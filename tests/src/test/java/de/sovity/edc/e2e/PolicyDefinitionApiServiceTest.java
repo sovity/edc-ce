@@ -12,7 +12,8 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper.api.ui.pages.policy;
+// TODO package de.sovity.edc.ext.wrapper.api.ui.pages.policy;
+package de.sovity.edc.e2e;
 
 
 import de.sovity.edc.client.EdcClient;
@@ -35,6 +36,7 @@ import org.jooq.DSLContext;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
+import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -61,7 +63,8 @@ class PolicyDefinitionApiServiceTest {
     @Test
     void getPolicyList(EdcClient client) {
         // arrange
-        createPolicyDefinition(client, "my-policy-def-1");
+        val policyDefinitionId = "my-policy-def-1";
+        createPolicyDefinition(client, policyDefinitionId);
 
         // act
         var response = client.uiApi().getPolicyDefinitionPage();
@@ -70,24 +73,27 @@ class PolicyDefinitionApiServiceTest {
         var policyDefinitions = response.getPolicies();
         assertThat(policyDefinitions).hasSize(2);
         var policyDefinition = policyDefinitions.stream()
-            .filter(it -> it.getPolicyDefinitionId().equals("my-policy-def-1"))
+            .filter(it -> it.getPolicyDefinitionId().equals(policyDefinitionId))
             .findFirst().get();
-        assertThat(policyDefinition.getPolicyDefinitionId()).isEqualTo("my-policy-def-1");
+        assertThat(policyDefinition.getPolicyDefinitionId()).isEqualTo(policyDefinitionId);
         assertThat(policyDefinition.getPolicy().getExpression()).usingRecursiveComparison().isEqualTo(expression);
+
+        // cleanup
+        client.uiApi().deletePolicyDefinition(policyDefinitionId);
     }
 
     @Test
     void sortPoliciesFromNewestToOldest(EdcClient client, DslContextFactory dslContextFactory) {
         // arrange
-        createPolicyDefinition(client, "my-policy-def-0");
-        createPolicyDefinition(client, "my-policy-def-1");
-        createPolicyDefinition(client, "my-policy-def-2");
+        createPolicyDefinition(client, "my-policy-def-10");
+        createPolicyDefinition(client, "my-policy-def-11");
+        createPolicyDefinition(client, "my-policy-def-12");
 
         dslContextFactory.transaction(dsl ->
             Map.of(
-                "my-policy-def-0", 1628956800000L,
-                "my-policy-def-1", 1628956801000L,
-                "my-policy-def-2", 1628956802000L
+                "my-policy-def-10", 1628956800000L,
+                "my-policy-def-11", 1628956801000L,
+                "my-policy-def-12", 1628956802000L
             ).forEach((id, time) -> setPolicyDefCreatedAt(dsl, id, time)));
 
         // act
@@ -98,9 +104,16 @@ class PolicyDefinitionApiServiceTest {
             .extracting(PolicyDefinitionDto::getPolicyDefinitionId)
             .containsExactly(
                 "always-true",
-                "my-policy-def-2",
-                "my-policy-def-1",
-                "my-policy-def-0");
+                "my-policy-def-12",
+                "my-policy-def-11",
+                "my-policy-def-10");
+
+        // cleanup
+        List.of(
+            "my-policy-def-12",
+            "my-policy-def-11",
+            "my-policy-def-10"
+        ).forEach(id -> client.uiApi().deletePolicyDefinition(id));
     }
 
     private static void setPolicyDefCreatedAt(DSLContext dsl, String id, Long time) {
@@ -114,15 +127,16 @@ class PolicyDefinitionApiServiceTest {
     @Test
     void test_delete(EdcClient client, PolicyDefinitionService policyDefinitionService) {
         // arrange
-        createPolicyDefinition(client, "my-policy-def-1");
+        String policyDefinitionId = "my-policy-def-21";
+        createPolicyDefinition(client, policyDefinitionId);
         assertThat(policyDefinitionService.query(QuerySpec.max()).getContent().toList())
-            .extracting(Entity::getId).contains("always-true", "my-policy-def-1");
+            .extracting(Entity::getId).contains("always-true", policyDefinitionId);
 
         // act
-        var response = client.uiApi().deletePolicyDefinition("my-policy-def-1");
+        var response = client.uiApi().deletePolicyDefinition(policyDefinitionId);
 
         // assert
-        assertThat(response.getId()).isEqualTo("my-policy-def-1");
+        assertThat(response.getId()).isEqualTo(policyDefinitionId);
         assertThat(policyDefinitionService.query(QuerySpec.max()).getContent())
             .extracting(Entity::getId).containsExactly("always-true");
     }
