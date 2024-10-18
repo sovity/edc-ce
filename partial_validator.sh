@@ -22,3 +22,4 @@ gradle \
     --tests 'de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.DashboardPageApiServiceTest' \
     --tests 'de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiServiceTest' \
     --tests 'de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferProcessAssetApiServiceTest' \
+    --tests 'de.sovity.edc.ext.wrapper.api.usecase.KpiApiTest' \
