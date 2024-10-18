@@ -68,7 +68,7 @@ class ContractDefinitionPageApiServiceTest {
         assertThat(criterionEntry.getOperandRight().getValue()).isEqualTo("abc");
     }
 
-    // TODO: enable again
+    // TODO: this test is not stable, the elements should be returned sorted but eventually they're not. Doesn't make sense.
     @Disabled
     @Test
     void contractDefinitionPageSorting(EdcClient client, ContractDefinitionService contractDefinitionService) {
@@ -80,21 +80,21 @@ class ContractDefinitionPageApiServiceTest {
                 "contractPolicy-id-1",
                 "accessPolicy-id-1",
                 new Criterion("exampleLeft1", "=", "abc"),
-                1628956800000L);
+                1628000000000L);
         createContractDefinition(
                 contractDefinitionService,
                 "contractDefinition-id-2",
                 "contractPolicy-id-2",
                 "accessPolicy-id-2",
                 new Criterion("exampleLeft1", "=", "abc"),
-                1628956801000L);
+                1628000001000L);
         createContractDefinition(
                 contractDefinitionService,
                 "contractDefinition-id-3",
                 "contractPolicy-id-3",
                 "accessPolicy-id-3",
                 new Criterion("exampleLeft1", "=", "abc"),
-                1628956802000L);
+                1628000002000L);
 
         // act
         var result = client.uiApi().getContractDefinitionPage();
