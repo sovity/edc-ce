@@ -20,3 +20,4 @@ gradle \
     --tests 'de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services.TransferRequestBuilderTest' \
     --tests 'de.sovity.edc.ext.wrapper.api.ui.pages.contract_definitions.ContractDefinitionPageApiServiceTest' \
     --tests 'de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.DashboardPageApiServiceTest' \
+    --tests 'de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferProcessAssetApiServiceTest' \
