@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2024 sovity GmbH
+ * Copyright (c) 2024 sovity GmbH
  *
  *  This program and the accompanying materials are made available under the
  *  terms of the Apache License, Version 2.0 which is available at
@@ -16,6 +16,7 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services;
 
 import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.EdcPropertyUtils;
 import de.sovity.edc.ext.wrapper.api.ui.model.InitiateTransferRequest;
+import de.sovity.edc.utils.jsonld.vocab.Prop;
 import lombok.val;
 import org.eclipse.edc.connector.controlplane.contract.spi.types.agreement.ContractAgreement;
 import org.eclipse.edc.connector.controlplane.contract.spi.types.negotiation.ContractNegotiation;
@@ -40,8 +41,8 @@ class TransferRequestBuilderTest {
             .contractAgreementId("contract-id")
             .transferType("HttpData-PUSH")
             .dataSinkProperties(Map.of(
-                "type", "HttpData",
-                "baseUrl", "http://example.com/segment0"
+                Prop.Edc.TYPE, "HttpData",
+                Prop.Edc.BASE_URL, "http://example.com/segment0"
             ))
             .transferProcessProperties(Map.of(
                 EDC_NAMESPACE + "pathSegments", "my-endpoint",

@@ -14,5 +14,6 @@ gradle \
     --tests 'de.sovity.edc.e2e.ContractAgreementPageTest' \
     --tests 'de.sovity.edc.e2e.ContractAgreementTerminationDetailsQueryTest' \
     --tests 'de.sovity.edc.e2e.ContractAgreementTransferApiServiceTest' \
+    --tests 'de.sovity.edc.e2e.TransferRequestBuilderTest' \
     --tests 'de.sovity.edc.e2e.UseCaseApiWrapperTest' \
     --tests 'de.sovity.edc.e2e.UiApiWrapperTest.retrieveSingleContractAgreement' \

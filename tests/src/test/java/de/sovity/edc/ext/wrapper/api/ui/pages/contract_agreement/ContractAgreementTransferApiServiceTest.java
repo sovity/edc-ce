@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2023 sovity GmbH
+ * Copyright (c) 2024 sovity GmbH
  *
  *  This program and the accompanying materials are made available under the
  *  terms of the Apache License, Version 2.0 which is available at
@@ -12,8 +12,7 @@
  *
  */
 
-// TODO de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreement
-package de.sovity.edc.e2e;
+package de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreement;
 
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.InitiateCustomTransferRequest;
