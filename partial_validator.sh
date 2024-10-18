@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 gradle \
+    :extensions:contract-termination:test \
+    --tests 'de.sovity.edc.extension.contacttermination.query.TerminateContractQueryTest' \
     :extensions:edc-ui-config:test \
     :extensions:last-commit-info:test \
     :extensions:policy-always-true:test \
