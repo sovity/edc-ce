@@ -188,6 +188,7 @@ class ApiWrapperDemoTest {
 
     private UiContractNegotiation initiateNegotiation(UiDataOffer dataOffer, UiContractOffer contractOffer) {
         var negotiationRequest = ContractNegotiationRequest.builder()
+            .counterPartyId(dataOffer.getParticipantId())
             .counterPartyAddress(dataOffer.getEndpoint())
             .assetId(dataOffer.getAsset().getAssetId())
             .contractOfferId(contractOffer.getContractOfferId())

@@ -63,6 +63,7 @@ class CatalogApiTest {
         createAsset(client);
         createPolicy(client);
         createContractDefinition(client);
+
         // act
         var catalogPageDataOffers = client.uiApi().getCatalogPageDataOffers(participantId, protocolApiUrl);
 

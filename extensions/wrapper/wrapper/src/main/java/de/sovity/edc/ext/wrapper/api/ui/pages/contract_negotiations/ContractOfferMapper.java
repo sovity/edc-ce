@@ -34,6 +34,7 @@ public class ContractOfferMapper {
         // despite the catalog not putting it out while policies aren't asset specific
         policy = policy.toBuilder()
             .target(contractRequest.getAssetId())
+            .assigner(contractRequest.getCounterPartyId())
             .build();
 
         return ContractOffer.Builder.newInstance()

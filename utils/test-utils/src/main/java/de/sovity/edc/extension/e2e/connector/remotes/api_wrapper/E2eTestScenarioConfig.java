@@ -43,7 +43,7 @@ public class E2eTestScenarioConfig {
     public static E2eTestScenarioConfig forProviderConfig(Config providerConfig) {
         return builder()
             .providerParticipantId(ConfigUtils.getParticipantId(providerConfig))
-            .providerProtocolApiUrl(ConfigUtils.getManagementApiUrl(providerConfig))
+            .providerProtocolApiUrl(ConfigUtils.getProtocolApiUrl(providerConfig))
             .build();
     }
 }
