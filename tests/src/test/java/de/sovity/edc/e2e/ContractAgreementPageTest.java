@@ -12,7 +12,7 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreement;
+package de.sovity.edc.e2e;
 
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.ContractAgreementDirection;
