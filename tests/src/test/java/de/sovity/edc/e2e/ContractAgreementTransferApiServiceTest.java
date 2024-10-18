@@ -63,8 +63,8 @@ class ContractAgreementTransferApiServiceTest {
             .contractAgreementId(contractId)
             .transferType("HttpData-PUSH")
             .dataSinkProperties(Map.of(
-                "type", "HttpData",
-                "baseUrl", DATA_SINK
+                Prop.Edc.TYPE, "HttpData",
+                Prop.Edc.BASE_URL, DATA_SINK
             ))
             .transferProcessProperties(Map.of("privateProperty", "privateValue"))
             .build();
@@ -82,8 +82,8 @@ class ContractAgreementTransferApiServiceTest {
         assertThat(transferProcess.getContractId()).isEqualTo(contractId);
         assertThat(transferProcess.getCounterPartyAddress()).isEqualTo(COUNTER_PARTY_ADDRESS);
         assertThat(transferProcess.getDataDestination().getProperties()).containsAllEntriesOf(Map.of(
-            "https://w3id.org/edc/v0.0.1/ns/type", "HttpData",
-            "baseUrl", DATA_SINK
+            Prop.Edc.TYPE, "HttpData",
+            Prop.Edc.BASE_URL, DATA_SINK
         ));
     }
 
