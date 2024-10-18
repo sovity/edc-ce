@@ -53,6 +53,7 @@ import org.mockserver.model.HttpResponse;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
@@ -74,7 +75,7 @@ public class E2eTestScenario {
     @NonNull
     private final ClientAndServer mockServer;
 
-    private final AtomicInteger assetCounter = new AtomicInteger(0);
+    private final Random random = new Random();
 
     public String createAsset() {
         val dummyDataSource = UiDataSource.builder()
@@ -88,7 +89,7 @@ public class E2eTestScenario {
     }
 
     private @NotNull String nextAssetId() {
-        return "asset-" + assetCounter.getAndIncrement();
+        return "asset-" + random.nextInt();
     }
 
     public String createAsset(String id, UiDataSourceHttpData uiDataSourceHttpData) {

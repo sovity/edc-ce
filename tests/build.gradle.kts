@@ -13,8 +13,10 @@ dependencies {
 
     testImplementation(libs.edc.dspHttpSpi)
 
+    testImplementation(project(":extensions:database-direct-access"))
     testImplementation(project(":extensions:test-backend-controller"))
     testImplementation(project(":extensions:wrapper:clients:java-client"))
+    testImplementation(project(":utils:jooq-database-access"))
     testImplementation(project(":utils:test-utils"))
     testImplementation(libs.jsonUnit.assertj)
     testImplementation(libs.mockito.core)

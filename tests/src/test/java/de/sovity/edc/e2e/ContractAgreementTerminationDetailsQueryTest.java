@@ -12,11 +12,12 @@
  *
  */
 
-package de.sovity.edc.extension.contacttermination.query;
+package de.sovity.edc.e2e;
 
 import de.sovity.edc.client.gen.model.ContractTerminationRequest;
 import de.sovity.edc.ext.db.jooq.enums.ContractTerminatedBy;
 import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationDetails;
+import de.sovity.edc.extension.contacttermination.query.ContractAgreementTerminationDetailsQuery;
 import de.sovity.edc.extension.db.directaccess.DslContextFactory;
 import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario;
 import de.sovity.edc.extension.e2e.junit.CeE2eTestExtension;
