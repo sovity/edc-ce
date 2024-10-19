@@ -7,6 +7,7 @@ gradle \
     --tests 'de.sovity.edc.e2e.ApiWrapperDemoTest' \
     --tests 'de.sovity.edc.e2e.AssetApiServiceTest' \
     --tests 'de.sovity.edc.e2e.ContractAgreementTerminationDetailsQueryTest' \
+    --tests 'de.sovity.edc.e2e.DataSourceQueryParamsTest' \
     --tests 'de.sovity.edc.e2e.PolicyDefinitionApiServiceTest' \
     --tests 'de.sovity.edc.e2e.UiApiWrapperTest.retrieveSingleContractAgreement' \
     --tests 'de.sovity.edc.e2e.UseCaseApiWrapperTest' \

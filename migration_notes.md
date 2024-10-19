@@ -36,6 +36,12 @@ CanGetAgreementPageForTerminatedContractTest > initializationError FAILED
 
 Why?
 
+## Provider push parameterization is deprecated
+
+ProviderPushTransferDataFlowController is deprecated since 0.5.1.
+
+See `git show aa30b4805268821c0852d50950b69e78a3f7efcb` in core EDC.
+
 
 ## TODOs
 
