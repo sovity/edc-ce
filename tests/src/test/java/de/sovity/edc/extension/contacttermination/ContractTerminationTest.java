@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2024 sovity GmbH
+ * Copyright (c) 2024 sovity GmbH
  *
  *  This program and the accompanying materials are made available under the
  *  terms of the Apache License, Version 2.0 which is available at
@@ -12,19 +12,13 @@
  *
  */
 
-package de.sovity.edc.e2e;
+package de.sovity.edc.extension.contacttermination;
 
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.ApiException;
-import de.sovity.edc.client.gen.model.ContractAgreementPage;
 import de.sovity.edc.client.gen.model.ContractAgreementPageQuery;
-import de.sovity.edc.client.gen.model.ContractTerminatedBy;
 import de.sovity.edc.client.gen.model.ContractTerminationRequest;
 import de.sovity.edc.client.gen.model.InitiateTransferRequest;
-import de.sovity.edc.client.gen.model.TransferHistoryEntry;
-import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationService;
-import de.sovity.edc.extension.contacttermination.ContractTerminationEvent;
-import de.sovity.edc.extension.contacttermination.ContractTerminationObserver;
 import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario;
 import de.sovity.edc.extension.e2e.junit.CeE2eTestExtension;
 import de.sovity.edc.extension.e2e.junit.utils.Consumer;
@@ -34,7 +28,6 @@ import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.ws.rs.HttpMethod;
 import lombok.SneakyThrows;
 import lombok.val;
-import org.awaitility.Awaitility;
 import org.eclipse.edc.connector.controlplane.contract.spi.ContractOfferId;
 import org.eclipse.edc.connector.controlplane.transfer.spi.types.TransferProcessStates;
 import org.junit.jupiter.api.DynamicTest;
@@ -47,20 +40,14 @@ import org.mockserver.integration.ClientAndServer;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
 
-import java.time.OffsetDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-import static de.sovity.edc.client.gen.model.ContractTerminatedBy.COUNTERPARTY;
-import static de.sovity.edc.client.gen.model.ContractTerminatedBy.SELF;
 import static de.sovity.edc.client.gen.model.ContractTerminationStatus.ONGOING;
 import static de.sovity.edc.client.gen.model.ContractTerminationStatus.TERMINATED;
-import static java.time.Duration.ofSeconds;
-import static java.util.concurrent.TimeUnit.SECONDS;
+import static de.sovity.edc.extension.contacttermination.ContractTerminationTestUtils.awaitTerminationCount;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.within;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.mockito.ArgumentMatchers.any;
@@ -69,118 +56,9 @@ import static org.mockito.Mockito.verify;
 class ContractTerminationTest {
 
     @RegisterExtension
-    private static CeE2eTestExtension e2eTestExtension = CeE2eTestExtension.builder()
+    private final static CeE2eTestExtension e2eTestExtension = CeE2eTestExtension.builder()
         .additionalModule(":launchers:connectors:sovity-dev")
         .build();
-
-    @Test
-    @DisabledOnGithub
-    void canGetAgreementPageForNonTerminatedContract(
-        E2eTestScenario scenario,
-        @Consumer EdcClient consumerClient,
-        @Provider EdcClient providerClient
-    ) {
-        val assets = IntStream.range(0, 3).mapToObj((it) -> scenario.createAsset());
-
-        val agreements = assets
-            .peek(scenario::createContractDefinition)
-            .map(scenario::negotiateAssetAndAwait)
-            .toList();
-
-        consumerClient.uiApi().terminateContractAgreement(
-            agreements.get(0).getContractAgreementId(),
-            ContractTerminationRequest.builder()
-                .detail("detail 0")
-                .reason("reason 0")
-                .build()
-        );
-
-        consumerClient.uiApi().terminateContractAgreement(
-            agreements.get(1).getContractAgreementId(),
-            ContractTerminationRequest.builder()
-                .detail("detail 1")
-                .reason("reason 1")
-                .build()
-        );
-
-        awaitTerminationCount(consumerClient, 2);
-        awaitTerminationCount(providerClient, 2);
-
-        // act
-        // don't terminate the contract
-        val allAgreements = consumerClient.uiApi().getContractAgreementPage(ContractAgreementPageQuery.builder().build());
-        val terminatedAgreements =
-            consumerClient.uiApi().getContractAgreementPage(ContractAgreementPageQuery.builder().terminationStatus(TERMINATED).build());
-        val ongoingAgreements =
-            consumerClient.uiApi().getContractAgreementPage(ContractAgreementPageQuery.builder().terminationStatus(ONGOING).build());
-
-        // assert
-        assertThat(allAgreements.getContractAgreements()).hasSize(3);
-        assertThat(terminatedAgreements.getContractAgreements()).hasSize(2);
-        assertThat(ongoingAgreements.getContractAgreements()).hasSize(1);
-    }
-
-    @DisabledOnGithub
-    @Test
-    @SneakyThrows
-    void canGetAgreementPageForTerminatedContract(
-        E2eTestScenario scenario,
-        @Consumer EdcClient consumerClient,
-        @Provider EdcClient providerClient
-    ) {
-        val assetId = scenario.createAsset();
-        scenario.createContractDefinition(assetId);
-        scenario.negotiateAssetAndAwait(assetId);
-
-        val agreements = consumerClient.uiApi().getContractAgreementPage(ContractAgreementPageQuery.builder().build());
-
-        // act
-
-        val reason = "Reason";
-        val details = "Details";
-        consumerClient.uiApi().terminateContractAgreement(
-            agreements.getContractAgreements().get(0).getContractAgreementId(),
-            ContractTerminationRequest.builder().reason(reason).detail(details).build());
-
-        awaitTerminationCount(consumerClient, 1);
-        awaitTerminationCount(providerClient, 1);
-
-        val agreementsAfterTermination = consumerClient.uiApi().getContractAgreementPage(ContractAgreementPageQuery.builder().build());
-
-        // assert
-        assertTermination(agreementsAfterTermination, details, reason, SELF);
-    }
-
-    @DisabledOnGithub
-    @Test
-    @SneakyThrows
-    void canTerminateFromConsumer(
-        E2eTestScenario scenario,
-        @Consumer EdcClient consumerClient,
-        @Provider EdcClient providerClient
-    ) {
-        val assetId = scenario.createAsset();
-        scenario.createContractDefinition(assetId);
-        val negotiation = scenario.negotiateAssetAndAwait(assetId);
-
-        // act
-        val detail = "Some detail";
-        val reason = "Some reason";
-        consumerClient.uiApi().terminateContractAgreement(negotiation.getContractAgreementId(), ContractTerminationRequest.builder()
-            .detail(detail)
-            .reason(reason)
-            .build());
-
-        awaitTerminationCount(consumerClient, 1);
-        awaitTerminationCount(providerClient, 1);
-
-        val consumerSideAgreements = consumerClient.uiApi().getContractAgreementPage(ContractAgreementPageQuery.builder().build());
-        val providerSideAgreements = providerClient.uiApi().getContractAgreementPage(ContractAgreementPageQuery.builder().build());
-
-        // assert
-        assertTermination(consumerSideAgreements, detail, reason, SELF);
-        assertTermination(providerSideAgreements, detail, reason, COUNTERPARTY);
-    }
 
     @DisabledOnGithub
     @Test
@@ -303,42 +181,6 @@ class ContractTerminationTest {
                                 .build())
                     );
                 })).toList();
-    }
-
-    @DisabledOnGithub
-    @Test
-    @SneakyThrows
-    void canTerminateFromProvider(
-        E2eTestScenario scenario,
-        @Consumer EdcClient consumerClient,
-        @Provider EdcClient providerClient
-    ) {
-        val assetId = scenario.createAsset();
-        scenario.createContractDefinition(assetId);
-        val negotiation = scenario.negotiateAssetAndAwait(assetId);
-
-        // act
-        val detail = "Some detail";
-        val reason = "Some reason";
-
-        providerClient.uiApi().terminateContractAgreement(
-            negotiation.getContractAgreementId(),
-            ContractTerminationRequest.builder()
-                .detail(detail)
-                .reason(reason)
-                .build());
-
-        awaitTerminationCount(consumerClient, 1);
-        awaitTerminationCount(providerClient, 1);
-
-        val consumerSideAgreements = consumerClient.uiApi().getContractAgreementPage(ContractAgreementPageQuery.builder().build());
-        val providerSideAgreements = providerClient.uiApi().getContractAgreementPage(ContractAgreementPageQuery.builder().build());
-
-        // assert
-
-        // assert
-        assertTermination(consumerSideAgreements, detail, reason, COUNTERPARTY);
-        assertTermination(providerSideAgreements, detail, reason, SELF);
     }
 
     @Test
@@ -524,52 +366,5 @@ class ContractTerminationTest {
         assertThat(argument.getValue().detail()).isEqualTo(contractTerminationRequest.getDetail());
         assertThat(argument.getValue().reason()).isEqualTo(contractTerminationRequest.getReason());
         assertThat(argument.getValue().timestamp()).isNotNull();
-    }
-
-    private static void assertTermination(
-        ContractAgreementPage consumerSideAgreements,
-        String detail,
-        String reason,
-        ContractTerminatedBy terminatedBy
-    ) {
-        val contractAgreements = consumerSideAgreements.getContractAgreements();
-        assertThat(contractAgreements).hasSize(1);
-        assertThat(contractAgreements.get(0).getTerminationStatus()).isEqualTo(TERMINATED);
-
-        val consumerInformation = contractAgreements.get(0).getTerminationInformation();
-
-        assertThat(consumerInformation).isNotNull();
-
-        val now = OffsetDateTime.now();
-        assertThat(consumerInformation.getTerminatedAt()).isCloseTo(now, within(1, ChronoUnit.MINUTES));
-
-        assertThat(consumerInformation.getDetail()).isEqualTo(detail);
-        assertThat(consumerInformation.getReason()).isEqualTo(reason);
-        assertThat(consumerInformation.getTerminatedBy()).isEqualTo(terminatedBy);
-    }
-
-    private TransferHistoryEntry awaitTransfer(EdcClient client, String transferProcessId) {
-        val historyEntry = Awaitility.await().atMost(10, SECONDS).until(() ->
-                client.uiApi()
-                    .getTransferHistoryPage()
-                    .getTransferEntries()
-                    .stream()
-                    .filter(it -> it.getTransferProcessId().equals(transferProcessId))
-                    .findFirst(),
-            first -> first.map(it -> it.getState().getCode().equals(TransferProcessStates.COMPLETED.code()))
-                .orElse(false));
-
-        return historyEntry.get();
-    }
-
-    private void awaitTerminationCount(EdcClient client, int count) {
-        Awaitility.await().atMost(ofSeconds(5)).until(
-            () -> client.uiApi()
-                .getContractAgreementPage(ContractAgreementPageQuery.builder().build())
-                .getContractAgreements()
-                .stream()
-                .filter(it -> it.getTerminationStatus().equals(TERMINATED))
-                .count() >= count
-        );
     }
 }

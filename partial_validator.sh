@@ -19,3 +19,8 @@ gradle \
     --tests 'de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferProcessAssetApiServiceTest' \
     --tests 'de.sovity.edc.ext.wrapper.api.usecase.KpiApiTest' \
     --tests 'de.sovity.edc.ext.wrapper.api.usecase.SupportedPolicyApiTest' \
+    --tests 'de.sovity.edc.extension.contacttermination.CanGetAgreementPageForNonTerminatedContractTest' \
+    --tests 'de.sovity.edc.extension.contacttermination.CanGetAgreementPageForTerminatedContractTest' \
+    --tests 'de.sovity.edc.extension.contacttermination.CanTerminateFromConsumerTest' \
+    --tests 'de.sovity.edc.extension.contacttermination.ContractTerminationTest' \
+    --tests 'de.sovity.edc.extension.contacttermination.ContractTerminationTestUtils' \

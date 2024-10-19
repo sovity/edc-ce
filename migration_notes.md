@@ -19,8 +19,27 @@ Must NOT use the shorthand `baseUrl`, `type`, ...
 
 Must use the FQDN `https://w3id.org/edc/v0.0.1/ns/baseUrl`, `https://w3id.org/edc/v0.0.1/ns/type`, ...
 
+### DB reset
+
+Some tests depended on the DB's reset `@BeforeEach` method.
+
+In some cases if was fixed with `@Order`ing, in others with deletion of the problematic asset, or changing queries to be more selective.
+
+## Port re-use
+
+CanGetAgreementPageForTerminatedContractTest > initializationError FAILED
+  org.eclipse.edc.spi.EdcException: Failed to start EDC runtime
+    org.eclipse.edc.spi.EdcException: org.eclipse.edc.spi.EdcException: Error starting Jetty service
+      org.eclipse.edc.spi.EdcException: Error starting Jetty service
+        java.io.IOException: Failed to bind to 0.0.0.0/0.0.0.0:49678
+          java.net.BindException: Address already in use
+
+Why?
+
+
 ## TODOs
 
 ### Media type went missing
 
 Play whack-a-mole between the new EDC usage of distribution, the `Media Type` assertion and the catalog fetching.
+
