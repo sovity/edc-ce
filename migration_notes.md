@@ -25,7 +25,7 @@ Some tests depended on the DB's reset `@BeforeEach` method.
 
 In some cases if was fixed with `@Order`ing, in others with deletion of the problematic asset, or changing queries to be more selective.
 
-## Port re-use
+### Port re-use
 
 CanGetAgreementPageForTerminatedContractTest > initializationError FAILED
   org.eclipse.edc.spi.EdcException: Failed to start EDC runtime
@@ -36,12 +36,23 @@ CanGetAgreementPageForTerminatedContractTest > initializationError FAILED
 
 Why?
 
-## Provider push parameterization is deprecated
+### Provider push parameterization is deprecated
 
 ProviderPushTransferDataFlowController is deprecated since 0.5.1.
 
 See `git show aa30b4805268821c0852d50950b69e78a3f7efcb` in core EDC.
 
+### Management API v2/v3
+
+#### Asset
+
+`api/management/v2/assets` seems gone.
+
+`api/management/v3/assets` must be used.
+
+#### Policy
+
+`api/management/v2/assets` is deprecated.
 
 ## TODOs
 
