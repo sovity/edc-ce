@@ -158,7 +158,7 @@ public class AssetJsonLdBuilder {
 
     private void addDistribution(JsonObjectBuilder properties, UiAssetCreateRequest request) {
         var distribution = buildDistribution(request);
-        addNonNullJsonValue(properties, Prop.Dcat.DISTRIBUTION, distribution);
+        addNonNullJsonValue(properties, Prop.SovityDcatExt.DISTRIBUTION, distribution);
     }
 
     private void addMobilityTheme(JsonObjectBuilder properties, UiAssetCreateRequest request) {

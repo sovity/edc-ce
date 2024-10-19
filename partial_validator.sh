@@ -6,6 +6,7 @@ gradle \
     :tests:test \
     --tests 'de.sovity.edc.e2e.ApiWrapperDemoTest' \
     --tests 'de.sovity.edc.e2e.AssetApiServiceTest' \
+    --tests 'de.sovity.edc.e2e.CatalogApiTest' \
     --tests 'de.sovity.edc.e2e.ContractAgreementTerminationDetailsQueryTest' \
     --tests 'de.sovity.edc.e2e.DataSourceQueryParamsTest' \
     --tests 'de.sovity.edc.e2e.PolicyDefinitionApiServiceTest' \
