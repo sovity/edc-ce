@@ -95,7 +95,7 @@ class PlaceholderDataSourceExtensionTest {
             .build());
 
         // assert
-        assertThat(new String(Base64.getDecoder().decode(accessed.get())))
+        assertThat(accessed.get())
             .contains("This is not real data.")
             .contains(email)
             .contains(subject);

@@ -9,6 +9,7 @@ gradle \
     --tests 'de.sovity.edc.e2e.CatalogApiTest' \
     --tests 'de.sovity.edc.e2e.ContractAgreementTerminationDetailsQueryTest' \
     --tests 'de.sovity.edc.e2e.DataSourceQueryParamsTest' \
+    --tests 'de.sovity.edc.e2e.PlaceholderDataSourceExtensionTest' \
     --tests 'de.sovity.edc.e2e.PolicyDefinitionApiServiceTest' \
     --tests 'de.sovity.edc.e2e.UiApiWrapperTest.retrieveSingleContractAgreement' \
     --tests 'de.sovity.edc.e2e.UseCaseApiWrapperTest' \

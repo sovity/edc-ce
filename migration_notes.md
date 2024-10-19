@@ -27,14 +27,16 @@ In some cases if was fixed with `@Order`ing, in others with deletion of the prob
 
 ### Port re-use
 
+```
 CanGetAgreementPageForTerminatedContractTest > initializationError FAILED
   org.eclipse.edc.spi.EdcException: Failed to start EDC runtime
     org.eclipse.edc.spi.EdcException: org.eclipse.edc.spi.EdcException: Error starting Jetty service
       org.eclipse.edc.spi.EdcException: Error starting Jetty service
         java.io.IOException: Failed to bind to 0.0.0.0/0.0.0.0:49678
           java.net.BindException: Address already in use
+```
 
-Why?
+Why? The port seems to be allocated randomly.
 
 ### Provider push parameterization is deprecated
 
@@ -53,6 +55,10 @@ See `git show aa30b4805268821c0852d50950b69e78a3f7efcb` in core EDC.
 #### Policy
 
 `api/management/v2/assets` is deprecated.
+
+### Distribution key
+
+The distribution key was moved from `http://www.w3.org/ns/dcat#distribution` to `https://semantic.sovity.io/dcat-ext#distribution`.
 
 ## TODOs
 
