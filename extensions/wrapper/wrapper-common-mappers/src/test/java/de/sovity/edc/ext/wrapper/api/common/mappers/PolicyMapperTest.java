@@ -18,7 +18,7 @@ import de.sovity.edc.ext.wrapper.api.common.mappers.policy.ExpressionExtractor;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.ExpressionMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.MappingErrors;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyExpression;
-import de.sovity.edc.utils.config.ConfigProps;
+import de.sovity.edc.utils.config.CeConfigProps;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import org.eclipse.edc.policy.model.Constraint;
@@ -36,7 +36,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Map;
 import java.util.Optional;
 
-import static de.sovity.edc.utils.config.ConfigProps.EDC_PARTICIPANT_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -103,7 +102,7 @@ class PolicyMapperTest {
     void buildPolicy_noConstraint() {
         // arrange
         when(config.getEntries()).thenReturn(
-            Map.of(ConfigProps.EDC_PARTICIPANT_ID.getProperty(), "foo")
+            Map.of(CeConfigProps.EDC_PARTICIPANT_ID.getProperty(), "foo")
         );
 
         var uiExpression = mock(UiPolicyExpression.class);

@@ -1,7 +1,7 @@
 package de.sovity.edc.extension.postgresql;
 
 import com.zaxxer.hikari.HikariDataSource;
-import de.sovity.edc.utils.config.ConfigProps;
+import de.sovity.edc.utils.config.CeConfigProps;
 import lombok.val;
 import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.persistence.EdcPersistenceException;
@@ -33,11 +33,11 @@ public class FlywayMigrator {
         if (shouldClean) {
             if (!canClean) {
                 throw new IllegalStateException("In order to clean the history both %s and %s must be set to true.".formatted(
-                        ConfigProps.EDC_FLYWAY_CLEAN.getProperty(), ConfigProps.EDC_FLYWAY_CLEAN_ENABLE.getProperty()
+                        CeConfigProps.EDC_FLYWAY_CLEAN.getProperty(), CeConfigProps.EDC_FLYWAY_CLEAN_ENABLE.getProperty()
                 ));
             }
             monitor.info(() -> "Cleaning database before migrations, since %s=true and %s=true.".formatted(
-                ConfigProps.EDC_FLYWAY_CLEAN.getProperty(), ConfigProps.EDC_FLYWAY_CLEAN_ENABLE.getProperty()
+                CeConfigProps.EDC_FLYWAY_CLEAN.getProperty(), CeConfigProps.EDC_FLYWAY_CLEAN_ENABLE.getProperty()
             ));
 
             val flyway = flywayFactory.setupFlywayForUnifiedHistory(dataSource);

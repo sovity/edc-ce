@@ -15,7 +15,7 @@
 package de.sovity.edc.extension.version.controller;
 
 import de.sovity.edc.extension.e2e.junit.CeIntegrationTestExtension;
-import de.sovity.edc.utils.config.ConfigProps;
+import de.sovity.edc.utils.config.CeConfigProps;
 import de.sovity.edc.utils.config.ConfigUtils;
 import io.restassured.http.ContentType;
 import org.eclipse.edc.connector.dataplane.selector.spi.client.DataPlaneClientFactory;
@@ -35,8 +35,8 @@ class LastCommitInfoTest {
         .additionalModule(":launchers:utils:vanilla-control-plane")
         .skipDb(true)
         .configOverrides(config -> config
-            .property(ConfigProps.EDC_LAST_COMMIT_INFO, "test env commit message")
-            .property(ConfigProps.EDC_BUILD_DATE, "2023-05-08T15:15:00Z")
+            .property(CeConfigProps.EDC_LAST_COMMIT_INFO, "test env commit message")
+            .property(CeConfigProps.EDC_BUILD_DATE, "2023-05-08T15:15:00Z")
         )
         .beforeEdcStartup(runtime -> {
             runtime.registerServiceMock(DataPlaneClientFactory.class, mock(DataPlaneClientFactory.class));

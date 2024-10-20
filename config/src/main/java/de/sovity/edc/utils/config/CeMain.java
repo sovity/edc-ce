@@ -12,13 +12,10 @@
  *
  */
 
-package de.sovity.edc;
+package de.sovity.edc.utils.config;
 
-import de.sovity.edc.utils.config.ConfigProps;
-import de.sovity.edc.utils.config.SovityEdcRuntime;
-
-public class Main {
+public class CeMain {
     public static void main(String[] argv) {
-        SovityEdcRuntime.boot(argv, ConfigProps.ALL_CE_PROPS);
+        SovityEdcRuntime.boot(argv, CeConfigProps.ALL_CE_PROPS);
     }
 }

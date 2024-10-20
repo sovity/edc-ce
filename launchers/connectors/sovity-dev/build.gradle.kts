@@ -12,7 +12,7 @@ dependencies {
 }
 
 application {
-    mainClass.set("de.sovity.edc.Main")
+    mainClass.set("de.sovity.edc.utils.config.CeMain")
 }
 
 tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {

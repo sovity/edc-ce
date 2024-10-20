@@ -14,7 +14,7 @@
 
 package de.sovity.edc.extension.dataplaneinstancestoreinit;
 
-import de.sovity.edc.utils.config.ConfigProps;
+import de.sovity.edc.utils.config.CeConfigProps;
 import de.sovity.edc.utils.config.ConfigUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -37,9 +37,9 @@ public class DataPlaneInitializerService {
     @SneakyThrows
     public void addIntegratedDataPlane() {
         var dataPlaneUrl = ConfigUtils.getIntegratedDataPlaneUrl(config);
-        var transferTypes = new HashSet<>(ConfigProps.EDC_DATAPLANE_TRANSFERTYPES.getListOrThrow(config));
-        var destTypes = new HashSet<>(ConfigProps.EDC_DATAPLANE_DESTTYPES.getListOrThrow(config));
-        var sourceTypes = new HashSet<>(ConfigProps.EDC_DATAPLANE_SOURCETYPES.getListOrThrow(config));
+        var transferTypes = new HashSet<>(CeConfigProps.EDC_DATAPLANE_TRANSFERTYPES.getListOrThrow(config));
+        var destTypes = new HashSet<>(CeConfigProps.EDC_DATAPLANE_DESTTYPES.getListOrThrow(config));
+        var sourceTypes = new HashSet<>(CeConfigProps.EDC_DATAPLANE_SOURCETYPES.getListOrThrow(config));
         var publicApiUrl = ConfigUtils.getPublicApiUrl(config);
 
         addDataPlane(

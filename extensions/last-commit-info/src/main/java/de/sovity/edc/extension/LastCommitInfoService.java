@@ -14,7 +14,7 @@
 
 package de.sovity.edc.extension;
 
-import de.sovity.edc.utils.config.ConfigProps;
+import de.sovity.edc.utils.config.CeConfigProps;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
@@ -43,7 +43,7 @@ public class LastCommitInfoService {
     }
 
     private String getEnvLastCommitInfo() {
-        return ConfigProps.EDC_LAST_COMMIT_INFO.getStringOrThrow(config);
+        return CeConfigProps.EDC_LAST_COMMIT_INFO.getStringOrThrow(config);
     }
 
     private String getJarBuildDate() {
@@ -51,7 +51,7 @@ public class LastCommitInfoService {
     }
 
     private String getEnvBuildDate() {
-        return ConfigProps.EDC_BUILD_DATE.getStringOrThrow(config);
+        return CeConfigProps.EDC_BUILD_DATE.getStringOrThrow(config);
     }
 
     @SneakyThrows

@@ -20,7 +20,7 @@ import de.sovity.edc.extension.e2e.junit.CeE2eTestExtension;
 import de.sovity.edc.extension.e2e.junit.utils.Consumer;
 import de.sovity.edc.extension.e2e.junit.utils.Provider;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
-import de.sovity.edc.utils.config.ConfigProps;
+import de.sovity.edc.utils.config.CeConfigProps;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockserver.integration.ClientAndServer;
@@ -33,11 +33,11 @@ class AlwaysTrueMigrationReversedTest {
     private static final CeE2eTestExtension E2E_TEST_EXTENSION = CeE2eTestExtension.builder()
         .additionalModule(":launchers:connectors:sovity-dev")
         .consumerConfigCustomizer(config -> config.property(
-            ConfigProps.EDC_FLYWAY_ADDITIONAL_MIGRATION_LOCATIONS,
+            CeConfigProps.EDC_FLYWAY_ADDITIONAL_MIGRATION_LOCATIONS,
             "classpath:db/additional-test-data/always-true-policy-legacy"
         ))
         .providerConfigCustomizer(config -> config.property(
-            ConfigProps.EDC_FLYWAY_ADDITIONAL_MIGRATION_LOCATIONS,
+            CeConfigProps.EDC_FLYWAY_ADDITIONAL_MIGRATION_LOCATIONS,
             "classpath:db/additional-test-data/always-true-policy-migrated"
         ))
         .build();

@@ -21,7 +21,7 @@ import de.sovity.edc.extension.e2e.connector.config.PortUtils;
 import de.sovity.edc.extension.e2e.connector.remotes.management_api.ManagementApiConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.remotes.management_api.ManagementApiConnectorRemoteConfig;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
-import de.sovity.edc.utils.config.ConfigProps;
+import de.sovity.edc.utils.config.CeConfigProps;
 import de.sovity.edc.utils.config.ConfigUtils;
 import lombok.experimental.UtilityClass;
 import lombok.val;
@@ -47,30 +47,30 @@ public final class CeIntegrationTestUtils {
 
         val configBuilder = ConnectorBootConfig.builder()
             // Network
-            .property(ConfigProps.MY_EDC_NETWORK_TYPE, ConfigProps.NetworkType.UNIT_TEST)
-            .property(ConfigProps.MY_EDC_FIRST_PORT, String.valueOf(firstPort))
+            .property(CeConfigProps.MY_EDC_NETWORK_TYPE, CeConfigProps.CeEnvironment.UNIT_TEST)
+            .property(CeConfigProps.MY_EDC_FIRST_PORT, String.valueOf(firstPort))
 
             // API Auth
-            .property(ConfigProps.EDC_API_AUTH_KEY, apiKey)
+            .property(CeConfigProps.EDC_API_AUTH_KEY, apiKey)
 
             // C2C Auth
-            .property(ConfigProps.MY_EDC_C2C_IAM_TYPE, ConfigProps.C2cIamType.MOCK_IAM)
-            .property(ConfigProps.MY_EDC_PARTICIPANT_ID, participantId)
+            .property(CeConfigProps.MY_EDC_C2C_IAM_TYPE, CeConfigProps.CeC2cIamType.MOCK_IAM)
+            .property(CeConfigProps.MY_EDC_PARTICIPANT_ID, participantId)
 
             // DB
-            .property(ConfigProps.MY_EDC_JDBC_URL, testDatabase.getJdbcCredentials().jdbcUrl())
-            .property(ConfigProps.MY_EDC_JDBC_USER, testDatabase.getJdbcCredentials().jdbcUser())
-            .property(ConfigProps.MY_EDC_JDBC_PASSWORD, testDatabase.getJdbcCredentials().jdbcPassword())
-            .property(ConfigProps.EDC_FLYWAY_CLEAN_ENABLE, "true")
-            .property(ConfigProps.EDC_FLYWAY_CLEAN, "true")
+            .property(CeConfigProps.MY_EDC_JDBC_URL, testDatabase.getJdbcCredentials().jdbcUrl())
+            .property(CeConfigProps.MY_EDC_JDBC_USER, testDatabase.getJdbcCredentials().jdbcUser())
+            .property(CeConfigProps.MY_EDC_JDBC_PASSWORD, testDatabase.getJdbcCredentials().jdbcPassword())
+            .property(CeConfigProps.EDC_FLYWAY_CLEAN_ENABLE, "true")
+            .property(CeConfigProps.EDC_FLYWAY_CLEAN, "true")
 
             // Metadata
-            .property(ConfigProps.MY_EDC_TITLE, "Connector Title %s".formatted(participantId))
-            .property(ConfigProps.MY_EDC_DESCRIPTION, "Connector Description %s".formatted(participantId))
-            .property(ConfigProps.MY_EDC_CURATOR_URL, "http://curator.%s".formatted(participantId))
-            .property(ConfigProps.MY_EDC_CURATOR_NAME, "Curator Name %s".formatted(participantId))
-            .property(ConfigProps.MY_EDC_MAINTAINER_URL, "http://maintainer.%s".formatted(participantId))
-            .property(ConfigProps.MY_EDC_MAINTAINER_NAME, "Maintainer Name %s".formatted(participantId));
+            .property(CeConfigProps.MY_EDC_TITLE, "Connector Title %s".formatted(participantId))
+            .property(CeConfigProps.MY_EDC_DESCRIPTION, "Connector Description %s".formatted(participantId))
+            .property(CeConfigProps.MY_EDC_CURATOR_URL, "http://curator.%s".formatted(participantId))
+            .property(CeConfigProps.MY_EDC_CURATOR_NAME, "Curator Name %s".formatted(participantId))
+            .property(CeConfigProps.MY_EDC_MAINTAINER_URL, "http://maintainer.%s".formatted(participantId))
+            .property(CeConfigProps.MY_EDC_MAINTAINER_NAME, "Maintainer Name %s".formatted(participantId));
         if (overrides != null) {
             overrides.accept(configBuilder);
         }

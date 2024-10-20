@@ -14,7 +14,7 @@
 
 package de.sovity.edc.extension.vaultinit;
 
-import de.sovity.edc.utils.config.ConfigProps;
+import de.sovity.edc.utils.config.CeConfigProps;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.edc.spi.monitor.Monitor;
@@ -29,13 +29,13 @@ public class VaultInitializerService {
     private final Vault vault;
 
     public void initializeVault() {
-        if (!ConfigProps.MY_EDC_VAULT_INIT_ENABLED.getBoolean(config)) {
+        if (!CeConfigProps.MY_EDC_VAULT_INIT_ENABLED.getBoolean(config)) {
             monitor.info("Vault initialization is disabled.");
             return;
         }
         monitor.info("Vault initialization is enabled.");
 
-        var entries = ConfigProps.MY_EDC_VAULT_INIT_ENTRIES_WILDCARD.getWildcardSubconfig(config);
+        var entries = CeConfigProps.MY_EDC_VAULT_INIT_ENTRIES_WILDCARD.getWildcardSubconfig(config);
         entries.getRelativeEntries().forEach(this::initializeVaultValue);
     }
 

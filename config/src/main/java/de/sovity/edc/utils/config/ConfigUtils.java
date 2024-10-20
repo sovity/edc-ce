@@ -25,7 +25,7 @@ import java.util.Map;
 @UtilityClass
 public class ConfigUtils {
     public static String getParticipantId(Map<String, String> props) {
-        return ConfigProps.EDC_PARTICIPANT_ID.getRaw(props);
+        return CeConfigProps.EDC_PARTICIPANT_ID.getRaw(props);
     }
 
     public static String getParticipantId(Config config) {
@@ -34,9 +34,9 @@ public class ConfigUtils {
 
     public static String getProtocolApiUrl(Map<String, String> props) {
         return UrlPathUtils.urlPathJoin(
-            ConfigProps.MY_EDC_PROTOCOL.getRaw(props),
-            getHost(props, ConfigProps.WEB_HTTP_PROTOCOL_PORT),
-            ConfigProps.WEB_HTTP_PROTOCOL_PATH.getRaw(props)
+            CeConfigProps.MY_EDC_PROTOCOL.getRaw(props),
+            getHost(props, CeConfigProps.WEB_HTTP_PROTOCOL_PORT),
+            CeConfigProps.WEB_HTTP_PROTOCOL_PATH.getRaw(props)
         );
     }
 
@@ -46,9 +46,9 @@ public class ConfigUtils {
 
     public static String getManagementApiUrl(Map<String, String> props) {
         return UrlPathUtils.urlPathJoin(
-            ConfigProps.MY_EDC_PROTOCOL.getRaw(props),
-            getHost(props, ConfigProps.WEB_HTTP_MANAGEMENT_PORT),
-            ConfigProps.WEB_HTTP_MANAGEMENT_PATH.getRaw(props)
+            CeConfigProps.MY_EDC_PROTOCOL.getRaw(props),
+            getHost(props, CeConfigProps.WEB_HTTP_MANAGEMENT_PORT),
+            CeConfigProps.WEB_HTTP_MANAGEMENT_PATH.getRaw(props)
         );
     }
 
@@ -57,7 +57,7 @@ public class ConfigUtils {
     }
 
     public static String getManagementApiKey(Map<String, String> props) {
-        return ConfigProps.EDC_API_AUTH_KEY.getRaw(props);
+        return CeConfigProps.EDC_API_AUTH_KEY.getRaw(props);
     }
 
     public static String getManagementApiKey(Config config) {
@@ -66,9 +66,9 @@ public class ConfigUtils {
 
     public static String getDefaultApiUrl(Map<String, String> props) {
         return UrlPathUtils.urlPathJoin(
-            ConfigProps.MY_EDC_PROTOCOL.getRaw(props),
-            getHost(props, ConfigProps.WEB_HTTP_PORT),
-            ConfigProps.WEB_HTTP_PATH.getRaw(props)
+            CeConfigProps.MY_EDC_PROTOCOL.getRaw(props),
+            getHost(props, CeConfigProps.WEB_HTTP_PORT),
+            CeConfigProps.WEB_HTTP_PATH.getRaw(props)
         );
     }
 
@@ -78,9 +78,9 @@ public class ConfigUtils {
 
     public static String getPublicApiUrl(Map<String, String> props) {
         return UrlPathUtils.urlPathJoin(
-            ConfigProps.MY_EDC_PROTOCOL.getRaw(props),
-            getHost(props, ConfigProps.WEB_HTTP_PUBLIC_PORT),
-            ConfigProps.WEB_HTTP_PUBLIC_PATH.getRaw(props)
+            CeConfigProps.MY_EDC_PROTOCOL.getRaw(props),
+            getHost(props, CeConfigProps.WEB_HTTP_PUBLIC_PORT),
+            CeConfigProps.WEB_HTTP_PUBLIC_PATH.getRaw(props)
         );
     }
 
@@ -90,9 +90,9 @@ public class ConfigUtils {
 
     public static String getControlApiUrl(Map<String, String> props) {
         return UrlPathUtils.urlPathJoin(
-            ConfigProps.MY_EDC_PROTOCOL.getRaw(props),
-            getHost(props, ConfigProps.WEB_HTTP_CONTROL_PORT),
-            ConfigProps.WEB_HTTP_CONTROL_PATH.getRaw(props)
+            CeConfigProps.MY_EDC_PROTOCOL.getRaw(props),
+            getHost(props, CeConfigProps.WEB_HTTP_CONTROL_PORT),
+            CeConfigProps.WEB_HTTP_CONTROL_PATH.getRaw(props)
         );
     }
 
@@ -109,9 +109,9 @@ public class ConfigUtils {
 
     @Nullable
     public static String getHost(Map<String, String> props, ConfigProp portIfNoReverseProxy) {
-        var hasReverseProxy = ConfigProps.NetworkType.isProduction(props);
+        var hasReverseProxy = CeConfigProps.CeEnvironment.isProduction(props);
 
-        var host = ConfigProps.MY_EDC_FQDN.getRaw(props);
+        var host = CeConfigProps.MY_EDC_FQDN.getRaw(props);
         if (!hasReverseProxy) {
             host = "%s:%s".formatted(host, portIfNoReverseProxy.getRaw(props));
         }

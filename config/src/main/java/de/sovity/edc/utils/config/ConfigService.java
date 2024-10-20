@@ -48,7 +48,7 @@ public class ConfigService {
     }
 
     private void applyDefault(Map<String, String> properties, ConfigProp prop) {
-        if (prop.getRelevantIf() != null && !prop.getRelevantIf().predicate(properties)) {
+        if (prop.getOnlyValidateAndDefaultIf() != null && !prop.getOnlyValidateAndDefaultIf().predicate(properties)) {
             return;
         }
         String value = prop.getRaw(properties);

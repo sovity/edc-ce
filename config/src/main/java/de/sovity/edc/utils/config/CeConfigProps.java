@@ -16,16 +16,12 @@ package de.sovity.edc.utils.config;
 
 import de.sovity.edc.utils.config.model.ConfigProp;
 import de.sovity.edc.utils.config.utils.UrlPathUtils;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 import lombok.experimental.UtilityClass;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 /**
  * Configuration Properties for the EDC:<br>
@@ -35,16 +31,16 @@ import java.util.function.Supplier;
  */
 @SuppressWarnings("unused")
 @UtilityClass
-public class ConfigProps {
+public class CeConfigProps {
     public static final List<ConfigProp> ALL_CE_PROPS = new ArrayList<>();
 
     public static final ConfigProp MY_EDC_NETWORK_TYPE = addCeProp(builder -> builder
         .category(Category.ADVANCED)
         .property("my.edc.network.type")
         .description("Configuring EDCs for different environments. Available values are: %s".formatted(
-            String.join(", ", NetworkType.ALL_NETWORK_TYPES)))
+            String.join(", ", CeEnvironment.ALL_CE_ENVIRONMENTS)))
         .warnIfOverridden(true)
-        .defaultValue(NetworkType.PRODUCTION)
+        .defaultValue(CeEnvironment.PRODUCTION)
     );
 
     /* Basic Configuration */
@@ -102,8 +98,9 @@ public class ConfigProps {
         .category(Category.BASIC)
         .property("my.edc.fqdn")
         .description("Fully Qualified Domain Name of where the Connector is hosted, e.g. my-connector.myorg.com")
-        .requiredIf(props -> NetworkType.isProduction(props) || NetworkType.isLocalDemoDockerCompose(props))
-        .defaultValueFn(props -> new NetworkTypeMatcher<String>(props).unitTest(() -> "localhost").orElseThrow())
+        .requiredIf(props -> !CeEnvironment.isUnitTest(props))
+        // Only in network type "unit test" will the default be applied
+        .defaultValue("localhost")
     );
 
     public static final ConfigProp MY_EDC_JDBC_URL = addCeProp(builder -> builder
@@ -141,8 +138,6 @@ public class ConfigProps {
     );
 
     /* Auth */
-
-    // EDC_API_AUTH_KEY: ApiKeyDefaultValue
     public static final ConfigProp EDC_API_AUTH_KEY = addCeProp(builder -> builder
         .category(Category.BASIC)
         .property("edc.api.auth.key")
@@ -165,7 +160,7 @@ public class ConfigProps {
         .category(Category.C2C_IAM)
         .property("edc.oauth.token.url")
         .description("OAuth2 / DAPS: Token URL")
-        .relevantIf(C2cIamType::isDaps)
+        .onlyValidateAndDefaultIf(CeC2cIamType::isDaps)
         .required(true)
     );
 
@@ -173,7 +168,7 @@ public class ConfigProps {
         .category(Category.C2C_IAM)
         .property("edc.oauth.provider.jwks.url")
         .description("OAuth2 / DAPS: JWKS URL")
-        .relevantIf(C2cIamType::isDaps)
+        .onlyValidateAndDefaultIf(CeC2cIamType::isDaps)
         .required(true)
     );
 
@@ -181,7 +176,7 @@ public class ConfigProps {
         .category(Category.C2C_IAM)
         .property("edc.oauth.client.id")
         .description("OAuth2 / DAPS: Client ID. Defaults to Participant ID")
-        .relevantIf(C2cIamType::isDaps)
+        .onlyValidateAndDefaultIf(CeC2cIamType::isDaps)
         .defaultValueFn(MY_EDC_PARTICIPANT_ID::getRaw)
     );
 
@@ -189,7 +184,7 @@ public class ConfigProps {
         .category(Category.C2C_IAM)
         .property("edc.keystore")
         .description("File-Based Vault: Keystore file (.jks)")
-        .relevantIf(C2cIamType::isDaps)
+        .onlyValidateAndDefaultIf(CeC2cIamType::isDaps)
         .required(true)
     );
 
@@ -197,7 +192,7 @@ public class ConfigProps {
         .category(Category.C2C_IAM)
         .property("edc.keystore.password")
         .description("File-Based Vault: Keystore password")
-        .relevantIf(C2cIamType::isDaps)
+        .onlyValidateAndDefaultIf(CeC2cIamType::isDaps)
         .required(true)
     );
 
@@ -205,7 +200,7 @@ public class ConfigProps {
         .category(Category.C2C_IAM)
         .property("edc.oauth.certificate.alias")
         .description("OAuth2 / DAPS: Certificate Vault Entry for the Public Key. Default: '1'")
-        .relevantIf(C2cIamType::isDaps)
+        .onlyValidateAndDefaultIf(CeC2cIamType::isDaps)
         .defaultValue("1")
     );
 
@@ -213,7 +208,7 @@ public class ConfigProps {
         .category(Category.C2C_IAM)
         .property("edc.oauth.private.key.alias")
         .description("OAuth2 / DAPS: Certificate Vault Entry for the Private Key. Default: '1'")
-        .relevantIf(C2cIamType::isDaps)
+        .onlyValidateAndDefaultIf(CeC2cIamType::isDaps)
         .defaultValue("1")
     );
 
@@ -221,10 +216,10 @@ public class ConfigProps {
         .category(Category.C2C_IAM)
         .property("edc.oauth.provider.audience")
         .description("OAuth2 / DAPS: Provider Audience")
-        .relevantIf(C2cIamType::isDaps)
+        .onlyValidateAndDefaultIf(CeC2cIamType::isDaps)
         .warnIfOverridden(true)
         .defaultValueFn(props -> {
-            if (C2cIamType.isDapsOmejdn(props)) {
+            if (CeC2cIamType.isDapsOmejdn(props)) {
                 return "idsc:IDS_CONNECTORS_ALL";
             }
 
@@ -237,7 +232,7 @@ public class ConfigProps {
         .category(Category.C2C_IAM)
         .property("edc.oauth.endpoint.audience")
         .description("OAuth2 / DAPS: Endpoint Audience")
-        .relevantIf(C2cIamType::isDaps)
+        .onlyValidateAndDefaultIf(CeC2cIamType::isDaps)
         .warnIfOverridden(true)
         .defaultValue("idsc:IDS_CONNECTORS_ALL")
     );
@@ -246,10 +241,10 @@ public class ConfigProps {
         .category(Category.C2C_IAM)
         .property("edc.agent.identity.key")
         .description("OAuth2 / DAPS: Agent Identity Key")
-        .relevantIf(C2cIamType::isDaps)
+        .onlyValidateAndDefaultIf(CeC2cIamType::isDaps)
         .warnIfOverridden(true)
         .defaultValueFn(props -> {
-            if (C2cIamType.isDapsOmejdn(props)) {
+            if (CeC2cIamType.isDapsOmejdn(props)) {
                 return "client_id";
             }
 
@@ -322,7 +317,7 @@ public class ConfigProps {
         .property("edc.web.rest.cors.enabled")
         .description("Enable CORS")
         .warnIfOverridden(true)
-        .relevantIf(props -> !NetworkType.isProduction(props))
+        .onlyValidateAndDefaultIf(props -> !CeEnvironment.isProduction(props))
         .defaultValue("true")
     );
 
@@ -331,7 +326,7 @@ public class ConfigProps {
         .property("edc.web.rest.cors.headers")
         .description("CORS: Allowed Headers")
         .warnIfOverridden(true)
-        .relevantIf(props -> !NetworkType.isProduction(props))
+        .onlyValidateAndDefaultIf(props -> !CeEnvironment.isProduction(props))
         .defaultValue("origin,content-type,accept,authorization,X-Api-Key")
     );
 
@@ -340,7 +335,7 @@ public class ConfigProps {
         .property("edc.web.rest.cors.origins")
         .description("CORS: Allowed Origins")
         .warnIfOverridden(true)
-        .relevantIf(props -> !NetworkType.isProduction(props))
+        .onlyValidateAndDefaultIf(props -> !CeEnvironment.isProduction(props))
         .defaultValue("*")
     );
 
@@ -440,7 +435,7 @@ public class ConfigProps {
         .property("my.edc.protocol")
         .description("HTTP Protocol for when the EDC exposes its own URL for callbacks")
         .warnIfOverridden(true)
-        .defaultValueFn(props -> NetworkType.isProduction(props) ? "https://" : "http://")
+        .defaultValueFn(props -> CeEnvironment.isProduction(props) ? "https://" : "http://")
     );
 
     public static final ConfigProp MY_EDC_BASE_PATH = addCeProp(builder -> builder
@@ -614,7 +609,7 @@ public class ConfigProps {
     public static final ConfigProp EDC_DATASOURCE_LOGGINGHOUSE_URL = addCeProp(builder -> builder
         .category(Category.RAW_EDC_CONFIG_DEFAULTS)
         .property("edc.datasource.logginghouse.url")
-        .relevantIf(NetworkType::isProduction)
+        .onlyValidateAndDefaultIf(CeEnvironment::isProduction)
         .description("MDS Prod Variants Only: Logging House URL")
         .defaultValueFn(MY_EDC_JDBC_URL::getRaw)
     );
@@ -622,7 +617,7 @@ public class ConfigProps {
     public static final ConfigProp EDC_DATASOURCE_LOGGINGHOUSE_USER = addCeProp(builder -> builder
         .category(Category.RAW_EDC_CONFIG_DEFAULTS)
         .property("edc.datasource.logginghouse.user")
-        .relevantIf(NetworkType::isProduction)
+        .onlyValidateAndDefaultIf(CeEnvironment::isProduction)
         .description("MDS Prod Variants Only: Logging House User")
         .defaultValueFn(MY_EDC_JDBC_USER::getRaw)
     );
@@ -630,7 +625,7 @@ public class ConfigProps {
     public static final ConfigProp EDC_DATASOURCE_LOGGINGHOUSE_PASSWORD = addCeProp(builder -> builder
         .category(Category.RAW_EDC_CONFIG_DEFAULTS)
         .property("edc.datasource.logginghouse.password")
-        .relevantIf(NetworkType::isProduction)
+        .onlyValidateAndDefaultIf(CeEnvironment::isProduction)
         .description("MDS Prod Variants Only: Logging House Password")
         .defaultValueFn(MY_EDC_JDBC_PASSWORD::getRaw)
     );
@@ -641,7 +636,7 @@ public class ConfigProps {
         .description("This file could contain an entry replacing the EDC_KEYSTORE ENV var, " +
             "but for some reason it is required, and EDC won't start up if it isn't configured." +
             "It is created in the Dockerfile")
-        .relevantIf(NetworkType::isProduction)
+        .onlyValidateAndDefaultIf(CeEnvironment::isProduction)
     );
 
     public static final ConfigProp EDC_DATAPLANE_TRANSFERTYPES = addCeProp(builder -> builder
@@ -704,27 +699,27 @@ public class ConfigProps {
     }
 
     @UtilityClass
-    public static class NetworkType {
+    public static class CeEnvironment {
         public static final String PRODUCTION = "production";
         public static final String LOCAL_DEMO_DOCKER_COMPOSE = "local-demo-docker-compose";
         public static final String UNIT_TEST = "unit-test";
-        public static final List<String> ALL_NETWORK_TYPES = List.of(PRODUCTION, LOCAL_DEMO_DOCKER_COMPOSE, UNIT_TEST);
+        public static final List<String> ALL_CE_ENVIRONMENTS = List.of(PRODUCTION, LOCAL_DEMO_DOCKER_COMPOSE, UNIT_TEST);
 
         public static boolean isProduction(Map<String, String> props) {
-            return NetworkType.PRODUCTION.equals(MY_EDC_NETWORK_TYPE.getRaw(props));
+            return CeEnvironment.PRODUCTION.equals(MY_EDC_NETWORK_TYPE.getRaw(props));
         }
 
         public static boolean isLocalDemoDockerCompose(Map<String, String> props) {
-            return NetworkType.LOCAL_DEMO_DOCKER_COMPOSE.equals(MY_EDC_NETWORK_TYPE.getRaw(props));
+            return CeEnvironment.LOCAL_DEMO_DOCKER_COMPOSE.equals(MY_EDC_NETWORK_TYPE.getRaw(props));
         }
 
         public static boolean isUnitTest(Map<String, String> props) {
-            return NetworkType.UNIT_TEST.equals(MY_EDC_NETWORK_TYPE.getRaw(props));
+            return CeEnvironment.UNIT_TEST.equals(MY_EDC_NETWORK_TYPE.getRaw(props));
         }
     }
 
     @UtilityClass
-    public static class C2cIamType {
+    public static class CeC2cIamType {
         public static final String DAPS_SOVITY = "daps-sovity";
         public static final String DAPS_OMEJDN = "daps-omejdn";
         public static final String MOCK_IAM = "mock-iam";
@@ -744,42 +739,6 @@ public class ConfigProps {
 
         public static boolean isMockIam(Map<String, String> props) {
             return MOCK_IAM.equals(MY_EDC_C2C_IAM_TYPE.getRaw(props));
-        }
-    }
-
-    @Setter
-    @Accessors(fluent = true, chain = true)
-    @RequiredArgsConstructor
-    public static class NetworkTypeMatcher<T> {
-        private final Map<String, String> props;
-        private Supplier<T> production;
-        private Supplier<T> localDemoDockerCompose;
-        private Supplier<T> unitTest;
-
-        public T orElse(Supplier<T> elseFn) {
-            if (production != null && NetworkType.isProduction(props)) {
-                return production.get();
-            }
-
-            if (localDemoDockerCompose != null && NetworkType.isLocalDemoDockerCompose(props)) {
-                return localDemoDockerCompose.get();
-            }
-
-            if (unitTest != null && NetworkType.isUnitTest(props)) {
-                return unitTest.get();
-            }
-
-            return elseFn.get();
-        }
-
-        public T orElseThrow() {
-            return orElse(() -> {
-                var msg = "Unhandled %s: %s".formatted(
-                    MY_EDC_NETWORK_TYPE.getProperty(),
-                    MY_EDC_NETWORK_TYPE.getRaw(props)
-                );
-                throw new IllegalArgumentException(msg);
-            });
         }
     }
 

@@ -16,7 +16,7 @@ package de.sovity.edc.extension.db.directaccess;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import de.sovity.edc.utils.config.ConfigProps;
+import de.sovity.edc.utils.config.CeConfigProps;
 import lombok.val;
 import org.eclipse.edc.runtime.metamodel.annotation.Provides;
 import org.eclipse.edc.spi.system.ServiceExtension;
@@ -40,15 +40,15 @@ public class DatabaseDirectAccessExtension implements ServiceExtension {
 
         val hikariConfig = new HikariConfig();
         val config = context.getConfig();
-        hikariConfig.setJdbcUrl(ConfigProps.MY_EDC_JDBC_URL.getStringOrThrow(config));
-        hikariConfig.setUsername(ConfigProps.MY_EDC_JDBC_USER.getStringOrThrow(config));
-        hikariConfig.setPassword(ConfigProps.MY_EDC_JDBC_PASSWORD.getStringOrThrow(config));
+        hikariConfig.setJdbcUrl(CeConfigProps.MY_EDC_JDBC_URL.getStringOrThrow(config));
+        hikariConfig.setUsername(CeConfigProps.MY_EDC_JDBC_USER.getStringOrThrow(config));
+        hikariConfig.setPassword(CeConfigProps.MY_EDC_JDBC_PASSWORD.getStringOrThrow(config));
         hikariConfig.setMinimumIdle(1);
-        hikariConfig.setMaximumPoolSize(ConfigProps.EDC_SERVER_DB_CONNECTION_POOL_SIZE.getInt(config));
+        hikariConfig.setMaximumPoolSize(CeConfigProps.EDC_SERVER_DB_CONNECTION_POOL_SIZE.getInt(config));
         hikariConfig.setIdleTimeout(30000);
         hikariConfig.setPoolName("direct-database-access");
         hikariConfig.setMaxLifetime(50000);
-        hikariConfig.setConnectionTimeout(ConfigProps.EDC_SERVER_DB_CONNECTION_TIMEOUT_IN_MS.getInt(config));
+        hikariConfig.setConnectionTimeout(CeConfigProps.EDC_SERVER_DB_CONNECTION_TIMEOUT_IN_MS.getInt(config));
 
         val dslContextFactory = new DslContextFactory(new HikariDataSource(hikariConfig));
         context.registerService(DslContextFactory.class, dslContextFactory);

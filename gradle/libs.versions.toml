@@ -2,7 +2,7 @@
 # Publishing
 sovityEdcExtensionGroup = "de.sovity.edc.ext"
 sovityEdcGroup = "de.sovity.edc"
-sovityCeVersion = "0.0.1-SNAPSHOT"
+sovityCeVersion = "0.0.2-SNAPSHOT"
 
 # Eclipse EDC Version
 edc = "0.7.2"

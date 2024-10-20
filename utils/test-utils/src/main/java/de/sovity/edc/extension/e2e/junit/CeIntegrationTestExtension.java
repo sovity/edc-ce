@@ -23,7 +23,7 @@ import de.sovity.edc.extension.e2e.junit.edc.EmbeddedRuntimeFixed;
 import de.sovity.edc.extension.e2e.junit.edc.RuntimeExtensionFixed;
 import de.sovity.edc.extension.e2e.junit.edc.RuntimePerClassExtensionFixed;
 import de.sovity.edc.extension.e2e.junit.utils.InstancesForJunitTest;
-import de.sovity.edc.utils.config.ConfigProps;
+import de.sovity.edc.utils.config.CeConfigProps;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -86,7 +86,7 @@ public class CeIntegrationTestExtension
         var runtime = new EmbeddedRuntimeFixed(
             participantId,
             bootConfig,
-            ConfigProps.ALL_CE_PROPS,
+            CeConfigProps.ALL_CE_PROPS,
             additionalModules.toArray(String[]::new)
         );
         instances.put(runtime);

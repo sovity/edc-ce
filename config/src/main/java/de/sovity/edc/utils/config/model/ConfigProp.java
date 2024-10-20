@@ -45,7 +45,7 @@ public class ConfigProp {
     /**
      * Turns off all required / defaulting logic, if false
      */
-    private ConfigPropRequiredIfFn relevantIf;
+    private ConfigPropRequiredIfFn onlyValidateAndDefaultIf;
 
     private boolean required;
     private ConfigPropRequiredIfFn requiredIf;

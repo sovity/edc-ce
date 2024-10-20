@@ -15,7 +15,7 @@
 package de.sovity.edc.extension.postgresql;
 
 import de.sovity.edc.extension.postgresql.utils.JdbcCredentials;
-import de.sovity.edc.utils.config.ConfigProps;
+import de.sovity.edc.utils.config.CeConfigProps;
 import org.eclipse.edc.spi.system.configuration.Config;
 
 public record PostgresFlywayConfig(
@@ -32,16 +32,16 @@ public record PostgresFlywayConfig(
         return new PostgresFlywayConfig(
             new JdbcCredentials(
 				// TODO: Switch to Vault for EE
-                ConfigProps.MY_EDC_JDBC_URL.getStringOrThrow(config),
-                ConfigProps.MY_EDC_JDBC_USER.getStringOrThrow(config),
-                ConfigProps.MY_EDC_JDBC_PASSWORD.getStringOrThrow(config)
+                CeConfigProps.MY_EDC_JDBC_URL.getStringOrThrow(config),
+                CeConfigProps.MY_EDC_JDBC_USER.getStringOrThrow(config),
+                CeConfigProps.MY_EDC_JDBC_PASSWORD.getStringOrThrow(config)
             ),
-            ConfigProps.EDC_FLYWAY_REPAIR.getBoolean(config),
-            ConfigProps.EDC_FLYWAY_CLEAN_ENABLE.getBoolean(config),
-            ConfigProps.EDC_FLYWAY_CLEAN.getBoolean(config),
-            ConfigProps.EDC_FLYWAY_ADDITIONAL_MIGRATION_LOCATIONS.getStringOrEmpty(config),
-            ConfigProps.EDC_SERVER_DB_CONNECTION_POOL_SIZE.getInt(config),
-            ConfigProps.EDC_SERVER_DB_CONNECTION_TIMEOUT_IN_MS.getInt(config)
+            CeConfigProps.EDC_FLYWAY_REPAIR.getBoolean(config),
+            CeConfigProps.EDC_FLYWAY_CLEAN_ENABLE.getBoolean(config),
+            CeConfigProps.EDC_FLYWAY_CLEAN.getBoolean(config),
+            CeConfigProps.EDC_FLYWAY_ADDITIONAL_MIGRATION_LOCATIONS.getStringOrEmpty(config),
+            CeConfigProps.EDC_SERVER_DB_CONNECTION_POOL_SIZE.getInt(config),
+            CeConfigProps.EDC_SERVER_DB_CONNECTION_TIMEOUT_IN_MS.getInt(config)
         );
     }
 }

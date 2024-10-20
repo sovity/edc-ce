@@ -82,7 +82,7 @@ import de.sovity.edc.extension.db.directaccess.DslContextFactory;
 import de.sovity.edc.extension.policy.services.AlwaysTruePolicyDefinitionService;
 import de.sovity.edc.utils.catalog.DspCatalogService;
 import de.sovity.edc.utils.catalog.mapper.DspDataOfferBuilder;
-import de.sovity.edc.utils.config.ConfigProps;
+import de.sovity.edc.utils.config.CeConfigProps;
 import lombok.NoArgsConstructor;
 import lombok.val;
 import org.eclipse.edc.connector.controlplane.asset.spi.index.AssetIndex;
@@ -152,7 +152,7 @@ public class WrapperExtensionContextBuilder {
         var selfDescriptionService = new SelfDescriptionService(config);
         var ownConnectorEndpointService = new OwnConnectorEndpointServiceImpl(selfDescriptionService);
         var placeholderEndpointService = new PlaceholderEndpointService(
-            ConfigProps.MY_EDC_DATASOURCE_PLACEHOLDER_BASEURL.getStringOrThrow(config)
+            CeConfigProps.MY_EDC_DATASOURCE_PLACEHOLDER_BASEURL.getStringOrThrow(config)
         );
         var managementApiTypeTransformerRegistry = rootTypeTransformerRegistry.forContext("management-api");
         var assetMapper = newAssetMapper(
