@@ -24,6 +24,23 @@ the detailed section referring to by linking pull requests or issues.
 
 _No special deployment migration steps required_
 
+## [v4.1.7] - 2024-10-21
+
+### Overview
+
+Fixing a label in the asset creation dialog.
+
+### Detailed Changes
+
+#### Patch
+
+- Fix wrong label for description field on asset creation dialog
+  ([#870](https://github.com/sovity/edc-ui/issues/870))
+
+### Deployment Migration Notes
+
+_No special deployment migration steps required_
+
 ## [v4.1.6] - 2024-10-07
 
 ### Overview
