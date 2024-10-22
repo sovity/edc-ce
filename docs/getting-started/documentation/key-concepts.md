@@ -13,6 +13,8 @@ An **Asset** represents any data or resource that can be shared, consumed, or tr
 **Cardinality**:
 - An asset can be associated with multiple policies and contract definitions / data offers.
 
+[Frontend: Create Asset](/frontend/providing/create-asset)
+
 ### 2. Policy
 
 A **Policy** governs the usage of an asset by defining the conditions or restrictions. Policies ensure that access control rules, privacy considerations, and compliance requirements are respected during catalog crawling and data exchange.
