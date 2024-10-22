@@ -1,6 +1,7 @@
 # Table of contents
 
 * [Welcome](welcome.md)
+* [Key Concepts](getting-started/documentation/key-concepts.md)
 * [FAQ](getting-started/documentation/faq.md)
 
 ## Frontend
