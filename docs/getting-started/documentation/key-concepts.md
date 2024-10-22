@@ -11,7 +11,7 @@ This section defines important terms in the context of the EDC and explains thei
 An **Asset** represents any data or resource that can be shared, consumed, or transferred between parties. Assets are at the core of data exchanges within the EDC. They could represent APIs or other different data sources and include the metadata that describes the resource.
 
 **Cardinality**:
-- An asset can be associated with multiple policies and contract definitions/data offers.
+- An asset can be associated with multiple policies and contract definitions / data offers.
 
 ### 2. Policy
 
@@ -42,7 +42,7 @@ The **Catalog** is a collection of assets that a provider offers for sharing to 
 - **Asset**: The catalog lists assets that are part of the data offer.
 
 **Cardinality**:
-- A catalog can contain many contract definitions/data offers.
+- A catalog can contain many contract definitions / data offers.
 
 ### 5. Contract Negotiation
 
