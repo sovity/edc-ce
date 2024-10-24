@@ -35,7 +35,7 @@ public class PostgresFlywayExtension implements ServiceExtension {
         val dataSourceFactory = new DataSourceFactory(extensionConfig);
         dataSource = dataSourceFactory.newDataSource();
 
-        val migrator = new FlywayMigrator(extensionConfig, legacyConfig, dataSource, context.getMonitor());
+        val migrator = new FlywayMigrator(extensionConfig, dataSource, context.getMonitor());
         migrator.updateDatabaseWithLegacyHandling();
     }
 

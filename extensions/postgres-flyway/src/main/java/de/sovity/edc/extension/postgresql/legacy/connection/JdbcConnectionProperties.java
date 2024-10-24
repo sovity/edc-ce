@@ -35,16 +35,4 @@ public class JdbcConnectionProperties {
         user = config.getString(String.format(DATASOURCE_SETTING_USER, entityName));
         password = config.getString(String.format(DATASOURCE_SETTING_PASSWORD, entityName));
     }
-
-    public String getJdbcUrl() {
-        return jdbcUrl;
-    }
-
-    public String getUser() {
-        return user;
-    }
-
-    public String getPassword() {
-        return password;
-    }
 }
