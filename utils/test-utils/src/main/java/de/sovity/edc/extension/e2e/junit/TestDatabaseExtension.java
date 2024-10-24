@@ -29,6 +29,10 @@ import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
 /**
  * Starts one DB and one EDC
  */
@@ -52,6 +56,14 @@ public final class TestDatabaseExtension
         instances.putLazy(DSLContext.class, () -> {
             val credentials = testDatabase.getJdbcCredentials();
             return DSL.using(credentials.jdbcUrl(), credentials.jdbcUser(), credentials.jdbcPassword());
+        });
+        instances.putLazy(Connection.class, () -> {
+            val credentials = testDatabase.getJdbcCredentials();
+            try {
+                return DriverManager.getConnection(credentials.jdbcUrl(), credentials.jdbcUser(), credentials.jdbcPassword());
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         });
     }
 
