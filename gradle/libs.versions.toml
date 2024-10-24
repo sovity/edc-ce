@@ -97,7 +97,6 @@ edc-controlPlaneContract = { module = "org.eclipse.edc:control-plane-contract", 
 edc-controlPlaneSpi = { module = "org.eclipse.edc:control-plane-spi", version.ref = "edc" }
 edc-controlPlaneSql = { module = "org.eclipse.edc:control-plane-sql", version.ref = "edc" }
 edc-coreSpi = { module = "org.eclipse.edc:core-spi", version.ref = "edc" }
-edc-dataPlaneClient = { module = "org.eclipse.edc:data-plane-client", version.ref = "edc" }
 edc-dataPlaneControlApi = { module = "org.eclipse.edc:data-plane-control-api", version.ref = "edc" }
 edc-dataPlaneCore = { module = "org.eclipse.edc:data-plane-core", version.ref = "edc" }
 edc-dataPlaneHttp = { module = "org.eclipse.edc:data-plane-http", version.ref = "edc" }
