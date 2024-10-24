@@ -12,7 +12,7 @@ gradle \
     --tests 'de.sovity.edc.e2e.ManagementApiTransferTest' \
     --tests 'de.sovity.edc.e2e.PlaceholderDataSourceExtensionTest' \
     --tests 'de.sovity.edc.e2e.PolicyDefinitionApiServiceTest' \
-    --tests 'de.sovity.edc.e2e.UiApiWrapperTest.retrieveSingleContractAgreement' \
+    --tests 'de.sovity.edc.e2e.UiApiWrapperTest' \
     --tests 'de.sovity.edc.e2e.UseCaseApiWrapperTest' \
     --tests 'de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreement.ContractAgreementPageTest' \
     --tests 'de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreement.ContractAgreementTransferApiServiceTest' \
