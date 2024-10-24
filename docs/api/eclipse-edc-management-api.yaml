@@ -1,162 +1,107 @@
 openapi: 3.0.1
 info:
   title: management-api
-  description: REST API documentation for the Eclipse EDC management-api. This does not include endpoints of the sovity EDC API Wrapper.
-  version: 0.2.1
+  description: REST API documentation for the management-api
+  version: 0.7.0
 servers:
-  - url: https://[MY_EDC_FQDN]/api/management
+- url: /
 paths:
   /callback/{processId}/deprovision:
     post:
       tags:
-        - HTTP Provisioner Webhook
+      - HTTP Provisioner Webhook
       operationId: callDeprovisionWebhook
       parameters:
-        - name: processId
-          in: path
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: null
+      - name: processId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: null
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DeprovisionedResource'
+              $ref: "#/components/schemas/DeprovisionedResource"
       responses:
         default:
           description: default response
           content:
-            application/json: { }
+            application/json: {}
   /callback/{processId}/provision:
     post:
       tags:
-        - HTTP Provisioner Webhook
+      - HTTP Provisioner Webhook
       operationId: callProvisionWebhook
       parameters:
-        - name: processId
-          in: path
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: null
+      - name: processId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: null
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ProvisionerWebhookRequest'
+              $ref: "#/components/schemas/ProvisionerWebhookRequest"
       responses:
         default:
           description: default response
           content:
-            application/json: { }
-  /check/health:
-    get:
-      tags:
-        - Application Observability
-      description: Performs a liveness probe to determine whether the runtime is working
-        properly.
-      operationId: checkHealth
-      responses:
-        "200":
-          description: The runtime is working properly.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HealthStatus'
-  /check/liveness:
-    get:
-      tags:
-        - Application Observability
-      description: Performs a liveness probe to determine whether the runtime is working
-        properly.
-      operationId: getLiveness
-      responses:
-        "200":
-          description: The runtime is working properly.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HealthStatus'
-  /check/readiness:
-    get:
-      tags:
-        - Application Observability
-      description: Performs a readiness probe to determine whether the runtime is
-        able to accept requests.
-      operationId: getReadiness
-      responses:
-        "200":
-          description: The runtime is able to accept requests.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HealthStatus'
-  /check/startup:
-    get:
-      tags:
-        - Application Observability
-      description: Performs a startup probe to determine whether the runtime has completed
-        startup.
-      operationId: getStartup
-      responses:
-        "200":
-          description: The runtime has completed startup.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HealthStatus'
-  /select:
+            application/json: {}
+  /v1/edrs/request:
     post:
       tags:
-        - Dataplane Selector
-      description: Finds the best fitting data plane instance for a particular query
-      operationId: find
+      - EDR Cache
+      description: Request all Edr entries according to a particular query
+      operationId: requestEdrEntries
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
-              $ref: '#/components/schemas/SelectionRequestSchema'
+              $ref: "#/components/schemas/QuerySpec"
       responses:
         "200":
-          description: The DataPlane instance that fits best for the given selection
-            request
+          description: The edr entries matching the query
           content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/DataPlaneInstanceSchema'
-        "204":
-          description: No suitable DataPlane instance was found
-        "400":
-          description: Request body was malformed
-          content:
-            '*/*':
+            application/json:
               schema:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
-  /v2/assets:
-    put:
+                  $ref: "#/components/schemas/EndpointDataReferenceEntry"
+        "400":
+          description: Request body was malformed
+          content:
+            application/json:
+              schema:
+                type: array
+                example: null
+                items:
+                  $ref: "#/components/schemas/ApiErrorDetail"
+  /v1/edrs/{transferProcessId}:
+    delete:
       tags:
-        - Asset
-      description: "Updates an asset with the given ID if it exists. If the asset\
-        \ is not found, no further action is taken. DANGER ZONE: Note that updating\
-        \ assets can have unexpected results, especially for contract offers that\
-        \ have been sent out or are ongoing in contract negotiations."
-      operationId: updateAsset
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Asset'
+      - EDR Cache
+      description: Removes an EDR entry given the transfer process ID
+      operationId: removeEdrEntry
+      parameters:
+      - name: transferProcessId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: null
       responses:
-        "200":
-          description: Asset was updated successfully
+        "204":
+          description: EDR entry was deleted successfully
         "400":
           description: "Request was malformed, e.g. id was null"
           content:
@@ -165,28 +110,101 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
         "404":
-          description: "Asset could not be updated, because it does not exist."
-      deprecated: true
-    post:
+          description: An EDR entry with the given ID does not exist
+          content:
+            application/json:
+              schema:
+                type: array
+                example: null
+                items:
+                  $ref: "#/components/schemas/ApiErrorDetail"
+  /v1/edrs/{transferProcessId}/dataaddress:
+    get:
       tags:
-        - Asset
-      description: Creates a new asset together with a data address
-      operationId: createAsset
+      - EDR Cache
+      description: Gets the EDR data address with the given transfer process ID
+      operationId: getEdrEntryDataAddress
+      parameters:
+      - name: transferProcessId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: null
+      responses:
+        "200":
+          description: The data address
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DataAddress"
+        "400":
+          description: "Request was malformed, e.g. id was null"
+          content:
+            application/json:
+              schema:
+                type: array
+                example: null
+                items:
+                  $ref: "#/components/schemas/ApiErrorDetail"
+        "404":
+          description: An EDR data address with the given transfer process ID does
+            not exist
+          content:
+            application/json:
+              schema:
+                type: array
+                example: null
+                items:
+                  $ref: "#/components/schemas/ApiErrorDetail"
+  /v1/secrets:
+    put:
+      tags:
+      - Secret
+      description: "Updates a secret with the given ID if it exists. If the secret\
+        \ is not found, no further action is taken. "
+      operationId: updateSecret
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AssetEntryNewDto'
+              $ref: "#/components/schemas/SecretInput"
       responses:
-        "200":
-          description: Asset was created successfully. Returns the asset Id and created
-            timestamp
+        "204":
+          description: Secret was updated successfully
+        "400":
+          description: "Request was malformed, e.g. id was null"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdResponse'
+                type: array
+                example: null
+                items:
+                  $ref: "#/components/schemas/ApiErrorDetail"
+        "404":
+          description: "Secret could not be updated, because it does not exist."
+    post:
+      tags:
+      - Secret
+      description: Creates a new secret.
+      operationId: createSecret
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SecretInput"
+      responses:
+        "200":
+          description: Secret was created successfully. Returns the secret Id and
+            created timestamp
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IdResponse"
         "400":
           description: Request body was malformed
           content:
@@ -195,9 +213,9 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
         "409":
-          description: "Could not create asset, because an asset with that ID already\
+          description: "Could not create secret, because a secret with that ID already\
             \ exists"
           content:
             application/json:
@@ -205,103 +223,29 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
-      deprecated: true
-  /v2/assets/request:
-    post:
-      tags:
-        - Asset
-      description: ' all assets according to a particular query'
-      operationId: requestAssets
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/QuerySpec'
-      responses:
-        "200":
-          description: The assets matching the query
-          content:
-            application/json:
-              schema:
-                type: array
-                example: null
-                items:
-                  $ref: '#/components/schemas/Asset'
-        "400":
-          description: Request body was malformed
-          content:
-            application/json:
-              schema:
-                type: array
-                example: null
-                items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
-      deprecated: true
-  /v2/assets/{assetId}/dataaddress:
-    put:
-      tags:
-        - Asset
-      description: Updates a DataAddress for an asset with the given ID.
-      operationId: updateDataAddress
-      parameters:
-        - name: assetId
-          in: path
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: null
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Asset'
-      responses:
-        "200":
-          description: Asset was updated successfully
-        "400":
-          description: "Request was malformed, e.g. id was null"
-          content:
-            application/json:
-              schema:
-                type: array
-                example: null
-                items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
-        "404":
-          description: An asset with the given ID does not exist
-          content:
-            application/json:
-              schema:
-                type: array
-                example: null
-                items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
-      deprecated: true
-  /v2/assets/{id}:
+                  $ref: "#/components/schemas/ApiErrorDetail"
+  /v1/secrets/{id}:
     get:
       tags:
-        - Asset
-      description: Gets an asset with the given ID
-      operationId: getAsset
+      - Secret
+      description: Gets a secret with the given ID
+      operationId: getSecret
       parameters:
-        - name: id
-          in: path
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: null
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: null
       responses:
         "200":
-          description: The asset
+          description: The secret
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Asset'
+                $ref: "#/components/schemas/SecretOutput"
         "400":
           description: "Request was malformed, e.g. id was null"
           content:
@@ -310,38 +254,33 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
         "404":
-          description: An asset with the given ID does not exist
+          description: A secret with the given ID does not exist
           content:
             application/json:
               schema:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
-      deprecated: true
+                  $ref: "#/components/schemas/ApiErrorDetail"
     delete:
       tags:
-        - Asset
-      description: "Removes an asset with the given ID if possible. Deleting an asset\
-        \ is only possible if that asset is not yet referenced by a contract agreement,\
-        \ in which case an error is returned. DANGER ZONE: Note that deleting assets\
-        \ can have unexpected results, especially for contract offers that have been\
-        \ sent out or ongoing or contract negotiations."
-      operationId: removeAsset
+      - Secret
+      description: Removes a secret with the given ID if possible.
+      operationId: removeSecret
       parameters:
-        - name: id
-          in: path
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: null
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: null
       responses:
-        "200":
-          description: Asset was deleted successfully
+        "204":
+          description: Secret was deleted successfully
         "400":
           description: "Request was malformed, e.g. id was null"
           content:
@@ -350,113 +289,61 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
         "404":
-          description: An asset with the given ID does not exist
+          description: A secret with the given ID does not exist
           content:
             application/json:
               schema:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
-        "409":
-          description: "The asset cannot be deleted, because it is referenced by a\
-            \ contract agreement"
-          content:
-            application/json:
-              schema:
-                type: array
-                example: null
-                items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
-      deprecated: true
-  /v2/assets/{id}/dataaddress:
-    get:
-      tags:
-        - Asset
-      description: Gets a data address of an asset with the given ID
-      operationId: getAssetDataAddress
-      parameters:
-        - name: id
-          in: path
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: null
-      responses:
-        "200":
-          description: The data address
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DataAddress'
-        "400":
-          description: "Request was malformed, e.g. id was null"
-          content:
-            application/json:
-              schema:
-                type: array
-                example: null
-                items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
-        "404":
-          description: An asset with the given ID does not exist
-          content:
-            application/json:
-              schema:
-                type: array
-                example: null
-                items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
-      deprecated: true
+                  $ref: "#/components/schemas/ApiErrorDetail"
   /v2/catalog/dataset/request:
     post:
       tags:
-        - Catalog
+      - Catalog
       operationId: getDataset
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DatasetRequest'
+              $ref: "#/components/schemas/DatasetRequest"
       responses:
         default:
           description: Gets single dataset from a connector
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Dataset'
+                $ref: "#/components/schemas/Dataset"
   /v2/catalog/request:
     post:
       tags:
-        - Catalog
+      - Catalog
       operationId: requestCatalog
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CatalogRequest'
+              $ref: "#/components/schemas/CatalogRequest"
       responses:
         default:
           description: Gets contract offers (=catalog) of a single connector
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Catalog'
+                $ref: "#/components/schemas/Catalog"
   /v2/contractagreements/request:
     post:
       tags:
-        - Contract Agreement
+      - Contract Agreement
       description: Gets all contract agreements according to a particular query
-      operationId: queryAllAgreements
+      operationId: queryAgreements
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
-              $ref: '#/components/schemas/QuerySpec'
+              $ref: "#/components/schemas/QuerySpec"
       responses:
         "200":
           description: The contract agreements matching the query
@@ -466,7 +353,7 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ContractAgreement'
+                  $ref: "#/components/schemas/ContractAgreement"
         "400":
           description: Request body was malformed
           content:
@@ -475,29 +362,29 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
   /v2/contractagreements/{id}:
     get:
       tags:
-        - Contract Agreement
+      - Contract Agreement
       description: Gets an contract agreement with the given ID
       operationId: getAgreementById
       parameters:
-        - name: id
-          in: path
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: null
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: null
       responses:
         "200":
           description: The contract agreement
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ContractAgreement'
+                $ref: "#/components/schemas/ContractAgreement"
         "400":
           description: "Request was malformed, e.g. id was null"
           content:
@@ -506,7 +393,7 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
         "404":
           description: An contract agreement with the given ID does not exist
           content:
@@ -515,29 +402,29 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
   /v2/contractagreements/{id}/negotiation:
     get:
       tags:
-        - Contract Agreement
+      - Contract Agreement
       description: Gets a contract negotiation with the given contract agreement ID
       operationId: getNegotiationByAgreementId
       parameters:
-        - name: id
-          in: path
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: null
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: null
       responses:
         "200":
           description: The contract negotiation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ContractNegotiation'
+                $ref: "#/components/schemas/ContractNegotiation"
         "400":
           description: "Request was malformed, e.g. id was null"
           content:
@@ -546,7 +433,7 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
         "404":
           description: An contract agreement with the given ID does not exist
           content:
@@ -555,19 +442,19 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
   /v2/contractdefinitions:
     put:
       tags:
-        - Contract Definition
+      - Contract Definition
       description: Updated a contract definition with the given ID. The supplied JSON
         structure must be a valid JSON-LD object
       operationId: updateContractDefinition
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
-              $ref: '#/components/schemas/ContractDefinitionInput'
+              $ref: "#/components/schemas/ContractDefinitionInput"
       responses:
         "204":
           description: Contract definition was updated successfully
@@ -579,7 +466,7 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
         "404":
           description: A contract definition with the given ID does not exist
           content:
@@ -588,17 +475,17 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
     post:
       tags:
-        - Contract Definition
+      - Contract Definition
       description: Creates a new contract definition
       operationId: createContractDefinition
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
-              $ref: '#/components/schemas/ContractDefinitionInput'
+              $ref: "#/components/schemas/ContractDefinitionInput"
       responses:
         "200":
           description: contract definition was created successfully. Returns the Contract
@@ -606,7 +493,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdResponse'
+                $ref: "#/components/schemas/IdResponse"
         "400":
           description: Request body was malformed
           content:
@@ -615,7 +502,7 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
         "409":
           description: "Could not create contract definition, because a contract definition\
             \ with that ID already exists"
@@ -625,18 +512,18 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
   /v2/contractdefinitions/request:
     post:
       tags:
-        - Contract Definition
+      - Contract Definition
       description: Returns all contract definitions according to a query
-      operationId: queryAllContractDefinitions
+      operationId: queryContractDefinitions
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
-              $ref: '#/components/schemas/QuerySpec'
+              $ref: "#/components/schemas/QuerySpec"
       responses:
         "200":
           description: The contract definitions matching the query
@@ -646,7 +533,7 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ContractDefinitionOutput'
+                  $ref: "#/components/schemas/ContractDefinitionOutput"
         "400":
           description: Request was malformed
           content:
@@ -655,29 +542,29 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
   /v2/contractdefinitions/{id}:
     get:
       tags:
-        - Contract Definition
+      - Contract Definition
       description: Gets an contract definition with the given ID
       operationId: getContractDefinition
       parameters:
-        - name: id
-          in: path
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: null
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: null
       responses:
         "200":
           description: The contract definition
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ContractDefinitionOutput'
+                $ref: "#/components/schemas/ContractDefinitionOutput"
         "400":
           description: "Request was malformed, e.g. id was null"
           content:
@@ -686,7 +573,7 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
         "404":
           description: An contract agreement with the given ID does not exist
           content:
@@ -695,26 +582,26 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
     delete:
       tags:
-        - Contract Definition
+      - Contract Definition
       description: "Removes a contract definition with the given ID if possible. DANGER\
         \ ZONE: Note that deleting contract definitions can have unexpected results,\
         \ especially for contract offers that have been sent out or ongoing or contract\
         \ negotiations."
       operationId: deleteContractDefinition
       parameters:
-        - name: id
-          in: path
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: null
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: null
       responses:
-        "200":
+        "204":
           description: Contract definition was deleted successfully
         "400":
           description: "Request was malformed, e.g. id was null"
@@ -724,7 +611,7 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
         "404":
           description: A contract definition with the given ID does not exist
           content:
@@ -733,11 +620,11 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
   /v2/contractnegotiations:
     post:
       tags:
-        - Contract Negotiation
+      - Contract Negotiation
       description: "Initiates a contract negotiation for a given offer and with the\
         \ given counter part. Please note that successfully invoking this endpoint\
         \ only means that the negotiation was initiated. Clients must poll the /{id}/state\
@@ -747,7 +634,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ContractRequest'
+              $ref: "#/components/schemas/ContractRequest"
       responses:
         "200":
           description: The negotiation was successfully initiated. Returns the contract
@@ -755,7 +642,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdResponse'
+                $ref: "#/components/schemas/IdResponse"
           links:
             poll-state:
               operationId: getNegotiationState
@@ -769,18 +656,18 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
   /v2/contractnegotiations/request:
     post:
       tags:
-        - Contract Negotiation
+      - Contract Negotiation
       description: Returns all contract negotiations according to a query
       operationId: queryNegotiations
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QuerySpec'
+              $ref: "#/components/schemas/QuerySpec"
       responses:
         "200":
           description: The contract negotiations that match the query
@@ -790,7 +677,7 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ContractNegotiation'
+                  $ref: "#/components/schemas/ContractNegotiation"
         "400":
           description: Request was malformed
           content:
@@ -799,29 +686,29 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
   /v2/contractnegotiations/{id}:
     get:
       tags:
-        - Contract Negotiation
+      - Contract Negotiation
       description: Gets a contract negotiation with the given ID
       operationId: getNegotiation
       parameters:
-        - name: id
-          in: path
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: null
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: null
       responses:
         "200":
           description: The contract negotiation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ContractNegotiation'
+                $ref: "#/components/schemas/ContractNegotiation"
         "400":
           description: "Request was malformed, e.g. id was null"
           content:
@@ -830,7 +717,7 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
         "404":
           description: An contract negotiation with the given ID does not exist
           content:
@@ -839,23 +726,23 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
   /v2/contractnegotiations/{id}/agreement:
     get:
       tags:
-        - Contract Negotiation
+      - Contract Negotiation
       description: Gets a contract agreement for a contract negotiation with the given
         ID
       operationId: getAgreementForNegotiation
       parameters:
-        - name: id
-          in: path
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: null
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: null
       responses:
         "200":
           description: "The contract agreement that is attached to the negotiation,\
@@ -863,7 +750,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ContractAgreement'
+                $ref: "#/components/schemas/ContractAgreement"
         "400":
           description: "Request was malformed, e.g. id was null"
           content:
@@ -872,7 +759,7 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
         "404":
           description: An contract negotiation with the given ID does not exist
           content:
@@ -881,117 +768,29 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
-  /v2/contractnegotiations/{id}/cancel:
-    post:
-      tags:
-        - Contract Negotiation
-      description: "Requests aborting the contract negotiation. Due to the asynchronous\
-        \ nature of contract negotiations, a successful response only indicates that\
-        \ the request was successfully received. Clients must poll the /{id}/state\
-        \ endpoint to track the state."
-      operationId: cancelNegotiation
-      parameters:
-        - name: id
-          in: path
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: null
-      responses:
-        "200":
-          description: Request to cancel the Contract negotiation was successfully
-            received
-          links:
-            poll-state:
-              operationId: getNegotiationState
-        "400":
-          description: "Request was malformed, e.g. id was null"
-          content:
-            application/json:
-              schema:
-                type: array
-                example: null
-                items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
-        "404":
-          description: A contract negotiation with the given ID does not exist
-          content:
-            application/json:
-              schema:
-                type: array
-                example: null
-                items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
-      deprecated: true
-  /v2/contractnegotiations/{id}/decline:
-    post:
-      tags:
-        - Contract Negotiation
-      description: "Requests cancelling the contract negotiation. Due to the asynchronous\
-        \ nature of contract negotiations, a successful response only indicates that\
-        \ the request was successfully received. Clients must poll the /{id}/state\
-        \ endpoint to track the state."
-      operationId: declineNegotiation
-      parameters:
-        - name: id
-          in: path
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: null
-      responses:
-        "200":
-          description: Request to decline the Contract negotiation was successfully
-            received
-          links:
-            poll-state:
-              operationId: getNegotiationState
-        "400":
-          description: "Request was malformed, e.g. id was null"
-          content:
-            application/json:
-              schema:
-                type: array
-                example: null
-                items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
-        "404":
-          description: A contract negotiation with the given ID does not exist
-          content:
-            application/json:
-              schema:
-                type: array
-                example: null
-                items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
-      deprecated: true
+                  $ref: "#/components/schemas/ApiErrorDetail"
   /v2/contractnegotiations/{id}/state:
     get:
       tags:
-        - Contract Negotiation
+      - Contract Negotiation
       description: Gets the state of a contract negotiation with the given ID
       operationId: getNegotiationState
       parameters:
-        - name: id
-          in: path
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: null
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: null
       responses:
         "200":
           description: The contract negotiation's state
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NegotiationState'
+                $ref: "#/components/schemas/NegotiationState"
         "400":
           description: "Request was malformed, e.g. id was null"
           content:
@@ -1000,7 +799,7 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
         "404":
           description: An contract negotiation with the given ID does not exist
           content:
@@ -1009,27 +808,27 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
   /v2/contractnegotiations/{id}/terminate:
     post:
       tags:
-        - Contract Negotiation
+      - Contract Negotiation
       description: Terminates the contract negotiation.
       operationId: terminateNegotiation
       parameters:
-        - name: id
-          in: path
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: null
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: null
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TerminateNegotiationSchema'
+              $ref: "#/components/schemas/TerminateNegotiationSchema"
       responses:
         "200":
           description: ContractNegotiation is terminating
@@ -1044,7 +843,7 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
         "404":
           description: A contract negotiation with the given ID does not exist
           content:
@@ -1053,39 +852,42 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
   /v2/dataplanes:
     get:
       tags:
-        - Dataplane Selector
+      - Dataplane Selector
       description: Returns a list of all currently registered data plane instances
-      operationId: getAll
+      operationId: getAllDataPlaneInstances
       responses:
-        "204":
+        "200":
           description: A (potentially empty) list of currently registered data plane
             instances
-        "400":
-          description: Request body was malformed
           content:
             application/json:
               schema:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/DataPlaneInstanceSchema"
     post:
       tags:
-        - Dataplane Selector
-      description: Adds one datatplane instance to the internal database of the selector
-      operationId: addEntry
+      - Dataplane Selector
+      description: "Adds one dataplane instance to the internal database of the selector.\
+        \ DEPRECATED: dataplanes should register themselves through control-api"
+      operationId: addDataPlaneInstance
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DataPlaneInstanceSchema'
+              $ref: "#/components/schemas/DataPlaneInstanceSchema"
       responses:
         "200":
           description: Entry was added successfully to the database
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IdResponse"
         "400":
           description: Request body was malformed
           content:
@@ -1094,18 +896,19 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
+      deprecated: true
   /v2/dataplanes/select:
     post:
       tags:
-        - Dataplane Selector
+      - Dataplane Selector
       description: Finds the best fitting data plane instance for a particular query
-      operationId: find_1
+      operationId: selectDataPlaneInstance
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SelectionRequestSchema'
+              $ref: "#/components/schemas/SelectionRequestSchema"
       responses:
         "200":
           description: The DataPlane instance that fits best for the given selection
@@ -1113,7 +916,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataPlaneInstanceSchema'
+                $ref: "#/components/schemas/DataPlaneInstanceSchema"
         "204":
           description: No suitable DataPlane instance was found
         "400":
@@ -1124,18 +927,19 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
+      deprecated: true
   /v2/policydefinitions:
     post:
       tags:
-        - Policy Definition
+      - Policy Definition
       description: Creates a new policy definition
       operationId: createPolicyDefinition
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PolicyDefinitionInput'
+              $ref: "#/components/schemas/PolicyDefinitionInput"
       responses:
         "200":
           description: policy definition was created successfully. Returns the Policy
@@ -1143,7 +947,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdResponse'
+                $ref: "#/components/schemas/IdResponse"
         "400":
           description: Request body was malformed
           content:
@@ -1152,7 +956,7 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
         "409":
           description: "Could not create policy definition, because a contract definition\
             \ with that ID already exists"
@@ -1162,18 +966,18 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
   /v2/policydefinitions/request:
     post:
       tags:
-        - Policy Definition
+      - Policy Definition
       description: Returns all policy definitions according to a query
       operationId: queryPolicyDefinitions
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QuerySpec'
+              $ref: "#/components/schemas/QuerySpec"
       responses:
         "200":
           description: The policy definitions matching the query
@@ -1183,7 +987,7 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/PolicyDefinitionOutput'
+                  $ref: "#/components/schemas/PolicyDefinitionOutput"
         "400":
           description: Request was malformed
           content:
@@ -1192,29 +996,29 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
   /v2/policydefinitions/{id}:
     get:
       tags:
-        - Policy Definition
+      - Policy Definition
       description: Gets a policy definition with the given ID
       operationId: getPolicyDefinition
       parameters:
-        - name: id
-          in: path
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: null
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: null
       responses:
         "200":
           description: The  policy definition
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PolicyDefinitionOutput'
+                $ref: "#/components/schemas/PolicyDefinitionOutput"
         "400":
           description: "Request was malformed, e.g. id was null"
           content:
@@ -1223,7 +1027,7 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
         "404":
           description: An  policy definition with the given ID does not exist
           content:
@@ -1232,31 +1036,30 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
     put:
       tags:
-        - Policy Definition
+      - Policy Definition
       description: "Updates an existing Policy, If the Policy is not found, an error\
         \ is reported"
       operationId: updatePolicyDefinition
       parameters:
-        - name: id
-          in: path
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: null
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: null
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PolicyDefinitionInput'
+              $ref: "#/components/schemas/PolicyDefinitionInput"
       responses:
-        "200":
-          description: policy definition was updated successfully. Returns the Policy
-            Definition Id and updated timestamp
+        "204":
+          description: policy definition was updated successfully.
         "400":
           description: Request body was malformed
           content:
@@ -1265,17 +1068,17 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
         "404":
           description: "policy definition could not be updated, because it does not\
             \ exists"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiErrorDetail'
+                $ref: "#/components/schemas/ApiErrorDetail"
     delete:
       tags:
-        - Policy Definition
+      - Policy Definition
       description: "Removes a policy definition with the given ID if possible. Deleting\
         \ a policy definition is only possible if that policy definition is not yet\
         \ referenced by a contract definition, in which case an error is returned.\
@@ -1283,16 +1086,16 @@ paths:
         \ do this at your own risk!"
       operationId: deletePolicyDefinition
       parameters:
-        - name: id
-          in: path
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: null
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: null
       responses:
-        "200":
+        "204":
           description: Policy definition was deleted successfully
         "400":
           description: "Request was malformed, e.g. id was null"
@@ -1302,7 +1105,7 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
         "404":
           description: An policy definition with the given ID does not exist
           content:
@@ -1311,7 +1114,7 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
         "409":
           description: "The policy definition cannot be deleted, because it is referenced\
             \ by a contract definition"
@@ -1321,20 +1124,21 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
   /v2/transferprocesses:
     post:
       tags:
-        - Transfer Process
-      description: "Initiates a data transfer with the given parameters. Please note\
-        \ that successfully invoking this endpoint only means that the transfer was\
-        \ initiated. Clients must poll the /{id}/state endpoint to track the state"
+      - Transfer Process
+      description: "Initiates a data transfer with the given parameters. Due to the\
+        \ asynchronous nature of transfers, a successful response only indicates that\
+        \ the request was successfully received. This may take a long time, so clients\
+        \ must poll the /{id}/state endpoint to track the state."
       operationId: initiateTransferProcess
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TransferRequest'
+              $ref: "#/components/schemas/TransferRequest"
       responses:
         "200":
           description: The transfer was successfully initiated. Returns the transfer
@@ -1342,7 +1146,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdResponse'
+                $ref: "#/components/schemas/IdResponse"
           links:
             poll-state:
               operationId: getTransferProcessState
@@ -1356,18 +1160,18 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
   /v2/transferprocesses/request:
     post:
       tags:
-        - Transfer Process
+      - Transfer Process
       description: Returns all transfer process according to a query
       operationId: queryTransferProcesses
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QuerySpec'
+              $ref: "#/components/schemas/QuerySpec"
       responses:
         "200":
           description: The transfer processes matching the query
@@ -1377,7 +1181,7 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/TransferProcess'
+                  $ref: "#/components/schemas/TransferProcess"
         "400":
           description: Request was malformed
           content:
@@ -1386,29 +1190,29 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
   /v2/transferprocesses/{id}:
     get:
       tags:
-        - Transfer Process
+      - Transfer Process
       description: Gets an transfer process with the given ID
       operationId: getTransferProcess
       parameters:
-        - name: id
-          in: path
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: null
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: null
       responses:
         "200":
           description: The transfer process
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransferProcess'
+                $ref: "#/components/schemas/TransferProcess"
         "400":
           description: "Request was malformed, e.g. id was null"
           content:
@@ -1417,7 +1221,7 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
         "404":
           description: A transfer process with the given ID does not exist
           content:
@@ -1426,11 +1230,11 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
   /v2/transferprocesses/{id}/deprovision:
     post:
       tags:
-        - Transfer Process
+      - Transfer Process
       description: "Requests the deprovisioning of resources associated with a transfer\
         \ process. Due to the asynchronous nature of transfers, a successful response\
         \ only indicates that the request was successfully received. This may take\
@@ -1438,21 +1242,21 @@ paths:
         \ state."
       operationId: deprovisionTransferProcess
       parameters:
-        - name: id
-          in: path
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: null
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: null
       responses:
-        "200":
+        "204":
           description: Request to deprovision the transfer process was successfully
             received
           links:
             poll-state:
-              operationId: getTransferProcessState
+              operationId: deprovisionTransferProcess
         "400":
           description: "Request was malformed, e.g. id was null"
           content:
@@ -1461,38 +1265,80 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
         "404":
-          description: A contract negotiation with the given ID does not exist
+          description: A transfer process with the given ID does not exist
           content:
             application/json:
               schema:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
+  /v2/transferprocesses/{id}/resume:
+    post:
+      tags:
+      - Transfer Process
+      description: "Requests the resumption of a suspended transfer process. Due to\
+        \ the asynchronous nature of transfers, a successful response only indicates\
+        \ that the request was successfully received. This may take a long time, so\
+        \ clients must poll the /{id}/state endpoint to track the state."
+      operationId: resumeTransferProcess
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: null
+      responses:
+        "204":
+          description: Request to resume the transfer process was successfully received
+          links:
+            poll-state:
+              operationId: resumeTransferProcess
+        "400":
+          description: "Request was malformed, e.g. id was null"
+          content:
+            application/json:
+              schema:
+                type: array
+                example: null
+                items:
+                  $ref: "#/components/schemas/ApiErrorDetail"
+        "404":
+          description: A transfer process with the given ID does not exist
+          content:
+            application/json:
+              schema:
+                type: array
+                example: null
+                items:
+                  $ref: "#/components/schemas/ApiErrorDetail"
   /v2/transferprocesses/{id}/state:
     get:
       tags:
-        - Transfer Process
+      - Transfer Process
       description: Gets the state of a transfer process with the given ID
       operationId: getTransferProcessState
       parameters:
-        - name: id
-          in: path
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: null
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: null
       responses:
         "200":
           description: The  transfer process's state
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransferState'
+                $ref: "#/components/schemas/TransferState"
         "400":
           description: "Request was malformed, e.g. id was null"
           content:
@@ -1501,7 +1347,7 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
         "404":
           description: An  transfer process with the given ID does not exist
           content:
@@ -1510,36 +1356,36 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
-  /v2/transferprocesses/{id}/terminate:
+                  $ref: "#/components/schemas/ApiErrorDetail"
+  /v2/transferprocesses/{id}/suspend:
     post:
       tags:
-        - Transfer Process
-      description: "Requests the termination of a transfer process. Due to the asynchronous\
+      - Transfer Process
+      description: "Requests the suspension of a transfer process. Due to the asynchronous\
         \ nature of transfers, a successful response only indicates that the request\
-        \ was successfully received. Clients must poll the /{id}/state endpoint to\
-        \ track the state."
-      operationId: terminateTransferProcess
+        \ was successfully received. This may take a long time, so clients must poll\
+        \ the /{id}/state endpoint to track the state."
+      operationId: suspendTransferProcess
       parameters:
-        - name: id
-          in: path
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: null
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: null
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TerminateTransfer'
+              $ref: "#/components/schemas/SuspendTransfer"
       responses:
-        "200":
-          description: Request to cancel the transfer process was successfully received
+        "204":
+          description: Request to suspend the transfer process was successfully received
           links:
             poll-state:
-              operationId: getTransferProcessState
+              operationId: suspendTransferProcess
         "400":
           description: "Request was malformed, e.g. id was null"
           content:
@@ -1548,16 +1394,74 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
         "404":
-          description: A contract negotiation with the given ID does not exist
+          description: A transfer process with the given ID does not exist
           content:
             application/json:
               schema:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
+        "409":
+          description: "Could not suspend the transfer process, because it is already\
+            \ completed or terminated."
+          content:
+            application/json:
+              schema:
+                type: array
+                example: null
+                items:
+                  $ref: "#/components/schemas/ApiErrorDetail"
+  /v2/transferprocesses/{id}/terminate:
+    post:
+      tags:
+      - Transfer Process
+      description: "Requests the termination of a transfer process. Due to the asynchronous\
+        \ nature of transfers, a successful response only indicates that the request\
+        \ was successfully received. This may take a long time, so clients must poll\
+        \ the /{id}/state endpoint to track the state."
+      operationId: terminateTransferProcess
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: null
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TerminateTransfer"
+      responses:
+        "204":
+          description: Request to terminate the transfer process was successfully
+            received
+          links:
+            poll-state:
+              operationId: terminateTransferProcess
+        "400":
+          description: "Request was malformed, e.g. id was null"
+          content:
+            application/json:
+              schema:
+                type: array
+                example: null
+                items:
+                  $ref: "#/components/schemas/ApiErrorDetail"
+        "404":
+          description: A transfer process with the given ID does not exist
+          content:
+            application/json:
+              schema:
+                type: array
+                example: null
+                items:
+                  $ref: "#/components/schemas/ApiErrorDetail"
         "409":
           description: "Could not terminate transfer process, because it is already\
             \ completed or terminated."
@@ -1567,23 +1471,23 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
   /v3/assets:
     put:
       tags:
-        - Asset
+      - Asset
       description: "Updates an asset with the given ID if it exists. If the asset\
         \ is not found, no further action is taken. DANGER ZONE: Note that updating\
         \ assets can have unexpected results, especially for contract offers that\
         \ have been sent out or are ongoing in contract negotiations."
-      operationId: updateAsset_1
+      operationId: updateAsset
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AssetInput'
+              $ref: "#/components/schemas/AssetInput"
       responses:
-        "200":
+        "204":
           description: Asset was updated successfully
         "400":
           description: "Request was malformed, e.g. id was null"
@@ -1593,19 +1497,19 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
         "404":
           description: "Asset could not be updated, because it does not exist."
     post:
       tags:
-        - Asset
+      - Asset
       description: Creates a new asset together with a data address
-      operationId: createAsset_1
+      operationId: createAsset
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AssetInput'
+              $ref: "#/components/schemas/AssetInput"
       responses:
         "200":
           description: Asset was created successfully. Returns the asset Id and created
@@ -1613,7 +1517,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdResponse'
+                $ref: "#/components/schemas/IdResponse"
         "400":
           description: Request body was malformed
           content:
@@ -1622,7 +1526,7 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
         "409":
           description: "Could not create asset, because an asset with that ID already\
             \ exists"
@@ -1632,18 +1536,18 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
   /v3/assets/request:
     post:
       tags:
-        - Asset
-      description: ' all assets according to a particular query'
-      operationId: requestAssets_1
+      - Asset
+      description: Request all assets according to a particular query
+      operationId: requestAssets
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QuerySpec'
+              $ref: "#/components/schemas/QuerySpec"
       responses:
         "200":
           description: The assets matching the query
@@ -1653,7 +1557,7 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/AssetOutput'
+                  $ref: "#/components/schemas/AssetOutput"
         "400":
           description: Request body was malformed
           content:
@@ -1662,29 +1566,29 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
   /v3/assets/{id}:
     get:
       tags:
-        - Asset
+      - Asset
       description: Gets an asset with the given ID
-      operationId: getAsset_1
+      operationId: getAsset
       parameters:
-        - name: id
-          in: path
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: null
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: null
       responses:
         "200":
           description: The asset
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AssetOutput'
+                $ref: "#/components/schemas/AssetOutput"
         "400":
           description: "Request was malformed, e.g. id was null"
           content:
@@ -1693,7 +1597,7 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
         "404":
           description: An asset with the given ID does not exist
           content:
@@ -1702,27 +1606,27 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
     delete:
       tags:
-        - Asset
+      - Asset
       description: "Removes an asset with the given ID if possible. Deleting an asset\
         \ is only possible if that asset is not yet referenced by a contract agreement,\
         \ in which case an error is returned. DANGER ZONE: Note that deleting assets\
         \ can have unexpected results, especially for contract offers that have been\
         \ sent out or ongoing or contract negotiations."
-      operationId: removeAsset_1
+      operationId: removeAsset
       parameters:
-        - name: id
-          in: path
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: null
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: null
       responses:
-        "200":
+        "204":
           description: Asset was deleted successfully
         "400":
           description: "Request was malformed, e.g. id was null"
@@ -1732,7 +1636,7 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
         "404":
           description: An asset with the given ID does not exist
           content:
@@ -1741,7 +1645,7 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
         "409":
           description: "The asset cannot be deleted, because it is referenced by a\
             \ contract agreement"
@@ -1751,14 +1655,14 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
+                  $ref: "#/components/schemas/ApiErrorDetail"
 components:
   schemas:
     ApiErrorDetail:
       type: object
       properties:
         invalidValue:
-          type: object
+          type: string
           example: null
         message:
           type: string
@@ -1769,43 +1673,21 @@ components:
         type:
           type: string
           example: null
-      example: null
-    Asset:
-      type: object
-      properties:
-        createdAt:
-          type: integer
-          format: int64
-          example: null
-        dataAddress:
-          $ref: '#/components/schemas/DataAddress'
-        id:
-          type: string
-          example: null
-        privateProperties:
-          type: object
-          additionalProperties:
-            type: object
-            example: null
-          example: null
-        properties:
-          type: object
-          additionalProperties:
-            type: object
-            example: null
-          example: null
-      example: null
-    AssetEntryNewDto:
-      type: object
-      properties:
-        asset:
-          $ref: '#/components/schemas/Asset'
-        dataAddress:
-          $ref: '#/components/schemas/DataAddress'
-      example: null
+      example:
+        message: error message
+        type: ErrorType
+        path: object.error.path
+        invalidValue: this value is not valid
     AssetInput:
+      required:
+      - '@context'
+      - dataAddress
+      - properties
       type: object
       properties:
+        '@context':
+          type: object
+          example: null
         '@id':
           type: string
           example: null
@@ -1813,22 +1695,14 @@ components:
           type: string
           example: https://w3id.org/edc/v0.0.1/ns/Asset
         dataAddress:
-          $ref: '#/components/schemas/DataAddress'
+          $ref: "#/components/schemas/DataAddress"
         privateProperties:
-          type: object
-          additionalProperties:
-            type: object
-            example: null
-          example: null
+          $ref: "#/components/schemas/Properties"
         properties:
-          type: object
-          additionalProperties:
-            type: object
-            example: null
-          example: null
+          $ref: "#/components/schemas/Properties"
       example:
         '@context':
-          edc: https://w3id.org/edc/v0.0.1/ns/
+          '@vocab': https://w3id.org/edc/v0.0.1/ns/
         '@id': asset-id
         properties:
           key: value
@@ -1836,6 +1710,7 @@ components:
           privateKey: privateValue
         dataAddress:
           type: HttpData
+          baseUrl: https://jsonplaceholder.typicode.com/todos
     AssetOutput:
       type: object
       properties:
@@ -1850,30 +1725,23 @@ components:
           format: int64
           example: null
         dataAddress:
-          $ref: '#/components/schemas/DataAddress'
+          $ref: "#/components/schemas/DataAddress"
         privateProperties:
-          type: object
-          additionalProperties:
-            type: object
-            example: null
-          example: null
+          $ref: "#/components/schemas/Properties"
         properties:
-          type: object
-          additionalProperties:
-            type: object
-            example: null
-          example: null
+          $ref: "#/components/schemas/Properties"
       example:
         '@context':
-          edc: https://w3id.org/edc/v0.0.1/ns/
+          '@vocab': https://w3id.org/edc/v0.0.1/ns/
         '@id': asset-id
-        edc:properties:
-          edc:key: value
-        edc:privateProperties:
-          edc:privateKey: privateValue
-        edc:dataAddress:
-          edc:type: HttpData
-        edc:createdAt: 1688465655
+        properties:
+          key: value
+        privateProperties:
+          privateKey: privateValue
+        dataAddress:
+          type: HttpData
+          baseUrl: https://jsonplaceholder.typicode.com/todos
+        createdAt: 1688465655
     CallbackAddress:
       type: object
       properties:
@@ -1918,67 +1786,73 @@ components:
                 odrl:type: http://www.w3.org/ns/odrl/2/use
               odrl:constraint:
                 odrl:and:
-                  - odrl:leftOperand: https://w3id.org/edc/v0.0.1/ns/inForceDate
-                    odrl:operator:
-                      '@id': odrl:gteq
-                    odrl:rightOperand: 2023-07-07T07:19:58.585601395Z
-                  - odrl:leftOperand: https://w3id.org/edc/v0.0.1/ns/inForceDate
-                    odrl:operator:
-                      '@id': odrl:lteq
-                    odrl:rightOperand: 2023-07-12T07:19:58.585601395Z
-            odrl:prohibition: [ ]
-            odrl:obligation: [ ]
-            odrl:target: bcca61be-e82e-4da6-bfec-9716a56cef35
+                - odrl:leftOperand: https://w3id.org/edc/v0.0.1/ns/inForceDate
+                  odrl:operator:
+                    '@id': odrl:gteq
+                  odrl:rightOperand: 2023-07-07T07:19:58.585601395Z
+                - odrl:leftOperand: https://w3id.org/edc/v0.0.1/ns/inForceDate
+                  odrl:operator:
+                    '@id': odrl:lteq
+                  odrl:rightOperand: 2023-07-12T07:19:58.585601395Z
+            odrl:prohibition: []
+            odrl:obligation: []
           dcat:distribution:
-            - '@type': dcat:Distribution
-              dct:format:
-                '@id': HttpData
-              dcat:accessService: 5e839777-d93e-4785-8972-1005f51cf367
-          edc:description: description
-          edc:id: bcca61be-e82e-4da6-bfec-9716a56cef35
+          - '@type': dcat:Distribution
+            dct:format:
+              '@id': HttpData
+            dcat:accessService: 5e839777-d93e-4785-8972-1005f51cf367
+          description: description
+          id: bcca61be-e82e-4da6-bfec-9716a56cef35
         dcat:service:
           '@id': 5e839777-d93e-4785-8972-1005f51cf367
           '@type': dcat:DataService
           dct:terms: connector
           dct:endpointUrl: http://localhost:16806/protocol
-        edc:participantId: urn:connector:provider
+        dspace:participantId: urn:connector:provider
         '@context':
-          dct: https://purl.org/dc/terms/
+          '@vocab': https://w3id.org/edc/v0.0.1/ns/
+          dct: http://purl.org/dc/terms/
           edc: https://w3id.org/edc/v0.0.1/ns/
-          dcat: https://www.w3.org/ns/dcat/
+          dcat: http://www.w3.org/ns/dcat#
           odrl: http://www.w3.org/ns/odrl/2/
           dspace: https://w3id.org/dspace/v0.8/
     CatalogRequest:
+      required:
+      - '@context'
+      - counterPartyAddress
+      - protocol
       type: object
       properties:
+        '@context':
+          type: object
+          example: null
         '@type':
           type: string
           example: https://w3id.org/edc/v0.0.1/ns/CatalogRequest
         counterPartyAddress:
           type: string
           example: null
+        counterPartyId:
+          type: string
+          example: null
         protocol:
           type: string
           example: null
-        providerUrl:
-          type: string
-          description: please use counterPartyAddress instead
-          example: null
-          deprecated: true
         querySpec:
-          $ref: '#/components/schemas/QuerySpec'
+          $ref: "#/components/schemas/QuerySpec"
       example:
         '@context':
-          edc: https://w3id.org/edc/v0.0.1/ns/
+          '@vocab': https://w3id.org/edc/v0.0.1/ns/
         '@type': CatalogRequest
         counterPartyAddress: http://provider-address
+        counterPartyId: providerId
         protocol: dataspace-protocol-http
         querySpec:
           offset: 0
           limit: 50
           sortOrder: DESC
           sortField: fieldName
-          filterExpression: [ ]
+          filterExpression: []
     ContractAgreement:
       type: object
       properties:
@@ -1999,13 +1873,13 @@ components:
           format: int64
           example: null
         policy:
-          $ref: '#/components/schemas/Policy'
+          $ref: "#/components/schemas/Policy"
         providerId:
           type: string
           example: null
       example:
         '@context':
-          edc: https://w3id.org/edc/v0.0.1/ns/
+          '@vocab': https://w3id.org/edc/v0.0.1/ns/
         '@type': https://w3id.org/edc/v0.0.1/ns/ContractAgreement
         '@id': negotiation-id
         providerId: provider-id
@@ -2017,11 +1891,19 @@ components:
           '@type': Set
           '@id': offer-id
           permission:
-            - target: asset-id
-              action: display
+          - target: asset-id
+            action: display
     ContractDefinitionInput:
+      required:
+      - '@context'
+      - accessPolicyId
+      - assetsSelector
+      - contractPolicyId
       type: object
       properties:
+        '@context':
+          type: object
+          example: null
         '@id':
           type: string
           example: null
@@ -2035,17 +1917,17 @@ components:
           type: array
           example: null
           items:
-            $ref: '#/components/schemas/Criterion'
+            $ref: "#/components/schemas/Criterion"
         contractPolicyId:
           type: string
           example: null
       example:
         '@context':
-          edc: https://w3id.org/edc/v0.0.1/ns/
+          '@vocab': https://w3id.org/edc/v0.0.1/ns/
         '@id': definition-id
         accessPolicyId: asset-policy-id
         contractPolicyId: contract-policy-id
-        assetsSelector: [ ]
+        assetsSelector: []
     ContractDefinitionOutput:
       type: object
       properties:
@@ -2062,7 +1944,7 @@ components:
           type: array
           example: null
           items:
-            $ref: '#/components/schemas/Criterion'
+            $ref: "#/components/schemas/Criterion"
         contractPolicyId:
           type: string
           example: null
@@ -2072,12 +1954,12 @@ components:
           example: null
       example:
         '@context':
-          edc: https://w3id.org/edc/v0.0.1/ns/
+          '@vocab': https://w3id.org/edc/v0.0.1/ns/
         '@id': definition-id
-        edc:accessPolicyId: asset-policy-id
-        edc:contractPolicyId: contract-policy-id
-        edc:assetsSelector: [ ]
-        edc:createdAt: 1688465655
+        accessPolicyId: asset-policy-id
+        contractPolicyId: contract-policy-id
+        assetsSelector: []
+        createdAt: 1688465655
     ContractNegotiation:
       type: object
       properties:
@@ -2091,7 +1973,7 @@ components:
           type: array
           example: null
           items:
-            $ref: '#/components/schemas/CallbackAddress'
+            $ref: "#/components/schemas/CallbackAddress"
         contractAgreementId:
           type: string
           example: null
@@ -2114,11 +1996,11 @@ components:
           type: string
           example: null
           enum:
-            - CONSUMER
-            - PROVIDER
+          - CONSUMER
+          - PROVIDER
       example:
         '@context':
-          edc: https://w3id.org/edc/v0.0.1/ns/
+          '@vocab': https://w3id.org/edc/v0.0.1/ns/
         '@type': https://w3id.org/edc/v0.0.1/ns/ContractNegotiation
         '@id': negotiation-id
         type: PROVIDER
@@ -2130,13 +2012,13 @@ components:
         errorDetail: eventual-error-detail
         createdAt: 1688465655
         callbackAddresses:
-          - transactional: false
-            uri: http://callback/url
-            events:
-              - contract.negotiation
-              - transfer.process
-            authKey: auth-key
-            authCodeId: auth-code-id
+        - transactional: false
+          uri: http://callback/url
+          events:
+          - contract.negotiation
+          - transfer.process
+          authKey: auth-key
+          authCodeId: auth-code-id
     ContractOfferDescription:
       type: object
       properties:
@@ -2150,11 +2032,21 @@ components:
           type: string
           example: null
         policy:
-          $ref: '#/components/schemas/Policy'
+          $ref: "#/components/schemas/Policy"
+      description: please use policy instead of offer
       example: null
+      deprecated: true
     ContractRequest:
+      required:
+      - '@context'
+      - counterPartyAddress
+      - policy
+      - protocol
       type: object
       properties:
+        '@context':
+          type: object
+          example: null
         '@type':
           type: string
           example: https://w3id.org/edc/v0.0.1/ns/ContractRequest
@@ -2162,54 +2054,55 @@ components:
           type: array
           example: null
           items:
-            $ref: '#/components/schemas/CallbackAddress'
+            $ref: "#/components/schemas/CallbackAddress"
         connectorAddress:
           type: string
-          example: null
-        connectorId:
-          type: string
-          description: please use providerId instead
+          description: please use counterPartyAddress instead
           example: null
           deprecated: true
-        consumerId:
+        counterPartyAddress:
           type: string
-          description: this field is not used anymore
           example: null
-          deprecated: true
         offer:
-          $ref: '#/components/schemas/ContractOfferDescription'
+          $ref: "#/components/schemas/ContractOfferDescription"
+        policy:
+          $ref: "#/components/schemas/Offer"
         protocol:
           type: string
           example: null
         providerId:
           type: string
+          description: please use policy.assigner instead
           example: null
+          deprecated: true
       example:
         '@context':
-          edc: https://w3id.org/edc/v0.0.1/ns/
+          '@vocab': https://w3id.org/edc/v0.0.1/ns/
         '@type': https://w3id.org/edc/v0.0.1/ns/ContractRequest
-        connectorAddress: http://provider-address
+        counterPartyAddress: http://provider-address
         protocol: dataspace-protocol-http
-        providerId: provider-id
-        offer:
-          offerId: offer-id
-          assetId: asset-id
-          policy:
-            '@context': http://www.w3.org/ns/odrl.jsonld
-            '@type': Set
-            '@id': offer-id
-            permission:
-              - target: asset-id
-                action: display
+        policy:
+          '@context': http://www.w3.org/ns/odrl.jsonld
+          '@type': odrl:Offer
+          '@id': offer-id
+          assigner: providerId
+          permission: []
+          prohibition: []
+          obligation: []
+          target: assetId
         callbackAddresses:
-          - transactional: false
-            uri: http://callback/url
-            events:
-              - contract.negotiation
-              - transfer.process
-            authKey: auth-key
-            authCodeId: auth-code-id
+        - transactional: false
+          uri: http://callback/url
+          events:
+          - contract.negotiation
+          - transfer.process
+          authKey: auth-key
+          authCodeId: auth-code-id
     Criterion:
+      required:
+      - operandLeft
+      - operandRight
+      - operator
       type: object
       properties:
         '@type':
@@ -2226,7 +2119,7 @@ components:
           example: null
       example:
         '@context':
-          edc: https://w3id.org/edc/v0.0.1/ns/
+          '@vocab': https://w3id.org/edc/v0.0.1/ns/
         '@type': Criterion
         operandLeft: fieldName
         operator: =
@@ -2242,8 +2135,16 @@ components:
           example: null
       example: null
     DataPlaneInstanceSchema:
+      required:
+      - '@context'
+      - allowedDestTypes
+      - allowedSourceTypes
+      - url
       type: object
       properties:
+        '@context':
+          type: object
+          example: null
         '@id':
           type: string
           example: null
@@ -2277,13 +2178,17 @@ components:
           format: url
           example: null
       example:
+        '@context':
+          '@vocab': https://w3id.org/edc/v0.0.1/ns/
         '@id': your-dataplane-id
         url: http://somewhere.com:1234/api/v1
         allowedSourceTypes:
-          - source-type1
-          - source-type2
+        - source-type1
+        - source-type2
         allowedDestTypes:
-          - your-dest-type
+        - your-dest-type
+        allowedTransferTypes:
+        - transfer-type
     Dataset:
       type: object
       description: DCAT dataset
@@ -2299,28 +2204,29 @@ components:
               odrl:type: http://www.w3.org/ns/odrl/2/use
             odrl:constraint:
               odrl:and:
-                - odrl:leftOperand: https://w3id.org/edc/v0.0.1/ns/inForceDate
-                  odrl:operator:
-                    '@id': odrl:gteq
-                  odrl:rightOperand: 2023-07-07T07:19:58.585601395Z
-                - odrl:leftOperand: https://w3id.org/edc/v0.0.1/ns/inForceDate
-                  odrl:operator:
-                    '@id': odrl:lteq
-                  odrl:rightOperand: 2023-07-12T07:19:58.585601395Z
-          odrl:prohibition: [ ]
-          odrl:obligation: [ ]
+              - odrl:leftOperand: https://w3id.org/edc/v0.0.1/ns/inForceDate
+                odrl:operator:
+                  '@id': odrl:gteq
+                odrl:rightOperand: 2023-07-07T07:19:58.585601395Z
+              - odrl:leftOperand: https://w3id.org/edc/v0.0.1/ns/inForceDate
+                odrl:operator:
+                  '@id': odrl:lteq
+                odrl:rightOperand: 2023-07-12T07:19:58.585601395Z
+          odrl:prohibition: []
+          odrl:obligation: []
           odrl:target: bcca61be-e82e-4da6-bfec-9716a56cef35
         dcat:distribution:
-          - '@type': dcat:Distribution
-            dct:format:
-              '@id': HttpData
-            dcat:accessService: 5e839777-d93e-4785-8972-1005f51cf367
-        edc:description: description
-        edc:id: bcca61be-e82e-4da6-bfec-9716a56cef35
+        - '@type': dcat:Distribution
+          dct:format:
+            '@id': HttpData
+          dcat:accessService: 5e839777-d93e-4785-8972-1005f51cf367
+        description: description
+        id: bcca61be-e82e-4da6-bfec-9716a56cef35
         '@context':
-          dct: https://purl.org/dc/terms/
+          '@vocab': https://w3id.org/edc/v0.0.1/ns/
+          dct: http://purl.org/dc/terms/
           edc: https://w3id.org/edc/v0.0.1/ns/
-          dcat: https://www.w3.org/ns/dcat/
+          dcat: http://www.w3.org/ns/dcat#
           odrl: http://www.w3.org/ns/odrl/2/
           dspace: https://w3id.org/dspace/v0.8/
     DatasetRequest:
@@ -2332,17 +2238,21 @@ components:
         counterPartyAddress:
           type: string
           example: null
+        counterPartyId:
+          type: string
+          example: null
         protocol:
           type: string
           example: null
         querySpec:
-          $ref: '#/components/schemas/QuerySpec'
+          $ref: "#/components/schemas/QuerySpec"
       example:
         '@context':
-          edc: https://w3id.org/edc/v0.0.1/ns/
+          '@vocab': https://w3id.org/edc/v0.0.1/ns/
         '@type': DatasetRequest
         '@id': dataset-id
         counterPartyAddress: http://counter-party-address
+        counterPartyId: counter-party-id
         protocol: dataspace-protocol-http
     DeprovisionedResource:
       type: object
@@ -2360,43 +2270,25 @@ components:
           type: string
           example: null
       example: null
-    Failure:
+    EndpointDataReferenceEntry:
       type: object
       properties:
-        failureDetail:
+        '@id':
           type: string
           example: null
-        messages:
-          type: array
-          example: null
-          items:
-            type: string
-            example: null
-      example: null
-    HealthCheckResult:
-      type: object
-      properties:
-        component:
+        '@type':
           type: string
-          example: null
-        failure:
-          $ref: '#/components/schemas/Failure'
-        isHealthy:
-          type: boolean
-          example: null
-      example: null
-    HealthStatus:
-      type: object
-      properties:
-        componentResults:
-          type: array
-          example: null
-          items:
-            $ref: '#/components/schemas/HealthCheckResult'
-        isSystemHealthy:
-          type: boolean
-          example: null
-      example: null
+          example: https://w3id.org/edc/v0.0.1/ns/EndpointDataReferenceEntry
+      example:
+        '@context':
+          '@vocab': https://w3id.org/edc/v0.0.1/ns/
+        '@id': transfer-process-id
+        transferProcessId: transfer-process-id
+        agreementId: agreement-id
+        contractNegotiationId: contract-negotiation-id
+        assetId: asset-id
+        providerId: provider-id
+        createdAt: 1688465655
     IdResponse:
       type: object
       properties:
@@ -2409,7 +2301,7 @@ components:
           example: null
       example:
         '@context':
-          edc: https://w3id.org/edc/v0.0.1/ns/
+          '@vocab': https://w3id.org/edc/v0.0.1/ns/
         '@id': id-value
         createdAt: 1688465655
     JsonArray:
@@ -2422,16 +2314,16 @@ components:
           type: string
           example: null
           enum:
-            - ARRAY
-            - OBJECT
-            - STRING
-            - NUMBER
-            - "TRUE"
-            - "FALSE"
-            - "NULL"
+          - ARRAY
+          - OBJECT
+          - STRING
+          - NUMBER
+          - "TRUE"
+          - "FALSE"
+          - "NULL"
       example: null
       items:
-        $ref: '#/components/schemas/JsonValue'
+        $ref: "#/components/schemas/JsonValue"
     JsonObject:
       type: object
       properties:
@@ -2442,15 +2334,15 @@ components:
           type: string
           example: null
           enum:
-            - ARRAY
-            - OBJECT
-            - STRING
-            - NUMBER
-            - "TRUE"
-            - "FALSE"
-            - "NULL"
+          - ARRAY
+          - OBJECT
+          - STRING
+          - NUMBER
+          - "TRUE"
+          - "FALSE"
+          - "NULL"
       additionalProperties:
-        $ref: '#/components/schemas/JsonValue'
+        $ref: "#/components/schemas/JsonValue"
       example: null
     JsonValue:
       type: object
@@ -2459,13 +2351,13 @@ components:
           type: string
           example: null
           enum:
-            - ARRAY
-            - OBJECT
-            - STRING
-            - NUMBER
-            - "TRUE"
-            - "FALSE"
-            - "NULL"
+          - ARRAY
+          - OBJECT
+          - STRING
+          - NUMBER
+          - "TRUE"
+          - "FALSE"
+          - "NULL"
       example: null
     NegotiationState:
       type: object
@@ -2474,6 +2366,35 @@ components:
           type: string
           example: null
       example: null
+    Offer:
+      required:
+      - '@id'
+      - assigner
+      - target
+      type: object
+      properties:
+        '@id':
+          type: string
+          example: null
+        '@type':
+          type: string
+          example: http://www.w3.org/ns/odrl/2/Offer
+        assigner:
+          type: string
+          example: null
+        target:
+          type: string
+          example: null
+      description: ODRL offer
+      example:
+        '@context': http://www.w3.org/ns/odrl.jsonld
+        '@type': odrl:Offer
+        '@id': offer-id
+        assigner: providerId
+        target: assetId
+        permission: []
+        prohibition: []
+        obligation: []
     Policy:
       type: object
       description: ODRL policy
@@ -2489,11 +2410,17 @@ components:
             leftOperand: https://w3id.org/edc/v0.0.1/ns/left
             operator: eq
             rightOperand: value
-        prohibition: [ ]
-        obligation: [ ]
+        prohibition: []
+        obligation: []
     PolicyDefinitionInput:
+      required:
+      - '@context'
+      - policy
       type: object
       properties:
+        '@context':
+          type: object
+          example: null
         '@id':
           type: string
           example: null
@@ -2501,23 +2428,23 @@ components:
           type: string
           example: https://w3id.org/edc/v0.0.1/ns/PolicyDefinition
         policy:
-          $ref: '#/components/schemas/Policy'
+          $ref: "#/components/schemas/Policy"
       example:
         '@context':
-          edc: https://w3id.org/edc/v0.0.1/ns/
+          '@vocab': https://w3id.org/edc/v0.0.1/ns/
         '@id': definition-id
         policy:
           '@context': http://www.w3.org/ns/odrl.jsonld
           '@type': Set
           uid: http://example.com/policy:1010
           permission:
-            - target: http://example.com/asset:9898.movie
-              action: display
-              constraint:
-                - leftOperand: spatial
-                  operator: eq
-                  rightOperand: https://www.wikidata.org/wiki/Q183
-                  comment: i.e Germany
+          - target: http://example.com/asset:9898.movie
+            action: display
+            constraint:
+            - leftOperand: spatial
+              operator: eq
+              rightOperand: https://www.wikidata.org/wiki/Q183
+              comment: i.e Germany
     PolicyDefinitionOutput:
       type: object
       properties:
@@ -2528,24 +2455,27 @@ components:
           type: string
           example: https://w3id.org/edc/v0.0.1/ns/PolicyDefinition
         policy:
-          $ref: '#/components/schemas/Policy'
+          $ref: "#/components/schemas/Policy"
       example:
         '@context':
-          edc: https://w3id.org/edc/v0.0.1/ns/
+          '@vocab': https://w3id.org/edc/v0.0.1/ns/
         '@id': definition-id
         policy:
           '@context': http://www.w3.org/ns/odrl.jsonld
           '@type': Set
           uid: http://example.com/policy:1010
           permission:
-            - target: http://example.com/asset:9898.movie
-              action: display
-              constraint:
-                - leftOperand: spatial
-                  operator: eq
-                  rightOperand: https://www.wikidata.org/wiki/Q183
-                  comment: i.e Germany
+          - target: http://example.com/asset:9898.movie
+            action: display
+            constraint:
+            - leftOperand: spatial
+              operator: eq
+              rightOperand: https://www.wikidata.org/wiki/Q183
+              comment: i.e Germany
         createdAt: 1688465655
+    Properties:
+      type: object
+      example: null
     ProvisionerWebhookRequest:
       type: object
       properties:
@@ -2556,7 +2486,7 @@ components:
           type: string
           example: null
         contentDataAddress:
-          $ref: '#/components/schemas/DataAddress'
+          $ref: "#/components/schemas/DataAddress"
         hasToken:
           type: boolean
           example: null
@@ -2577,7 +2507,7 @@ components:
           type: array
           example: null
           items:
-            $ref: '#/components/schemas/Criterion'
+            $ref: "#/components/schemas/Criterion"
         limit:
           type: integer
           format: int32
@@ -2593,17 +2523,60 @@ components:
           type: string
           example: null
           enum:
-            - ASC
-            - DESC
+          - ASC
+          - DESC
       example:
         '@context':
-          edc: https://w3id.org/edc/v0.0.1/ns/
+          '@vocab': https://w3id.org/edc/v0.0.1/ns/
         '@type': QuerySpec
         offset: 5
         limit: 10
         sortOrder: DESC
         sortField: fieldName
-        filterExpression: [ ]
+        filterExpression: []
+    SecretInput:
+      required:
+      - '@context'
+      - https://w3id.org/edc/v0.0.1/ns/value
+      type: object
+      properties:
+        '@context':
+          type: object
+          example: null
+        '@id':
+          type: string
+          example: null
+        '@type':
+          type: string
+          example: https://w3id.org/edc/v0.0.1/ns/Secret
+        https://w3id.org/edc/v0.0.1/ns/value:
+          type: string
+          example: null
+      example:
+        '@context':
+          '@vocab': https://w3id.org/edc/v0.0.1/ns/
+        '@id': secret-id
+        value: secret-value
+    SecretOutput:
+      required:
+      - https://w3id.org/edc/v0.0.1/ns/value
+      type: object
+      properties:
+        '@id':
+          type: string
+          example: null
+        '@type':
+          type: string
+          example: https://w3id.org/edc/v0.0.1/ns/Secret
+        https://w3id.org/edc/v0.0.1/ns/value:
+          type: string
+          example: null
+      example:
+        '@context':
+          '@vocab': https://w3id.org/edc/v0.0.1/ns/
+        '@id': secret-id
+        '@type': https://w3id.org/edc/v0.0.1/ns/Secret
+        value: secret-value
     SelectionRequestSchema:
       type: object
       properties:
@@ -2611,13 +2584,18 @@ components:
           type: string
           example: https://w3id.org/edc/v0.0.1/ns/SelectionRequest
         destination:
-          $ref: '#/components/schemas/DataAddress'
+          $ref: "#/components/schemas/DataAddress"
         source:
-          $ref: '#/components/schemas/DataAddress'
+          $ref: "#/components/schemas/DataAddress"
         strategy:
           type: string
           example: null
+        transferType:
+          type: string
+          example: null
       example:
+        '@context':
+          '@vocab': https://w3id.org/edc/v0.0.1/ns/
         source:
           '@type': https://w3id.org/edc/v0.0.1/ns/DataAddress
           type: test-src1
@@ -2625,6 +2603,21 @@ components:
           '@type': https://w3id.org/edc/v0.0.1/ns/DataAddress
           type: test-dst2
         strategy: you_custom_strategy
+        transferType: you_custom_transfer_type
+    SuspendTransfer:
+      type: object
+      properties:
+        '@type':
+          type: string
+          example: https://w3id.org/edc/v0.0.1/ns/SuspendTransfer
+        state:
+          type: string
+          example: null
+      example:
+        '@context':
+          '@vocab': https://w3id.org/edc/v0.0.1/ns/
+        '@type': https://w3id.org/edc/v0.0.1/ns/SuspendTransfer
+        reason: a reason to suspend
     TerminateNegotiationSchema:
       type: object
       properties:
@@ -2639,7 +2632,7 @@ components:
           example: null
       example:
         '@context':
-          edc: https://w3id.org/edc/v0.0.1/ns/
+          '@vocab': https://w3id.org/edc/v0.0.1/ns/
         '@type': https://w3id.org/edc/v0.0.1/ns/TerminateNegotiation
         '@id': negotiation-id
         reason: a reason to terminate
@@ -2648,13 +2641,13 @@ components:
       properties:
         '@type':
           type: string
-          example: https://w3id.org/edc/v0.0.1/ns/TransferState
+          example: https://w3id.org/edc/v0.0.1/ns/TerminateTransfer
         state:
           type: string
           example: null
       example:
         '@context':
-          edc: https://w3id.org/edc/v0.0.1/ns/
+          '@vocab': https://w3id.org/edc/v0.0.1/ns/
         '@type': https://w3id.org/edc/v0.0.1/ns/TerminateTransfer
         reason: a reason to terminate
     TransferProcess:
@@ -2670,7 +2663,7 @@ components:
           type: array
           example: null
           items:
-            $ref: '#/components/schemas/CallbackAddress'
+            $ref: "#/components/schemas/CallbackAddress"
         contractAgreementId:
           type: string
           example: null
@@ -2680,23 +2673,13 @@ components:
         counterPartyId:
           type: string
           example: null
+        dataDestination:
+          $ref: "#/components/schemas/DataAddress"
         errorDetail:
           type: string
           example: null
         privateProperties:
-          type: object
-          additionalProperties:
-            type: object
-            example: null
-          example: null
-        properties:
-          type: object
-          additionalProperties:
-            type: string
-            example: null
-            deprecated: true
-          example: null
-          deprecated: true
+          $ref: "#/components/schemas/Properties"
         protocol:
           type: string
           example: null
@@ -2707,11 +2690,11 @@ components:
           type: string
           example: null
           enum:
-            - CONSUMER
-            - PROVIDER
+          - CONSUMER
+          - PROVIDER
       example:
         '@context':
-          edc: https://w3id.org/edc/v0.0.1/ns/
+          '@vocab': https://w3id.org/edc/v0.0.1/ns/
         '@type': https://w3id.org/edc/v0.0.1/ns/TransferProcess
         '@id': process-id
         correlationId: correlation-id
@@ -2719,7 +2702,6 @@ components:
         state: STARTED
         stateTimestamp: 1688465655
         assetId: asset-id
-        connectorId: connectorId
         contractId: contractId
         dataDestination:
           type: data-destination-type
@@ -2728,16 +2710,26 @@ components:
         errorDetail: eventual-error-detail
         createdAt: 1688465655
         callbackAddresses:
-          - transactional: false
-            uri: http://callback/url
-            events:
-              - contract.negotiation
-              - transfer.process
-            authKey: auth-key
-            authCodeId: auth-code-id
+        - transactional: false
+          uri: http://callback/url
+          events:
+          - contract.negotiation
+          - transfer.process
+          authKey: auth-key
+          authCodeId: auth-code-id
     TransferRequest:
+      required:
+      - '@context'
+      - assetId
+      - contractId
+      - counterPartyAddress
+      - protocol
+      - transferType
       type: object
       properties:
+        '@context':
+          type: object
+          example: null
         '@type':
           type: string
           example: https://w3id.org/edc/v0.0.1/ns/TransferRequest
@@ -2748,60 +2740,54 @@ components:
           type: array
           example: null
           items:
-            $ref: '#/components/schemas/CallbackAddress'
+            $ref: "#/components/schemas/CallbackAddress"
         connectorAddress:
           type: string
+          description: please use counterPartyAddress instead
           example: null
+          deprecated: true
         connectorId:
           type: string
+          description: Provider connector id is stored in the contract agreement
           example: null
+          deprecated: true
         contractId:
           type: string
           example: null
+        counterPartyAddress:
+          type: string
+          example: null
         dataDestination:
-          $ref: '#/components/schemas/DataAddress'
+          $ref: "#/components/schemas/DataAddress"
         privateProperties:
-          type: object
-          additionalProperties:
-            type: string
-            example: null
-          example: null
-        properties:
-          type: object
-          additionalProperties:
-            type: string
-            description: "Deprecated as this field is not used anymore, please use\
-              \ privateProperties instead"
-            example: null
-            deprecated: true
-          description: "Deprecated as this field is not used anymore, please use privateProperties\
-            \ instead"
-          example: null
-          deprecated: true
+          $ref: "#/components/schemas/Properties"
         protocol:
+          type: string
+          example: null
+        transferType:
           type: string
           example: null
       example:
         '@context':
-          edc: https://w3id.org/edc/v0.0.1/ns/
+          '@vocab': https://w3id.org/edc/v0.0.1/ns/
         '@type': https://w3id.org/edc/v0.0.1/ns/TransferRequest
         protocol: dataspace-protocol-http
-        connectorAddress: http://provider-address
-        connectorId: provider-id
+        counterPartyAddress: http://provider-address
         contractId: contract-id
         assetId: asset-id
+        transferType: transferType
         dataDestination:
           type: data-destination-type
         privateProperties:
           private-key: private-value
         callbackAddresses:
-          - transactional: false
-            uri: http://callback/url
-            events:
-              - contract.negotiation
-              - transfer.process
-            authKey: auth-key
-            authCodeId: auth-code-id
+        - transactional: false
+          uri: http://callback/url
+          events:
+          - contract.negotiation
+          - transfer.process
+          authKey: auth-key
+          authCodeId: auth-code-id
     TransferState:
       type: object
       properties:
@@ -2813,6 +2799,6 @@ components:
           example: null
       example:
         '@context':
-          edc: https://w3id.org/edc/v0.0.1/ns/
+          '@vocab': https://w3id.org/edc/v0.0.1/ns/
         '@type': https://w3id.org/edc/v0.0.1/ns/TransferState
         state: STARTED
