@@ -14,6 +14,8 @@ The variable ```EDC_API_AUTH_KEY``` in the EDC backend is used to define the API
 **Frontend (EDC UI):**
 The frontend is such an external service whose API requests to the Management-API/API-Wrapper of the EDC backend must be authenticated like any other API request, hence the variable ```EDC_UI_MANAGEMENT_API_KEY``` in the EDC UI. It therefore tells the UI which API-key it should use for its own requests to the EDC backend in order to be successfully authenticated there, so that the UI can query and display data from the EDC backend or create assets etc.
 
+**General Note:** When using docker-compose quotation marks shouldn't be used and therefore the API-Key can't start with a special character like ```&```.
+
 ### Can the EDC forward the response content of an error message from the data sink/source?
 
 It is not possible with the EDC, as this is an intended behavior. The EDC will only return the response-content if the HTTP status code is in the [200..300) range. Otherwise, the response-content will be ignored.
