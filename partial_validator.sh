@@ -1,9 +1,15 @@
 #!/usr/bin/env bash
 
 gradle \
-    :extensions:test \
+    :extensions:contract-termination:test \
+    :extensions:edc-ui-config:test \
+    :extensions:last-commit-info:test \
+    :extensions:policy-always-true:test \
+    :extensions:policy-referring-connector:test \
+    :extensions:sovity-messenger:test \
     :utils:catalog-parser:test \
     :tests:test \
+    --tests 'de.sovity.edc.e2e.wrapper.RecreateAlwaysTruePolicyTest' \
     --tests 'de.sovity.edc.e2e.ApiWrapperDemoTest' \
     --tests 'de.sovity.edc.e2e.AssetApiServiceTest' \
     --tests 'de.sovity.edc.e2e.CatalogApiTest' \
