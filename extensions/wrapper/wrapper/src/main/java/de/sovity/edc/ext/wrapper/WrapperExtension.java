@@ -33,6 +33,7 @@ import org.eclipse.edc.connector.controlplane.services.spi.transferprocess.Trans
 import org.eclipse.edc.connector.controlplane.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.eclipse.edc.policy.engine.spi.PolicyEngine;
+import org.eclipse.edc.policy.engine.spi.RuleBindingRegistry;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.spi.constants.CoreConstants;
 import org.eclipse.edc.spi.system.ServiceExtension;
@@ -68,6 +69,8 @@ public class WrapperExtension implements ServiceExtension {
     private PolicyDefinitionStore policyDefinitionStore;
     @Inject
     private PolicyEngine policyEngine;
+    @Inject
+    private RuleBindingRegistry ruleBindingRegistry;
     @Inject
     private TransferProcessService transferProcessService;
     @Inject
@@ -113,6 +116,7 @@ public class WrapperExtension implements ServiceExtension {
             policyDefinitionService,
             policyDefinitionStore,
             policyEngine,
+            ruleBindingRegistry,
             transferProcessService,
             transferProcessStore,
             typeTransformerRegistry
