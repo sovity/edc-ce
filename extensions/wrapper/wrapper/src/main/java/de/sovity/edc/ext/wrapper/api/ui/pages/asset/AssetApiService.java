@@ -24,9 +24,9 @@ import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.SelfDescriptionService;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import org.eclipse.edc.connector.spi.asset.AssetService;
+import org.eclipse.edc.connector.controlplane.asset.spi.domain.Asset;
+import org.eclipse.edc.connector.controlplane.services.spi.asset.AssetService;
 import org.eclipse.edc.spi.query.QuerySpec;
-import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.jetbrains.annotations.NotNull;
 import org.jooq.DSLContext;
 
@@ -64,7 +64,7 @@ public class AssetApiService {
         Objects.requireNonNull(foundAsset, "Asset with ID %s not found".formatted(assetId));
         val editedAsset = assetMapper.editAsset(foundAsset, request);
         val updatedAsset = assetService.update(editedAsset).orElseThrow(ServiceException::new);
-        assetService.update(editedAsset.getId(), editedAsset.getDataAddress());
+        assetService.update(editedAsset);
         return new IdResponseDto(updatedAsset.getId());
     }
 

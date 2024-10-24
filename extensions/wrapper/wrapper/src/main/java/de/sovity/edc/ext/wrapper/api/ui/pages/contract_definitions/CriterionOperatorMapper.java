@@ -26,7 +26,7 @@ import static java.util.Objects.requireNonNull;
 @RequiredArgsConstructor
 public class CriterionOperatorMapper {
     /**
-     * @see org.eclipse.edc.connector.defaults.storage.CriterionToPredicateConverterImpl
+     * @see org.eclipse.edc.connector.controlplane.defaults.storage.CriterionToPredicateConverterImpl
      */
     private final Map<UiCriterionOperator, String> mappings = Map.of(
             UiCriterionOperator.EQ, "=",

@@ -33,6 +33,12 @@ public class InitiateTransferRequest {
     @Schema(description = "Contract Agreement ID", requiredMode = Schema.RequiredMode.REQUIRED)
     private String contractAgreementId;
 
+    @Schema(description = "Transfer Type. Used to select a compatible DataPlane. " +
+        "Examples are 'HttpData-PUSH', 'HttpData-PULL'. " +
+        "Not to be confused with the 'type' of the data source, or the 'type' of the data sink found in the 'properties'",
+        requiredMode = Schema.RequiredMode.REQUIRED)
+    private String transferType;
+
     @Schema(description = "Data Sink / Data Address", requiredMode = Schema.RequiredMode.REQUIRED)
     private Map<String, String> dataSinkProperties;
 

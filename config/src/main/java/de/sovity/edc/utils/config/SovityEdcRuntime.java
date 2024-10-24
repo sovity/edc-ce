@@ -15,11 +15,14 @@
 package de.sovity.edc.utils.config;
 
 import de.sovity.edc.utils.config.model.ConfigProp;
+import de.sovity.edc.utils.config.utils.ReflectionUtils;
 import lombok.RequiredArgsConstructor;
+import org.eclipse.edc.boot.config.EnvironmentVariables;
+import org.eclipse.edc.boot.config.SystemProperties;
+import org.eclipse.edc.boot.system.ExtensionLoader;
+import org.eclipse.edc.boot.system.ServiceLocator;
+import org.eclipse.edc.boot.system.ServiceLocatorImpl;
 import org.eclipse.edc.boot.system.runtime.BaseRuntime;
-import org.eclipse.edc.spi.monitor.Monitor;
-import org.eclipse.edc.spi.system.ServiceExtensionContext;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -28,20 +31,27 @@ import java.util.List;
  */
 @RequiredArgsConstructor
 public class SovityEdcRuntime extends BaseRuntime {
-    /**
-     * Will be evaluated in sequence to apply default config values and validate the configuration.
-     */
-    private final List<ConfigProp> configProps;
 
-    @Override
-    protected @NotNull ServiceExtensionContext createContext(Monitor monitor) {
-        return new SovityServiceExtensionContext(monitor, configProps, this.loadConfigurationExtensions());
+    public SovityEdcRuntime(List<ConfigProp> configProps) {
+        this(new ServiceLocatorImpl(), configProps);
     }
 
-    public static void boot(List<ConfigProp> configProps) {
-        var runtime = new SovityEdcRuntime(configProps);
+    public SovityEdcRuntime(ServiceLocator serviceLocator, List<ConfigProp> configProps) {
+        // overwrite private final "extensionLoader"
+        var extensionLoader = new ExtensionLoader(serviceLocator);
+        ReflectionUtils.setFieldValue(BaseRuntime.class, this, "extensionLoader", extensionLoader);
 
-        // This method is protected, so we need to have the static method here
-        runtime.boot();
+        // overwrite private final "configLoader"
+        var configurationLoader = new SovityConfigurationLoader(serviceLocator, EnvironmentVariables.ofDefault(),
+            SystemProperties.ofDefault(), configProps);
+        ReflectionUtils.setFieldValue(BaseRuntime.class, this, "configurationLoader", configurationLoader);
+    }
+
+    public static void boot(String[] args, List<ConfigProp> configProps) {
+        // overwrite private static final "programArgs"
+        ReflectionUtils.setFieldValue(BaseRuntime.class, null, "programArgs", args);
+
+        var runtime = new SovityEdcRuntime(configProps);
+        runtime.boot(true);
     }
 }

@@ -163,9 +163,6 @@ class PolicyValidatorTest {
                 .build();
         var permission = Permission.Builder.newInstance()
                 .duty(mock(Duty.class))
-                .assigner("assigner")
-                .assignee("assignee")
-                .target("target")
                 .action(action)
                 .build();
 
@@ -175,8 +172,6 @@ class PolicyValidatorTest {
         // assert
         assertThat(errors.getErrors()).containsExactlyInAnyOrder(
                 "$: Permission has duties, which is currently unsupported.",
-                "$: Permission has an assigner, which is currently unsupported.",
-                "$: Permission has an assignee, which is currently unsupported.",
                 "$.action: Action has a type that is not 'USE', but 'idk'.",
                 "$.action: Action has a value for includedIn, which is currently unsupported.",
                 "$.action: Action has a constraint, which is currently unsupported."

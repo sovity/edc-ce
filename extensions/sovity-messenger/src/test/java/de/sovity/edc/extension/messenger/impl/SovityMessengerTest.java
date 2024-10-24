@@ -43,6 +43,7 @@ class SovityMessengerTest {
             StatusResult.success(
                 new SovityMessageRequest(
                     new URL("https://example.com/api/dsp"),
+                    "counter-party-id",
                     """
                         {
                             "status": "no_handler",
@@ -53,7 +54,7 @@ class SovityMessengerTest {
 
         when(registry.dispatch(any(), any())).thenReturn(future);
         val messenger = new SovityMessenger(registry, new ObjectMapperFactory().createObjectMapper(), new ConsoleMonitor());
-        val answer = messenger.send(Answer.class, "https://example.com/api/dsp", new UnsupportedMessage());
+        val answer = messenger.send(Answer.class, "https://example.com/api/dsp", "counterPartyId", new UnsupportedMessage());
 
         // act
         val exception = assertThrows(ExecutionException.class, answer::get);

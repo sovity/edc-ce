@@ -142,8 +142,8 @@ public class UiResourceImpl implements UiResource {
     }
 
     @Override
-    public List<UiDataOffer> getCatalogPageDataOffers(String connectorEndpoint) {
-        return catalogApiService.fetchDataOffers(connectorEndpoint);
+    public List<UiDataOffer> getCatalogPageDataOffers(String participantId, String connectorEndpoint) {
+        return catalogApiService.fetchDataOffers(participantId, connectorEndpoint);
     }
 
     @Override

@@ -18,7 +18,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Contract Definition Criterion
- * See <pre>org.eclipse.edc.connector.defaults.storage.CriterionToPredicateConverterImpl</pre>
+ * See <pre>org.eclipse.edc.connector.controlplane.defaults.storage.CriterionToPredicateConverterImpl</pre>
  */
 
 @Schema(description = "Operator for constraints", enumAsRef = true)

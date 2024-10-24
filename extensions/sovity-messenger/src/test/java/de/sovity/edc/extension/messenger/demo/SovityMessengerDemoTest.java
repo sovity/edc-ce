@@ -14,8 +14,7 @@
 
 package de.sovity.edc.extension.messenger.demo;
 
-import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
-import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
+import de.sovity.edc.extension.e2e.junit.CeIntegrationTestExtension;
 import de.sovity.edc.extension.messenger.SovityMessenger;
 import de.sovity.edc.extension.messenger.SovityMessengerException;
 import de.sovity.edc.extension.messenger.demo.message.Addition;
@@ -26,42 +25,38 @@ import de.sovity.edc.extension.messenger.demo.message.Signal;
 import de.sovity.edc.extension.messenger.demo.message.Sqrt;
 import de.sovity.edc.extension.messenger.demo.message.UnregisteredMessage;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
+import de.sovity.edc.utils.config.ConfigUtils;
 import lombok.SneakyThrows;
 import lombok.val;
-import org.junit.jupiter.api.BeforeEach;
+import org.eclipse.edc.spi.system.configuration.Config;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.concurrent.ExecutionException;
 
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 class SovityMessengerDemoTest {
 
+    @RegisterExtension
+    static CeIntegrationTestExtension emitterExtension = CeIntegrationTestExtension.builder()
+        .additionalModule(":launchers:connectors:sovity-dev")
+        .build();
+
     @DisabledOnGithub
     @Test
     @SneakyThrows
-    void demo() {
-        /*
-         * Get a reference to the SovityMessenger. This is equivalent to
-         *
-         * @Inject SovityMessenger messenger;
-         *
-         * in an extension.
-         *
-         * This messenger is already configured to accept messages in de.sovity.edc.extension.messenger.demo.SovityMessengerDemo#initialize
-         */
-        val messenger = emitterExtension.getEdcRuntimeExtension().getContext().getService(SovityMessenger.class);
-
+    void demo(SovityMessenger messenger, Config config) {
         System.out.println("START MARKER");
+        var receiverId = ConfigUtils.getParticipantId(config);
+        var receiverAddress = ConfigUtils.getProtocolApiUrl(config);
 
         // Send messages
-        val added = messenger.send(Answer.class, receiverAddress, new Addition(20, 30));
-        val rooted = messenger.send(Answer.class, receiverAddress, new Sqrt(9.0));
-        val withClaims = messenger.send(Answer.class, receiverAddress, new Counterparty());
-        val unregistered = messenger.send(Answer.class, receiverAddress, new UnregisteredMessage());
-        messenger.send(receiverAddress, new Signal());
+        val added = messenger.send(Answer.class, receiverAddress, receiverId, new Addition(20, 30));
+        val rooted = messenger.send(Answer.class, receiverAddress, receiverId, new Sqrt(9.0));
+        val withClaims = messenger.send(Answer.class, receiverAddress, receiverId, new Counterparty());
+        val unregistered = messenger.send(Answer.class, receiverAddress, receiverId, new UnregisteredMessage());
+        messenger.send(receiverAddress, receiverId, new Signal());
 
         try {
             // Wait for the answers
@@ -77,8 +72,8 @@ class SovityMessengerDemoTest {
         }
 
         try {
-            val failing1 = messenger.send(Answer.class, receiverAddress, new Failing("Some content 1"));
-            val failing2 = messenger.send(Answer.class, receiverAddress, new Failing("Some content 2"));
+            val failing1 = messenger.send(Answer.class, receiverAddress, receiverId, new Failing("Some content 1"));
+            val failing2 = messenger.send(Answer.class, receiverAddress, receiverId, new Failing("Some content 2"));
             failing1.get(2, SECONDS);
             failing2.get(2, SECONDS);
         } catch (ExecutionException e) {
@@ -92,35 +87,5 @@ class SovityMessengerDemoTest {
         }
 
         System.out.println("END MARKER");
-    }
-
-    @RegisterExtension
-    static EdcRuntimeExtensionWithTestDatabase emitterExtension = new EdcRuntimeExtensionWithTestDatabase(
-        ":launchers:connectors:sovity-dev",
-        "emitter",
-        testDatabase -> {
-            ConnectorConfig emitterConfig = forTestDatabase("emitter", testDatabase);
-            return emitterConfig.getProperties();
-        }
-    );
-
-
-    private static ConnectorConfig receiverConfig;
-
-    @RegisterExtension
-    static EdcRuntimeExtensionWithTestDatabase receiverExtension = new EdcRuntimeExtensionWithTestDatabase(
-        ":launchers:connectors:sovity-dev",
-        "receiver",
-        testDatabase -> {
-            receiverConfig = forTestDatabase("receiver", testDatabase);
-            return receiverConfig.getProperties();
-        }
-    );
-
-    private String receiverAddress;
-
-    @BeforeEach
-    void setup() {
-        receiverAddress = receiverConfig.getProtocolApiUrl();
     }
 }

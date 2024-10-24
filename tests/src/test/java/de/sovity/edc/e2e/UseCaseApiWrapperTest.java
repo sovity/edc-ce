@@ -36,11 +36,11 @@ import de.sovity.edc.client.gen.model.UiPolicyExpression;
 import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
 import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
-import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
-import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
-import de.sovity.edc.extension.e2e.extension.Consumer;
-import de.sovity.edc.extension.e2e.extension.E2eTestExtension;
-import de.sovity.edc.extension.e2e.extension.Provider;
+import de.sovity.edc.extension.e2e.connector.remotes.management_api.ManagementApiConnectorRemote;
+import de.sovity.edc.extension.e2e.connector.remotes.test_backend_controller.TestBackendRemote;
+import de.sovity.edc.extension.e2e.junit.CeE2eTestExtension;
+import de.sovity.edc.extension.e2e.junit.utils.Consumer;
+import de.sovity.edc.extension.e2e.junit.utils.Provider;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,31 +50,33 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import java.time.OffsetDateTime;
 import java.util.List;
 
-import static de.sovity.edc.extension.e2e.extension.Helpers.defaultE2eTestExtension;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class UseCaseApiWrapperTest {
 
     @RegisterExtension
-    private static E2eTestExtension e2eTestExtension = defaultE2eTestExtension();
+    private static CeE2eTestExtension e2eTestExtension = CeE2eTestExtension.builder()
+        .additionalModule(":launchers:connectors:sovity-dev")
+        .build();
 
-    private MockDataAddressRemote dataAddress;
+    private TestBackendRemote dataAddress;
     private final String dataOfferData = "expected data 123";
 
     private final String dataOfferId = "my-data-offer-2023-11";
 
     @BeforeEach
-    void setup(@Provider ConnectorRemote providerConnector) {
+    void setup(@Provider ManagementApiConnectorRemote providerConnector) {
         // We use the provider EDC as data sink / data source (it has the test-backend-controller extension)
-        dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultApiUrl());
+        dataAddress = new TestBackendRemote(providerConnector.getConfig().getDefaultApiUrl());
     }
 
     @DisabledOnGithub
     @Test
     void catalog_filtering_by_like(
         @Consumer EdcClient consumerClient,
-        @Provider ConnectorRemote providerConnector,
-        @Provider EdcClient providerClient) {
+        @Provider ManagementApiConnectorRemote providerConnector,
+        @Provider EdcClient providerClient
+    ) {
 
         // arrange
         createPolicy(providerClient);
@@ -94,10 +96,11 @@ class UseCaseApiWrapperTest {
     }
 
     private CatalogQuery criterion(
-        ConnectorRemote providerConnector,
+        ManagementApiConnectorRemote providerConnector,
         String leftOperand,
         CatalogFilterExpressionOperator operator,
-        String rightOperand) {
+        String rightOperand
+    ) {
 
         return CatalogQuery.builder()
             .connectorEndpoint(getProtocolEndpoint(providerConnector))
@@ -193,7 +196,7 @@ class UseCaseApiWrapperTest {
         providerClient.uiApi().createContractDefinition(contractDefinition);
     }
 
-    private String getProtocolEndpoint(ConnectorRemote connector) {
+    private String getProtocolEndpoint(ManagementApiConnectorRemote connector) {
         return connector.getConfig().getProtocolApiUrl();
     }
 }

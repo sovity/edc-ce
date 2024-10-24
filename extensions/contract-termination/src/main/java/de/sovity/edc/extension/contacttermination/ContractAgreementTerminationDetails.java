@@ -16,7 +16,7 @@ package de.sovity.edc.extension.contacttermination;
 
 import de.sovity.edc.ext.db.jooq.enums.ContractTerminatedBy;
 import lombok.Builder;
-import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
+import org.eclipse.edc.connector.controlplane.contract.spi.types.negotiation.ContractNegotiation;
 
 import java.time.OffsetDateTime;
 

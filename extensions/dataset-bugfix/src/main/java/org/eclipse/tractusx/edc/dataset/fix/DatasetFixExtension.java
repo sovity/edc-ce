@@ -24,11 +24,11 @@ import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerResponseContext;
 import jakarta.ws.rs.container.ContainerResponseFilter;
-import org.eclipse.edc.protocol.dsp.api.configuration.DspApiConfiguration;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
 import org.eclipse.edc.web.spi.WebService;
+import org.eclipse.edc.web.spi.configuration.ApiContext;
 
 import static jakarta.ws.rs.HttpMethod.GET;
 import static org.eclipse.edc.jsonld.spi.JsonLdKeywords.TYPE;
@@ -37,16 +37,12 @@ import static org.eclipse.edc.jsonld.spi.PropertyAndTypeNames.ODRL_POLICY_ATTRIB
 
 public class DatasetFixExtension implements ServiceExtension {
 
-
-    @Inject
-    private DspApiConfiguration apiConfiguration;
-
     @Inject
     private WebService webService;
 
     @Override
     public void initialize(ServiceExtensionContext context) {
-        webService.registerResource(apiConfiguration.getContextAlias(), new DatasetFilter());
+        webService.registerResource(ApiContext.PROTOCOL, new DatasetFilter());
     }
 
     private static class DatasetFilter implements ContainerResponseFilter {

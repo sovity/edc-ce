@@ -15,8 +15,8 @@
 package de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services;
 
 import lombok.RequiredArgsConstructor;
-import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
-import org.eclipse.edc.connector.spi.contractagreement.ContractAgreementService;
+import org.eclipse.edc.connector.controlplane.contract.spi.types.agreement.ContractAgreement;
+import org.eclipse.edc.connector.controlplane.services.spi.contractagreement.ContractAgreementService;
 import org.eclipse.edc.spi.EdcException;
 
 import java.util.Optional;

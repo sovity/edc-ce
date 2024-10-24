@@ -18,22 +18,20 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import de.sovity.edc.extension.messenger.impl.ObjectMapperFactory;
 import de.sovity.edc.extension.messenger.impl.SovityMessageRequest;
 import lombok.val;
-import org.json.JSONException;
+import net.javacrumbs.jsonunit.assertj.JsonAssertions;
 import org.junit.jupiter.api.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
 class SovityMessageRequestTest {
 
-
     @Test
-    void canSerialize() throws MalformedURLException, JsonProcessingException, JSONException {
+    void canSerialize() throws MalformedURLException, JsonProcessingException {
         // arrange
         val message = new SovityMessageRequest(
             new URL("https://example.com"),
+            "someCountrerPartyId",
             "{\"type\":\"foo\"}",
             "body content"
         );
@@ -44,15 +42,15 @@ class SovityMessageRequestTest {
         val serialized = mapper.writeValueAsString(message);
 
         // assert
-        JSONAssert.assertEquals(
-            """
+        // TODO: change to allow compilation. Needs diffing and fixing.
+        JsonAssertions.assertThatJson(serialized)
+            .isEqualTo(
+                """
                 {
                   "https://semantic.sovity.io/message/generic/header": "{\\"type\\":\\"foo\\"}",
                   "https://semantic.sovity.io/message/generic/body": "body content"
                 }
-                """,
-            serialized,
-            JSONCompareMode.STRICT
-        );
+                """
+            );
     }
 }

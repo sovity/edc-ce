@@ -50,7 +50,7 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
   - [ ] Set the UI release version for `EDC_UI_IMAGE` of
         the [docker-compose's .env file](https://github.com/sovity/edc-ce/blob/main/.env).
   - [ ] If the Eclipse EDC version changed, update
-        the [eclipse-edc-management-api.yaml file](https://github.com/sovity/edc-ce/blob/main/docs/api/eclipse-edc-management-api.yaml).
+        the [eclipse-edc-management-api.yaml file](https://github.com/sovity/edc-ce/blob/main/docs/api/eclipse-edc-management-api.yaml) with [the official one](https://app.swaggerhub.com/apis/eclipse-edc-bot/management-api/).
   - [ ] Run all tests locally as long as the [GH flaky tests](https://github.com/sovity/edc-ce/issues/870) are a problem.
   - [ ] Merge the `release-prep` PR.
 - [ ] Wait for the main branch to be green. You can check the status in GH [actions](https://github.com/sovity/edc-ce/actions).

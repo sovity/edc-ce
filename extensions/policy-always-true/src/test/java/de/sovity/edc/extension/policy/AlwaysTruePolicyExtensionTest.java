@@ -14,48 +14,55 @@
 
 package de.sovity.edc.extension.policy;
 
-import org.eclipse.edc.connector.contract.spi.offer.ContractDefinitionResolver;
+import de.sovity.edc.extension.e2e.junit.CeIntegrationTestExtension;
+import de.sovity.edc.extension.e2e.junit.edc.EmbeddedRuntimeFixed;
+import org.eclipse.edc.connector.controlplane.contract.spi.offer.ContractDefinitionResolver;
+import org.eclipse.edc.connector.controlplane.policy.spi.PolicyDefinition;
+import org.eclipse.edc.connector.controlplane.services.spi.policydefinition.PolicyDefinitionService;
+import org.eclipse.edc.connector.dataplane.selector.spi.client.DataPlaneClientFactory;
 import org.eclipse.edc.connector.dataplane.selector.spi.store.DataPlaneInstanceStore;
-import org.eclipse.edc.connector.policy.spi.PolicyDefinition;
-import org.eclipse.edc.connector.spi.policydefinition.PolicyDefinitionService;
-import org.eclipse.edc.junit.annotations.ApiTest;
-import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.policy.engine.spi.PolicyContext;
 import org.eclipse.edc.policy.engine.spi.PolicyEngine;
 import org.eclipse.edc.spi.protocol.ProtocolWebhook;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static de.sovity.edc.extension.policy.AlwaysTruePolicyConstants.POLICY_DEFINITION_ID;
 import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
-@ApiTest
-@ExtendWith(EdcExtension.class)
 class AlwaysTruePolicyExtensionTest {
 
+    @RegisterExtension
+    static CeIntegrationTestExtension extension = CeIntegrationTestExtension.builder()
+        .additionalModule(":extensions:edc-ui-config")
+        .additionalModule(":launchers:utils:vanilla-control-plane")
+        .skipDb(true)
+        .beforeEdcStartup(runtime -> runtime.registerServiceMock(DataPlaneClientFactory.class, mock()))
+        .build();
+
     @BeforeEach
-    void setUp(EdcExtension extension) {
-        extension.registerServiceMock(ProtocolWebhook.class, mock(ProtocolWebhook.class));
-        extension.registerServiceMock(
-                DataPlaneInstanceStore.class,
-                mock(DataPlaneInstanceStore.class));
+    void setUp(EmbeddedRuntimeFixed runtime) {
+        runtime.registerServiceMock(ProtocolWebhook.class, mock());
+        runtime.registerServiceMock(DataPlaneInstanceStore.class, mock());
     }
 
     @Test
-    void alwaysTruePolicyDef(PolicyEngine policyEngine,
-                             PolicyDefinitionService policyDefinitionService) {
+    void alwaysTruePolicyDef(
+        PolicyEngine policyEngine,
+        PolicyDefinitionService policyDefinitionService
+    ) {
         // arrange
         var alwaysTrue = alwaysTruePolicy(policyDefinitionService);
 
         // act
         var result = policyEngine.evaluate(
-                ContractDefinitionResolver.CATALOGING_SCOPE,
-                alwaysTrue.getPolicy(),
-                mock(PolicyContext.class)
+            ContractDefinitionResolver.CATALOGING_SCOPE,
+            alwaysTrue.getPolicy(),
+            mock(PolicyContext.class)
         );
 
         // assert

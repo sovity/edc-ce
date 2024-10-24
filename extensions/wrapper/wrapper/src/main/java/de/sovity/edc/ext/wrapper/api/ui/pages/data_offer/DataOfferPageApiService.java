@@ -17,7 +17,7 @@ import de.sovity.edc.extension.policy.AlwaysTruePolicyConstants;
 import de.sovity.edc.extension.policy.services.AlwaysTruePolicyDefinitionService;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import org.eclipse.edc.spi.types.domain.asset.Asset;
+import org.eclipse.edc.connector.controlplane.asset.spi.domain.Asset;
 import org.eclipse.edc.web.spi.exception.InvalidRequestException;
 import org.jetbrains.annotations.NotNull;
 import org.jooq.DSLContext;

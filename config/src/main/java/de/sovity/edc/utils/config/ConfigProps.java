@@ -127,6 +127,19 @@ public class ConfigProps {
         .required(true)
     );
 
+    public static final ConfigProp MY_EDC_VAULT_INIT_ENABLED = addCeProp(builder -> builder
+        .category(Category.BASIC)
+        .property("my.edc.vault.init.enabled")
+        .description("Enable Vault Initialization. Enabled by default if in-memory vault is active.")
+        .defaultValue("true")
+    );
+
+    public static final ConfigProp MY_EDC_VAULT_INIT_ENTRIES_WILDCARD = addCeProp(builder -> builder
+        .category(Category.BASIC)
+        .property("my.edc.vault.init.entries.*")
+        .description("Puts given value into the vault on startup. Replace '*' with the key you want to put into the vault.")
+    );
+
     /* Auth */
 
     // EDC_API_AUTH_KEY: ApiKeyDefaultValue
@@ -152,7 +165,7 @@ public class ConfigProps {
         .category(Category.C2C_IAM)
         .property("edc.oauth.token.url")
         .description("OAuth2 / DAPS: Token URL")
-        .relevantIf(props -> MY_EDC_C2C_IAM_TYPE.getRaw(props).startsWith("daps"))
+        .relevantIf(C2cIamType::isDaps)
         .required(true)
     );
 
@@ -160,7 +173,7 @@ public class ConfigProps {
         .category(Category.C2C_IAM)
         .property("edc.oauth.provider.jwks.url")
         .description("OAuth2 / DAPS: JWKS URL")
-        .relevantIf(props -> MY_EDC_C2C_IAM_TYPE.getRaw(props).startsWith("daps"))
+        .relevantIf(C2cIamType::isDaps)
         .required(true)
     );
 
@@ -168,7 +181,7 @@ public class ConfigProps {
         .category(Category.C2C_IAM)
         .property("edc.oauth.client.id")
         .description("OAuth2 / DAPS: Client ID. Defaults to Participant ID")
-        .relevantIf(props -> MY_EDC_C2C_IAM_TYPE.getRaw(props).startsWith("daps"))
+        .relevantIf(C2cIamType::isDaps)
         .defaultValueFn(MY_EDC_PARTICIPANT_ID::getRaw)
     );
 
@@ -176,7 +189,7 @@ public class ConfigProps {
         .category(Category.C2C_IAM)
         .property("edc.keystore")
         .description("File-Based Vault: Keystore file (.jks)")
-        .relevantIf(props -> MY_EDC_C2C_IAM_TYPE.getRaw(props).startsWith("daps"))
+        .relevantIf(C2cIamType::isDaps)
         .required(true)
     );
 
@@ -184,7 +197,7 @@ public class ConfigProps {
         .category(Category.C2C_IAM)
         .property("edc.keystore.password")
         .description("File-Based Vault: Keystore password")
-        .relevantIf(props -> MY_EDC_C2C_IAM_TYPE.getRaw(props).startsWith("daps"))
+        .relevantIf(C2cIamType::isDaps)
         .required(true)
     );
 
@@ -192,7 +205,7 @@ public class ConfigProps {
         .category(Category.C2C_IAM)
         .property("edc.oauth.certificate.alias")
         .description("OAuth2 / DAPS: Certificate Vault Entry for the Public Key. Default: '1'")
-        .relevantIf(props -> MY_EDC_C2C_IAM_TYPE.getRaw(props).startsWith("daps"))
+        .relevantIf(C2cIamType::isDaps)
         .defaultValue("1")
     );
 
@@ -200,7 +213,7 @@ public class ConfigProps {
         .category(Category.C2C_IAM)
         .property("edc.oauth.private.key.alias")
         .description("OAuth2 / DAPS: Certificate Vault Entry for the Private Key. Default: '1'")
-        .relevantIf(props -> MY_EDC_C2C_IAM_TYPE.getRaw(props).startsWith("daps"))
+        .relevantIf(C2cIamType::isDaps)
         .defaultValue("1")
     );
 
@@ -208,10 +221,10 @@ public class ConfigProps {
         .category(Category.C2C_IAM)
         .property("edc.oauth.provider.audience")
         .description("OAuth2 / DAPS: Provider Audience")
-        .relevantIf(props -> MY_EDC_C2C_IAM_TYPE.getRaw(props).startsWith("daps"))
+        .relevantIf(C2cIamType::isDaps)
         .warnIfOverridden(true)
         .defaultValueFn(props -> {
-            if ("daps-omejdn".equals(MY_EDC_C2C_IAM_TYPE.getRaw(props))) {
+            if (C2cIamType.isDapsOmejdn(props)) {
                 return "idsc:IDS_CONNECTORS_ALL";
             }
 
@@ -224,7 +237,7 @@ public class ConfigProps {
         .category(Category.C2C_IAM)
         .property("edc.oauth.endpoint.audience")
         .description("OAuth2 / DAPS: Endpoint Audience")
-        .relevantIf(props -> MY_EDC_C2C_IAM_TYPE.getRaw(props).startsWith("daps"))
+        .relevantIf(C2cIamType::isDaps)
         .warnIfOverridden(true)
         .defaultValue("idsc:IDS_CONNECTORS_ALL")
     );
@@ -233,10 +246,10 @@ public class ConfigProps {
         .category(Category.C2C_IAM)
         .property("edc.agent.identity.key")
         .description("OAuth2 / DAPS: Agent Identity Key")
-        .relevantIf(props -> MY_EDC_C2C_IAM_TYPE.getRaw(props).startsWith("daps"))
+        .relevantIf(C2cIamType::isDaps)
         .warnIfOverridden(true)
         .defaultValueFn(props -> {
-            if ("daps-omejdn".equals(MY_EDC_C2C_IAM_TYPE.getRaw(props))) {
+            if (C2cIamType.isDapsOmejdn(props)) {
                 return "client_id";
             }
 
@@ -290,7 +303,7 @@ public class ConfigProps {
         .category(Category.ADVANCED)
         .property("edc.flyway.clean.enable")
         .description(
-            "Allows the deletion of the database. Goes in pair with edc.flyway.clean.enable. Both options must be enabled for a clean to happen.")
+            "Allows the deletion of the database. Goes in pair with edc.flyway.clean. Both options must be enabled for a clean to happen.")
         .defaultValue("false")
         .warnIfOverridden(true)
     );
@@ -299,7 +312,7 @@ public class ConfigProps {
         .category(Category.ADVANCED)
         .property("edc.flyway.clean")
         .description(
-            "Request the deletion of the database. Goes in pair with edc.flyway.clean. Both options must be enabled for a clean to happen.")
+            "Request the deletion of the database. Goes in pair with edc.flyway.clean.enable. Both options must be enabled for a clean to happen.")
         .defaultValue("false")
         .warnIfOverridden(true)
     );
@@ -345,16 +358,82 @@ public class ConfigProps {
         .defaultValue("Unknown Version")
     );
 
-    public static final ConfigProp MY_EDC_DOCKER_COMPOSE_SERVICE_NAME = addCeProp(builder -> builder
+    public static final ConfigProp EDC_TRANSFER_SEND_RETRY_LIMIT = addCeProp(builder -> builder
         .category(Category.ADVANCED)
-        .property("edc.web.rest.cors.origins")
-        .description("CORS: Allowed Origins")
-        .warnIfOverridden(true)
-        .relevantIf(props -> !NetworkType.isProduction(props))
-        .defaultValue("*")
+        .property("edc.transfer.send.retry.limit")
+        .description("Transfer Process Retry Limit")
+        .defaultValue("1")
     );
 
+    public static final ConfigProp EDC_TRANSFER_SEND_RETRY_BASE_DELAY_MS = addCeProp(builder -> builder
+        .category(Category.ADVANCED)
+        .property("edc.transfer.send.retry.base-delay.ms")
+        .description("Transfer Process Retry Base Delay in Milliseconds")
+        .defaultValue("100")
+    );
+
+    public static final ConfigProp EDC_NEGOTIATION_CONSUMER_SEND_RETRY_LIMIT = addCeProp(builder -> builder
+        .category(Category.ADVANCED)
+        .property("edc.negotiation.consumer.send.retry.limit")
+        .description("Contract Negotiation Retry Limit (Consuming Side)")
+        .defaultValue("1")
+    );
+
+    public static final ConfigProp EDC_NEGOTIATION_PROVIDER_SEND_RETRY_LIMIT = addCeProp(builder -> builder
+        .category(Category.ADVANCED)
+        .property("edc.negotiation.provider.send.retry.limit")
+        .description("Contract Negotiation Retry Limit (Providing Side)")
+        .defaultValue("1")
+    );
+
+    public static final ConfigProp EDC_NEGOTIATION_CONSUMER_SEND_RETRY_BASE_DELAY_MS = addCeProp(builder -> builder
+        .category(Category.ADVANCED)
+        .property("edc.negotiation.consumer.send.retry.base-delay.ms")
+        .description("Contract Negotiation Retry Base Delay in Milliseconds (Consuming Side)")
+        .defaultValue("100")
+    );
+
+    public static final ConfigProp EDC_NEGOTIATION_PROVIDER_SEND_RETRY_BASE_DELAY_MS = addCeProp(builder -> builder
+        .category(Category.ADVANCED)
+        .property("edc.negotiation.provider.send.retry.base-delay.ms")
+        .description("Contract Negotiation Retry Base Delay in Milliseconds (Providing Side)")
+        .defaultValue("100")
+    );
+
+
     /* Defaults of EDC Configuration */
+
+    public static final ConfigProp EDC_DATASOURCE_DEFAULT_NAME = addCeProp(builder -> builder
+        .category(Category.RAW_EDC_CONFIG_DEFAULTS)
+        .property("edc.datasource.default.name")
+        .description("Ensures the EDC initializes the DataSource 'default' because it initializes all edc.datasource.* data sources.")
+        .warnIfOverridden(true)
+        .defaultValue("default")
+    );
+
+    public static final ConfigProp MY_EDC_VAULT_INIT_ENTRY_DEFAULT_DATASOURCE_JDBC_URL = addCeProp(builder -> builder
+        .category(Category.RAW_EDC_CONFIG_DEFAULTS)
+        .property("my.edc.vault.init.entries.edc.datasource.default.url")
+        .description("Initializes Vault Value: edc.datasource.default.url")
+        .warnIfOverridden(true)
+        .defaultValueFn(MY_EDC_JDBC_URL::getRaw)
+    );
+
+    public static final ConfigProp MY_EDC_VAULT_INIT_ENTRY_DEFAULT_DATASOURCE_JDBC_USER = addCeProp(builder -> builder
+        .category(Category.RAW_EDC_CONFIG_DEFAULTS)
+        .property("my.edc.vault.init.entries.edc.datasource.default.user")
+        .description("Initializes Vault Value: edc.datasource.default.user")
+        .warnIfOverridden(true)
+        .defaultValueFn(MY_EDC_JDBC_USER::getRaw)
+    );
+
+    public static final ConfigProp MY_EDC_VAULT_INIT_ENTRY_DEFAULT_DATASOURCE_JDBC_PASSWORD = addCeProp(builder -> builder
+        .category(Category.RAW_EDC_CONFIG_DEFAULTS)
+        .property("my.edc.vault.init.entries.edc.datasource.default.password")
+        .description("Initializes Vault Value: edc.datasource.default.password")
+        .warnIfOverridden(true)
+        .defaultValueFn(MY_EDC_JDBC_PASSWORD::getRaw)
+    );
 
     public static final ConfigProp MY_EDC_PROTOCOL = addCeProp(builder -> builder
         .category(Category.RAW_EDC_CONFIG_DEFAULTS)
@@ -520,28 +599,16 @@ public class ConfigProps {
         .defaultValueFn(EDC_DSP_CALLBACK_ADDRESS::getRaw)
     );
 
-    public static final ConfigProp EDC_DATASOURCE_DEFAULT_URL = addCeProp(builder -> builder
+    public static final ConfigProp EDC_DATAPLANE_API_PUBLIC_BASEURL = addCeProp(builder -> builder
         .category(Category.RAW_EDC_CONFIG_DEFAULTS)
-        .property("edc.datasource.default.url")
-        .description("Default Datasource: JDBC URL. Prefer setting %s".formatted(MY_EDC_JDBC_URL.getProperty()))
+        .property("edc.dataplane.api.public.baseurl")
+        .description("Base URL for the public data plane API")
         .warnIfOverridden(true)
-        .defaultValueFn(MY_EDC_JDBC_URL::getRaw)
-    );
-
-    public static final ConfigProp EDC_DATASOURCE_DEFAULT_USER = addCeProp(builder -> builder
-        .category(Category.RAW_EDC_CONFIG_DEFAULTS)
-        .property("edc.datasource.default.user")
-        .description("Default Datasource: Username. Prefer setting %s".formatted(MY_EDC_JDBC_USER.getProperty()))
-        .warnIfOverridden(true)
-        .defaultValueFn(MY_EDC_JDBC_USER::getRaw)
-    );
-
-    public static final ConfigProp EDC_DATASOURCE_DEFAULT_PASSWORD = addCeProp(builder -> builder
-        .category(Category.RAW_EDC_CONFIG_DEFAULTS)
-        .property("edc.datasource.default.password")
-        .description("Default Datasource: Password. Prefer setting %s".formatted(MY_EDC_JDBC_PASSWORD.getProperty()))
-        .warnIfOverridden(true)
-        .defaultValueFn(MY_EDC_JDBC_PASSWORD::getRaw)
+        .defaultValueFn(props -> UrlPathUtils.urlPathJoin(
+            ConfigUtils.getPublicApiUrl(props),
+            // See org.eclipse.edc.test.e2e.TransferEndToEndParticipant#dataPlaneConfiguration
+            "/v2"
+        ))
     );
 
     public static final ConfigProp EDC_DATASOURCE_LOGGINGHOUSE_URL = addCeProp(builder -> builder
@@ -575,6 +642,39 @@ public class ConfigProps {
             "but for some reason it is required, and EDC won't start up if it isn't configured." +
             "It is created in the Dockerfile")
         .relevantIf(NetworkType::isProduction)
+    );
+
+    public static final ConfigProp EDC_DATAPLANE_TRANSFERTYPES = addCeProp(builder -> builder
+        .category(Category.RAW_EDC_CONFIG_DEFAULTS)
+        .property("edc.dataplane.transfertypes")
+        .description("Data Plane Transfer Types, not to be confused with the Data Plane Source and Dest Types")
+        .warnIfOverridden(true)
+        .defaultValue("HttpData-PUSH,HttpData-PULL,AmazonS3-PUSH")
+    );
+
+    // MY_EDC_TRANSFER_TYPES=HttpData,HttpProxy,HttpPush,AzureStorage,AmazonS3
+    public static final ConfigProp MY_EDC_TRANSFER_TYPES = addCeProp(builder -> builder
+        .category(Category.RAW_EDC_CONFIG_DEFAULTS)
+        .property("my.edc.transfer.types")
+        .description("Data Plane Source and Dest Types")
+        .warnIfOverridden(true)
+        .defaultValue("HttpData,HttpProxy,HttpPush")
+    );
+
+    public static final ConfigProp EDC_DATAPLANE_DESTTYPES = addCeProp(builder -> builder
+        .category(Category.RAW_EDC_CONFIG_DEFAULTS)
+        .property("edc.dataplane.desttypes")
+        .description("Data Plane Destination Types")
+        .warnIfOverridden(true)
+        .defaultValueFn(MY_EDC_TRANSFER_TYPES::getRaw)
+    );
+
+    public static final ConfigProp EDC_DATAPLANE_SOURCETYPES = addCeProp(builder -> builder
+        .category(Category.RAW_EDC_CONFIG_DEFAULTS)
+        .property("edc.dataplane.sourcetypes")
+        .description("Data Plane Source Types")
+        .warnIfOverridden(true)
+        .defaultValueFn(MY_EDC_TRANSFER_TYPES::getRaw)
     );
 
     private static ConfigProp addCeProp(Consumer<ConfigProp.ConfigPropBuilder> builderFn) {
@@ -620,6 +720,30 @@ public class ConfigProps {
 
         public static boolean isUnitTest(Map<String, String> props) {
             return NetworkType.UNIT_TEST.equals(MY_EDC_NETWORK_TYPE.getRaw(props));
+        }
+    }
+
+    @UtilityClass
+    public static class C2cIamType {
+        public static final String DAPS_SOVITY = "daps-sovity";
+        public static final String DAPS_OMEJDN = "daps-omejdn";
+        public static final String MOCK_IAM = "mock-iam";
+        public static final List<String> ALL_NETWORK_TYPES = List.of(DAPS_SOVITY, DAPS_OMEJDN, MOCK_IAM);
+
+        public static boolean isDaps(Map<String, String> props) {
+            return isDapsSovity(props) || isDapsOmejdn(props);
+        }
+
+        public static boolean isDapsSovity(Map<String, String> props) {
+            return DAPS_SOVITY.equals(MY_EDC_C2C_IAM_TYPE.getRaw(props));
+        }
+
+        public static boolean isDapsOmejdn(Map<String, String> props) {
+            return DAPS_OMEJDN.equals(MY_EDC_C2C_IAM_TYPE.getRaw(props));
+        }
+
+        public static boolean isMockIam(Map<String, String> props) {
+            return MOCK_IAM.equals(MY_EDC_C2C_IAM_TYPE.getRaw(props));
         }
     }
 

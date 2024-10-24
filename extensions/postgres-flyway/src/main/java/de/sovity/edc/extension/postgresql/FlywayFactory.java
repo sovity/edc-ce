@@ -41,21 +41,7 @@ public class FlywayFactory {
                 .cleanDisabled(!config.flywayCleanEnabled())
                 .baselineVersion("0")
                 .baselineOnMigrate(true)
-                .table("flyway_schema_history")
-                .locations(locations.toArray(new String[0]))
-                .load();
-    }
-
-    public Flyway setupFlywayForUnifiedHistoryFromLegacyDatabase(DataSource dataSource) {
-        val locations = new ArrayList<String>();
-        locations.add("classpath:db/migration");
-        locations.addAll(getAdditionalFlywayMigrationLocations());
-
-        return Flyway.configure()
-                .dataSource(dataSource)
-                .baselineVersion("8")
-                .cleanDisabled(!config.flywayCleanEnabled())
-                .table("flyway_schema_history")
+                .table(TableNames.SOVITY_MIGRATION_TABLE)
                 .locations(locations.toArray(new String[0]))
                 .load();
     }

@@ -18,7 +18,7 @@ import de.sovity.edc.utils.config.ConfigProps;
 import de.sovity.edc.utils.config.SovityEdcRuntime;
 
 public class Main {
-    public static void main(String[] args) {
-        SovityEdcRuntime.boot(ConfigProps.ALL_CE_PROPS);
+    public static void main(String[] argv) {
+        SovityEdcRuntime.boot(argv, ConfigProps.ALL_CE_PROPS);
     }
 }

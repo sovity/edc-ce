@@ -17,7 +17,7 @@ package de.sovity.edc.extension.contacttermination.query;
 import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
+import org.eclipse.edc.connector.controlplane.contract.spi.types.negotiation.ContractNegotiation;
 import org.jooq.DSLContext;
 
 import static de.sovity.edc.ext.db.jooq.Tables.EDC_CONTRACT_AGREEMENT;

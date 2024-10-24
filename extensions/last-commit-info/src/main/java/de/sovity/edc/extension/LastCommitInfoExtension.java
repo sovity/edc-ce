@@ -14,17 +14,15 @@
 
 package de.sovity.edc.extension;
 
-import org.eclipse.edc.connector.api.management.configuration.ManagementApiConfiguration;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
 import org.eclipse.edc.web.spi.WebService;
+import org.eclipse.edc.web.spi.configuration.ApiContext;
 
 public class LastCommitInfoExtension implements ServiceExtension {
 
     public static final String EXTENSION_NAME = "LastCommitInfoExtension";
-    @Inject
-    private ManagementApiConfiguration config;
     @Inject
     private WebService webService;
 
@@ -38,6 +36,6 @@ public class LastCommitInfoExtension implements ServiceExtension {
     public void initialize(ServiceExtensionContext context) {
         var lastCommitInfoService = new LastCommitInfoService(context.getConfig());
         var controller = new LastCommitInfoController(lastCommitInfoService);
-        webService.registerResource(config.getContextAlias(), controller);
+        webService.registerResource(ApiContext.MANAGEMENT, controller);
     }
 }

@@ -36,36 +36,40 @@ public class Prop {
     public class Edc {
         public final String CTX = "https://w3id.org/edc/v0.0.1/ns/";
         public final String CTX_ALIAS = "edc";
+
         public final String TYPE_ASSET = CTX + "Asset";
         public final String TYPE_DATA_ADDRESS = CTX + "DataAddress";
-        public final String ID = CTX + "id";
-        public final String PARTICIPANT_ID = CTX + "participantId";
-        public final String PROPERTIES = CTX + "properties";
-        public final String PRIVATE_PROPERTIES = CTX + "privateProperties";
+
+        public final String ASSET_ID = CTX + "assetId";
+        public final String AUTH_CODE = CTX + "authCode";
+        public final String AUTH_KEY = CTX + "authKey";
+        public final String BASE_URL = CTX + "baseUrl";
+        public final String BODY = CTX + "body";
+        public final String CONNECTOR_ADDRESS = CTX + "connectorAddress";
+        public final String CONNECTOR_ID = CTX + "connectorId";
+        public final String CONTENT_TYPE = CTX + "contentType";
+        public final String CONTRACT_ID = CTX + "contractId";
+        public final String COUNTER_PARTY_ADDRESS = CTX + "counterPartyAddress";
         public final String DATA_ADDRESS = CTX + "dataAddress";
-        public final String TYPE = CTX + "type";
         public final String DATA_ADDRESS_TYPE_HTTP_DATA = "HttpData";
         public final String DATA_ADDRESS_TYPE_HTTP_PROXY = "HttpProxy";
-        public final String BASE_URL = CTX + "baseUrl";
+        public final String DATA_DESTINATION = CTX + "dataDestination";
+        public final String ID = CTX + "id";
+        public final String MEDIA_TYPE = CTX + "mediaType";
         public final String METHOD = CTX + "method";
-        public final String CONTENT_TYPE = CTX + "contentType";
-        public final String QUERY_PARAMS = CTX + "queryParams";
-        public final String AUTH_KEY = CTX + "authKey";
-        public final String AUTH_CODE = CTX + "authCode";
-        public final String SECRET_NAME = CTX + "secretName";
+        public final String PARTICIPANT_ID = CTX + "participantId";
+        public final String PATH = CTX + "path";
+        public final String PRIVATE_PROPERTIES = CTX + "privateProperties";
+        public final String PROPERTIES = CTX + "properties";
+        public final String PROXY_BODY = CTX + "proxyBody";
         public final String PROXY_METHOD = CTX + "proxyMethod";
         public final String PROXY_PATH = CTX + "proxyPath";
         public final String PROXY_QUERY_PARAMS = CTX + "proxyQueryParams";
-        public final String PROXY_BODY = CTX + "proxyBody";
-
-        // Transfer Request Related
-        public static String TYPE_TRANSFER_REQUEST = CTX + "TransferRequest";
-        public final String CONNECTOR_ADDRESS = CTX + "connectorAddress";
-        public final String CONTRACT_ID = CTX + "contractId";
-        public final String CONNECTOR_ID = CTX + "connectorId";
-        public final String ASSET_ID = CTX + "assetId";
-        public final String DATA_DESTINATION = CTX + "dataDestination";
+        public final String QUERY_PARAMS = CTX + "queryParams";
         public final String RECEIVER_HTTP_ENDPOINT = CTX + "receiverHttpEndpoint";
+        public final String SECRET_NAME = CTX + "secretName";
+        public final String TYPE = CTX + "type";
+        public final String TYPE_TRANSFER_REQUEST = CTX + "TransferRequest";
     }
 
     /**
@@ -76,16 +80,14 @@ public class Prop {
         /**
          * Context as specified in https://www.w3.org/TR/vocab-dcat-3/#normative-namespaces
          */
+        // TODO: get a sample from the catalog in v0.7 and validate that this is the correct URI and update `catalogResponse.json`
         public final String CTX = "http://www.w3.org/ns/dcat#";
 
+        public final String DATASET = CTX + "dataset";
         /**
-         * Context as used in the Core EDC, or atleast how its output from a DCAT request
+         * TODO Explain what happen and link code
          */
-        public final String CTX_WRONG_BUT_USED_BY_CORE_EDC = "https://www.w3.org/ns/dcat/";
-
-        public final String DATASET = CTX_WRONG_BUT_USED_BY_CORE_EDC + "dataset";
-        public final String DISTRIBUTION = CTX + "distribution";
-        public final String DISTRIBUTION_AS_USED_BY_CORE_EDC = CTX_WRONG_BUT_USED_BY_CORE_EDC + "distribution";
+        public final String DISTRIBUTION_WILL_BE_OVERWRITTEN_BY_CATALOG = CTX + "distribution";
         public final String VERSION = CTX + "version";
         public final String KEYWORDS = CTX + "keyword";
         public final String LANDING_PAGE = CTX + "landingPage";
@@ -145,6 +147,7 @@ public class Prop {
         public final String DATA_SOURCE_AVAILABILITY_ON_REQUEST = "ON_REQUEST";
         public final String CONTACT_EMAIL = CTX + "contactEmail";
         public final String CONTACT_PREFERRED_EMAIL_SUBJECT = CTX + "contactPreferredEmailSubject";
+        public final String DISTRIBUTION = CTX + "distribution";
 
         @UtilityClass
         public class HttpDatasourceHints {
@@ -230,4 +233,10 @@ public class Prop {
         public final String LITERAL = CTX + "Literal";
         public final String LABEL = CTX + "label";
     }
+
+    /*
+     * TODO: add EDC jsonld keys in here instead of the EDC keys
+     *
+     * EDC_NAMESPACE + "method" -> Prop.Edc.METHOD
+     */
 }

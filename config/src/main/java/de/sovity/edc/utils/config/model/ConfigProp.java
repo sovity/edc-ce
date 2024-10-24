@@ -23,8 +23,10 @@ import org.eclipse.edc.spi.system.configuration.Config;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 @Setter
 @Getter
@@ -84,5 +86,31 @@ public class ConfigProp {
     public Integer getInt(Config config) {
         // Default should already be handled by ConfigProp
         return config.getInteger(property);
+    }
+
+    public Config getWildcardSubconfig(Config config) throws IllegalArgumentException {
+        if (!property.endsWith(".*")) {
+            throw new IllegalArgumentException("Property does not contain wildcard: %s".formatted(property));
+        }
+
+        var key = property.substring(0, property.length() - 2);
+        return config.getConfig(key);
+    }
+
+    public List<String> getListOrEmpty(Config config) {
+        var string = config.getString(property, "");
+        return Stream.of(string.split(","))
+            .map(String::trim)
+            .filter(it -> !it.isEmpty())
+            .toList();
+    }
+
+    public List<String> getListOrThrow(Config config) {
+        var list = getListOrEmpty(config);
+
+        if (list.isEmpty()) {
+            throw new IllegalArgumentException("Required list property is empty: %s".formatted(property));
+        }
+        return list;
     }
 }

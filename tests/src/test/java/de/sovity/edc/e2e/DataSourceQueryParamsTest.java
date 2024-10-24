@@ -18,35 +18,37 @@ import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.InitiateTransferRequest;
 import de.sovity.edc.client.gen.model.UiContractNegotiation;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
-import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
-import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
-import de.sovity.edc.extension.e2e.extension.Consumer;
-import de.sovity.edc.extension.e2e.extension.E2eScenario;
-import de.sovity.edc.extension.e2e.extension.E2eTestExtension;
-import de.sovity.edc.extension.e2e.extension.Provider;
+import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario;
+import de.sovity.edc.extension.e2e.connector.remotes.test_backend_controller.TestBackendRemote;
+import de.sovity.edc.extension.e2e.junit.CeE2eTestExtension;
+import de.sovity.edc.extension.e2e.junit.utils.Consumer;
+import de.sovity.edc.extension.e2e.junit.utils.Provider;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
+import de.sovity.edc.utils.config.ConfigUtils;
 import lombok.val;
+import org.eclipse.edc.spi.system.configuration.Config;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.HashMap;
 
-import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validateDataTransferred;
-import static de.sovity.edc.extension.e2e.extension.Helpers.defaultE2eTestExtension;
+import static de.sovity.edc.extension.e2e.connector.remotes.management_api.DataTransferTestUtil.validateDataTransferred;
 
 class DataSourceQueryParamsTest {
 
     @RegisterExtension
-    private static E2eTestExtension e2eTestExtension = defaultE2eTestExtension();
+    private static CeE2eTestExtension e2eTestExtension = CeE2eTestExtension.builder()
+        .additionalModule(":launchers:connectors:sovity-dev")
+        .build();
 
-    private MockDataAddressRemote dataAddress;
+    private TestBackendRemote dataAddress;
     private final String encodedParam = "a=%25"; // Unencoded param "a=%"
 
     @BeforeEach
-    void setup(@Provider ConnectorConfig providerConfig) {
+    void setup(@Provider Config providerConfig) {
         // We use the provider EDC as data sink / data source (it has the test-backend-controller extension)
-        dataAddress = new MockDataAddressRemote(providerConfig.getDefaultApiUrl());
+        dataAddress = new TestBackendRemote(ConfigUtils.getDefaultApiUrl(providerConfig));
     }
 
     @Test
@@ -67,7 +69,7 @@ class DataSourceQueryParamsTest {
      */
     @DisabledOnGithub
     @Test
-    void testQueryParamsDoubleEncoded(E2eScenario scenario, @Consumer EdcClient consumerClient) {
+    void testQueryParamsDoubleEncoded(E2eTestScenario scenario, @Consumer EdcClient consumerClient) {
 
         // arrange
         val assetId = "asset-1";
@@ -91,6 +93,7 @@ class DataSourceQueryParamsTest {
         var contractAgreementId = negotiation.getContractAgreementId();
         var transferRequest = InitiateTransferRequest.builder()
             .contractAgreementId(contractAgreementId)
+            .transferType("HttpData-PUSH")
             .dataSinkProperties(dataAddress.getDataSinkProperties())
             .build();
         consumerClient.uiApi().initiateTransfer(transferRequest);

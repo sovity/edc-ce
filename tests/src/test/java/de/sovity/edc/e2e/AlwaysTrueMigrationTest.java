@@ -19,10 +19,10 @@ import de.sovity.edc.client.gen.model.InitiateTransferRequest;
 import de.sovity.edc.client.gen.model.OperatorDto;
 import de.sovity.edc.client.gen.model.TransferProcessSimplifiedState;
 import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
-import de.sovity.edc.extension.e2e.extension.Consumer;
-import de.sovity.edc.extension.e2e.extension.E2eScenario;
-import de.sovity.edc.extension.e2e.extension.E2eTestExtension;
-import de.sovity.edc.extension.e2e.extension.Provider;
+import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario;
+import de.sovity.edc.extension.e2e.junit.CeE2eTestExtension;
+import de.sovity.edc.extension.e2e.junit.utils.Consumer;
+import de.sovity.edc.extension.e2e.junit.utils.Provider;
 import de.sovity.edc.extension.policy.AlwaysTruePolicyConstants;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.config.ConfigProps;
@@ -38,27 +38,27 @@ import org.mockserver.model.HttpResponse;
 
 import java.util.Map;
 
-import static de.sovity.edc.extension.e2e.extension.CeE2eTestExtensionConfigFactory.withModule;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class AlwaysTrueMigrationTest {
 
     @RegisterExtension
-    private static final E2eTestExtension E2E_TEST_EXTENSION = new E2eTestExtension(
-        withModule(":launchers:connectors:sovity-dev").toBuilder()
-            .consumerConfigCustomizer(config -> config.setProperty(
-                ConfigProps.EDC_FLYWAY_ADDITIONAL_MIGRATION_LOCATIONS, "classpath:db/additional-test-data/always-true-policy-migrated"
-            ))
-            .providerConfigCustomizer(config -> config.setProperty(
-                ConfigProps.EDC_FLYWAY_ADDITIONAL_MIGRATION_LOCATIONS, "classpath:db/additional-test-data/always-true-policy-legacy"
-            ))
-            .build()
-    );
+    private static final CeE2eTestExtension E2E_TEST_EXTENSION = CeE2eTestExtension.builder()
+        .additionalModule(":launchers:connectors:sovity-dev")
+        .consumerConfigCustomizer(config -> config.property(
+            ConfigProps.EDC_FLYWAY_ADDITIONAL_MIGRATION_LOCATIONS,
+            "classpath:db/additional-test-data/always-true-policy-legacy"
+        ))
+        .providerConfigCustomizer(config -> config.property(
+            ConfigProps.EDC_FLYWAY_ADDITIONAL_MIGRATION_LOCATIONS,
+            "classpath:db/additional-test-data/always-true-policy-migrated"
+        ))
+        .build();
 
     @Test
     @DisabledOnGithub
     void test_migrated_policy_working_test_legacy_policy_working(
-        E2eScenario scenario,
+        E2eTestScenario scenario,
         ClientAndServer mockServer,
         @Provider EdcClient providerClient,
         @Consumer EdcClient consumerClient
@@ -85,7 +85,7 @@ class AlwaysTrueMigrationTest {
         testTransfer(scenario, mockServer, consumerClient);
     }
 
-    public static void testTransfer(E2eScenario scenario, ClientAndServer mockServer, EdcClient consumerClient) {
+    public static void testTransfer(E2eTestScenario scenario, ClientAndServer mockServer, EdcClient consumerClient) {
         // arrange
         val destinationPath = "/destination/some/path/";
         val destinationUrl = "http://localhost:" + mockServer.getPort() + destinationPath;
@@ -99,6 +99,7 @@ class AlwaysTrueMigrationTest {
         val transfer = scenario.transferAndAwait(
             InitiateTransferRequest.builder()
                 .contractAgreementId(negotiation.getContractAgreementId())
+                .transferType("HttpData-PUSH")
                 .dataSinkProperties(
                     Map.of(
                         Prop.Edc.BASE_URL, destinationUrl,

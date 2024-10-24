@@ -16,7 +16,7 @@ package de.sovity.edc.extension.policy;
 
 import de.sovity.edc.extension.policy.services.AlwaysTruePolicyDefinitionService;
 import de.sovity.edc.extension.policy.services.AlwaysTruePolicyService;
-import org.eclipse.edc.connector.spi.policydefinition.PolicyDefinitionService;
+import org.eclipse.edc.connector.controlplane.services.spi.policydefinition.PolicyDefinitionService;
 import org.eclipse.edc.policy.engine.spi.PolicyEngine;
 import org.eclipse.edc.policy.engine.spi.RuleBindingRegistry;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;

@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  */
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
-@Tag("not-on-github")
+@Tag("exclude-on-github")
 public @interface DisabledOnGithub {
 
 }

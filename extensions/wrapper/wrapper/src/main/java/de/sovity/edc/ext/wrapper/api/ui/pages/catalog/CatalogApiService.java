@@ -25,8 +25,8 @@ public class CatalogApiService {
     private final UiDataOfferBuilder uiDataOfferBuilder;
     private final DspCatalogService dspCatalogService;
 
-    public List<UiDataOffer> fetchDataOffers(String connectorEndpoint) {
-        var dspCatalog = dspCatalogService.fetchDataOffers(connectorEndpoint);
+    public List<UiDataOffer> fetchDataOffers(String participantId, String connectorEndpoint) {
+        var dspCatalog = dspCatalogService.fetchDataOffers(participantId, connectorEndpoint);
         return uiDataOfferBuilder.buildUiDataOffers(dspCatalog);
     }
 }

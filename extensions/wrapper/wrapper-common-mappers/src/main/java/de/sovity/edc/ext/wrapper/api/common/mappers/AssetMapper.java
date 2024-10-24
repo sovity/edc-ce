@@ -24,10 +24,11 @@ import de.sovity.edc.utils.jsonld.JsonLdUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
+import jakarta.json.JsonValue;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.eclipse.edc.connector.controlplane.asset.spi.domain.Asset;
 import org.eclipse.edc.jsonld.spi.JsonLd;
-import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 
 import java.util.Optional;
@@ -92,6 +93,7 @@ public class AssetMapper {
     ) {
         var expanded = jsonLd.expand(assetJsonLd)
             .orElseThrow(FailedMappingException::ofFailure);
+
         return typeTransformerRegistry.transform(expanded, Asset.class)
             .orElseThrow(FailedMappingException::ofFailure);
     }
@@ -111,6 +113,8 @@ public class AssetMapper {
         // Try to use the EDC Prop ID, but if it's not available, fall back to the "@id" property
         var assetId = Optional.ofNullable(JsonLdUtils.string(json, Prop.Edc.ID))
             .orElseGet(() -> JsonLdUtils.string(json, Prop.ID));
+
+        // TODO: write doc about this change
 
         return Json.createObjectBuilder()
             .add(Prop.ID, assetId)
