@@ -42,11 +42,6 @@ public class ContractDefinitionApiService {
     public List<ContractDefinitionEntry> getContractDefinitions() {
         var definitions = getAllContractDefinitions();
 
-        // TODO: rm debug
-        try(var f = new FileWriter("/tmp/dates")) {
-            f.write(String.join("\n", definitions.stream().map(it -> it.getContractPolicyId() + ": " + it.getCreatedAt()).toList()));
-        }
-
         return definitions.stream()
                 .sorted(Comparator.comparing(ContractDefinition::getCreatedAt).reversed())
                 .map(this::buildContractDefinitionEntry)

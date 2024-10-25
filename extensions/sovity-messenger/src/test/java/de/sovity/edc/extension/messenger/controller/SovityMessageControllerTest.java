@@ -96,7 +96,6 @@ class SovityMessageControllerTest {
 
         val message = new SovityMessageRequest(
             new URL("https://example.com/api"),
-            // TODO: added for compilation. Needs fixing.
             "someCounterpartyId",
             """
                 { "type" : "foo" }
@@ -127,7 +126,6 @@ class SovityMessageControllerTest {
 
         val message = new SovityMessageRequest(
             new URL("https://example.com/api"),
-            // TODO: added for compilation. Needs fixing.
             "someCounterpartyId",
             """
                 { "type" : "foo" }
@@ -162,7 +160,6 @@ class SovityMessageControllerTest {
 
         val message = new SovityMessageRequest(
             new URL("https://example.com/api"),
-            // TODO: added for compilation. Needs fixing.
             "someCounterpartyId",
             """
                 { "type" : "foo" }

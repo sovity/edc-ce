@@ -53,6 +53,6 @@ public record SovityMessageRequest(
     public String getCounterPartyId() {
         // TODO: @RT why adding this if it's not used anyway?
         // TODO: @CL return `null` and check that all the tests still pass.
-        return counterPartyId;
+        return null;
     }
 }

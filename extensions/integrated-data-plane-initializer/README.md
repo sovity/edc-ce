@@ -18,7 +18,7 @@
 
 This extension populates the data plane instance store from config properties on startup.
 
-This is useful when using an "integrated" cp + dp.
+This is useful when using an "integrated" control plane and data plane.
 
 ## Why does this extension exist?
 

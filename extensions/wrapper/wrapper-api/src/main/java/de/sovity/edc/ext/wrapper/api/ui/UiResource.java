@@ -148,7 +148,6 @@ interface UiResource {
     @Path("pages/catalog-page/data-offers")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Fetch a connector's data offers")
-    // TODO: request it from the UI or add a workaround here?
     List<UiDataOffer> getCatalogPageDataOffers(@QueryParam("participantId") String participantId, @QueryParam("connectorEndpoint") String connectorEndpoint);
 
     @POST

@@ -23,7 +23,6 @@ dependencies {
     testCompileOnly(libs.lombok)
 
     testImplementation(project(":launchers:utils:vanilla-control-plane"))
-    testImplementation(project(":launchers:utils:vanilla-control-plane"))
 }
 
 group = libs.versions.sovityEdcExtensionGroup.get()

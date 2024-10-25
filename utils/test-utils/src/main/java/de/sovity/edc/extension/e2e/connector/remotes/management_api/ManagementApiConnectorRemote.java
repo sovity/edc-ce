@@ -83,8 +83,6 @@ public class ManagementApiConnectorRemote {
             .contentType(JSON);
     }
 
-    // TODO where can I find an example of a policy with some content?
-    //  not in there it seems... org.eclipse.edc.connector.controlplane.api.management.policy.BasePolicyDefinitionApiControllerTest
     public String createPolicy(JsonObject policyJsonObject) {
         var requestBody =
             createObjectBuilder()
@@ -290,9 +288,6 @@ public class ManagementApiConnectorRemote {
         var dataset = getDatasetForAsset(assetId, providerProtocolApiUrl);
         var contractId = getDatasetContractId(dataset);
         var policy = dataset.getJsonArray(ODRL_POLICY_ATTRIBUTE).get(0).asJsonObject();
-
-        // TODO: policy type should be http://www.w3.org/ns/odrl.jsonld/Offer
-        //  not http://www.w3.org/ns/odrl/2/Offer
 
         val editedPolicy = Json.createObjectBuilder()
             .add(CONTEXT, "http://www.w3.org/ns/odrl.jsonld")

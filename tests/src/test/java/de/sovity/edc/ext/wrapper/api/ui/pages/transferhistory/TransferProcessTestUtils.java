@@ -153,7 +153,6 @@ public class TransferProcessTestUtils {
             .correlationId(UUID.randomUUID().toString())
             .contractId(contractId)
             .assetId(assetId)
-            // TODO: no connector id? Seems to have been move to the transfer request and then to the API caller
             .counterPartyAddress(COUNTER_PARTY_ADDRESS)
             .dataDestination(dataAddress)
             .protocol(HttpMessageProtocol.DATASPACE_PROTOCOL_HTTP)

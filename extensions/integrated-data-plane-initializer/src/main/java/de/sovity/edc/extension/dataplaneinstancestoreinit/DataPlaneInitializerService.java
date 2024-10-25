@@ -104,10 +104,10 @@ public class DataPlaneInitializerService {
         }
 
         monitor.warning(
-            "Data Plane instance '%s' is out of date. Since the DataPlaneInstance lacks an update method, the Data Plane Instance will be deleted for a moment. This can cause running transfers to fail."
+            "Data Plane instance '%s' is out of date. Since the DataPlaneInstance lacks an update method, the Data Plane Instance will be deleted for a moment. This can cause running transfers to fail.".formatted(id)
         );
         dataPlaneSelectorService.unregister(id)
-            .orElseThrow(f -> new EdcException("Data Plane '%s' deregistration failed: " + f.getFailureDetail()));
+            .orElseThrow(f -> new EdcException("Data Plane '%s' deregistration failed: ".formatted(id) + f.getFailureDetail()));
         return false;
     }
 }
