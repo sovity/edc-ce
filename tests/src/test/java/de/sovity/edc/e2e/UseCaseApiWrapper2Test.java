@@ -33,6 +33,7 @@ import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.client.gen.model.UiPolicyExpression;
 import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
 import de.sovity.edc.extension.e2e.junit.CeIntegrationTestExtension;
+import de.sovity.edc.extension.e2e.junit.Janitor;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.config.ConfigUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
@@ -65,10 +66,11 @@ class UseCaseApiWrapper2Test {
     @Test
     @DisabledOnGithub
     void shouldFetchFilteredDataOffersWithEq(
-        EdcClient client
+        EdcClient client,
+        Janitor janitor
     ) {
         // arrange
-        setupAssets(client);
+        setupAssets(client, janitor);
         buildContractDefinition(client, policyId, assetId1, "cd-1");
         buildContractDefinition(client, policyId, assetId2, "cd-2");
 
@@ -87,10 +89,11 @@ class UseCaseApiWrapper2Test {
     @Test
     @DisabledOnGithub
     void shouldFetchFilteredDataOffersWithIn(
-        EdcClient client
+        EdcClient client,
+        Janitor janitor
     ) {
         // arrange
-        setupAssets(client);
+        setupAssets(client, janitor);
         buildContractDefinition(client, policyId, assetId1, "cd-1");
         buildContractDefinition(client, policyId, assetId2, "cd-2");
 
@@ -118,10 +121,11 @@ class UseCaseApiWrapper2Test {
     @Test
     @DisabledOnGithub
     void shouldFetchWithoutFilterButWithLimit(
-        EdcClient client
+        EdcClient client,
+        Janitor janitor
     ) {
         // arrange
-        setupAssets(client);
+        setupAssets(client, janitor);
         buildContractDefinition(client, policyId, assetId1, "cd-1");
         buildContractDefinition(client, policyId, assetId2, "cd-2");
 
@@ -199,7 +203,7 @@ class UseCaseApiWrapper2Test {
             .build());
     }
 
-    private void setupAssets(EdcClient client) {
+    private void setupAssets(EdcClient client, Janitor janitor) {
         var dataSource = UiDataSource.builder()
             .type(DataSourceType.HTTP_DATA)
             .httpData(UiDataSourceHttpData.builder()
@@ -209,7 +213,7 @@ class UseCaseApiWrapper2Test {
 
         int offset = 0;
         int firstIndex = offset + 1;
-        assetId1 = client.uiApi().createAsset(UiAssetCreateRequest.builder()
+        assetId1 = janitor.withClient(client).createAsset(UiAssetCreateRequest.builder()
             .id("test-asset-" + firstIndex)
             .title("Test Asset " + firstIndex)
             .dataSource(dataSource)
@@ -217,14 +221,14 @@ class UseCaseApiWrapper2Test {
             .build()).getId();
 
         int secondIndex = offset + 2;
-        assetId2 = client.uiApi().createAsset(UiAssetCreateRequest.builder()
+        assetId2 = janitor.withClient(client).createAsset(UiAssetCreateRequest.builder()
             .id("test-asset-" + secondIndex)
             .title("Test Asset " + secondIndex)
             .dataSource(dataSource)
             .mediaType("application/json")
             .build()).getId();
 
-        policyId = client.uiApi().createPolicyDefinitionV2(PolicyDefinitionCreateDto.builder()
+        policyId = janitor.withClient(client).createPolicyDefinitionV2(PolicyDefinitionCreateDto.builder()
             .policyDefinitionId("policy-" + offset)
             .expression(UiPolicyExpression.builder()
                 .type(UiPolicyExpressionType.EMPTY)

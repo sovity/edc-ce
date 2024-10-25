@@ -24,11 +24,11 @@ import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.EdcPropertyUtils;
 import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.FailedMappingException;
 import de.sovity.edc.extension.e2e.junit.CeIntegrationTestExtension;
+import de.sovity.edc.extension.e2e.junit.Janitor;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import lombok.SneakyThrows;
 import org.eclipse.edc.connector.controlplane.asset.spi.domain.Asset;
 import org.eclipse.edc.connector.controlplane.services.spi.asset.AssetService;
-import org.eclipse.edc.spi.query.Criterion;
 import org.eclipse.edc.spi.query.QuerySpec;
 import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,13 +61,13 @@ public class AssetApiServiceTest {
     }
 
     @Test
-    void assetPage(EdcClient client, AssetService assetService) {
+    void assetPage(EdcClient client, AssetService assetService, Janitor janitor) {
         // arrange
         var properties = Map.of(
-            Asset.PROPERTY_ID, "asset-11",
+            Asset.PROPERTY_ID, "asset-1",
             Prop.Dcat.LANDING_PAGE, "https://data-source.my-org/docs"
         );
-        createAsset(assetService, "2023-06-01", properties);
+        createAsset(janitor, assetService, "2023-06-01", properties);
 
         // act
         var result = client.uiApi().getAssetPage();
@@ -78,16 +78,14 @@ public class AssetApiServiceTest {
         var asset = assets.get(0);
         assertThat(asset.getAssetId()).isEqualTo(properties.get(Asset.PROPERTY_ID));
         assertThat(asset.getLandingPageUrl()).isEqualTo(properties.get(Prop.Dcat.LANDING_PAGE));
-
-        client.uiApi().deleteAsset("asset-11");
     }
 
     @Test
-    void assetPageSorting(EdcClient client, AssetService assetService) {
+    void assetPageSorting(EdcClient client, AssetService assetService, Janitor janitor) {
         // arrange
-        createAsset(assetService, "2023-06-01", Map.of(Asset.PROPERTY_ID, "asset-21"));
-        createAsset(assetService, "2023-06-03", Map.of(Asset.PROPERTY_ID, "asset-23"));
-        createAsset(assetService, "2023-06-02", Map.of(Asset.PROPERTY_ID, "asset-22"));
+        createAsset(janitor, assetService, "2023-06-01", Map.of(Asset.PROPERTY_ID, "asset-1"));
+        createAsset(janitor, assetService, "2023-06-03", Map.of(Asset.PROPERTY_ID, "asset-3"));
+        createAsset(janitor, assetService, "2023-06-02", Map.of(Asset.PROPERTY_ID, "asset-2"));
 
         // act
         var result = client.uiApi().getAssetPage();
@@ -95,13 +93,11 @@ public class AssetApiServiceTest {
         // assert
         assertThat(result.getAssets())
             .extracting(UiAsset::getAssetId)
-            .containsExactly("asset-23", "asset-22", "asset-21");
-
-        List.of("asset-21", "asset-22", "asset-23").forEach(id -> client.uiApi().deleteAsset(id));
+            .containsExactly("asset-3", "asset-2", "asset-1");
     }
 
     @Test
-    void testAssetCreation(EdcClient client, AssetService assetService) {
+    void testAssetCreation(EdcClient client, AssetService assetService, Janitor janitor) {
         // arrange
         var dataSource = UiDataSource.builder()
             .type(DataSourceType.HTTP_DATA)
@@ -114,8 +110,9 @@ public class AssetApiServiceTest {
                 .build())
             .customProperties(Map.of("oauth2:tokenUrl", "https://token-url"))
             .build();
+
         var uiAssetRequest = UiAssetCreateRequest.builder()
-            .id("asset-31")
+            .id("asset-1")
             .title("AssetTitle")
             .description("AssetDescription")
             .licenseUrl("https://license-url")
@@ -165,15 +162,15 @@ public class AssetApiServiceTest {
             .build();
 
         // act
-        var response = client.uiApi().createAsset(uiAssetRequest);
+        var response = janitor.withClient(client).createAsset(uiAssetRequest);
 
         // assert
-        assertThat(response.getId()).isEqualTo("asset-31");
+        assertThat(response.getId()).isEqualTo("asset-1");
 
         var assets = client.uiApi().getAssetPage().getAssets();
         assertThat(assets).hasSize(1);
         var asset = assets.get(0);
-        assertThat(asset.getAssetId()).isEqualTo("asset-31");
+        assertThat(asset.getAssetId()).isEqualTo("asset-1");
         assertThat(asset.getTitle()).isEqualTo("AssetTitle");
         assertThat(asset.getDescription()).isEqualTo("AssetDescription");
         assertThat(asset.getVersion()).isEqualTo("1.0.0");
@@ -227,8 +224,6 @@ public class AssetApiServiceTest {
 
         var assetWithDataAddress = assetService.query(QuerySpec.max()).orElseThrow(FailedMappingException::ofFailure).toList().get(0);
         assertThat(assetWithDataAddress.getDataAddress().getProperties()).containsEntry("oauth2:tokenUrl", "https://token-url");
-
-        client.uiApi().deleteAsset("asset-31");
     }
 
     @Test
@@ -379,7 +374,7 @@ public class AssetApiServiceTest {
     }
 
     @Test
-    void testAssetCreation_noProxying(EdcClient client) {
+    void testAssetCreation_noProxying(EdcClient client, Janitor janitor) {
         // arrange
         var dataSource = UiDataSource.builder()
             .type(DataSourceType.HTTP_DATA)
@@ -387,16 +382,17 @@ public class AssetApiServiceTest {
                 .baseUrl(DATA_SINK)
                 .build())
             .build();
+
         var uiAssetRequest = UiAssetCreateRequest.builder()
-            .id("asset-51")
+            .id("asset-1")
             .dataSource(dataSource)
             .build();
 
         // act
-        var response = client.uiApi().createAsset(uiAssetRequest);
+        var response = janitor.withClient(client).createAsset(uiAssetRequest);
 
         // assert
-        assertThat(response.getId()).isEqualTo("asset-51");
+        assertThat(response.getId()).isEqualTo("asset-1");
         var assets = client.uiApi().getAssetPage().getAssets();
         assertThat(assets).hasSize(1);
         var asset = assets.get(0);
@@ -404,8 +400,6 @@ public class AssetApiServiceTest {
         assertThat(asset.getHttpDatasourceHintsProxyPath()).isFalse();
         assertThat(asset.getHttpDatasourceHintsProxyQueryParams()).isFalse();
         assertThat(asset.getHttpDatasourceHintsProxyBody()).isFalse();
-
-        client.uiApi().deleteAsset("asset-51");
     }
 
     @Test
@@ -439,23 +433,21 @@ public class AssetApiServiceTest {
     }
 
     @Test
-    void testDeleteAsset(EdcClient client, AssetService assetService) {
+    void testDeleteAsset(EdcClient client, AssetService assetService, Janitor janitor) {
         // arrange
-        createAsset(assetService, "2023-06-01", Map.of(Asset.PROPERTY_ID, "asset-71"));
-        QuerySpec query71 = QuerySpec.Builder.newInstance()
-            .filter(Criterion.criterion("id", "=", "asset-71"))
-            .build();
-        assertThat(assetService.query(query71).getContent()).isNotEmpty();
+        createAsset(janitor, assetService, "2023-06-01", Map.of(Asset.PROPERTY_ID, "asset-1"));
+        assertThat(assetService.query(QuerySpec.max()).getContent()).isNotEmpty();
 
         // act
-        var response = client.uiApi().deleteAsset("asset-71");
+        var response = client.uiApi().deleteAsset("asset-1");
 
         // assert
-        assertThat(response.getId()).isEqualTo("asset-71");
-        assertThat(assetService.query(query71).getContent()).hasSize(0);
+        assertThat(response.getId()).isEqualTo("asset-1");
+        assertThat(assetService.query(QuerySpec.max()).getContent()).hasSize(0);
     }
 
     private void createAsset(
+        Janitor janitor,
         AssetService assetService,
         String date,
         Map<String, String> properties
@@ -471,7 +463,8 @@ public class AssetApiServiceTest {
             .dataAddress(dataAddress)
             .createdAt(dateFormatterToLong(date))
             .build();
-        assetService.create(asset);
+
+        janitor.withAssetService(assetService).create(asset);
     }
 
     @SneakyThrows

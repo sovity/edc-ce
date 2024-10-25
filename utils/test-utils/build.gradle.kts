@@ -23,6 +23,7 @@ dependencies {
     api(libs.junit.api)
 
     implementation(project(":utils:versions"))
+    implementation(libs.edc.controlPlaneSpi)
     implementation(libs.edc.jsonLd)
     implementation(libs.assertj.core)
     implementation(libs.mockito.core)

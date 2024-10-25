@@ -6,10 +6,10 @@ dependencies {
     // For Custom Launcher Code
     implementation(project(":config"))
 
-    // // Management API Key
+    // Management API Key
     api(libs.edc.authTokenbased)
 
-    // // sovity Extensions Package
+    // sovity Extensions Package
     api(project(":extensions:sovity-edc-extensions-package"))
     api(project(":extensions:postgres-flyway"))
 
