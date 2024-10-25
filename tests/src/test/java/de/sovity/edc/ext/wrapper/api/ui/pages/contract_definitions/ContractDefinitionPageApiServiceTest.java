@@ -68,8 +68,6 @@ class ContractDefinitionPageApiServiceTest {
         assertThat(criterionEntry.getOperandRight().getValue()).isEqualTo("abc");
     }
 
-    // TODO: this test is not stable, the elements should be returned sorted but eventually they're not. Doesn't make sense.
-    @Disabled
     @Test
     void contractDefinitionPageSorting(EdcClient client, ContractDefinitionService contractDefinitionService) {
         // arrange
@@ -98,6 +96,7 @@ class ContractDefinitionPageApiServiceTest {
 
         // act
         var result = client.uiApi().getContractDefinitionPage();
+
 
         // assert
         assertThat(result.getContractDefinitions())
