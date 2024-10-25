@@ -227,7 +227,7 @@ public class AssetApiServiceTest {
     }
 
     @Test
-    void testeditAsset(EdcClient client, AssetService assetService) {
+    void testeditAsset(EdcClient client, AssetService assetService, Janitor janitor) {
         // arrange
         var dataSource = UiDataSource.builder()
             .type(DataSourceType.HTTP_DATA)
@@ -241,7 +241,7 @@ public class AssetApiServiceTest {
             .customProperties(Map.of("oauth2:tokenUrl", "https://token-url"))
             .build();
         var createRequest = UiAssetCreateRequest.builder()
-            .id("asset-41")
+            .id("asset-1")
             .title("AssetTitle")
             .description("AssetDescription")
             .licenseUrl("https://license-url")
@@ -277,7 +277,8 @@ public class AssetApiServiceTest {
                 """)
             .build();
 
-        client.uiApi().createAsset(createRequest);
+        janitor.withClient(client).createAsset(createRequest);
+
         var dataAddressBeforeEdit = assetService.query(QuerySpec.max())
             .orElseThrow(FailedMappingException::ofFailure).toList().get(0)
             .getDataAddress()
@@ -319,15 +320,15 @@ public class AssetApiServiceTest {
             .build();
 
         // act
-        var response = client.uiApi().editAsset("asset-41", editRequest);
+        var response = client.uiApi().editAsset("asset-1", editRequest);
 
         // assert
-        assertThat(response.getId()).isEqualTo("asset-41");
+        assertThat(response.getId()).isEqualTo("asset-1");
 
         var assets = client.uiApi().getAssetPage().getAssets();
         assertThat(assets).hasSize(1);
         var asset = assets.get(0);
-        assertThat(asset.getAssetId()).isEqualTo("asset-41");
+        assertThat(asset.getAssetId()).isEqualTo("asset-1");
         assertThat(asset.getTitle()).isEqualTo("AssetTitle 2");
         assertThat(asset.getDescription()).isEqualTo("AssetDescription 2");
         assertThat(asset.getVersion()).isEqualTo("2.0.0");
@@ -368,9 +369,6 @@ public class AssetApiServiceTest {
             .getDataAddress()
             .getProperties();
         assertThat(dataAddressAfterEdit).isEqualTo(dataAddressBeforeEdit);
-
-
-        client.uiApi().deleteAsset("asset-41");
     }
 
     @Test
@@ -403,7 +401,7 @@ public class AssetApiServiceTest {
     }
 
     @Test
-    void testAssetCreation_differentDataAddressType(EdcClient client) {
+    void testAssetCreation_differentDataAddressType(EdcClient client, Janitor janitor) {
         // arrange
         var dataSource = UiDataSource.builder()
             .type(DataSourceType.CUSTOM)
@@ -412,15 +410,15 @@ public class AssetApiServiceTest {
             ))
             .build();
         var uiAssetRequest = UiAssetCreateRequest.builder()
-            .id("asset-61")
+            .id("asset-1")
             .dataSource(dataSource)
             .build();
 
         // act
-        var response = client.uiApi().createAsset(uiAssetRequest);
+        var response = janitor.withClient(client).createAsset(uiAssetRequest);
 
         // assert
-        assertThat(response.getId()).isEqualTo("asset-61");
+        assertThat(response.getId()).isEqualTo("asset-1");
         var assets = client.uiApi().getAssetPage().getAssets();
         assertThat(assets).hasSize(1);
         var asset = assets.get(0);
@@ -428,8 +426,6 @@ public class AssetApiServiceTest {
         assertThat(asset.getHttpDatasourceHintsProxyPath()).isNull();
         assertThat(asset.getHttpDatasourceHintsProxyQueryParams()).isNull();
         assertThat(asset.getHttpDatasourceHintsProxyBody()).isNull();
-
-        client.uiApi().deleteAsset("asset-61");
     }
 
     @Test

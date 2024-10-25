@@ -15,6 +15,7 @@
 package de.sovity.edc.extension.e2e.junit;
 
 import de.sovity.edc.client.EdcClient;
+import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
 import de.sovity.edc.client.gen.model.IdResponseDto;
 import de.sovity.edc.client.gen.model.PolicyDefinitionCreateDto;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
@@ -35,7 +36,13 @@ public class JanitorApiWrapper {
 
     public IdResponseDto createPolicyDefinitionV2(PolicyDefinitionCreateDto policyDefinition) {
         val result = client.uiApi().createPolicyDefinitionV2(policyDefinition);
-        janitor.afterEach(() -> client.uiApi().deleteAsset(result.getId()));
+        janitor.afterEach(() -> client.uiApi().deletePolicyDefinition(result.getId()));
+        return result;
+    }
+
+    public IdResponseDto createContractDefinition(ContractDefinitionRequest contractDefinitionRequest) {
+        val result = client.uiApi().createContractDefinition(contractDefinitionRequest);
+        janitor.afterEach(() -> client.uiApi().deleteContractDefinition(result.getId()));
         return result;
     }
 }

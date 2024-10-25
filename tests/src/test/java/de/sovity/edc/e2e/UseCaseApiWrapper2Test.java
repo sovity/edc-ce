@@ -71,8 +71,6 @@ class UseCaseApiWrapper2Test {
     ) {
         // arrange
         setupAssets(client, janitor);
-        buildContractDefinition(client, policyId, assetId1, "cd-1");
-        buildContractDefinition(client, policyId, assetId2, "cd-2");
 
         // act
         var catalogQueryParamsEq = criterion(Prop.Edc.ID, CatalogFilterExpressionOperator.EQ, "test-asset-1");
@@ -82,8 +80,6 @@ class UseCaseApiWrapper2Test {
         assertThat(dataOffers).hasSize(1);
         assertThat(dataOffers.get(0).getAsset().getAssetId()).isEqualTo(assetId1);
         assertThat(dataOffers.get(0).getAsset().getTitle()).isEqualTo("Test Asset 1");
-
-        cleanup(client);
     }
 
     @Test
@@ -94,8 +90,6 @@ class UseCaseApiWrapper2Test {
     ) {
         // arrange
         setupAssets(client, janitor);
-        buildContractDefinition(client, policyId, assetId1, "cd-1");
-        buildContractDefinition(client, policyId, assetId2, "cd-2");
 
         // act
         var catalogQueryParamsEq = criterion(Prop.Edc.ID, CatalogFilterExpressionOperator.IN, List.of("test-asset-1", "test-asset-2"));
@@ -106,16 +100,6 @@ class UseCaseApiWrapper2Test {
         assertThat(dataOffers)
             .extracting(it -> it.getAsset().getAssetId())
             .containsExactlyInAnyOrder(assetId1, assetId2);
-
-        cleanup(client);
-    }
-
-    private static void cleanup(EdcClient client) {
-        client.uiApi().deleteAsset(assetId1);
-        client.uiApi().deleteAsset(assetId2);
-        client.uiApi().deleteContractDefinition("cd-1");
-        client.uiApi().deleteContractDefinition("cd-2");
-        client.uiApi().deletePolicyDefinition(policyId);
     }
 
     @Test
@@ -126,8 +110,6 @@ class UseCaseApiWrapper2Test {
     ) {
         // arrange
         setupAssets(client, janitor);
-        buildContractDefinition(client, policyId, assetId1, "cd-1");
-        buildContractDefinition(client, policyId, assetId2, "cd-2");
 
         // act
         var catalogQueryParamsEq = criterion(1, 0);
@@ -138,8 +120,6 @@ class UseCaseApiWrapper2Test {
         assertThat(dataOffers)
             .extracting(it -> it.getAsset().getAssetId())
             .containsAnyOf(assetId1, assetId2);
-
-        cleanup(client);
     }
 
     private CatalogQuery criterion(
@@ -187,8 +167,9 @@ class UseCaseApiWrapper2Test {
             .build();
     }
 
-    private void buildContractDefinition(EdcClient client, String policyId, String assetId1, String cdId) {
-        client.uiApi().createContractDefinition(ContractDefinitionRequest.builder()
+    private void buildContractDefinition(Janitor janitor, EdcClient client, String policyId, String assetId1, String cdId) {
+        janitor.withClient(client)
+            .createContractDefinition(ContractDefinitionRequest.builder()
             .contractDefinitionId(cdId)
             .accessPolicyId(policyId)
             .contractPolicyId(policyId)
@@ -213,6 +194,7 @@ class UseCaseApiWrapper2Test {
 
         int offset = 0;
         int firstIndex = offset + 1;
+
         assetId1 = janitor.withClient(client).createAsset(UiAssetCreateRequest.builder()
             .id("test-asset-" + firstIndex)
             .title("Test Asset " + firstIndex)
@@ -234,5 +216,8 @@ class UseCaseApiWrapper2Test {
                 .type(UiPolicyExpressionType.EMPTY)
                 .build())
             .build()).getId();
+
+        buildContractDefinition(janitor, client, policyId, assetId1, "cd-1");
+        buildContractDefinition(janitor, client, policyId, assetId2, "cd-2");
     }
 }
