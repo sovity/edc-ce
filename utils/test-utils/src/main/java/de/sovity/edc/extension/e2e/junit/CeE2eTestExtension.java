@@ -34,6 +34,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.mockserver.integration.ClientAndServer;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
@@ -62,6 +63,9 @@ public class CeE2eTestExtension
     @Builder.Default
     private Consumer<ConnectorBootConfigBuilder> providerConfigCustomizer = it -> {
     };
+
+    @Builder.Default
+    private List<Runnable> cleanupHooks = new ArrayList<>();
 
     private final InstancesForEachConnector<CeE2eTestSide> instancesForEachConnector = new InstancesForEachConnector<>(
         Arrays.asList(CeE2eTestSide.values()),
