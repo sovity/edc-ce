@@ -62,6 +62,15 @@ in contract negotiation state:
 
 `edc:state` -> `state`, same for other fields.
 
+### EDC conflicting tables declarations
+
+`edc_lease` is declared 6 times.
+
+Once with `lease_duration INTEGER DEFAULT 60000 NOT NULL`
+5 times with `lease_duration INTEGER NOT NULL`
+
+Using the second option for the baseline.
+
 ## TODOs
 
 ### Media type went missing
