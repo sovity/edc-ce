@@ -75,7 +75,7 @@ public class DataPlaneInitializerService {
             .build();
 
         dataPlaneSelectorService.addInstance(instance)
-            .orElseThrow(f -> new EdcException("Data Plane '%s' registration failed: " + f.getFailureDetail()));
+            .orElseThrow(f -> new EdcException("Data Plane '%s' registration failed: ".formatted(id) + f.getFailureDetail()));
 
         var message = "Data Plane Instance created: '%s' '%s' '%s'".formatted(
             id,

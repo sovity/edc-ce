@@ -31,10 +31,10 @@ import java.util.List;
 @Schema(description = "Catalog query parameters")
 public class CatalogQuery {
     @Schema(description = "Target EDC DSP endpoint URL. Can contain a queryParam 'participantId', which is provided by default in the " +
-        "Connector Endpoint in the EDC UI..", requiredMode = Schema.RequiredMode.REQUIRED)
+        "Connector Endpoint in the EDC UI.", requiredMode = Schema.RequiredMode.REQUIRED)
     private String connectorEndpoint;
 
-    @Schema(description = "Target EDC Participant ID. Is required if the connector endpoint does not contain the queryParam " +
+    @Schema(description = "Target EDC Participant ID. It is required if the connector endpoint does not contain the queryParam " +
         "'participantId'.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String participantId;
 

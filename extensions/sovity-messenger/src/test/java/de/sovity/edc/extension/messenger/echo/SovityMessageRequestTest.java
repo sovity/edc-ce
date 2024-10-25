@@ -42,7 +42,6 @@ class SovityMessageRequestTest {
         val serialized = mapper.writeValueAsString(message);
 
         // assert
-        // TODO: change to allow compilation. Needs diffing and fixing.
         JsonAssertions.assertThatJson(serialized)
             .isEqualTo(
                 """

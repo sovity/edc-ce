@@ -2093,11 +2093,11 @@ components:
         connectorEndpoint:
           type: string
           description: "Target EDC DSP endpoint URL. Can contain a queryParam 'participantId',\
-            \ which is provided by default in the Connector Endpoint in the EDC UI.."
+            \ which is provided by default in the Connector Endpoint in the EDC UI."
         participantId:
           type: string
-          description: Target EDC Participant ID. Is required if the connector endpoint
-            does not contain the queryParam 'participantId'.
+          description: Target EDC Participant ID. It is required if the connector
+            endpoint does not contain the queryParam 'participantId'.
         limit:
           type: integer
           description: Limit the number of results

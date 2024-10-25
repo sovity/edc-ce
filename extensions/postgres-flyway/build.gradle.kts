@@ -12,7 +12,6 @@ dependencies {
 
     implementation(project(":config"))
 
-    // implementation(libs.edc.coreSpi)
     implementation(libs.edc.sqlCore)
     implementation(libs.edc.httpSpi)
 
