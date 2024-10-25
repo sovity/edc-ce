@@ -80,6 +80,8 @@ import java.util.concurrent.TimeUnit;
 
 import static de.sovity.edc.client.gen.model.ContractAgreementDirection.CONSUMING;
 import static de.sovity.edc.client.gen.model.ContractAgreementDirection.PROVIDING;
+import static de.sovity.edc.e2e.WrapperApiUtils.getAssetsWithId;
+import static de.sovity.edc.e2e.WrapperApiUtils.getContractDefinitionWithAssetId;
 import static de.sovity.edc.extension.e2e.connector.remotes.management_api.DataTransferTestUtil.validateDataTransferred;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -200,12 +202,7 @@ class UiApiWrapperTest {
             .build());
 
 
-        List<UiAsset> createdAsset = providerClient.uiApi()
-            .getAssetPage()
-            .getAssets()
-            .stream()
-            .filter(it -> it.getAssetId().equals(assetId))
-            .toList();
+        val createdAsset = getAssetsWithId(providerClient, assetId);
 
         assertThat(createdAsset).hasSize(1);
         var asset = createdAsset.stream().filter(it -> it.getAssetId().equals("asset-1")).findFirst().get();
@@ -380,12 +377,7 @@ class UiApiWrapperTest {
 
         // act
 
-        List<UiAsset> createdAsset = providerClient.uiApi()
-            .getAssetPage()
-            .getAssets()
-            .stream()
-            .filter(it -> it.getAssetId().equals(assetId))
-            .toList();
+        val createdAsset = getAssetsWithId(providerClient, assetId);
 
         assertThat(createdAsset).hasSize(1);
         val asset = createdAsset.get(0);
@@ -911,12 +903,7 @@ class UiApiWrapperTest {
 
         // assert
 
-        List<UiAsset> createdAsset = providerClient.uiApi()
-            .getAssetPage()
-            .getAssets()
-            .stream()
-            .filter(it -> it.getAssetId().equals(assetId))
-            .toList();
+        val createdAsset = getAssetsWithId(providerClient, assetId);
 
         assertThat(createdAsset)
             .hasSize(1)
@@ -926,11 +913,7 @@ class UiApiWrapperTest {
 
         assertThat(getPolicyNamed(assetId, providerClient)).hasSize(0);
 
-        List<ContractDefinitionEntry> createdContractDefinition = providerClient.uiApi()
-            .getContractDefinitionPage()
-            .getContractDefinitions()
-            .stream().filter(it -> it.getContractDefinitionId().equals(assetId))
-            .toList();
+        val createdContractDefinition = getContractDefinitionWithAssetId(providerClient, assetId);
 
         assertThat(createdContractDefinition).hasSize(0);
     }
@@ -963,12 +946,7 @@ class UiApiWrapperTest {
 
         // assert
 
-        List<UiAsset> createdAsset = providerClient.uiApi()
-            .getAssetPage()
-            .getAssets()
-            .stream()
-            .filter(it -> it.getAssetId().equals(assetId))
-            .toList();
+        val createdAsset = getAssetsWithId(providerClient, assetId);
 
         assertThat(createdAsset).hasSize(0);
 
@@ -977,11 +955,7 @@ class UiApiWrapperTest {
             .first()
             .isEqualTo(assetId);
 
-        List<ContractDefinitionEntry> createdContractDefinition = providerClient.uiApi()
-            .getContractDefinitionPage()
-            .getContractDefinitions()
-            .stream().filter(it -> it.getContractDefinitionId().equals(assetId))
-            .toList();
+        val createdContractDefinition = getContractDefinitionWithAssetId(providerClient, assetId);
 
         assertThat(createdContractDefinition).hasSize(0);
     }
@@ -1026,12 +1000,7 @@ class UiApiWrapperTest {
                     .build()));
 
         // assert
-        List<UiAsset> createdAsset = providerClient.uiApi()
-            .getAssetPage()
-            .getAssets()
-            .stream()
-            .filter(it -> it.getAssetId().equals(assetId))
-            .toList();
+        val createdAsset = getAssetsWithId(providerClient, assetId);
 
         assertThat(createdAsset)
             // the asset used for the placeholder contract definition
@@ -1075,12 +1044,7 @@ class UiApiWrapperTest {
                 .build());
 
         // assert
-        List<UiAsset> createdAsset = providerClient.uiApi()
-            .getAssetPage()
-            .getAssets()
-            .stream()
-            .filter(it -> it.getAssetId().equals(assetId))
-            .toList();
+        val createdAsset = getAssetsWithId(providerClient, assetId);
 
         assertThat(createdAsset)
             // the asset used for the placeholder contract definition
@@ -1091,11 +1055,7 @@ class UiApiWrapperTest {
 
         assertThat(getPolicyNamed(assetId, providerClient)).hasSize(0);
 
-        List<ContractDefinitionEntry> createdContractDefinition = providerClient.uiApi()
-            .getContractDefinitionPage()
-            .getContractDefinitions()
-            .stream().filter(it -> it.getContractDefinitionId().equals(assetId))
-            .toList();
+        val createdContractDefinition = getContractDefinitionWithAssetId(providerClient, assetId);
 
         assertThat(createdContractDefinition)
             .hasSize(1)
@@ -1130,12 +1090,7 @@ class UiApiWrapperTest {
                 .build());
 
         // assert
-        List<UiAsset> createdAsset = providerClient.uiApi()
-            .getAssetPage()
-            .getAssets()
-            .stream()
-            .filter(it -> it.getAssetId().equals(assetId))
-            .toList();
+        val createdAsset = getAssetsWithId(providerClient, assetId);
 
         assertThat(createdAsset)
             // the asset used for the placeholder contract definition

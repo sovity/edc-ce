@@ -15,7 +15,6 @@ dependencies {
     api(project(":extensions:edc-ui-config"))
     api(project(":extensions:last-commit-info"))
     api(project(":extensions:wrapper:wrapper"))
-    api(project(":extensions:dataset-bugfix"))
 
     // Utilities
     api(project(":extensions:vault-initializer"))

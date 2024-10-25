@@ -21,20 +21,26 @@ import de.sovity.edc.client.gen.model.UiCriterion;
 import de.sovity.edc.client.gen.model.UiCriterionLiteral;
 import de.sovity.edc.client.gen.model.UiCriterionLiteralType;
 import de.sovity.edc.client.gen.model.UiCriterionOperator;
+import de.sovity.edc.e2e.WrapperApiUtils;
 import de.sovity.edc.extension.e2e.junit.CeIntegrationTestExtension;
+import de.sovity.edc.extension.e2e.junit.Janitor;
 import lombok.val;
 import org.eclipse.edc.connector.controlplane.contract.spi.types.offer.ContractDefinition;
 import org.eclipse.edc.connector.controlplane.services.spi.contractdefinition.ContractDefinitionService;
 import org.eclipse.edc.spi.query.Criterion;
 import org.eclipse.edc.spi.query.QuerySpec;
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.byLessThan;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ContractDefinitionPageApiServiceTest {
 
     @RegisterExtension
@@ -43,17 +49,18 @@ class ContractDefinitionPageApiServiceTest {
         .build();
 
     @Test
-    void contractDefinitionPage(EdcClient client, ContractDefinitionService contractDefinitionService) {
+    void contractDefinitionPage(EdcClient client, ContractDefinitionService contractDefinitionService, Janitor janitor) {
         // arrange
 
         var criterion = new Criterion("exampleLeft1", "=", "abc");
-        createContractDefinition(contractDefinitionService, "contractDefinition-id-1", "contractPolicy-id-1", "accessPolicy-id-1", criterion);
+        createContractDefinition(janitor, contractDefinitionService, "contractDefinition-id-1", "contractPolicy-id-1", "accessPolicy-id-1",
+            criterion);
 
         // act
         var result = client.uiApi().getContractDefinitionPage();
 
         // assert
-        var contractDefinitions = result.getContractDefinitions();
+        var contractDefinitions = WrapperApiUtils.getContractDefinitionWithId(client, "contractDefinition-id-1");
         assertThat(contractDefinitions).hasSize(1);
         var contractDefinition = contractDefinitions.get(0);
         assertThat(contractDefinition.getContractDefinitionId()).isEqualTo("contractDefinition-id-1");
@@ -68,31 +75,37 @@ class ContractDefinitionPageApiServiceTest {
         assertThat(criterionEntry.getOperandRight().getValue()).isEqualTo("abc");
     }
 
+    @Order(1)
     @Test
-    void contractDefinitionPageSorting(EdcClient client, ContractDefinitionService contractDefinitionService) {
+    void contractDefinitionPageSorting(EdcClient client, ContractDefinitionService contractDefinitionService, Janitor janitor) {
         // arrange
 
         createContractDefinition(
-                contractDefinitionService,
-                "contractDefinition-id-1",
-                "contractPolicy-id-1",
-                "accessPolicy-id-1",
-                new Criterion("exampleLeft1", "=", "abc"),
-                1628000000000L);
+            janitor,
+            contractDefinitionService,
+            "contractDefinition-id-1",
+            "contractPolicy-id-1",
+            "accessPolicy-id-1",
+            new Criterion("exampleLeft1", "=", "abc"),
+            1628000000000L);
+
         createContractDefinition(
-                contractDefinitionService,
-                "contractDefinition-id-2",
-                "contractPolicy-id-2",
-                "accessPolicy-id-2",
-                new Criterion("exampleLeft1", "=", "abc"),
-                1628000001000L);
+            janitor,
+            contractDefinitionService,
+            "contractDefinition-id-2",
+            "contractPolicy-id-2",
+            "accessPolicy-id-2",
+            new Criterion("exampleLeft1", "=", "abc"),
+            1628000001000L);
+
         createContractDefinition(
-                contractDefinitionService,
-                "contractDefinition-id-3",
-                "contractPolicy-id-3",
-                "accessPolicy-id-3",
-                new Criterion("exampleLeft1", "=", "abc"),
-                1628000002000L);
+            janitor,
+            contractDefinitionService,
+            "contractDefinition-id-3",
+            "contractPolicy-id-3",
+            "accessPolicy-id-3",
+            new Criterion("exampleLeft1", "=", "abc"),
+            1628000002000L);
 
         // act
         var result = client.uiApi().getContractDefinitionPage();
@@ -100,8 +113,8 @@ class ContractDefinitionPageApiServiceTest {
 
         // assert
         assertThat(result.getContractDefinitions())
-                .extracting(ContractDefinitionEntry::getContractPolicyId)
-                .containsExactly("contractPolicy-id-3", "contractPolicy-id-2", "contractPolicy-id-1");
+            .extracting(ContractDefinitionEntry::getContractPolicyId)
+            .containsExactly("contractPolicy-id-3", "contractPolicy-id-2", "contractPolicy-id-1");
 
     }
 
@@ -110,16 +123,16 @@ class ContractDefinitionPageApiServiceTest {
         // arrange
 
         var criterion = new UiCriterion(
-                "exampleLeft1",
-                UiCriterionOperator.EQ,
-                new UiCriterionLiteral(UiCriterionLiteralType.VALUE, "test", null));
+            "exampleLeft1",
+            UiCriterionOperator.EQ,
+            new UiCriterionLiteral(UiCriterionLiteralType.VALUE, "test", null));
 
         var contractDefinition = ContractDefinitionRequest.builder()
-                .contractDefinitionId("contractDefinition-id-10")
-                .contractPolicyId("contractPolicy-id-10")
-                .accessPolicyId("accessPolicy-id-10")
-                .assetSelector(List.of(criterion))
-                .build();
+            .contractDefinitionId("contractDefinition-id-10")
+            .contractPolicyId("contractPolicy-id-10")
+            .accessPolicyId("accessPolicy-id-10")
+            .assetSelector(List.of(criterion))
+            .build();
 
         // act
         var response = client.uiApi().createContractDefinition(contractDefinition);
@@ -146,15 +159,24 @@ class ContractDefinitionPageApiServiceTest {
     }
 
     @Test
-    void testDeleteContractDefinition(EdcClient client, ContractDefinitionService contractDefinitionService) {
+    void testDeleteContractDefinition(EdcClient client, ContractDefinitionService contractDefinitionService, Janitor janitor) {
         // arrange
 
         val criterion = new Criterion("exampleLeft1", "=", "exampleRight1");
-        createContractDefinition(contractDefinitionService, "contractDefinition-id-20", "contractPolicy-id-20", "accessPolicy-id-20", criterion);
+        createContractDefinition(
+            janitor,
+            contractDefinitionService,
+            "contractDefinition-id-20",
+            "contractPolicy-id-20",
+            "accessPolicy-id-20",
+            criterion);
+
         val selectId20 = QuerySpec.Builder.newInstance()
             .filter(Criterion.criterion("id", "=", "contractDefinition-id-20"))
             .build();
+
         val contractDefinitions = contractDefinitionService.query(selectId20).getContent().toList();
+
         assertThat(contractDefinitions).hasSize(1);
 
         val contractDefinition = contractDefinitions.get(0);
@@ -168,37 +190,44 @@ class ContractDefinitionPageApiServiceTest {
     }
 
     private void createContractDefinition(
-            ContractDefinitionService contractDefinitionService,
-            String contractDefinitionId,
-            String contractPolicyId,
-            String accessPolicyId,
-            Criterion criteria,
-            long createdAt
+        Janitor janitor,
+        ContractDefinitionService contractDefinitionService,
+        String contractDefinitionId,
+        String contractPolicyId,
+        String accessPolicyId,
+        Criterion criteria,
+        long createdAt
     ) {
-
         var contractDefinition = ContractDefinition.Builder.newInstance()
-                .id(contractDefinitionId)
-                .contractPolicyId(contractPolicyId)
-                .accessPolicyId(accessPolicyId)
-                .assetsSelector(List.of(criteria))
-                .createdAt(createdAt)
-                .build();
+            .id(contractDefinitionId)
+            .contractPolicyId(contractPolicyId)
+            .accessPolicyId(accessPolicyId)
+            .assetsSelector(List.of(criteria))
+            .createdAt(createdAt)
+            .build();
+
         contractDefinitionService.create(contractDefinition);
+
+        janitor.afterEach(() -> contractDefinitionService.delete(contractDefinitionId));
     }
 
     private void createContractDefinition(
-            ContractDefinitionService contractDefinitionService,
-            String contractDefinitionId,
-            String contractPolicyId,
-            String accessPolicyId,
-            Criterion criteria
+        Janitor janitor,
+        ContractDefinitionService contractDefinitionService,
+        String contractDefinitionId,
+        String contractPolicyId,
+        String accessPolicyId,
+        Criterion criteria
     ) {
         var contractDefinition = ContractDefinition.Builder.newInstance()
-                .id(contractDefinitionId)
-                .contractPolicyId(contractPolicyId)
-                .accessPolicyId(accessPolicyId)
-                .assetsSelector(List.of(criteria))
-                .build();
+            .id(contractDefinitionId)
+            .contractPolicyId(contractPolicyId)
+            .accessPolicyId(accessPolicyId)
+            .assetsSelector(List.of(criteria))
+            .build();
+
         contractDefinitionService.create(contractDefinition);
+
+        janitor.afterEach(() -> contractDefinitionService.delete(contractDefinitionId));
     }
 }

@@ -3,7 +3,6 @@ rootProject.name = "sovity-ce-edc"
 include(":config")
 include(":extensions:contract-termination")
 include(":extensions:database-direct-access")
-include(":extensions:dataset-bugfix")
 include(":extensions:edc-ui-config")
 include(":extensions:integrated-data-plane-initializer")
 include(":extensions:last-commit-info")

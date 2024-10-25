@@ -19,11 +19,15 @@ import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionEntry;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.eclipse.edc.connector.controlplane.contract.spi.types.offer.ContractDefinition;
 import org.eclipse.edc.connector.controlplane.services.spi.contractdefinition.ContractDefinitionService;
+import org.eclipse.edc.spi.entity.Entity;
 import org.eclipse.edc.spi.query.QuerySpec;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.util.Comparator;
 import java.util.List;
 
@@ -34,8 +38,15 @@ public class ContractDefinitionApiService {
     private final CriterionMapper criterionMapper;
     private final ContractDefinitionBuilder contractDefinitionBuilder;
 
+    @SneakyThrows
     public List<ContractDefinitionEntry> getContractDefinitions() {
         var definitions = getAllContractDefinitions();
+
+        // TODO: rm debug
+        try(var f = new FileWriter("/tmp/dates")) {
+            f.write(String.join("\n", definitions.stream().map(it -> it.getContractPolicyId() + ": " + it.getCreatedAt()).toList()));
+        }
+
         return definitions.stream()
                 .sorted(Comparator.comparing(ContractDefinition::getCreatedAt).reversed())
                 .map(this::buildContractDefinitionEntry)

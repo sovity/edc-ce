@@ -31,7 +31,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.Singular;
 import lombok.experimental.Delegate;
 import org.jetbrains.annotations.Nullable;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.extension.AfterAllCallback;
+import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
@@ -45,7 +47,7 @@ import java.util.function.Consumer;
 @Builder
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class CeIntegrationTestExtension
-    implements BeforeAllCallback, AfterAllCallback, ParameterResolver {
+    implements BeforeAllCallback, AfterAllCallback, AfterEachCallback, ParameterResolver {
 
     @Getter
     @Builder.Default
@@ -103,6 +105,8 @@ public class CeIntegrationTestExtension
         instances.put(config);
         instances.putLazy(EdcClient.class, () -> CeIntegrationTestUtils.getEdcClient(config));
         instances.putLazy(ManagementApiConnectorRemote.class, () -> CeIntegrationTestUtils.getManagementApiConnectorRemote(config));
+
+        instances.put(new Janitor());
     }
 
     @Override
@@ -121,5 +125,10 @@ public class CeIntegrationTestExtension
             return instances.get(TestDatabaseExtension.class).getTestDatabase();
         }
         return () -> new JdbcCredentials("no-test-db", "no-test-db", "no-test-db");
+    }
+
+    @Override
+    public void afterEach(ExtensionContext extensionContext) throws Exception {
+        instances.get(Janitor.class).clear();
     }
 }
