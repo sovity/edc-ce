@@ -86,7 +86,7 @@ import static org.mockserver.matchers.Times.once;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.stop.Stop.stopQuietly;
 
-// TODO https://github.com/sovity/PMO-Software/issues/1628
+// Disabled until further evaluation of this workaround for EDC versions 0.7+
 @Disabled
 class DataSourceParameterizationTest {
 
