@@ -33,7 +33,6 @@ import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
 import org.mockserver.model.HttpStatusCode;
 
-import java.util.Base64;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -42,7 +41,7 @@ import static org.eclipse.edc.spi.constants.CoreConstants.EDC_NAMESPACE;
 
 class PlaceholderDataSourceExtensionTest {
     @RegisterExtension
-    private static CeE2eTestExtension e2eTestExtension = CeE2eTestExtension.builder()
+    private static final CeE2eTestExtension E2E_TEST_EXTENSION = CeE2eTestExtension.builder()
         .additionalModule(":launchers:connectors:sovity-dev")
         .build();
 

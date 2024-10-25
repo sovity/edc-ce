@@ -16,7 +16,6 @@ package de.sovity.edc.e2e;
 
 import de.sovity.edc.extension.e2e.junit.CeIntegrationTestExtension;
 import lombok.SneakyThrows;
-import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -27,14 +26,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class Edc07MigrationBaselineTest {
 
     @RegisterExtension
-    private static CeIntegrationTestExtension e2eTestExtension = CeIntegrationTestExtension.builder()
+    private static final CeIntegrationTestExtension INTEGRATION_TEST_EXTENSION = CeIntegrationTestExtension.builder()
         .additionalModule(":launchers:connectors:sovity-dev")
         .skipDb(false)
         .build();
 
     @SneakyThrows
     @Test
-    void worked(Connection cnx) {
+    void smokeTest(Connection cnx) {
         // arrange
 
         // act

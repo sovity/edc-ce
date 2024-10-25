@@ -29,7 +29,7 @@ import static de.sovity.edc.extension.e2e.connector.remotes.management_api.DataT
 class ManagementApiTransferTest {
 
     @RegisterExtension
-    private static CeE2eTestExtension e2eTestExtension = CeE2eTestExtension.builder()
+    private static final CeE2eTestExtension E2E_TEST_EXTENSION = CeE2eTestExtension.builder()
         .additionalModule(":launchers:connectors:sovity-dev")
         .build();
 
@@ -44,15 +44,6 @@ class ManagementApiTransferTest {
         // arrange
         var assetId = UUID.randomUUID().toString();
 
-        /**
-         * TODO
-         *
-         * to find what a policy looks like:
-         *
-         * build it from the UiPolicy
-         * transform via PolicyMapper to JsonLd
-         *
-         */
         providerConnector.createDataOffer(assetId, testBackend.getDataSourceUrl(TEST_BACKEND_TEST_DATA));
 
         // act

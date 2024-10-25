@@ -16,7 +16,6 @@ package de.sovity.edc.extension.contacttermination;
 
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.ApiException;
-import de.sovity.edc.client.gen.model.ContractAgreementPageQuery;
 import de.sovity.edc.client.gen.model.ContractTerminationRequest;
 import de.sovity.edc.client.gen.model.InitiateTransferRequest;
 import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario;
@@ -44,8 +43,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-import static de.sovity.edc.client.gen.model.ContractTerminationStatus.ONGOING;
-import static de.sovity.edc.client.gen.model.ContractTerminationStatus.TERMINATED;
 import static de.sovity.edc.extension.contacttermination.ContractTerminationTestUtils.awaitTerminationCount;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -56,7 +53,7 @@ import static org.mockito.Mockito.verify;
 class ContractTerminationTest {
 
     @RegisterExtension
-    private final static CeE2eTestExtension e2eTestExtension = CeE2eTestExtension.builder()
+    private static final CeE2eTestExtension E2E_TEST_EXTENSION = CeE2eTestExtension.builder()
         .additionalModule(":launchers:connectors:sovity-dev")
         .build();
 

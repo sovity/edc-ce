@@ -81,4 +81,7 @@ Play whack-a-mole between the new EDC usage of distribution, the `Media Type` as
 
 The attribute https://w3id.org/edc/v0.0.1/ns/providerId has been deprecated in type https://w3id.org/edc/v0.0.1/ns/ContractRequest, please use http://www.w3.org/ns/odrl/2/assigner
 
+###
+
+Release as 0.0.1-20241025-2408-alpha1
 

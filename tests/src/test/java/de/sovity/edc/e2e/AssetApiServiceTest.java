@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2023 sovity GmbH
+ * Copyright (c) 2023 sovity GmbH
  *
  *  This program and the accompanying materials are made available under the
  *  terms of the Apache License, Version 2.0 which is available at
@@ -11,8 +11,8 @@
  *       sovity GmbH - initial API and implementation
  *
  */
-package de.sovity.edc.e2e;
 
+package de.sovity.edc.e2e;
 
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.DataSourceType;
@@ -97,7 +97,7 @@ public class AssetApiServiceTest {
             .extracting(UiAsset::getAssetId)
             .containsExactly("asset-23", "asset-22", "asset-21");
 
-        List.of("asset-21","asset-22","asset-23").forEach(id -> client.uiApi().deleteAsset(id));
+        List.of("asset-21", "asset-22", "asset-23").forEach(id -> client.uiApi().deleteAsset(id));
     }
 
     @Test

@@ -36,7 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CanGetAgreementPageForNonTerminatedContractTest {
 
     @RegisterExtension
-    private final static CeE2eTestExtension e2eTestExtension = CeE2eTestExtension.builder()
+    private static final CeE2eTestExtension E2E_TEST_EXTENSION = CeE2eTestExtension.builder()
         .additionalModule(":launchers:connectors:sovity-dev")
         .build();
 

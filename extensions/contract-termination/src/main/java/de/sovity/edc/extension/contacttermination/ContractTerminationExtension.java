@@ -14,7 +14,6 @@
 
 package de.sovity.edc.extension.contacttermination;
 
-import de.sovity.edc.ext.db.jooq.Tables;
 import de.sovity.edc.extension.contacttermination.query.ContractAgreementIsTerminatedQuery;
 import de.sovity.edc.extension.contacttermination.query.ContractAgreementTerminationDetailsQuery;
 import de.sovity.edc.extension.contacttermination.query.TerminateContractQuery;

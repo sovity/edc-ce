@@ -92,10 +92,10 @@ class UiApiWrapperTest {
 
     private static final String PROVIDER_PARTICIPANT_ID = CeE2eTestSide.PROVIDER.getParticipantId();
     private static final String CONSUMER_PARTICIPANT_ID = CeE2eTestSide.CONSUMER.getParticipantId();
-    private static final Random random = new Random();
+    private static final Random RANDOM = new Random();
 
     @RegisterExtension
-    private static CeE2eTestExtension e2eTestExtension = CeE2eTestExtension.builder()
+    private static final CeE2eTestExtension E2E_TEST_EXTENSION = CeE2eTestExtension.builder()
         .additionalModule(":launchers:connectors:sovity-dev")
         .build();
 
@@ -699,7 +699,7 @@ class UiApiWrapperTest {
                     .contactPreferredEmailSubject("Subject")
                     .build())
                 .build())
-            .id("asset-" + random.nextInt())
+            .id("asset-" + RANDOM.nextInt())
             .title("foo")
             .build());
 
@@ -783,7 +783,7 @@ class UiApiWrapperTest {
             .type(DataSourceType.HTTP_DATA)
             .build();
 
-        val assetId = "asset-" + random.nextInt();
+        val assetId = "asset-" + RANDOM.nextInt();
         val asset = UiAssetCreateRequest.builder()
             .dataSource(dataSource)
             .id(assetId)
@@ -840,7 +840,7 @@ class UiApiWrapperTest {
             .type(DataSourceType.HTTP_DATA)
             .build();
 
-        val assetId = "asset-" + random.nextInt();
+        val assetId = "asset-" + RANDOM.nextInt();
         val asset = UiAssetCreateRequest.builder()
             .dataSource(dataSource)
             .id(assetId)
@@ -924,7 +924,7 @@ class UiApiWrapperTest {
         @Provider EdcClient providerClient
     ) {
         // arrange
-        val assetId = "assetId-" + random.nextInt();
+        val assetId = "assetId-" + RANDOM.nextInt();
         scenario.createPolicy(assetId, OffsetDateTime.now(), OffsetDateTime.now());
 
         // act
@@ -1025,7 +1025,7 @@ class UiApiWrapperTest {
         @Provider EdcClient providerClient
     ) {
         // arrange
-        val assetId = "assetId-" + random.nextInt();
+        val assetId = "assetId-" + RANDOM.nextInt();
 
         // act
         providerClient.uiApi()

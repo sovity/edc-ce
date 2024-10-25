@@ -13,8 +13,8 @@
  */
 
 // TODO package de.sovity.edc.ext.wrapper.api.ui.pages.policy;
-package de.sovity.edc.e2e;
 
+package de.sovity.edc.e2e;
 
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.OperatorDto;
@@ -44,7 +44,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class PolicyDefinitionApiServiceTest {
 
     @RegisterExtension
-    static CeIntegrationTestExtension providerExtension = CeIntegrationTestExtension.builder()
+    private static final CeIntegrationTestExtension INTEGRATION_TEST_EXTENSION = CeIntegrationTestExtension.builder()
         .additionalModule(":launchers:connectors:sovity-dev")
         .build();
 
