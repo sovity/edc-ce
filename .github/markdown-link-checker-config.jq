@@ -7,7 +7,9 @@
     {"pattern": "^https://www\\.linkedin\\.com"},
     {"pattern": "https://(.*?)\\.azure\\.sovity\\.io"},
     {"pattern": "http://edc2?:"},
-    {"pattern": "^https?://connector:"}
+    {"pattern": "^https?://connector:"},
+    {"pattern": "^https://app.swaggerhub.com/apis/eclipse-edc-bot/management-api/.*?"},
+    {"pattern": "^http://www.w3.org/ns/dcat.*"}
   ],
   "replacementPatterns": [
     {
