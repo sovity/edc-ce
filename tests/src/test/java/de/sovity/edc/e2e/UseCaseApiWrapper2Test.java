@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2024 sovity GmbH
+ * Copyright (c) 2024 sovity GmbH
  *
  *  This program and the accompanying materials are made available under the
  *  terms of the Apache License, Version 2.0 which is available at
@@ -12,7 +12,7 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper.api.usecase;
+package de.sovity.edc.e2e;
 
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.CatalogFilterExpression;
@@ -45,7 +45,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class UseCaseApiWrapperTest {
+class UseCaseApiWrapper2Test {
     String protocolApiUrl;
 
     @RegisterExtension
@@ -81,6 +81,7 @@ class UseCaseApiWrapperTest {
         assertThat(dataOffers.get(0).getAsset().getAssetId()).isEqualTo(assetId1);
         assertThat(dataOffers.get(0).getAsset().getTitle()).isEqualTo("Test Asset 1");
 
+        cleanup(client);
     }
 
     @Test
@@ -102,6 +103,16 @@ class UseCaseApiWrapperTest {
         assertThat(dataOffers)
             .extracting(it -> it.getAsset().getAssetId())
             .containsExactlyInAnyOrder(assetId1, assetId2);
+
+        cleanup(client);
+    }
+
+    private static void cleanup(EdcClient client) {
+        client.uiApi().deleteAsset(assetId1);
+        client.uiApi().deleteAsset(assetId2);
+        client.uiApi().deleteContractDefinition("cd-1");
+        client.uiApi().deleteContractDefinition("cd-2");
+        client.uiApi().deletePolicyDefinition(policyId);
     }
 
     @Test
@@ -123,6 +134,8 @@ class UseCaseApiWrapperTest {
         assertThat(dataOffers)
             .extracting(it -> it.getAsset().getAssetId())
             .containsAnyOf(assetId1, assetId2);
+
+        cleanup(client);
     }
 
     private CatalogQuery criterion(
@@ -194,22 +207,25 @@ class UseCaseApiWrapperTest {
                 .build())
             .build();
 
+        int offset = 0;
+        int firstIndex = offset + 1;
         assetId1 = client.uiApi().createAsset(UiAssetCreateRequest.builder()
-            .id("test-asset-1")
-            .title("Test Asset 1")
+            .id("test-asset-" + firstIndex)
+            .title("Test Asset " + firstIndex)
             .dataSource(dataSource)
             .mediaType("application/json")
             .build()).getId();
 
+        int secondIndex = offset + 2;
         assetId2 = client.uiApi().createAsset(UiAssetCreateRequest.builder()
-            .id("test-asset-2")
-            .title("Test Asset 2")
+            .id("test-asset-" + secondIndex)
+            .title("Test Asset " + secondIndex)
             .dataSource(dataSource)
             .mediaType("application/json")
             .build()).getId();
 
         policyId = client.uiApi().createPolicyDefinitionV2(PolicyDefinitionCreateDto.builder()
-            .policyDefinitionId("policy-1")
+            .policyDefinitionId("policy-" + offset)
             .expression(UiPolicyExpression.builder()
                 .type(UiPolicyExpressionType.EMPTY)
                 .build())
