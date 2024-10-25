@@ -16,9 +16,9 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.dashboard;
 
 import de.sovity.edc.ext.wrapper.api.ui.model.DashboardPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.DashboardTransferAmounts;
+import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.CxDidConfigService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.DapsConfigService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.DashboardDataFetcher;
-import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.MiwConfigService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.SelfDescriptionService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferProcessStateService;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +41,7 @@ public class DashboardPageApiService {
     private final DashboardDataFetcher dashboardDataFetcher;
     private final TransferProcessStateService transferProcessStateService;
     private final DapsConfigService dapsConfigService;
-    private final MiwConfigService miwConfigService;
+    private final CxDidConfigService cxDidConfigService;
     private final SelfDescriptionService selfDescriptionService;
 
     @NotNull
@@ -83,7 +83,7 @@ public class DashboardPageApiService {
         dashboardPage.setConnectorMaintainerUrl(selfDescriptionService.getMaintainerUrl());
         dashboardPage.setConnectorMaintainerName(selfDescriptionService.getMaintainerName());
 
-        dashboardPage.setConnectorMiwConfig(miwConfigService.buildMiwConfigOrNull());
+        dashboardPage.setConnectorCxDidConfig(cxDidConfigService.buildCxDidConfigOrNull());
         dashboardPage.setConnectorDapsConfig(dapsConfigService.buildDapsConfigOrNull());
         return dashboardPage;
     }

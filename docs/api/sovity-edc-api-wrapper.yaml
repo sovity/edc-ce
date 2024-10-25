@@ -627,11 +627,11 @@ components:
     DataSourceType:
       type: string
       description: Supported Data Source Types by UiDataSource
+      default: CUSTOM
       enum:
       - HTTP_DATA
       - ON_REQUEST
       - CUSTOM
-      default: CUSTOM
     SecretValue:
       type: object
       properties:
@@ -839,6 +839,7 @@ components:
     UiDataSourceHttpDataMethod:
       type: string
       description: Supported HTTP Methods by UiDataSource
+      default: GET
       enum:
       - GET
       - POST
@@ -846,7 +847,6 @@ components:
       - PATCH
       - DELETE
       - OPTIONS
-      default: GET
     UiDataSourceOnRequest:
       required:
       - contactEmail
@@ -1673,6 +1673,31 @@ components:
         state:
           $ref: "#/components/schemas/ContractNegotiationState"
       description: Contract Negotiation Information
+    DashboardCxDidConfig:
+      required:
+      - bdrsUrl
+      - dimUrl
+      - myDid
+      - trustedVcIssuer
+      - walletTokenUrl
+      type: object
+      properties:
+        myDid:
+          type: string
+          description: My DID / edc.iam.issuer.id
+        walletTokenUrl:
+          type: string
+          description: Wallet Token Url / edc.iam.sts.oauth.token.url
+        trustedVcIssuer:
+          type: string
+          description: Trusted VC Issuer / edc.iam.trusted-issuer.cofinity.id
+        bdrsUrl:
+          type: string
+          description: BDRS Url / tx.iam.iatp.bdrs.server.url
+        dimUrl:
+          type: string
+          description: STS DIM Url / edc.iam.sts.dim.url
+      description: Managed Identity Wallet (MIW) Config
     DashboardDapsConfig:
       required:
       - jwksUrl
@@ -1686,23 +1711,6 @@ components:
           type: string
           description: Your Connector's DAPS JWKS URL
       description: DAPS Config
-    DashboardMiwConfig:
-      required:
-      - authorityId
-      - tokenUrl
-      - url
-      type: object
-      properties:
-        url:
-          type: string
-          description: Your Connector's MIW's URL
-        tokenUrl:
-          type: string
-          description: Your Connector's MIW's Token URL
-        authorityId:
-          type: string
-          description: Your Connector's MIW's Authority ID
-      description: Managed Identity Wallet (MIW) Config
     DashboardPage:
       required:
       - connectorCuratorName
@@ -1772,8 +1780,8 @@ components:
           description: Your Connector's Maintainer's Organization Name
         connectorDapsConfig:
           $ref: "#/components/schemas/DashboardDapsConfig"
-        connectorMiwConfig:
-          $ref: "#/components/schemas/DashboardMiwConfig"
+        connectorCxDidConfig:
+          $ref: "#/components/schemas/DashboardCxDidConfig"
       description: Data as required by the UI's Dashboard Page
     DashboardTransferAmounts:
       required:

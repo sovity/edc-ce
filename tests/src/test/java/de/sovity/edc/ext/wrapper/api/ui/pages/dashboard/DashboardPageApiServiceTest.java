@@ -65,9 +65,12 @@ class DashboardPageApiServiceTest {
         .configOverrides(config -> config
             .property(CeConfigProps.EDC_OAUTH_TOKEN_URL, "https://token-url.daps")
             .property(CeConfigProps.EDC_OAUTH_PROVIDER_JWKS_URL, "https://jwks-url.daps")
-            .property("tx.ssi.oauth.token.url", "https://token.miw")
-            .property("tx.ssi.miw.url", "https://miw")
-            .property("tx.ssi.miw.authority.id", "my-authority-id"))
+            .property("edc.iam.sts.oauth.token.url", "tokenUrl")
+            .property("edc.iam.trusted-issuer.cofinity.id", "myTrustedIssuer")
+            .property("edc.iam.issuer.id", "myDid")
+            .property("tx.iam.iatp.bdrs.server.url", "bdrsUrl")
+            .property("edc.iam.sts.dim.url", "dimUrl")
+        )
         .beforeEdcStartup(runtime -> {
             runtime.registerServiceMock(AssetIndex.class, assetIndex);
             runtime.registerServiceMock(PolicyDefinitionService.class, policyDefinitionService);
@@ -143,10 +146,12 @@ class DashboardPageApiServiceTest {
         assertThat(dashboardPage.getConnectorDapsConfig().getTokenUrl()).isEqualTo("https://token-url.daps");
         assertThat(dashboardPage.getConnectorDapsConfig().getJwksUrl()).isEqualTo("https://jwks-url.daps");
 
-        assertThat(dashboardPage.getConnectorMiwConfig()).isNotNull();
-        assertThat(dashboardPage.getConnectorMiwConfig().getAuthorityId()).isEqualTo("my-authority-id");
-        assertThat(dashboardPage.getConnectorMiwConfig().getUrl()).isEqualTo("https://miw");
-        assertThat(dashboardPage.getConnectorMiwConfig().getTokenUrl()).isEqualTo("https://token.miw");
+        assertThat(dashboardPage.getConnectorCxDidConfig()).isNotNull();
+        assertThat(dashboardPage.getConnectorCxDidConfig().getMyDid()).isEqualTo("myDid");
+        assertThat(dashboardPage.getConnectorCxDidConfig().getWalletTokenUrl()).isEqualTo("tokenUrl");
+        assertThat(dashboardPage.getConnectorCxDidConfig().getTrustedVcIssuer()).isEqualTo("myTrustedIssuer");
+        assertThat(dashboardPage.getConnectorCxDidConfig().getBdrsUrl()).isEqualTo("bdrsUrl");
+        assertThat(dashboardPage.getConnectorCxDidConfig().getDimUrl()).isEqualTo("dimUrl");
     }
 
     private ContractNegotiation mockContractNegotiation(int contract, ContractNegotiation.Type type) {

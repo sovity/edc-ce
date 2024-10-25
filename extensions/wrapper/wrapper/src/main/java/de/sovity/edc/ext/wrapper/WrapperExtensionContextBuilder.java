@@ -59,9 +59,9 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.contract_negotiations.ContractNego
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_negotiations.ContractNegotiationStateService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_negotiations.ContractOfferMapper;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.DashboardPageApiService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.CxDidConfigService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.DapsConfigService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.DashboardDataFetcher;
-import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.MiwConfigService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.OwnConnectorEndpointServiceImpl;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.SelfDescriptionService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.data_offer.DataOfferPageApiService;
@@ -249,8 +249,8 @@ public class WrapperExtensionContextBuilder {
             contractNegotiationBuilder,
             contractNegotiationStateService
         );
-        var miwConfigBuilder = new MiwConfigService(config);
-        var dapsConfigBuilder = new DapsConfigService(config);
+        var cxDidConfigService = new CxDidConfigService(config);
+        var dapsConfigService = new DapsConfigService(config);
         var dashboardDataFetcher = new DashboardDataFetcher(
             contractNegotiationStore,
             transferProcessService,
@@ -261,8 +261,8 @@ public class WrapperExtensionContextBuilder {
         var dashboardApiService = new DashboardPageApiService(
             dashboardDataFetcher,
             transferProcessStateService,
-            dapsConfigBuilder,
-            miwConfigBuilder,
+            dapsConfigService,
+            cxDidConfigService,
             selfDescriptionService
         );
         var alwaysTruePolicyService = new AlwaysTruePolicyDefinitionService(
