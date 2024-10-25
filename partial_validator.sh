@@ -7,6 +7,8 @@ gradle \
     :extensions:policy-always-true:test \
     :extensions:policy-referring-connector:test \
     :extensions:sovity-messenger:test \
+    :extensions:wrapper:wrapper:test \
+    :extensions:wrapper:wrapper-common-mappers:test \
     :utils:catalog-parser:test \
     :tests:test \
     --tests 'de.sovity.edc.e2e.wrapper.RecreateAlwaysTruePolicyTest' \
