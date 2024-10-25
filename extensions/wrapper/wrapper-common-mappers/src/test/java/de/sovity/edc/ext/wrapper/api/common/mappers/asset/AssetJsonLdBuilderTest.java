@@ -129,7 +129,7 @@ class AssetJsonLdBuilderTest {
             .build();
 
         var expectedProperties = Json.createObjectBuilder()
-            .add(Prop.Dcat.DISTRIBUTION_WILL_BE_OVERWRITTEN_BY_CATALOG, Json.createObjectBuilder()
+            .add(Prop.SovityDcatExt.DISTRIBUTION, Json.createObjectBuilder()
                 .add(Prop.Dcat.MEDIATYPE, "B"));
 
         // act
@@ -149,7 +149,7 @@ class AssetJsonLdBuilderTest {
             .build();
 
         var expectedProperties = Json.createObjectBuilder()
-            .add(Prop.Dcat.DISTRIBUTION_WILL_BE_OVERWRITTEN_BY_CATALOG, Json.createObjectBuilder()
+            .add(Prop.SovityDcatExt.DISTRIBUTION, Json.createObjectBuilder()
                 .add(Prop.Dcterms.RIGHTS, Json.createObjectBuilder()
                     .add(Prop.Rdfs.LABEL, "B")));
 
@@ -170,7 +170,7 @@ class AssetJsonLdBuilderTest {
             .build();
 
         var expectedProperties = Json.createObjectBuilder()
-            .add(Prop.Dcat.DISTRIBUTION_WILL_BE_OVERWRITTEN_BY_CATALOG, Json.createObjectBuilder()
+            .add(Prop.SovityDcatExt.DISTRIBUTION, Json.createObjectBuilder()
                 .add(Prop.MobilityDcatAp.MOBILITY_DATA_STANDARD, Json.createObjectBuilder()
                     .add(Prop.ID, "B")));
 
@@ -191,7 +191,7 @@ class AssetJsonLdBuilderTest {
             .build();
 
         var expectedProperties = Json.createObjectBuilder()
-            .add(Prop.Dcat.DISTRIBUTION_WILL_BE_OVERWRITTEN_BY_CATALOG, Json.createObjectBuilder()
+            .add(Prop.SovityDcatExt.DISTRIBUTION, Json.createObjectBuilder()
                 .add(Prop.MobilityDcatAp.MOBILITY_DATA_STANDARD, Json.createObjectBuilder()
                     .add(Prop.MobilityDcatAp.SCHEMA, Json.createObjectBuilder()
                         .add(Prop.Rdfs.LITERAL, "B"))));
@@ -250,7 +250,7 @@ class AssetJsonLdBuilderTest {
             .build();
 
         var expectedProperties = Json.createObjectBuilder()
-            .add(Prop.Dcat.DISTRIBUTION_WILL_BE_OVERWRITTEN_BY_CATALOG, Json.createObjectBuilder()
+            .add(Prop.SovityDcatExt.DISTRIBUTION, Json.createObjectBuilder()
                 .add(Prop.MobilityDcatAp.MOBILITY_DATA_STANDARD, Json.createObjectBuilder()
                     .add(Prop.MobilityDcatAp.SCHEMA, Json.createObjectBuilder()
                         .add(Prop.Rdfs.LITERAL, "test"))));
@@ -273,7 +273,7 @@ class AssetJsonLdBuilderTest {
             .build();
 
         var expectedProperties = Json.createObjectBuilder()
-            .add(Prop.Dcat.DISTRIBUTION_WILL_BE_OVERWRITTEN_BY_CATALOG, Json.createObjectBuilder()
+            .add(Prop.SovityDcatExt.DISTRIBUTION, Json.createObjectBuilder()
                 .add(Prop.MobilityDcatAp.MOBILITY_DATA_STANDARD, Json.createObjectBuilder()
                     .add(Prop.MobilityDcatAp.SCHEMA, Json.createObjectBuilder()
                         .add(Prop.Dcat.DOWNLOAD_URL, Json.createArrayBuilder().add("http://test")))));
