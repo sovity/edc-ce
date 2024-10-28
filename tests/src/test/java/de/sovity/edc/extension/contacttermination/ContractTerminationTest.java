@@ -18,6 +18,8 @@ import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.ApiException;
 import de.sovity.edc.client.gen.model.ContractTerminationRequest;
 import de.sovity.edc.client.gen.model.InitiateTransferRequest;
+import de.sovity.edc.ext.db.jooq.Tables;
+import de.sovity.edc.extension.db.directaccess.DslContextFactory;
 import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario;
 import de.sovity.edc.extension.e2e.junit.CeE2eTestExtension;
 import de.sovity.edc.extension.e2e.junit.utils.Consumer;
@@ -195,10 +197,12 @@ class ContractTerminationTest {
     @DisabledOnGithub
     @Test
     @SneakyThrows
-    void cantTransferDataAfterTerminated(
+    void cantTransferDataAfterTerminatedOnProviderSideOnly(
         E2eTestScenario scenario,
         ClientAndServer mockServer,
+        @Consumer DslContextFactory consumerDsl,
         @Consumer EdcClient consumerClient,
+        @Provider DslContextFactory providerDsl,
         @Provider EdcClient providerClient
     ) {
         val assetId = "asset-1";
@@ -249,6 +253,20 @@ class ContractTerminationTest {
 
         awaitTerminationCount(consumerClient, 1);
         awaitTerminationCount(providerClient, 1);
+
+        val t = Tables.SOVITY_CONTRACT_TERMINATION;
+
+        val terminatedOnProviderSide = providerDsl.transactionResult((ptrx) ->
+            ptrx.selectCount()
+                .from(t)
+                .where(t.CONTRACT_AGREEMENT_ID.eq(contractAgreementId))
+                .execute());
+
+        assertThat(terminatedOnProviderSide).isEqualTo(1);
+        // pretend that the consumer didn't receive the termination message and let them try to get the data
+        consumerDsl.transactionResult((ctrx) -> ctrx.truncate(t).execute());
+        val terminatedOnConsumerSide = consumerDsl.transactionResult((ctrx) -> ctrx.fetchCount(t));
+        assertThat(terminatedOnConsumerSide).isEqualTo(0);
 
         // act
         consumerClient.uiApi().initiateTransfer(transferRequest);
@@ -357,8 +375,11 @@ class ContractTerminationTest {
         assertThat(providerService.getContractTerminationObservable().getListeners()).hasSize(0);
     }
 
-    private static void assertTerminationEvent(ArgumentCaptor<ContractTerminationEvent> argument, String contractAgreementId,
-                                  ContractTerminationRequest contractTerminationRequest) {
+    private static void assertTerminationEvent(
+        ArgumentCaptor<ContractTerminationEvent> argument,
+        String contractAgreementId,
+        ContractTerminationRequest contractTerminationRequest
+    ) {
         assertThat(argument.getValue().contractAgreementId()).isEqualTo(contractAgreementId);
         assertThat(argument.getValue().detail()).isEqualTo(contractTerminationRequest.getDetail());
         assertThat(argument.getValue().reason()).isEqualTo(contractTerminationRequest.getReason());
