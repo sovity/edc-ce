@@ -31,4 +31,6 @@ assignees: ""
 - [ ] Fix the GitHub Projects Labels, Sprint and other Metadata
 - [ ] Refine a Solution Proposal / Work Breakdown
 - [ ] (For Tech Team): Include acceptance criteria for the sub-tasks of the work breakdown
+- [ ] Add security related tasks and checks
+- [ ] Final solution design has been challenged for security related topics
 ```
