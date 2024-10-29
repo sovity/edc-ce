@@ -22,6 +22,7 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 - Refactoring: Config as Java Code ([#1051](https://github.com/sovity/edc-ce/pull/1051))
 - Fix issues with the Create Data Offer Endpoint ([PR#1055](https://github.com/sovity/edc-ce/pull/1055))
+- Interrupt the transfer process earlier (TODO PR#)
 
 ### Deployment Migration Notes
 
