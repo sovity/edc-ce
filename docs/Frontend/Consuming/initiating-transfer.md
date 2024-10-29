@@ -56,7 +56,7 @@ For more advanced data-sink endpoints not directly supported by the UI, you can 
 ```
 {% endcode %}
 
-Here, `"type": "HttpData"` indicates that the EDC will interpret the destination as a REST-API. The `baseUrl` is the endpoint receiving the data. You can also set the type to `HttpProxy`, enabling a pull-transfer over both data planes.
+Here, `"type": "HttpData"` indicates that the EDC will interpret the destination as a REST-API. The `baseUrl` is the endpoint receiving the data.
 
 #### 3. Transfer Data via Custom Transfer Process Request (JSON)
 
