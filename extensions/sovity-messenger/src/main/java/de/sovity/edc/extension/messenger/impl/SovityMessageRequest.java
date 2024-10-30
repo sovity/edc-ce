@@ -51,6 +51,6 @@ public record SovityMessageRequest(
     @JsonIgnore
     @Override
     public String getCounterPartyId() {
-        return null;
+        return counterPartyId;
     }
 }
