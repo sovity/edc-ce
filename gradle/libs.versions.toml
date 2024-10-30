@@ -33,6 +33,7 @@ gsonFire = "1.8.5"
 hibernateValidator = "8.0.1.Final"
 hidetakeSwagger = "2.19.2"
 hikari = "5.0.1"
+jackson = "2.17.1"
 jakartaAnnotation = "1.3.5"
 jakartaEl = "4.0.2"
 jakartaJson = "2.0.1"
@@ -177,6 +178,7 @@ gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 gsonFire = { module = "io.gsonfire:gson-fire", version.ref = "gsonFire" }
 hibernate-validation = { module = "org.hibernate.validator:hibernate-validator", version.ref = "hibernateValidator" }
 hikari = { module = "com.zaxxer:HikariCP", version.ref = "hikari" }
+jackson-jsr310 = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310", version.ref = "jackson" }
 jakarta-annotationApi = { module = "jakarta.annotation:jakarta.annotation-api", version.ref = "jakartaAnnotation" }
 jakarta-el = { module = "org.glassfish:jakarta.el", version.ref = "jakartaEl" }
 jakarta-json = { module = "org.glassfish:jakarta.json", version.ref = "jakartaJson" }

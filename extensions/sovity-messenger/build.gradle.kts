@@ -18,6 +18,8 @@ dependencies {
     implementation(libs.edc.managementApiConfiguration)
     implementation(libs.edc.transformLib)
 
+    implementation(libs.jackson.jsr310)
+
     testAnnotationProcessor(libs.lombok)
     testCompileOnly(libs.lombok)
 
