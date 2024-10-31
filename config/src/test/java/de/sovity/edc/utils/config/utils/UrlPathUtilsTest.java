@@ -14,7 +14,6 @@
 
 package de.sovity.edc.utils.config.utils;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static de.sovity.edc.utils.config.utils.UrlPathUtils.urlPathJoin;
