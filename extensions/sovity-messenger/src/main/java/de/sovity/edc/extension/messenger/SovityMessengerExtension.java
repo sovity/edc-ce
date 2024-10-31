@@ -26,6 +26,7 @@ import de.sovity.edc.extension.messenger.impl.SovityMessageRequestBodyExtractor;
 import lombok.val;
 import org.eclipse.edc.policy.engine.spi.PolicyEngine;
 import org.eclipse.edc.policy.engine.spi.PolicyScope;
+import org.eclipse.edc.policy.model.Permission;
 import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.protocol.dsp.http.spi.dispatcher.DspHttpRemoteMessageDispatcher;
 import org.eclipse.edc.protocol.dsp.http.spi.serialization.JsonLdRemoteMessageSerializer;
@@ -99,7 +100,7 @@ public class SovityMessengerExtension implements ServiceExtension {
         dspHttpRemoteMessageDispatcher.registerPolicyScope(
             SovityMessageRequest.class,
             MESSENGER_SCOPE,
-            (ignored) -> Policy.Builder.newInstance().build());
+            (ignored) -> Policy.Builder.newInstance().permission(Permission.Builder.newInstance().build()).build());
 
         policyEngine.registerPostValidator(MESSENGER_SCOPE, (ignored1, ignored2) -> true);
 
