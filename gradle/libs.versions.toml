@@ -62,6 +62,7 @@ quarkus = "2.16.6.Final"
 quartz = "2.3.2"
 restAssured = "5.5.0"
 shadow = "7.1.2"
+spotless = "6.25.0"
 swagger = "1.6.12"
 swaggerCore = "2.2.18"
 testcontainers = "1.19.1"
@@ -231,6 +232,7 @@ openapi-generator6 = { id = "org.openapi.generator", version.ref = "openapiGener
 openapi-generator7 = { id = "org.openapi.generator", version.ref = "openapiGenerator7" }
 quarkus = { id = "io.quarkus", version.ref = "quarkus" }
 shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 swagger-plugin = { id = "io.swagger.core.v3.swagger-gradle-plugin", version.ref = "swaggerCore" }
 jooq = { id = "nu.studer.jooq", version.ref = "jooqPlugin" }
 flyway = { id = "org.flywaydb.flyway", version.ref = "flywayPlugin" }

@@ -18,59 +18,60 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static de.sovity.edc.utils.config.utils.UrlPathUtils.urlPathJoin;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class UrlPathUtilsTest {
     @Test
     void urlPathJoin_empty() {
-        Assertions.assertThat(urlPathJoin()).isEmpty();
-        Assertions.assertThat(urlPathJoin("")).isEmpty();
-        Assertions.assertThat(urlPathJoin("/")).isEqualTo("/");
+        assertThat(urlPathJoin()).isEmpty();
+        assertThat(urlPathJoin("")).isEmpty();
+        assertThat(urlPathJoin("/")).isEqualTo("/");
     }
 
     @Test
     void urlPathJoin_relative() {
-        Assertions.assertThat(urlPathJoin("a")).isEqualTo("a");
-        Assertions.assertThat(urlPathJoin("a/")).isEqualTo("a/");
-        Assertions.assertThat(urlPathJoin("a", "b")).isEqualTo("a/b");
-        Assertions.assertThat(urlPathJoin("a/", "b")).isEqualTo("a/b");
-        Assertions.assertThat(urlPathJoin("a", "/b")).isEqualTo("a/b");
-        Assertions.assertThat(urlPathJoin("a/", "/b")).isEqualTo("a/b");
+        assertThat(urlPathJoin("a")).isEqualTo("a");
+        assertThat(urlPathJoin("a/")).isEqualTo("a/");
+        assertThat(urlPathJoin("a", "b")).isEqualTo("a/b");
+        assertThat(urlPathJoin("a/", "b")).isEqualTo("a/b");
+        assertThat(urlPathJoin("a", "/b")).isEqualTo("a/b");
+        assertThat(urlPathJoin("a/", "/b")).isEqualTo("a/b");
     }
 
     @Test
     void urlPathJoin_absolute() {
-        Assertions.assertThat(urlPathJoin("/a")).isEqualTo("/a");
-        Assertions.assertThat(urlPathJoin("/a/")).isEqualTo("/a/");
-        Assertions.assertThat(urlPathJoin("/a", "b")).isEqualTo("/a/b");
-        Assertions.assertThat(urlPathJoin("/a/", "b")).isEqualTo("/a/b");
-        Assertions.assertThat(urlPathJoin("/a", "/b")).isEqualTo("/a/b");
-        Assertions.assertThat(urlPathJoin("/a/", "/b")).isEqualTo("/a/b");
+        assertThat(urlPathJoin("/a")).isEqualTo("/a");
+        assertThat(urlPathJoin("/a/")).isEqualTo("/a/");
+        assertThat(urlPathJoin("/a", "b")).isEqualTo("/a/b");
+        assertThat(urlPathJoin("/a/", "b")).isEqualTo("/a/b");
+        assertThat(urlPathJoin("/a", "/b")).isEqualTo("/a/b");
+        assertThat(urlPathJoin("/a/", "/b")).isEqualTo("/a/b");
     }
 
     @Test
     void urlPathJoin_immediate_protocol() {
-        Assertions.assertThat(urlPathJoin("https://")).isEqualTo("https://");
-        Assertions.assertThat(urlPathJoin("https://", "b")).isEqualTo("https://b");
-        Assertions.assertThat(urlPathJoin("https://", "/b")).isEqualTo("https://b");
+        assertThat(urlPathJoin("https://")).isEqualTo("https://");
+        assertThat(urlPathJoin("https://", "b")).isEqualTo("https://b");
+        assertThat(urlPathJoin("https://", "/b")).isEqualTo("https://b");
     }
 
     @Test
     void urlPathJoin_protocol() {
-        Assertions.assertThat(urlPathJoin("https://a")).isEqualTo("https://a");
-        Assertions.assertThat(urlPathJoin("https://a/")).isEqualTo("https://a/");
-        Assertions.assertThat(urlPathJoin("https://a", "b")).isEqualTo("https://a/b");
-        Assertions.assertThat(urlPathJoin("https://a/", "b")).isEqualTo("https://a/b");
-        Assertions.assertThat(urlPathJoin("https://a", "/b")).isEqualTo("https://a/b");
-        Assertions.assertThat(urlPathJoin("https://a/", "/b")).isEqualTo("https://a/b");
+        assertThat(urlPathJoin("https://a")).isEqualTo("https://a");
+        assertThat(urlPathJoin("https://a/")).isEqualTo("https://a/");
+        assertThat(urlPathJoin("https://a", "b")).isEqualTo("https://a/b");
+        assertThat(urlPathJoin("https://a/", "b")).isEqualTo("https://a/b");
+        assertThat(urlPathJoin("https://a", "/b")).isEqualTo("https://a/b");
+        assertThat(urlPathJoin("https://a/", "/b")).isEqualTo("https://a/b");
     }
 
     @Test
     void urlPathJoin_protocol_overruling_not_enabled() {
-        Assertions.assertThat(urlPathJoin("https://ignored", "https://a")).isEqualTo("https://ignored/https://a");
-        Assertions.assertThat(urlPathJoin("https://ignored", "https://a/")).isEqualTo("https://ignored/https://a/");
-        Assertions.assertThat(urlPathJoin("https://ignored", "https://a", "b")).isEqualTo("https://ignored/https://a/b");
-        Assertions.assertThat(urlPathJoin("https://ignored", "https://a/", "b")).isEqualTo("https://ignored/https://a/b");
-        Assertions.assertThat(urlPathJoin("https://ignored", "https://a", "/b")).isEqualTo("https://ignored/https://a/b");
-        Assertions.assertThat(urlPathJoin("https://ignored", "https://a/", "/b")).isEqualTo("https://ignored/https://a/b");
+        assertThat(urlPathJoin("https://ignored", "https://a")).isEqualTo("https://ignored/https://a");
+        assertThat(urlPathJoin("https://ignored", "https://a/")).isEqualTo("https://ignored/https://a/");
+        assertThat(urlPathJoin("https://ignored", "https://a", "b")).isEqualTo("https://ignored/https://a/b");
+        assertThat(urlPathJoin("https://ignored", "https://a/", "b")).isEqualTo("https://ignored/https://a/b");
+        assertThat(urlPathJoin("https://ignored", "https://a", "/b")).isEqualTo("https://ignored/https://a/b");
+        assertThat(urlPathJoin("https://ignored", "https://a/", "/b")).isEqualTo("https://ignored/https://a/b");
     }
 }

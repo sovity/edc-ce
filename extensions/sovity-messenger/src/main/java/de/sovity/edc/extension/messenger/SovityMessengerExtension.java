@@ -24,6 +24,9 @@ import de.sovity.edc.extension.messenger.impl.ObjectMapperFactory;
 import de.sovity.edc.extension.messenger.impl.SovityMessageRequest;
 import de.sovity.edc.extension.messenger.impl.SovityMessageRequestBodyExtractor;
 import lombok.val;
+import org.eclipse.edc.policy.engine.spi.PolicyEngine;
+import org.eclipse.edc.policy.engine.spi.PolicyScope;
+import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.protocol.dsp.http.spi.dispatcher.DspHttpRemoteMessageDispatcher;
 import org.eclipse.edc.protocol.dsp.http.spi.serialization.JsonLdRemoteMessageSerializer;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
@@ -43,6 +46,9 @@ public class SovityMessengerExtension implements ServiceExtension {
 
     public static final String NAME = "SovityMessenger";
 
+    @PolicyScope
+    public static final String MESSENGER_SCOPE = "messenger.sovity";
+
     @Inject
     private DspHttpRemoteMessageDispatcher dspHttpRemoteMessageDispatcher;
 
@@ -56,6 +62,12 @@ public class SovityMessengerExtension implements ServiceExtension {
     private Monitor monitor;
 
     @Inject
+    private ParticipantAgentService participantAgentService;
+
+    @Inject
+    private PolicyEngine policyEngine;
+
+    @Inject
     private RemoteMessageDispatcherRegistry registry;
 
     @Inject
@@ -63,9 +75,6 @@ public class SovityMessengerExtension implements ServiceExtension {
 
     @Inject
     private WebService webService;
-
-    @Inject
-    private ParticipantAgentService participantAgentService;
 
     @Override
     public String name() {
@@ -84,7 +93,15 @@ public class SovityMessengerExtension implements ServiceExtension {
     private void setupSovityMessengerEmitter(ServiceExtensionContext context, ObjectMapper objectMapper) {
         val factory = new MessageEmitter(jsonLdRemoteMessageSerializer);
         val bodyExtractor = new SovityMessageRequestBodyExtractor(objectMapper);
+
         dspHttpRemoteMessageDispatcher.registerMessage(SovityMessageRequest.class, factory, bodyExtractor);
+
+        dspHttpRemoteMessageDispatcher.registerPolicyScope(
+            SovityMessageRequest.class,
+            MESSENGER_SCOPE,
+            (ignored) -> Policy.Builder.newInstance().build());
+
+        policyEngine.registerPostValidator(MESSENGER_SCOPE, (ignored1, ignored2) -> true);
 
         typeTransformerRegistry.register(new JsonObjectFromSovityMessageRequest());
 
