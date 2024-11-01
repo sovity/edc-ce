@@ -34,6 +34,7 @@ import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.runtime.metamodel.annotation.Provides;
 import org.eclipse.edc.spi.agent.ParticipantAgentService;
 import org.eclipse.edc.spi.iam.IdentityService;
+import org.eclipse.edc.spi.iam.RequestScope;
 import org.eclipse.edc.spi.message.RemoteMessageDispatcherRegistry;
 import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.system.ServiceExtension;
@@ -102,7 +103,12 @@ public class SovityMessengerExtension implements ServiceExtension {
             MESSENGER_SCOPE,
             (ignored) -> Policy.Builder.newInstance().permission(Permission.Builder.newInstance().build()).build());
 
-        policyEngine.registerPostValidator(MESSENGER_SCOPE, (ignored1, ignored2) -> true);
+        policyEngine.registerPostValidator(
+            MESSENGER_SCOPE,
+            (ignored, policyContext) -> {
+                policyContext.getContextData(RequestScope.Builder.class).scope("sovity.messenger:send");
+                return true;
+            });
 
         typeTransformerRegistry.register(new JsonObjectFromSovityMessageRequest());
 
