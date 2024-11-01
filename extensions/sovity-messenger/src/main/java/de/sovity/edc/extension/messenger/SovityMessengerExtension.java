@@ -106,7 +106,7 @@ public class SovityMessengerExtension implements ServiceExtension {
         policyEngine.registerPostValidator(
             MESSENGER_SCOPE,
             (ignored, policyContext) -> {
-                policyContext.getContextData(RequestScope.Builder.class).scope("sovity.messenger:send");
+                policyContext.getContextData(RequestScope.Builder.class).scope("sovity.messenger:send:write");
                 return true;
             });
 
