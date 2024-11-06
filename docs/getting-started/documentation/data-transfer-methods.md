@@ -9,7 +9,7 @@ The connector supports two different data transfer modes visualized in the follo
 
 **HTTPProxy**: The provider EDC fetches the data and passes it on consumer's data transfer request synchronously back to the consumer.
 > [!WARNING]
-> This feature is only available for our sovity EDC Enterprise Edition.
+> The HttpProxy / HTTP Pull feature is only available for our sovity EDC Enterprise Edition.
 
 # Consuming Data via HttpProxy / HTTP Pull
 
