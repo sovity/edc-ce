@@ -14,6 +14,8 @@ The Dashboard consists of three sections:
 - **Center**: Connector KPIs and Properties
 - **Right**: General Information about the Connector
 
+Individual details of the Dashboard may vary depending on the version of your own connector used. If you have any questions in this regard, please contact our Customer Service Desk at any time.
+
 ![EDC UI Dashboard](/docs/images/edc-ui-dashboard.png)
 
 ## Left - Navigation Menu
@@ -30,7 +32,7 @@ Navigate through the Connector to access all other pages. You can create an asse
 - **Contract agreements**: Number of contracts your Connector has agreed with partners (inbound & outbound)
 
 ### Lower Mid Section: Connector Properties
-- **Connector Endpoint**: The endpoint that can be shared with partners to quickly access your catalog via the catalog browser and search for data offerings. Also available in the upper right section for easy copy-and-pasting.
+- **Connector Endpoint**: The Dataspace Protocol endpoint of your Connector.
 - **Participant ID/Connector ID**: The unique identifier of your Connector, depending on the ecosystem and its participant identification method.
 - **Title**: A human-readable description of the Connector (name).
 - **Curator Organisation Name**: The name of your organization.
@@ -44,5 +46,5 @@ Navigate through the Connector to access all other pages. You can create an asse
 - **DAPS JWKS URL**: Technical property describing the configured DAPS JWKS for your Connector, if connected to a DAPS.
 
 ## Right - General Information about the Connector
-The right-hand section provides general details about the EDC UI. At the top, you can find and copy the Connector endpoint and the Management API URL. Below, you will see a general introduction to the EDC UI.
+The right-hand section provides general details about the EDC UI. At the top, you can find and copy your Connector endpoint extended by the own participantId as query parameter and additionally the own Management-API URL. Below, you will see a general introduction to the EDC UI.
  
