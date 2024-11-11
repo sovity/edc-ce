@@ -20,6 +20,9 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Patch
 
+- Fix wrong placeholders for On Request data offer type
+  ([#878](https://github.com/sovity/edc-ui/issues/878))
+
 ### Deployment Migration Notes
 
 _No special deployment migration steps required_
