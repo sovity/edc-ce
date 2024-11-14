@@ -64,6 +64,6 @@ public class DashboardPage {
     @Schema(description = "Your Connector's DAPS Configuration (if present)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private DashboardDapsConfig connectorDapsConfig;
 
-    @Schema(description = "Your Connector's MIW Configuration (if present)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private DashboardMiwConfig connectorMiwConfig;
+    @Schema(description = "Your Connector's Catena-X Web-DID Configuration (if present)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private DashboardCxDidConfig connectorCxDidConfig;
 }

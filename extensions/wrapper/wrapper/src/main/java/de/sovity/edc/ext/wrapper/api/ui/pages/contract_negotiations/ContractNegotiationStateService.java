@@ -17,8 +17,8 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.contract_negotiations;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractNegotiationSimplifiedState;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractNegotiationState;
 import lombok.RequiredArgsConstructor;
-import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
-import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiationStates;
+import org.eclipse.edc.connector.controlplane.contract.spi.types.negotiation.ContractNegotiation;
+import org.eclipse.edc.connector.controlplane.contract.spi.types.negotiation.ContractNegotiationStates;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -26,9 +26,9 @@ import org.jetbrains.annotations.NotNull;
 public class ContractNegotiationStateService {
 
     /**
-     * Interpret {@link org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation#getState()} for use in our UI.
+     * Interpret {@link org.eclipse.edc.connector.controlplane.contract.spi.types.negotiation.ContractNegotiation#getState()} for use in our UI.
      *
-     * @param code {@link org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation#getState()}, see {@link org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiationStates#code()}
+     * @param code {@link org.eclipse.edc.connector.controlplane.contract.spi.types.negotiation.ContractNegotiation#getState()}, see {@link org.eclipse.edc.connector.controlplane.contract.spi.types.negotiation.ContractNegotiationStates#code()}
      * @return if running
      */
     @NotNull

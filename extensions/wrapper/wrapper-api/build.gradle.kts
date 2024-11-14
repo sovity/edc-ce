@@ -1,3 +1,4 @@
+import com.diffplug.gradle.spotless.SpotlessTask
 
 plugins {
     `java-library`
@@ -5,6 +6,7 @@ plugins {
     alias(libs.plugins.swagger.plugin)  //./gradlew clean resolve
     alias(libs.plugins.hidetake.swaggerGenerator)  //./gradlew generateSwaggerUI
     alias(libs.plugins.openapi.generator6)  //./gradlew openApiValidate && ./gradlew openApiGenerate
+    alias(libs.plugins.spotless)
 }
 
 dependencies {
@@ -41,6 +43,14 @@ tasks.withType<io.swagger.v3.plugins.gradle.tasks.ResolveTask> {
     resourcePackages = setOf("de.sovity.edc.ext.wrapper.api")
 }
 
+spotless {
+    yaml {
+        target("src/**/*.yaml")
+        jackson()
+            .feature("ORDER_MAP_ENTRIES_BY_KEYS", true)
+    }
+}
+
 val copyOpenapiYamlToDocs by tasks.registering(Copy::class) {
     dependsOn("resolve")
     from(openapiFile)
@@ -51,11 +61,13 @@ val openApiGenerateTypeScriptClient by tasks.registering(org.openapitools.genera
     dependsOn("resolve")
     dependsOn(copyOpenapiYamlToDocs)
     generatorName.set("typescript-fetch")
-    configOptions.set(mutableMapOf(
+    configOptions.set(
+        mutableMapOf(
             "supportsES6" to "true",
             "npmVersion" to "8.15.0",
             "typescriptThreePlus" to "true",
-    ))
+        )
+    )
 
     inputSpec.set(openapiFile)
     val outputDirectory = buildFile.parentFile.resolve("../clients/typescript-client/src/generated").normalize()
@@ -68,6 +80,8 @@ val openApiGenerateTypeScriptClient by tasks.registering(org.openapitools.genera
     doLast {
         outputDirectory.resolve("src/generated").renameTo(outputDirectory)
     }
+
+    finalizedBy(tasks.withType<SpotlessTask>())
 }
 
 tasks.withType<org.gradle.jvm.tasks.Jar> {

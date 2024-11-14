@@ -15,7 +15,7 @@
 package de.sovity.edc.ext.wrapper.api.ui.pages.contract_negotiations;
 
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractNegotiationSimplifiedState;
-import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiationStates;
+import org.eclipse.edc.connector.controlplane.contract.spi.types.negotiation.ContractNegotiationStates;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

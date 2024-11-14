@@ -20,9 +20,9 @@ import de.sovity.edc.extension.contacttermination.query.TerminateContractQuery;
 import de.sovity.edc.extension.db.directaccess.DslContextFactory;
 import de.sovity.edc.extension.messenger.SovityMessenger;
 import de.sovity.edc.extension.messenger.SovityMessengerRegistry;
-import de.sovity.edc.utils.config.ConfigProps;
+import de.sovity.edc.utils.config.CeConfigProps;
 import lombok.val;
-import org.eclipse.edc.connector.transfer.spi.observe.TransferProcessObservable;
+import org.eclipse.edc.connector.controlplane.transfer.spi.observe.TransferProcessObservable;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.runtime.metamodel.annotation.Provides;
 import org.eclipse.edc.spi.agent.ParticipantAgentService;
@@ -54,7 +54,6 @@ public class ContractTerminationExtension implements ServiceExtension {
 
     @Override
     public void initialize(ServiceExtensionContext context) {
-
         val terminationService = setupTerminationService(context);
         setupMessenger(terminationService);
         setupTransferPrevention();
@@ -71,7 +70,7 @@ public class ContractTerminationExtension implements ServiceExtension {
             contractAgreementTerminationDetailsQuery,
             terminateContractQuery,
             monitor,
-            ConfigProps.EDC_PARTICIPANT_ID.getStringOrEmpty(config)
+            CeConfigProps.EDC_PARTICIPANT_ID.getStringOrEmpty(config)
         );
 
         context.registerService(ContractAgreementTerminationService.class, terminationService);

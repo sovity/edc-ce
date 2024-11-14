@@ -71,7 +71,7 @@ public class ContractAgreementTerminationService {
         val endEvent = ContractTerminationEvent.from(termination, terminatedAt, thisParticipantId);
         notifyObservers(it -> it.contractTerminationCompletedOnThisInstance(endEvent));
 
-        notifyTerminationToProvider(details.counterpartyAddress(), termination);
+        notifyTerminationToProvider(details.counterpartyAddress(), details.counterpartyId(), termination);
 
         return terminatedAt;
     }
@@ -114,7 +114,11 @@ public class ContractAgreementTerminationService {
         return result;
     }
 
-    public void notifyTerminationToProvider(String counterPartyAddress, ContractTerminationParam termination) {
+    public void notifyTerminationToProvider(
+        String counterPartyAddress,
+        String counterPartyId,
+        ContractTerminationParam termination
+    ) {
 
         val notificationEvent = ContractTerminationEvent.from(termination, OffsetDateTime.now(), null);
         notifyObservers(it -> it.contractTerminationOnCounterpartyStarted(notificationEvent));
@@ -122,6 +126,7 @@ public class ContractAgreementTerminationService {
         sovityMessenger.send(
             SovityMessage.class,
             counterPartyAddress,
+            counterPartyId,
             new ContractTerminationMessage(
                 termination.contractAgreementId(),
                 termination.detail(),

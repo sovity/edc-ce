@@ -48,22 +48,23 @@ import de.sovity.edc.client.gen.model.UiPolicyExpression;
 import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
 import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
-import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
-import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
-import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
-import de.sovity.edc.extension.e2e.extension.Consumer;
-import de.sovity.edc.extension.e2e.extension.E2eScenario;
-import de.sovity.edc.extension.e2e.extension.E2eTestExtension;
-import de.sovity.edc.extension.e2e.extension.Provider;
-import de.sovity.edc.extension.policy.AlwaysTruePolicyConstants;
+import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario;
+import de.sovity.edc.extension.e2e.connector.remotes.management_api.ManagementApiConnectorRemote;
+import de.sovity.edc.extension.e2e.connector.remotes.test_backend_controller.TestBackendRemote;
+import de.sovity.edc.extension.e2e.junit.CeE2eTestExtension;
+import de.sovity.edc.extension.e2e.junit.CeE2eTestSide;
+import de.sovity.edc.extension.e2e.junit.utils.Consumer;
+import de.sovity.edc.extension.e2e.junit.utils.Provider;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.JsonUtils;
+import de.sovity.edc.utils.config.ConfigUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import lombok.val;
 import org.awaitility.Awaitility;
-import org.eclipse.edc.protocol.dsp.spi.types.HttpMessageProtocol;
+import org.eclipse.edc.protocol.dsp.http.spi.types.HttpMessageProtocol;
+import org.eclipse.edc.spi.system.configuration.Config;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -74,43 +75,47 @@ import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import static de.sovity.edc.client.gen.model.ContractAgreementDirection.CONSUMING;
 import static de.sovity.edc.client.gen.model.ContractAgreementDirection.PROVIDING;
-import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validateDataTransferred;
-import static de.sovity.edc.extension.e2e.extension.Helpers.defaultE2eTestExtension;
+import static de.sovity.edc.e2e.WrapperApiUtils.getAssetsWithId;
+import static de.sovity.edc.e2e.WrapperApiUtils.getContractDefinitionWithAssetId;
+import static de.sovity.edc.extension.e2e.connector.remotes.management_api.DataTransferTestUtil.validateDataTransferred;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-
 class UiApiWrapperTest {
 
-    private static final String PROVIDER_PARTICIPANT_ID = "provider";
-    private static final String CONSUMER_PARTICIPANT_ID = "consumer";
+    private static final String PROVIDER_PARTICIPANT_ID = CeE2eTestSide.PROVIDER.getParticipantId();
+    private static final String CONSUMER_PARTICIPANT_ID = CeE2eTestSide.CONSUMER.getParticipantId();
+    private static final Random RANDOM = new Random();
 
     @RegisterExtension
-    private static E2eTestExtension e2eTestExtension = defaultE2eTestExtension();
+    private static final CeE2eTestExtension E2E_TEST_EXTENSION = CeE2eTestExtension.builder()
+        .additionalModule(":launchers:connectors:sovity-dev")
+        .build();
 
-    private MockDataAddressRemote dataAddress;
+    private TestBackendRemote dataAddress;
 
     @BeforeEach
-    void setup(@Provider ConnectorRemote providerConnector) {
+    void setup(@Provider ManagementApiConnectorRemote providerConnector) {
         // We use the provider EDC as data sink / data source (it has the test-backend-controller extension)
-        dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultApiUrl());
+        dataAddress = new TestBackendRemote(providerConnector.getConfig().getDefaultApiUrl());
     }
 
     @DisabledOnGithub
     @Test
     void provide_consume_assetMapping_policyMapping_agreements(
-        @Consumer ConnectorConfig consumerConfig,
-        @Consumer ConnectorRemote consumerConnector,
+        @Consumer Config consumerConfig,
+        @Consumer ManagementApiConnectorRemote consumerConnector,
         @Consumer EdcClient consumerClient,
-        @Provider ConnectorConfig providerConfig,
-        @Provider EdcClient providerClient) {
-
+        @Provider Config providerConfig,
+        @Provider EdcClient providerClient
+    ) {
         // arrange
         var data = "expected data 123";
         var yesterday = OffsetDateTime.now().minusDays(1);
@@ -178,7 +183,9 @@ class UiApiWrapperTest {
                 {"https://private/some#key": "private LD value"}
                 """)
             .build()).getId();
+
         assertThat(assetId).isEqualTo("asset-1");
+
 
         providerClient.uiApi().createContractDefinition(ContractDefinitionRequest.builder()
             .contractDefinitionId("cd-1")
@@ -194,12 +201,19 @@ class UiApiWrapperTest {
                 .build()))
             .build());
 
-        var assets = providerClient.uiApi().getAssetPage().getAssets();
-        assertThat(assets).hasSize(1);
-        var asset = assets.get(0);
 
-        var providerProtocolEndpoint = providerConfig.getProtocolApiUrl();
-        var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(providerProtocolEndpoint);
+        val createdAsset = getAssetsWithId(providerClient, assetId);
+
+        assertThat(createdAsset).hasSize(1);
+        var asset = createdAsset.stream().filter(it -> it.getAssetId().equals("asset-1")).findFirst().get();
+
+        var providerProtocolEndpoint = ConfigUtils.getProtocolApiUrl(providerConfig);
+        var providerParticipantId = ConfigUtils.getParticipantId(providerConfig);
+        var dataOffers = consumerClient.uiApi()
+            .getCatalogPageDataOffers(providerParticipantId, providerProtocolEndpoint)
+            .stream()
+            .filter(it -> it.getAsset().getAssetId().equals(assetId))
+            .toList();
         assertThat(dataOffers).hasSize(1);
         var dataOffer = dataOffers.get(0);
         assertThat(dataOffer.getContractOffers()).hasSize(1);
@@ -208,8 +222,19 @@ class UiApiWrapperTest {
         // act
         var negotiation = negotiate(consumerClient, consumerConnector, dataOffer, contractOffer);
         initiateTransfer(consumerClient, negotiation);
-        var providerAgreements = providerClient.uiApi().getContractAgreementPage(null).getContractAgreements();
-        var consumerAgreements = consumerClient.uiApi().getContractAgreementPage(null).getContractAgreements();
+        var providerAgreements = providerClient.uiApi()
+            .getContractAgreementPage(null)
+            .getContractAgreements()
+            .stream()
+            .filter(it -> it.getContractAgreementId().equals(negotiation.getContractAgreementId()))
+            .toList();
+        var consumerAgreements = consumerClient
+            .uiApi()
+            .getContractAgreementPage(null)
+            .getContractAgreements()
+            .stream()
+            .filter(it -> it.getContractAgreementId().equals(negotiation.getContractAgreementId()))
+            .toList();
 
         // assert
         assertThat(dataOffer.getEndpoint()).isEqualTo(providerProtocolEndpoint);
@@ -217,7 +242,7 @@ class UiApiWrapperTest {
         assertThat(dataOffer.getAsset().getAssetId()).isEqualTo(assetId);
         assertThat(dataOffer.getAsset().getTitle()).isEqualTo("AssetName");
         assertThat(dataOffer.getAsset().getConnectorEndpoint()).isEqualTo(providerProtocolEndpoint);
-        assertThat(dataOffer.getAsset().getParticipantId()).isEqualTo(providerConfig.getProperties().get("edc.participant.id"));
+        assertThat(dataOffer.getAsset().getParticipantId()).isEqualTo(ConfigUtils.getParticipantId(providerConfig));
         assertThat(dataOffer.getAsset().getKeywords()).isEqualTo(List.of("keyword1", "keyword2"));
         assertThat(dataOffer.getAsset().getDescription()).isEqualTo("AssetDescription");
         assertThat(dataOffer.getAsset().getVersion()).isEqualTo("1.0.0");
@@ -259,7 +284,7 @@ class UiApiWrapperTest {
         assertThat(asset.getAssetId()).isEqualTo(assetId);
         assertThat(asset.getTitle()).isEqualTo("AssetName");
         assertThat(asset.getConnectorEndpoint()).isEqualTo(providerProtocolEndpoint);
-        assertThat(asset.getParticipantId()).isEqualTo(providerConfig.getProperties().get("edc.participant.id"));
+        assertThat(asset.getParticipantId()).isEqualTo(ConfigUtils.getParticipantId(providerConfig));
 
         assertThatJson(asset.getCustomJsonAsString()).isEqualTo("""
             { "test": "value" }
@@ -286,7 +311,7 @@ class UiApiWrapperTest {
         // Provider Contract Agreement
         assertThat(providerAgreement.getContractAgreementId()).isEqualTo(negotiation.getContractAgreementId());
         assertThat(providerAgreement.getDirection()).isEqualTo(PROVIDING);
-        assertThat(providerAgreement.getCounterPartyAddress()).isEqualTo(consumerConfig.getProtocolApiUrl());
+        assertThat(providerAgreement.getCounterPartyAddress()).isEqualTo(ConfigUtils.getProtocolApiUrl(consumerConfig));
         assertThat(providerAgreement.getCounterPartyId()).isEqualTo(CONSUMER_PARTICIPANT_ID);
 
         assertThat(providerAgreement.getAsset().getAssetId()).isEqualTo(assetId);
@@ -335,7 +360,7 @@ class UiApiWrapperTest {
             .build();
 
         var assetId = providerClient.uiApi().createAsset(UiAssetCreateRequest.builder()
-            .id("asset-1")
+            .id("asset-2")
             .title("will be overridden")
             .dataSource(dataSource)
             .customJsonLdAsString("""
@@ -348,12 +373,14 @@ class UiApiWrapperTest {
                 }
                 """)
             .build()).getId();
-        assertThat(assetId).isEqualTo("asset-1");
+        assertThat(assetId).isEqualTo("asset-2");
 
         // act
-        val assets = providerClient.uiApi().getAssetPage().getAssets();
-        assertThat(assets).hasSize(1);
-        val asset = assets.get(0);
+
+        val createdAsset = getAssetsWithId(providerClient, assetId);
+
+        assertThat(createdAsset).hasSize(1);
+        val asset = createdAsset.get(0);
 
         // assert
 
@@ -374,11 +401,11 @@ class UiApiWrapperTest {
     @DisabledOnGithub
     @Test
     void customTransferRequest(
-        @Consumer ConnectorRemote consumerConnector,
+        @Consumer ManagementApiConnectorRemote consumerConnector,
         @Consumer EdcClient consumerClient,
-        @Provider ConnectorConfig providerConfig,
-        @Provider EdcClient providerClient) {
-
+        @Provider Config providerConfig,
+        @Provider EdcClient providerClient
+    ) {
         // arrange
         var data = "expected data 123";
 
@@ -390,27 +417,29 @@ class UiApiWrapperTest {
             .build();
 
         var assetId = providerClient.uiApi().createAsset(UiAssetCreateRequest.builder()
-            .id("asset-1")
+            .id("asset-3")
             .dataSource(dataSource)
             .build()).getId();
-        assertThat(assetId).isEqualTo("asset-1");
+
+        assertThat(assetId).isEqualTo("asset-3");
 
         var policyId = providerClient.uiApi().createPolicyDefinitionV2(PolicyDefinitionCreateDto.builder()
-            .policyDefinitionId("policy-1")
+            .policyDefinitionId("policy-3")
             .expression(UiPolicyExpression.builder()
                 .type(UiPolicyExpressionType.EMPTY)
                 .build())
             .build()).getId();
 
-        providerClient.uiApi().createContractDefinition(ContractDefinitionRequest.builder()
-            .contractDefinitionId("cd-1")
+        val contractDefinitionId = providerClient.uiApi().createContractDefinition(ContractDefinitionRequest.builder()
+            .contractDefinitionId("cd-3")
             .accessPolicyId(policyId)
             .contractPolicyId(policyId)
             .assetSelector(List.of())
             .build());
 
-        val providerProtocolEndpoint = providerConfig.getProtocolApiUrl();
-        var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(providerProtocolEndpoint);
+        val providerProtocolEndpoint = ConfigUtils.getProtocolApiUrl(providerConfig);
+        val providerParticipantId = ConfigUtils.getParticipantId(providerConfig);
+        var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(providerParticipantId, providerProtocolEndpoint);
         assertThat(dataOffers).hasSize(1);
         var dataOffer = dataOffers.get(0);
         assertThat(dataOffer.getContractOffers()).hasSize(1);
@@ -419,14 +448,8 @@ class UiApiWrapperTest {
         // act
         var negotiation = negotiate(consumerClient, consumerConnector, dataOffer, contractOffer);
         var transferRequestJsonLd = Json.createObjectBuilder()
-            .add(
-                Prop.Edc.DATA_DESTINATION,
-                getDatasinkPropertiesJsonObject()
-            )
-            .add(Prop.Edc.CTX + "transferType", Json.createObjectBuilder()
-                .add(Prop.Edc.CTX + "contentType", "application/octet-stream")
-                .add(Prop.Edc.CTX + "isFinite", true)
-            )
+            .add(Prop.Edc.DATA_DESTINATION, getDatasinkPropertiesJsonObject())
+            .add(Prop.Edc.CTX + "transferType", Json.createValue("HttpData-PUSH"))
             .add(Prop.Edc.CTX + "protocol", HttpMessageProtocol.DATASPACE_PROTOCOL_HTTP)
             .add(Prop.Edc.CTX + "managedResources", false)
             .build();
@@ -437,16 +460,19 @@ class UiApiWrapperTest {
         consumerClient.uiApi().initiateCustomTransfer(transferRequest);
 
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
+
+        providerClient.uiApi().deleteContractDefinition(contractDefinitionId.getId());
+        providerClient.uiApi().deletePolicyDefinition(policyId);
     }
 
     @DisabledOnGithub
     @Test
     void editAssetOnLiveContract(
-        @Consumer ConnectorRemote consumerConnector,
+        @Consumer ManagementApiConnectorRemote consumerConnector,
         @Consumer EdcClient consumerClient,
-        @Provider ConnectorConfig providerConfig,
-        @Provider EdcClient providerClient) {
-
+        @Provider Config providerConfig,
+        @Provider EdcClient providerClient
+    ) {
         // arrange
         var data = "expected data 123";
 
@@ -458,7 +484,7 @@ class UiApiWrapperTest {
             .build();
 
         var assetId = providerClient.uiApi().createAsset(UiAssetCreateRequest.builder()
-            .id("asset-1")
+            .id("asset-4")
             .title("Bad Asset Title")
             .dataSource(dataSource)
             .customJsonAsString("""
@@ -488,7 +514,7 @@ class UiApiWrapperTest {
             .build()).getId();
 
         providerClient.uiApi().createContractDefinition(ContractDefinitionRequest.builder()
-            .contractDefinitionId("cd-1")
+            .contractDefinitionId("cd-4")
             .accessPolicyId("always-true")
             .contractPolicyId("always-true")
             .assetSelector(List.of(UiCriterion.builder()
@@ -501,8 +527,13 @@ class UiApiWrapperTest {
                 .build()))
             .build());
 
-        val providerProtocolEndpoint = providerConfig.getProtocolApiUrl();
-        var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(providerProtocolEndpoint);
+        val providerProtocolEndpoint = ConfigUtils.getProtocolApiUrl(providerConfig);
+        val providerParticipantId = ConfigUtils.getParticipantId(providerConfig);
+        var dataOffers = consumerClient.uiApi()
+            .getCatalogPageDataOffers(providerParticipantId, providerProtocolEndpoint)
+            .stream()
+            .filter(it -> it.getAsset().getAssetId().equals(assetId))
+            .toList();
         assertThat(dataOffers).hasSize(1);
         var dataOffer = dataOffers.get(0);
         assertThat(dataOffer.getContractOffers()).hasSize(1);
@@ -542,7 +573,17 @@ class UiApiWrapperTest {
         initiateTransfer(consumerClient, negotiation);
 
         // assert
-        assertThat(consumerClient.uiApi().getCatalogPageDataOffers(providerProtocolEndpoint).get(0).getAsset().getTitle())
+        String asset4title = consumerClient.uiApi()
+            .getCatalogPageDataOffers(providerParticipantId, providerProtocolEndpoint)
+            .stream()
+            .filter(it -> it.getAsset().getAssetId().equals("asset-4"))
+            .findFirst()
+            .get()
+            .getAsset()
+            .getTitle();
+
+        assertThat(
+            asset4title)
             .isEqualTo("Good Asset Title");
         val firstAsset = providerClient.uiApi().getContractAgreementPage(null).getContractAgreements().get(0).getAsset();
         assertThat(firstAsset.getTitle()).isEqualTo("Good Asset Title");
@@ -576,7 +617,7 @@ class UiApiWrapperTest {
 
     @Test
     @DisabledOnGithub
-    void checkIdAvailability(E2eScenario scenario, @Provider EdcClient providerClient) {
+    void checkIdAvailability(E2eTestScenario scenario, @Provider EdcClient providerClient) {
         // arrange
         var assetId = scenario.createAsset();
         var policyId = "policy-id";
@@ -604,7 +645,7 @@ class UiApiWrapperTest {
     @DisabledOnGithub
     @Test
     void retrieveSingleContractAgreement(
-        E2eScenario scenario,
+        E2eTestScenario scenario,
         @Provider EdcClient providerClient
     ) {
         // arrange
@@ -646,7 +687,7 @@ class UiApiWrapperTest {
     @Test
     @DisabledOnGithub
     void canMakeAnOnDemandDataSourceAvailable(
-        E2eScenario scenario,
+        E2eTestScenario scenario,
         @Provider EdcClient providerClient
     ) {
         // arrange
@@ -658,7 +699,7 @@ class UiApiWrapperTest {
                     .contactPreferredEmailSubject("Subject")
                     .build())
                 .build())
-            .id("asset")
+            .id("asset-" + RANDOM.nextInt())
             .title("foo")
             .build());
 
@@ -723,7 +764,7 @@ class UiApiWrapperTest {
             .first()
             .isEqualTo(assetId);
 
-        assertThat(getAllPoliciesExceptTheAlwaysTruePolicy(providerClient)).hasSize(0);
+        assertThat(getPolicyNamed(assetId, providerClient)).hasSize(0);
 
         assertThat(providerClient.uiApi().getContractDefinitionPage().getContractDefinitions())
             .hasSize(0);
@@ -742,7 +783,7 @@ class UiApiWrapperTest {
             .type(DataSourceType.HTTP_DATA)
             .build();
 
-        val assetId = "asset";
+        val assetId = "asset-" + RANDOM.nextInt();
         val asset = UiAssetCreateRequest.builder()
             .dataSource(dataSource)
             .id(assetId)
@@ -774,7 +815,7 @@ class UiApiWrapperTest {
             .first()
             .isEqualTo(assetId);
 
-        assertThat(getAllPoliciesExceptTheAlwaysTruePolicy(providerClient))
+        assertThat(getPolicyNamed(assetId, providerClient))
             .hasSize(1)
             .extracting(PolicyDefinitionDto::getPolicyDefinitionId)
             .first()
@@ -799,7 +840,7 @@ class UiApiWrapperTest {
             .type(DataSourceType.HTTP_DATA)
             .build();
 
-        val assetId = "asset";
+        val assetId = "asset-" + RANDOM.nextInt();
         val asset = UiAssetCreateRequest.builder()
             .dataSource(dataSource)
             .id(assetId)
@@ -823,7 +864,7 @@ class UiApiWrapperTest {
             .first()
             .isEqualTo(assetId);
 
-        assertThat(getAllPoliciesExceptTheAlwaysTruePolicy(providerClient))
+        assertThat(getPolicyNamed(assetId, providerClient))
             .hasSize(1)
             .extracting(PolicyDefinitionDto::getPolicyDefinitionId)
             .first()
@@ -837,7 +878,7 @@ class UiApiWrapperTest {
 
     @Test
     void dontCreateAnythingIfTheAssetAlreadyExists(
-        E2eScenario scenario,
+        E2eTestScenario scenario,
         @Provider EdcClient providerClient
     ) {
         // arrange
@@ -861,23 +902,29 @@ class UiApiWrapperTest {
                     .build()));
 
         // assert
-        assertThat(providerClient.uiApi().getAssetPage().getAssets())
+
+        val createdAsset = getAssetsWithId(providerClient, assetId);
+
+        assertThat(createdAsset)
             .hasSize(1)
             .extracting(UiAsset::getAssetId)
             .first()
             .isEqualTo(assetId);
 
-        assertThat(getAllPoliciesExceptTheAlwaysTruePolicy(providerClient)).hasSize(0);
-        assertThat(providerClient.uiApi().getContractDefinitionPage().getContractDefinitions()).hasSize(0);
+        assertThat(getPolicyNamed(assetId, providerClient)).hasSize(0);
+
+        val createdContractDefinition = getContractDefinitionWithAssetId(providerClient, assetId);
+
+        assertThat(createdContractDefinition).hasSize(0);
     }
 
     @Test
     void dontCreateAnythingIfThePolicyAlreadyExists(
-        E2eScenario scenario,
+        E2eTestScenario scenario,
         @Provider EdcClient providerClient
     ) {
         // arrange
-        val assetId = "assetId";
+        val assetId = "assetId-" + RANDOM.nextInt();
         scenario.createPolicy(assetId, OffsetDateTime.now(), OffsetDateTime.now());
 
         // act
@@ -898,26 +945,31 @@ class UiApiWrapperTest {
                     .build()));
 
         // assert
-        assertThat(providerClient.uiApi().getAssetPage().getAssets()).hasSize(0);
 
-        assertThat(getAllPoliciesExceptTheAlwaysTruePolicy(providerClient)).hasSize(1)
+        val createdAsset = getAssetsWithId(providerClient, assetId);
+
+        assertThat(createdAsset).hasSize(0);
+
+        assertThat(getPolicyNamed(assetId, providerClient)).hasSize(1)
             .extracting(PolicyDefinitionDto::getPolicyDefinitionId)
             .first()
-            .isEqualTo("assetId");
+            .isEqualTo(assetId);
 
-        assertThat(providerClient.uiApi().getContractDefinitionPage().getContractDefinitions()).hasSize(0);
+        val createdContractDefinition = getContractDefinitionWithAssetId(providerClient, assetId);
+
+        assertThat(createdContractDefinition).hasSize(0);
     }
 
     @Test
     void dontCreateAnythingIfTheContractDefinitionAlreadyExists(
-        E2eScenario scenario,
+        E2eTestScenario scenario,
         @Provider EdcClient providerClient
     ) {
         // arrange
-        val assetId = "assetId";
-        val placeholder = scenario.createAsset();
+        val id = "assetId";
+        val assetId = scenario.createAsset();
         providerClient.uiApi().createContractDefinition(ContractDefinitionRequest.builder()
-            .contractDefinitionId(assetId)
+            .contractDefinitionId(id)
             .accessPolicyId("always-true")
             .contractPolicyId("always-true")
             .assetSelector(List.of(UiCriterion.builder()
@@ -925,7 +977,7 @@ class UiApiWrapperTest {
                 .operator(UiCriterionOperator.EQ)
                 .operandRight(UiCriterionLiteral.builder()
                     .type(UiCriterionLiteralType.VALUE)
-                    .value(placeholder)
+                    .value(assetId)
                     .build())
                 .build()))
             .build());
@@ -936,7 +988,7 @@ class UiApiWrapperTest {
             () -> providerClient.uiApi()
                 .createDataOffer(DataOfferCreationRequest.builder()
                     .uiAssetCreateRequest(UiAssetCreateRequest.builder()
-                        .id(assetId)
+                        .id(id)
                         .dataSource(UiDataSource.builder()
                             .type(DataSourceType.ON_REQUEST)
                             .onRequest(UiDataSourceOnRequest.builder()
@@ -948,22 +1000,24 @@ class UiApiWrapperTest {
                     .build()));
 
         // assert
-        assertThat(providerClient.uiApi().getAssetPage().getAssets())
+        val createdAsset = getAssetsWithId(providerClient, assetId);
+
+        assertThat(createdAsset)
             // the asset used for the placeholder contract definition
             .hasSize(1)
             .extracting(UiAsset::getAssetId)
             .first()
-            .isEqualTo(placeholder);
+            .isEqualTo(assetId);
 
-        assertThat(getAllPoliciesExceptTheAlwaysTruePolicy(providerClient)).hasSize(0);
+        assertThat(getPolicyNamed(id, providerClient)).hasSize(0);
 
         assertThat(providerClient.uiApi().getContractDefinitionPage().getContractDefinitions())
             .hasSize(1)
-            .filteredOn(it -> it.getContractDefinitionId().equals(assetId))
+            .filteredOn(it -> it.getContractDefinitionId().equals(id))
             .extracting(ContractDefinitionEntry::getContractDefinitionId)
             .first()
             // the already existing one, before the data offer creation attempt
-            .isEqualTo(assetId);
+            .isEqualTo(id);
     }
 
     @Test
@@ -971,7 +1025,7 @@ class UiApiWrapperTest {
         @Provider EdcClient providerClient
     ) {
         // arrange
-        val assetId = "assetId";
+        val assetId = "assetId-" + RANDOM.nextInt();
 
         // act
         providerClient.uiApi()
@@ -990,16 +1044,20 @@ class UiApiWrapperTest {
                 .build());
 
         // assert
-        assertThat(providerClient.uiApi().getAssetPage().getAssets())
+        val createdAsset = getAssetsWithId(providerClient, assetId);
+
+        assertThat(createdAsset)
             // the asset used for the placeholder contract definition
             .hasSize(1)
             .extracting(UiAsset::getAssetId)
             .first()
             .isEqualTo(assetId);
 
-        assertThat(getAllPoliciesExceptTheAlwaysTruePolicy(providerClient)).hasSize(0);
+        assertThat(getPolicyNamed(assetId, providerClient)).hasSize(0);
 
-        assertThat(providerClient.uiApi().getContractDefinitionPage().getContractDefinitions())
+        val createdContractDefinition = getContractDefinitionWithAssetId(providerClient, assetId);
+
+        assertThat(createdContractDefinition)
             .hasSize(1)
             .filteredOn(it -> it.getContractDefinitionId().equals(assetId))
             .extracting(ContractDefinitionEntry::getContractDefinitionId)
@@ -1032,88 +1090,39 @@ class UiApiWrapperTest {
                 .build());
 
         // assert
-        assertThat(providerClient.uiApi().getAssetPage().getAssets())
+        val createdAsset = getAssetsWithId(providerClient, assetId);
+
+        assertThat(createdAsset)
             // the asset used for the placeholder contract definition
             .hasSize(1)
             .extracting(UiAsset::getAssetId)
             .first()
             .isEqualTo(assetId);
 
-        assertThat(getAllPoliciesExceptTheAlwaysTruePolicy(providerClient)).hasSize(0);
+        assertThat(getPolicyNamed(assetId, providerClient)).hasSize(0);
 
         assertThat(providerClient.uiApi().getContractDefinitionPage().getContractDefinitions())
             .hasSize(0);
     }
 
-    @Test
-    void recreateTheAlwaysTruePolicyIfDeleted(
-        @Provider EdcClient providerClient
-    ) {
-        // arrange
-        val assetId = "assetId";
-        providerClient.uiApi().deletePolicyDefinition(AlwaysTruePolicyConstants.POLICY_DEFINITION_ID);
-
-        List<PolicyDefinitionDto> withoutDefaultAlwaysTrue =
-            providerClient.uiApi()
-                .getPolicyDefinitionPage()
-                .getPolicies()
-                .stream()
-                .filter(it -> !it.getPolicyDefinitionId().equals(AlwaysTruePolicyConstants.POLICY_DEFINITION_ID))
-                .toList();
-
-        assertThat(withoutDefaultAlwaysTrue).hasSize(0);
-
-        // act
-        providerClient.uiApi()
-            .createDataOffer(DataOfferCreationRequest.builder()
-                .uiAssetCreateRequest(UiAssetCreateRequest.builder()
-                    .id(assetId)
-                    .dataSource(UiDataSource.builder()
-                        .type(DataSourceType.ON_REQUEST)
-                        .onRequest(UiDataSourceOnRequest.builder()
-                            .contactEmail("foo@example.com")
-                            .contactPreferredEmailSubject("Subject")
-                            .build())
-                        .build())
-                    .build())
-                .policy(DataOfferCreationRequest.PolicyEnum.PUBLISH_UNRESTRICTED)
-                .build());
-
-        // assert
-        assertThat(providerClient.uiApi().getAssetPage().getAssets())
-            // the asset used for the placeholder contract definition
-            .hasSize(1)
-            .extracting(UiAsset::getAssetId)
-            .first()
-            .isEqualTo(assetId);
-
-        List<PolicyDefinitionDto> policies =
-            providerClient.uiApi()
-                .getPolicyDefinitionPage()
-                .getPolicies()
-                .stream()
-                .toList();
-
-        assertThat(policies).hasSize(1);
-
-        assertThat(providerClient.uiApi().getContractDefinitionPage().getContractDefinitions())
-            .hasSize(1);
-    }
-
-    private static @NotNull List<PolicyDefinitionDto> getAllPoliciesExceptTheAlwaysTruePolicy(EdcClient edcClient) {
-        return edcClient.uiApi().getPolicyDefinitionPage().getPolicies().stream().filter(it -> !it.getPolicyDefinitionId().equals(
-            AlwaysTruePolicyConstants.POLICY_DEFINITION_ID)).toList();
+    private static @NotNull List<PolicyDefinitionDto> getPolicyNamed(String name, EdcClient edcClient) {
+        return edcClient.uiApi()
+            .getPolicyDefinitionPage()
+            .getPolicies()
+            .stream()
+            .filter(it -> it.getPolicyDefinitionId().equals(name))
+            .toList();
     }
 
     private UiContractNegotiation negotiate(
         EdcClient consumerClient,
-        ConnectorRemote consumerConnector,
+        ManagementApiConnectorRemote consumerConnector,
         UiDataOffer dataOffer,
-        UiContractOffer contractOffer) {
-
+        UiContractOffer contractOffer
+    ) {
         var negotiationRequest = ContractNegotiationRequest.builder()
             .counterPartyAddress(dataOffer.getEndpoint())
-            .counterPartyParticipantId(dataOffer.getParticipantId())
+            .counterPartyId(dataOffer.getParticipantId())
             .assetId(dataOffer.getAsset().getAssetId())
             .contractOfferId(contractOffer.getContractOfferId())
             .policyJsonLd(contractOffer.getPolicy().getPolicyJsonLd())
@@ -1135,6 +1144,7 @@ class UiApiWrapperTest {
         var contractAgreementId = negotiation.getContractAgreementId();
         var transferRequest = InitiateTransferRequest.builder()
             .contractAgreementId(contractAgreementId)
+            .transferType("HttpData-PUSH")
             .dataSinkProperties(dataAddress.getDataSinkProperties())
             .build();
         consumerClient.uiApi().initiateTransfer(transferRequest);

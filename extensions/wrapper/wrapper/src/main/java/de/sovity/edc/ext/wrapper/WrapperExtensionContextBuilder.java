@@ -59,9 +59,9 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.contract_negotiations.ContractNego
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_negotiations.ContractNegotiationStateService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_negotiations.ContractOfferMapper;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.DashboardPageApiService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.CxDidConfigService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.DapsConfigService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.DashboardDataFetcher;
-import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.MiwConfigService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.OwnConnectorEndpointServiceImpl;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.SelfDescriptionService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.data_offer.DataOfferPageApiService;
@@ -82,25 +82,25 @@ import de.sovity.edc.extension.db.directaccess.DslContextFactory;
 import de.sovity.edc.extension.policy.services.AlwaysTruePolicyDefinitionService;
 import de.sovity.edc.utils.catalog.DspCatalogService;
 import de.sovity.edc.utils.catalog.mapper.DspDataOfferBuilder;
-import de.sovity.edc.utils.config.ConfigProps;
+import de.sovity.edc.utils.config.CeConfigProps;
 import lombok.NoArgsConstructor;
 import lombok.val;
-import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
-import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
-import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
-import org.eclipse.edc.connector.spi.asset.AssetService;
-import org.eclipse.edc.connector.spi.catalog.CatalogService;
-import org.eclipse.edc.connector.spi.contractagreement.ContractAgreementService;
-import org.eclipse.edc.connector.spi.contractdefinition.ContractDefinitionService;
-import org.eclipse.edc.connector.spi.contractnegotiation.ContractNegotiationService;
-import org.eclipse.edc.connector.spi.policydefinition.PolicyDefinitionService;
-import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
-import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
+import org.eclipse.edc.connector.controlplane.asset.spi.index.AssetIndex;
+import org.eclipse.edc.connector.controlplane.contract.spi.negotiation.store.ContractNegotiationStore;
+import org.eclipse.edc.connector.controlplane.contract.spi.offer.store.ContractDefinitionStore;
+import org.eclipse.edc.connector.controlplane.policy.spi.store.PolicyDefinitionStore;
+import org.eclipse.edc.connector.controlplane.services.spi.asset.AssetService;
+import org.eclipse.edc.connector.controlplane.services.spi.catalog.CatalogService;
+import org.eclipse.edc.connector.controlplane.services.spi.contractagreement.ContractAgreementService;
+import org.eclipse.edc.connector.controlplane.services.spi.contractdefinition.ContractDefinitionService;
+import org.eclipse.edc.connector.controlplane.services.spi.contractnegotiation.ContractNegotiationService;
+import org.eclipse.edc.connector.controlplane.services.spi.policydefinition.PolicyDefinitionService;
+import org.eclipse.edc.connector.controlplane.services.spi.transferprocess.TransferProcessService;
+import org.eclipse.edc.connector.controlplane.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.eclipse.edc.policy.engine.spi.PolicyEngine;
 import org.eclipse.edc.policy.engine.spi.RuleBindingRegistry;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
-import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.system.configuration.Config;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
@@ -141,7 +141,7 @@ public class WrapperExtensionContextBuilder {
         RuleBindingRegistry ruleBindingRegistry,
         TransferProcessService transferProcessService,
         TransferProcessStore transferProcessStore,
-        TypeTransformerRegistry typeTransformerRegistry
+        TypeTransformerRegistry rootTypeTransformerRegistry
     ) {
         // UI API
         var operatorMapper = new OperatorMapper();
@@ -152,10 +152,21 @@ public class WrapperExtensionContextBuilder {
         var selfDescriptionService = new SelfDescriptionService(config);
         var ownConnectorEndpointService = new OwnConnectorEndpointServiceImpl(selfDescriptionService);
         var placeholderEndpointService = new PlaceholderEndpointService(
-            ConfigProps.MY_EDC_DATASOURCE_PLACEHOLDER_BASEURL.getStringOrThrow(config)
+            CeConfigProps.MY_EDC_DATASOURCE_PLACEHOLDER_BASEURL.getStringOrThrow(config)
         );
-        var assetMapper = newAssetMapper(typeTransformerRegistry, jsonLd, ownConnectorEndpointService, placeholderEndpointService);
-        var policyMapper = newPolicyMapper(objectMapper, typeTransformerRegistry, operatorMapper);
+        var managementApiTypeTransformerRegistry = rootTypeTransformerRegistry.forContext("management-api");
+        var assetMapper = newAssetMapper(
+            managementApiTypeTransformerRegistry,
+            jsonLd,
+            ownConnectorEndpointService,
+            placeholderEndpointService
+        );
+        var policyMapper = newPolicyMapper(
+            objectMapper,
+            jsonLd,
+            managementApiTypeTransformerRegistry,
+            operatorMapper, config
+        );
         var transferProcessStateService = new TransferProcessStateService();
         var contractNegotiationUtils = new ContractNegotiationUtils(
             contractNegotiationService,
@@ -209,7 +220,7 @@ public class WrapperExtensionContextBuilder {
             contractAgreementUtils,
             contractNegotiationUtils,
             edcPropertyUtils,
-            typeTransformerRegistry,
+            managementApiTypeTransformerRegistry,
             parameterizationCompatibilityUtils
         );
         var contractAgreementTransferApiService = new ContractAgreementTransferApiService(
@@ -238,8 +249,8 @@ public class WrapperExtensionContextBuilder {
             contractNegotiationBuilder,
             contractNegotiationStateService
         );
-        var miwConfigBuilder = new MiwConfigService(config);
-        var dapsConfigBuilder = new DapsConfigService(config);
+        var cxDidConfigService = new CxDidConfigService(config);
+        var dapsConfigService = new DapsConfigService(config);
         var dashboardDataFetcher = new DashboardDataFetcher(
             contractNegotiationStore,
             transferProcessService,
@@ -250,8 +261,8 @@ public class WrapperExtensionContextBuilder {
         var dashboardApiService = new DashboardPageApiService(
             dashboardDataFetcher,
             transferProcessStateService,
-            dapsConfigBuilder,
-            miwConfigBuilder,
+            dapsConfigService,
+            cxDidConfigService,
             selfDescriptionService
         );
         var alwaysTruePolicyService = new AlwaysTruePolicyDefinitionService(
@@ -354,8 +365,10 @@ public class WrapperExtensionContextBuilder {
     @NotNull
     private static PolicyMapper newPolicyMapper(
         ObjectMapper objectMapper,
+        JsonLd jsonLd,
         TypeTransformerRegistry typeTransformerRegistry,
-        OperatorMapper operatorMapper
+        OperatorMapper operatorMapper,
+        Config config
     ) {
         var literalMapper = new LiteralMapper(objectMapper);
         var atomicConstraintMapper = new AtomicConstraintMapper(literalMapper, operatorMapper);
@@ -365,7 +378,9 @@ public class WrapperExtensionContextBuilder {
         return new PolicyMapper(
             constraintExtractor,
             expressionMapper,
-            typeTransformerRegistry
+            typeTransformerRegistry,
+            jsonLd,
+            config
         );
     }
 }

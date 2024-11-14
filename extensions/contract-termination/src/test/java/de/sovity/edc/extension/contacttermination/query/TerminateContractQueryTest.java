@@ -16,14 +16,15 @@ package de.sovity.edc.extension.contacttermination.query;
 
 import de.sovity.edc.extension.contacttermination.ContractTerminationParam;
 import de.sovity.edc.extension.db.directaccess.DslContextFactory;
-import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
-import de.sovity.edc.extension.e2e.extension.Consumer;
-import de.sovity.edc.extension.e2e.extension.E2eScenario;
-import de.sovity.edc.extension.e2e.extension.E2eTestExtension;
-import de.sovity.edc.extension.e2e.extension.Provider;
+import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario;
+import de.sovity.edc.extension.e2e.junit.CeE2eTestExtension;
+import de.sovity.edc.extension.e2e.junit.utils.Consumer;
+import de.sovity.edc.extension.e2e.junit.utils.Provider;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
+import de.sovity.edc.utils.config.ConfigUtils;
 import lombok.val;
-import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
+import org.eclipse.edc.connector.controlplane.contract.spi.types.negotiation.ContractNegotiation;
+import org.eclipse.edc.spi.system.configuration.Config;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -31,21 +32,22 @@ import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 
 import static de.sovity.edc.ext.db.jooq.enums.ContractTerminatedBy.COUNTERPARTY;
-import static de.sovity.edc.extension.e2e.extension.Helpers.defaultE2eTestExtension;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 
 class TerminateContractQueryTest {
 
     @RegisterExtension
-    private static E2eTestExtension e2eTestExtension = defaultE2eTestExtension();
+    private static CeE2eTestExtension e2eTestExtension = CeE2eTestExtension.builder()
+        .additionalModule(":launchers:connectors:sovity-dev")
+        .build();
 
     @DisabledOnGithub
     @Test
     void terminateConsumerAgreementOrThrow_shouldInsertRowInTerminationTable(
-        E2eScenario scenario,
+        E2eTestScenario scenario,
         @Consumer DslContextFactory dslContextFactory,
-        @Provider ConnectorConfig providerConfig
+        @Provider Config providerConfig
     ) {
         val assetId = scenario.createAsset();
         scenario.createContractDefinition(assetId);
@@ -76,7 +78,7 @@ class TerminateContractQueryTest {
                 assertThat(detailsAfterTermination.contractAgreementId()).isEqualTo(agreementId);
                 assertThat(detailsAfterTermination.counterpartyId()).isEqualTo("provider");
                 assertThat(detailsAfterTermination.counterpartyAddress())
-                    .isEqualTo(providerConfig.getProtocolApiUrl());
+                    .isEqualTo(ConfigUtils.getProtocolApiUrl(providerConfig));
                 assertThat(detailsAfterTermination.type()).isEqualTo(ContractNegotiation.Type.CONSUMER);
                 assertThat(detailsAfterTermination.providerAgentId()).isEqualTo("provider");
                 assertThat(detailsAfterTermination.consumerAgentId()).isEqualTo("consumer");

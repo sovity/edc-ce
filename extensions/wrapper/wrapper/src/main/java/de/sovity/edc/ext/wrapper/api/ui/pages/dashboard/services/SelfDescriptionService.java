@@ -14,7 +14,7 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services;
 
-import de.sovity.edc.utils.config.ConfigProps;
+import de.sovity.edc.utils.config.CeConfigProps;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.spi.system.configuration.Config;
 
@@ -23,34 +23,34 @@ public class SelfDescriptionService {
     private final Config config;
 
     public String getParticipantId() {
-        return ConfigProps.EDC_PARTICIPANT_ID.getStringOrThrow(config);
+        return CeConfigProps.EDC_PARTICIPANT_ID.getStringOrThrow(config);
     }
 
     public String getConnectorEndpoint() {
-        return ConfigProps.EDC_DSP_CALLBACK_ADDRESS.getStringOrThrow(config);
+        return CeConfigProps.EDC_DSP_CALLBACK_ADDRESS.getStringOrThrow(config);
     }
 
     public String getConnectorTitle() {
-        return ConfigProps.MY_EDC_TITLE.getStringOrThrow(config);
+        return CeConfigProps.MY_EDC_TITLE.getStringOrThrow(config);
     }
 
     public String getConnectorDescription() {
-        return ConfigProps.MY_EDC_DESCRIPTION.getStringOrThrow(config);
+        return CeConfigProps.MY_EDC_DESCRIPTION.getStringOrThrow(config);
     }
 
     public String getCuratorUrl() {
-        return ConfigProps.MY_EDC_CURATOR_URL.getStringOrThrow(config);
+        return CeConfigProps.MY_EDC_CURATOR_URL.getStringOrThrow(config);
     }
 
     public String getCuratorName() {
-        return ConfigProps.MY_EDC_CURATOR_NAME.getStringOrThrow(config);
+        return CeConfigProps.MY_EDC_CURATOR_NAME.getStringOrThrow(config);
     }
 
     public String getMaintainerUrl() {
-        return ConfigProps.MY_EDC_MAINTAINER_URL.getStringOrThrow(config);
+        return CeConfigProps.MY_EDC_MAINTAINER_URL.getStringOrThrow(config);
     }
 
     public String getMaintainerName() {
-        return ConfigProps.MY_EDC_MAINTAINER_NAME.getStringOrThrow(config);
+        return CeConfigProps.MY_EDC_MAINTAINER_NAME.getStringOrThrow(config);
     }
 }

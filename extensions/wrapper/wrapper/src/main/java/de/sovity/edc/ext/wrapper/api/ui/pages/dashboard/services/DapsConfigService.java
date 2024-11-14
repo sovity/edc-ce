@@ -15,7 +15,7 @@
 package de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services;
 
 import de.sovity.edc.ext.wrapper.api.ui.model.DashboardDapsConfig;
-import de.sovity.edc.utils.config.ConfigProps;
+import de.sovity.edc.utils.config.CeConfigProps;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.spi.system.configuration.Config;
 
@@ -27,8 +27,8 @@ public class DapsConfigService {
 
     public DashboardDapsConfig buildDapsConfigOrNull() {
         var dapsConfig = new DashboardDapsConfig();
-        dapsConfig.setTokenUrl(ConfigProps.EDC_OAUTH_TOKEN_URL.getStringOrNull(config));
-        dapsConfig.setJwksUrl(ConfigProps.EDC_OAUTH_PROVIDER_JWKS_URL.getStringOrNull(config));
+        dapsConfig.setTokenUrl(CeConfigProps.EDC_OAUTH_TOKEN_URL.getStringOrNull(config));
+        dapsConfig.setJwksUrl(CeConfigProps.EDC_OAUTH_PROVIDER_JWKS_URL.getStringOrNull(config));
         return isBlank(dapsConfig.getTokenUrl()) ? null : dapsConfig;
     }
 }

@@ -19,15 +19,15 @@ import de.sovity.edc.ext.wrapper.api.ServiceException;
 import de.sovity.edc.ext.wrapper.utils.MapUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
-import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
-import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
-import org.eclipse.edc.connector.spi.contractagreement.ContractAgreementService;
-import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
-import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
-import org.eclipse.edc.spi.asset.AssetIndex;
+import org.eclipse.edc.connector.controlplane.asset.spi.domain.Asset;
+import org.eclipse.edc.connector.controlplane.asset.spi.index.AssetIndex;
+import org.eclipse.edc.connector.controlplane.contract.spi.negotiation.store.ContractNegotiationStore;
+import org.eclipse.edc.connector.controlplane.contract.spi.types.agreement.ContractAgreement;
+import org.eclipse.edc.connector.controlplane.contract.spi.types.negotiation.ContractNegotiation;
+import org.eclipse.edc.connector.controlplane.services.spi.contractagreement.ContractAgreementService;
+import org.eclipse.edc.connector.controlplane.services.spi.transferprocess.TransferProcessService;
+import org.eclipse.edc.connector.controlplane.transfer.spi.types.TransferProcess;
 import org.eclipse.edc.spi.query.QuerySpec;
-import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.jetbrains.annotations.NotNull;
 import org.jooq.DSLContext;
 
@@ -62,7 +62,7 @@ public class ContractAgreementDataFetcher {
             .collect(groupingBy(it -> it.getContractAgreement().getId()));
 
         var transfers = getAllTransferProcesses().stream()
-            .collect(groupingBy(it -> it.getDataRequest().getContractId()));
+            .collect(groupingBy(TransferProcess::getContractId));
 
         var agreementIds = agreements.stream().map(ContractAgreement::getId).toList();
 
@@ -91,7 +91,7 @@ public class ContractAgreementDataFetcher {
             .orElseThrow(
                 () -> new IllegalStateException("Can't find any negotiation for contract agreement id %s".formatted(contractAgreementId)));
 
-        val transfers = getAllTransferProcesses().stream().collect(groupingBy(it -> it.getDataRequest().getContractId()));
+        val transfers = getAllTransferProcesses().stream().collect(groupingBy(TransferProcess::getContractId));
 
         val terminations = fetchTerminations(dsl, agreement.getId());
 

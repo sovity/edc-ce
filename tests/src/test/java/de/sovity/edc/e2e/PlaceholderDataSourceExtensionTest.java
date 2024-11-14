@@ -20,9 +20,9 @@ import de.sovity.edc.client.gen.model.InitiateTransferRequest;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
 import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceOnRequest;
-import de.sovity.edc.extension.e2e.extension.E2eScenario;
-import de.sovity.edc.extension.e2e.extension.E2eTestExtension;
-import de.sovity.edc.extension.e2e.extension.Provider;
+import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario;
+import de.sovity.edc.extension.e2e.junit.CeE2eTestExtension;
+import de.sovity.edc.extension.e2e.junit.utils.Provider;
 import jakarta.ws.rs.HttpMethod;
 import lombok.SneakyThrows;
 import lombok.val;
@@ -33,23 +33,22 @@ import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
 import org.mockserver.model.HttpStatusCode;
 
-import java.util.Base64;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static de.sovity.edc.extension.e2e.extension.Helpers.defaultE2eTestExtension;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.eclipse.edc.spi.CoreConstants.EDC_NAMESPACE;
+import static org.eclipse.edc.spi.constants.CoreConstants.EDC_NAMESPACE;
 
 class PlaceholderDataSourceExtensionTest {
-
     @RegisterExtension
-    private static E2eTestExtension e2eTestExtension = defaultE2eTestExtension();
+    private static final CeE2eTestExtension E2E_TEST_EXTENSION = CeE2eTestExtension.builder()
+        .additionalModule(":launchers:connectors:sovity-dev")
+        .build();
 
     @SneakyThrows
     @Test
     void shouldAccessDummyEndpoint(
-        E2eScenario scenario,
+        E2eTestScenario scenario,
         ClientAndServer clientAndServer,
         @Provider EdcClient providerClient
     ) {
@@ -86,6 +85,7 @@ class PlaceholderDataSourceExtensionTest {
 
         scenario.transferAndAwait(InitiateTransferRequest.builder()
             .contractAgreementId(negotiation.getContractAgreementId())
+            .transferType("HttpData-PUSH")
             .dataSinkProperties(Map.of(
                 EDC_NAMESPACE + "baseUrl", destinationUrl,
                 EDC_NAMESPACE + "method", HttpMethod.POST,
@@ -94,7 +94,7 @@ class PlaceholderDataSourceExtensionTest {
             .build());
 
         // assert
-        assertThat(new String(Base64.getDecoder().decode(accessed.get())))
+        assertThat(accessed.get())
             .contains("This is not real data.")
             .contains(email)
             .contains(subject);

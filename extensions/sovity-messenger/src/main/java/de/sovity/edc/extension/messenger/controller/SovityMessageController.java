@@ -35,12 +35,14 @@ import jakarta.ws.rs.core.Response;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import org.eclipse.edc.protocol.dsp.api.configuration.error.DspErrorResponse;
+import org.eclipse.edc.connector.controlplane.services.spi.protocol.ProtocolTokenValidator;
+import org.eclipse.edc.policy.model.Policy;
+import org.eclipse.edc.protocol.dsp.http.spi.error.DspErrorResponse;
 import org.eclipse.edc.spi.EdcException;
-import org.eclipse.edc.spi.agent.ParticipantAgentService;
 import org.eclipse.edc.spi.iam.ClaimToken;
 import org.eclipse.edc.spi.iam.IdentityService;
 import org.eclipse.edc.spi.iam.TokenRepresentation;
+import org.eclipse.edc.spi.iam.VerificationContext;
 import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.result.Result;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
@@ -58,12 +60,11 @@ public class SovityMessageController {
 
     public static final String PATH = "/sovity/message/generic";
 
-    private final IdentityService identityService;
-    private final String callbackAddress;
+    private final ProtocolTokenValidator protocolTokenValidator;
+
     private final TypeTransformerRegistry typeTransformerRegistry;
     private final Monitor monitor;
     private final ObjectMapper mapper;
-    private final ParticipantAgentService participant;
 
     @Getter
     private final SovityMessengerRegistry handlers;
@@ -71,7 +72,8 @@ public class SovityMessageController {
     @POST
     public Response post(
         @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
-        SovityMessageRequest request) {
+        SovityMessageRequest request
+    ) {
 
         val validation = validateToken(authorization);
         if (validation.failed()) {
@@ -98,7 +100,12 @@ public class SovityMessageController {
                 .map(it -> Response.ok().type(MediaType.APPLICATION_JSON).entity(it).build())
                 .orElse(failure -> {
                     var errorCode = UUID.randomUUID();
-                    monitor.warning(String.format("Error transforming " + response.getClass().getSimpleName() + ", error id %s: %s", errorCode, failure.getFailureDetail()));
+                    monitor.warning(String.format(
+                        "Error transforming %s, error id %s: %s",
+                        response.getClass().getSimpleName(),
+                        errorCode,
+                        failure.getFailureDetail()
+                    ));
                     return DspErrorResponse
                         .type(Prop.SovityMessageExt.REQUEST)
                         .internalServerError();
@@ -113,17 +120,14 @@ public class SovityMessageController {
         }
     }
 
-    private SovityMessageResponse processMessage(SovityMessageRequest compacted, HandlerBox<Object, Object> handler, ClaimToken claims) throws JsonProcessingException {
+    private SovityMessageResponse processMessage(SovityMessageRequest compacted, HandlerBox<Object, Object> handler, ClaimToken claims)
+        throws JsonProcessingException {
         val bodyStr = compacted.body();
         val parsed = mapper.readValue(bodyStr, handler.clazz());
         val result = handler.handler().apply(claims, parsed);
         val resultBody = mapper.writeValueAsString(result);
 
-        val response = new SovityMessageResponse(
-            buildOkHeader(handler.clazz()),
-            resultBody);
-
-        return response;
+        return new SovityMessageResponse(buildOkHeader(handler.clazz()), resultBody);
     }
 
     private String buildOkHeader(Class<?> clazz) {
@@ -143,7 +147,10 @@ public class SovityMessageController {
 
     private Result<ClaimToken> validateToken(String authorization) {
         val token = TokenRepresentation.Builder.newInstance().token(authorization).build();
-        return identityService.verifyJwtToken(token, callbackAddress);
+        val verificationContext = VerificationContext.Builder.newInstance()
+            .policy(Policy.Builder.newInstance().build())
+            .build();
+        return identityService.verifyJwtToken(token, verificationContext);
     }
 
     private SovityMessageResponse buildErrorNoHandlerHeader(SovityMessageRequest request) {

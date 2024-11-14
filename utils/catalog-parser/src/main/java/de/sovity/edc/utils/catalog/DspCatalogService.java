@@ -20,7 +20,7 @@ import de.sovity.edc.utils.catalog.model.DspCatalog;
 import jakarta.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.eclipse.edc.connector.spi.catalog.CatalogService;
+import org.eclipse.edc.connector.controlplane.services.spi.catalog.CatalogService;
 import org.eclipse.edc.spi.query.QuerySpec;
 
 import java.nio.charset.StandardCharsets;
@@ -30,27 +30,27 @@ public class DspCatalogService {
     private final CatalogService catalogService;
     private final DspDataOfferBuilder dspDataOfferBuilder;
 
-    public DspCatalog fetchDataOffers(String endpoint) throws DspCatalogServiceException {
-        var catalogJson = fetchDcatResponse(endpoint, QuerySpec.max());
+    public DspCatalog fetchDataOffers(String participantId, String endpoint) throws DspCatalogServiceException {
+        var catalogJson = fetchDcatResponse(participantId, endpoint, QuerySpec.max());
         return dspDataOfferBuilder.buildDataOffers(endpoint, catalogJson);
     }
 
-    public DspCatalog fetchDataOffersWithFilters(String endpoint, QuerySpec querySpec) {
-        var catalogJson = fetchDcatResponse(endpoint, querySpec);
+    public DspCatalog fetchDataOffersWithFilters(String participantId, String endpoint, QuerySpec querySpec) {
+        var catalogJson = fetchDcatResponse(participantId, endpoint, querySpec);
         return dspDataOfferBuilder.buildDataOffers(endpoint, catalogJson);
     }
 
-    private JsonObject fetchDcatResponse(String connectorEndpoint, QuerySpec querySpec) {
-        var raw = fetchDcatRaw(connectorEndpoint, querySpec);
+    private JsonObject fetchDcatResponse(String participantId, String connectorEndpoint, QuerySpec querySpec) {
+        var raw = fetchDcatRaw(participantId, connectorEndpoint, querySpec);
         var string = new String(raw, StandardCharsets.UTF_8);
         return JsonUtils.parseJsonObj(string);
     }
 
     @SneakyThrows
-    private byte[] fetchDcatRaw(String connectorEndpoint, QuerySpec querySpec) {
+    private byte[] fetchDcatRaw(String participantId, String connectorEndpoint, QuerySpec querySpec) {
         return catalogService
-                .requestCatalog(connectorEndpoint, "dataspace-protocol-http", querySpec)
-                .get()
-                .orElseThrow(DspCatalogServiceException::ofFailure);
+            .requestCatalog(participantId, connectorEndpoint, "dataspace-protocol-http", querySpec)
+            .get()
+            .orElseThrow(DspCatalogServiceException::ofFailure);
     }
 }

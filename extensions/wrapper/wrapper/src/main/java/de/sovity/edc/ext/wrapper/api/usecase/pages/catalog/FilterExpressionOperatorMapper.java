@@ -25,7 +25,7 @@ import static java.util.Objects.requireNonNull;
 @RequiredArgsConstructor
 public class FilterExpressionOperatorMapper {
     /**
-     * @see org.eclipse.edc.connector.defaults.storage.CriterionToPredicateConverterImpl
+     * @see org.eclipse.edc.connector.controlplane.defaults.storage.CriterionToPredicateConverterImpl
      */
     private final Map<CatalogFilterExpressionOperator, String> mappings = Map.of(
             CatalogFilterExpressionOperator.EQ, "=",

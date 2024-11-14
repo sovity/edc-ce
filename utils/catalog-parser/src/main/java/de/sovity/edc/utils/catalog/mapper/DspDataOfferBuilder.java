@@ -33,12 +33,13 @@ public class DspDataOfferBuilder {
 
     public DspCatalog buildDataOffers(String endpoint, JsonObject json) {
         json = jsonLd.expand(json).orElseThrow(DspCatalogServiceException::ofFailure);
-        String participantId = JsonLdUtils.string(json, Prop.Edc.PARTICIPANT_ID);
+        var participantId = JsonLdUtils.string(json, Prop.Edc.PARTICIPANT_ID);
+        var dataOffers = JsonLdUtils.listOfObjects(json, Prop.Dcat.DATASET);
 
         return new DspCatalog(
                 endpoint,
                 participantId,
-                JsonLdUtils.listOfObjects(json, Prop.Dcat.DATASET).stream()
+                dataOffers.stream()
                         .map(this::buildDataOffer)
                         .toList()
         );
@@ -49,14 +50,13 @@ public class DspDataOfferBuilder {
                 .map(this::buildContractOffer)
                 .toList();
 
-        var distributions = JsonLdUtils.listOfObjects(dataset, Prop.Dcat.DISTRIBUTION_AS_USED_BY_CORE_EDC);
+        var distributions = JsonLdUtils.listOfObjects(dataset, Prop.Dcat.DISTRIBUTION_WILL_BE_OVERWRITTEN_BY_CATALOG);
 
         var assetProperties = Json.createObjectBuilder(dataset)
                 .remove(Prop.TYPE)
                 .remove(Prop.Odrl.HAS_POLICY)
-                .remove(Prop.Dcat.DISTRIBUTION_AS_USED_BY_CORE_EDC)
+                .remove(Prop.Dcat.DISTRIBUTION_WILL_BE_OVERWRITTEN_BY_CATALOG)
                 .build();
-
 
         return new DspDataOffer(
                 assetProperties,

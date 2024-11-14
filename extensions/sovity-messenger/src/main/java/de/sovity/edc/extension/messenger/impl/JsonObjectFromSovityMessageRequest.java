@@ -33,7 +33,8 @@ public class JsonObjectFromSovityMessageRequest extends AbstractJsonLdTransforme
     @Override
     public @Nullable JsonObject transform(
         @NotNull SovityMessageRequest message,
-        @NotNull TransformerContext context) {
+        @NotNull TransformerContext context
+    ) {
 
         var builder = Json.createObjectBuilder();
         builder.add(TYPE, Prop.SovityMessageExt.REQUEST)

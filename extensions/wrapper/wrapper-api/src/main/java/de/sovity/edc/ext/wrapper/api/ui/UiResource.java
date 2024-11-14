@@ -148,7 +148,7 @@ interface UiResource {
     @Path("pages/catalog-page/data-offers")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Fetch a connector's data offers")
-    List<UiDataOffer> getCatalogPageDataOffers(@QueryParam("connectorEndpoint") String connectorEndpoint);
+    List<UiDataOffer> getCatalogPageDataOffers(@QueryParam("participantId") String participantId, @QueryParam("connectorEndpoint") String connectorEndpoint);
 
     @POST
     @Path("pages/catalog-page/contract-negotiations")

@@ -12,42 +12,9 @@ dependencies {
     testRuntimeOnly(libs.junit.engine)
 }
 
-val downloadArtifact: Configuration by configurations.creating {
-    isTransitive = false
-}
-
-
-val identityHubVersion: String by project
-val registrationServiceVersion: String by project
-
-// task that downloads the RegSrv CLI and IH CLI
-val getJars by tasks.registering(Copy::class) {
-    outputs.upToDateWhen { false } //always download
-
-    from(downloadArtifact)
-        // strip away the version string
-        .rename { s ->
-            s.replace("-${identityHubVersion}", "")
-                .replace("-${registrationServiceVersion}", "")
-                .replace("-all", "")
-        }
-    into(layout.projectDirectory.dir("libs/cli-tools"))
-}
-
-// run the download jars task after the "jar" task
-tasks {
-    jar {
-        finalizedBy(getJars)
-    }
-}
-
 allprojects {
     apply(plugin = "java")
     apply(plugin = "checkstyle")
-
-    configurations.all {
-        resolutionStrategy.force("org.eclipse.edc:runtime-metamodel:0.2.1")
-    }
 
     tasks.withType<JavaCompile> {
         options.encoding = "UTF-8"
@@ -60,7 +27,7 @@ allprojects {
 
         useJUnitPlatform {
             if (runningOnGithub) {
-                excludeTags = setOf("not-on-github")
+                excludeTags = setOf("exclude-on-github")
             }
         }
 
@@ -70,6 +37,7 @@ allprojects {
             showExceptions = true
             showCauses = true
         }
+
         failFast = true
     }
 
@@ -88,17 +56,11 @@ allprojects {
         }
         maven {
             url = uri("https://maven.pkg.github.com/truzzt/mds-ap3")
-            credentials {
-                username = project.findProperty("gpr.user") as String? ?: System.getenv("USERNAME")
-                password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")
-            }
+            withGitHubCredentials()
         }
         maven {
             url = uri("https://maven.pkg.github.com/ids-basecamp/ids-infomodel-java")
-            credentials {
-                username = project.findProperty("gpr.user") as String? ?: System.getenv("USERNAME")
-                password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")
-            }
+            withGitHubCredentials()
         }
         maven {
             url =
@@ -109,31 +71,45 @@ allprojects {
 }
 
 subprojects {
+    val libs = rootProject.libs
+
     apply(plugin = "maven-publish")
 
-    val sovityEdcExtensionsVersion: String by project
-    version = sovityEdcExtensionsVersion
+    version = libs.versions.sovityCeVersion.get()
 
     publishing {
         repositories {
             maven {
                 name = "GitHubPackages"
                 url = uri("https://maven.pkg.github.com/sovity/edc-ce")
-                credentials {
-                    username = project.findProperty("gpr.user") as String? ?: System.getenv("USERNAME")
-                    password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")
-                }
+                withGitHubCredentials()
             }
         }
     }
 
     tasks.register("printClasspath") {
-        group = libs.versions.edcGroup.get()
-        description = "The EdcRuntimeExtension JUnit Extension requires the gradle task 'printClasspath'"
+        group = libs.versions.sovityEdcGroup.get()
+        description = "Prints the classpath so EDC Integration tests can load a runtime of a full EDC including modules in tests"
         println(sourceSets.main.get().runtimeClasspath.asPath)
     }
 
     java {
         withSourcesJar()
+    }
+}
+
+fun MavenArtifactRepository.withGitHubCredentials() {
+    val gitHubUser = System.getenv("USERNAME")
+        ?: project.findProperty("gpr.user") as String?
+    val gitHubToken = System.getenv("TOKEN")
+        ?: project.findProperty("gpr.key") as String?
+
+    if (gitHubUser.isNullOrBlank() || gitHubToken.isNullOrBlank()) {
+        error("Need Gradle Properties 'gpr.user' and 'gpr.key' or environment variables 'USERNAME' and 'TOKEN' with a GitHub PAT to access the GitHub Maven Repository.")
+    }
+
+    credentials {
+        username = gitHubUser
+        password = gitHubToken
     }
 }

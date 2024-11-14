@@ -17,7 +17,7 @@ package de.sovity.edc.extension.messenger.impl;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
-import org.eclipse.edc.protocol.dsp.spi.types.HttpMessageProtocol;
+import org.eclipse.edc.protocol.dsp.http.spi.types.HttpMessageProtocol;
 import org.eclipse.edc.spi.types.domain.message.RemoteMessage;
 
 import java.net.URL;
@@ -25,6 +25,9 @@ import java.net.URL;
 public record SovityMessageRequest(
     @JsonIgnore
     URL counterPartyAddress,
+
+    @JsonIgnore
+    String counterPartyId,
 
     @JsonProperty(Prop.SovityMessageExt.HEADER)
     String header,
@@ -43,5 +46,11 @@ public record SovityMessageRequest(
     @Override
     public String getCounterPartyAddress() {
         return counterPartyAddress.toString();
+    }
+
+    @JsonIgnore
+    @Override
+    public String getCounterPartyId() {
+        return counterPartyId;
     }
 }

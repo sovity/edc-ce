@@ -10,11 +10,15 @@ dependencies {
 
     api(libs.edc.policyModel)
     api(libs.edc.coreSpi)
-    api(libs.edc.transformCore)
+    api(libs.edc.controlPlaneSpi)
     api(libs.edc.transformSpi)
+    api(libs.edc.jsonLdLib)
+    api(libs.edc.jsonLdSpi)
+    api(libs.edc.assetSpi)
 
     api(project(":extensions:wrapper:wrapper-common-api"))
     api(project(":utils:json-and-jsonld-utils"))
+    implementation(project(":config"))
 
     implementation(libs.apache.commonsLang)
     implementation(libs.apache.commonsCollections)
