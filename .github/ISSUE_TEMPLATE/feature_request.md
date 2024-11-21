@@ -9,8 +9,8 @@ assignees: ""
 # Feature Request
 
 ## Description
-<!-- A clear and concise description of what the customer wants to happen. Example below. -->
--   As a USER who PRECONDITIONS, I want to DO_THING, so I can ACCOMPLISH_GOAL.
+<!-- A clear and concise description of what the user wants to happen. Example below. Replace brackets! -->
+As a {user} who {preconditions}, I want to {do something}, so I can {goal}.
 
 ## Which Areas Would Be Affected?
 <!-- e.g., DPF, CI, build, transfer, etc. -->
