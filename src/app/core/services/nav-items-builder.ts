@@ -12,10 +12,27 @@ import {NavItemGroup} from './models/nav-item-group';
 export class NavItemsBuilder {
   private navItemGroups: NavItemGroup[] = [
     {
-      items: [{path: 'dashboard', icon: 'data_usage', title: 'Dashboard'}],
+      items: [
+        {path: 'dashboard', icon: 'data_usage', title: 'Dashboard'},
+        {
+          path: 'catalog-browser',
+          icon: 'sim_card',
+          title: 'catalog_browser_page.title',
+        },
+        {
+          path: 'contracts',
+          icon: 'assignment_turned_in',
+          title: 'contract_agreement_page.title',
+        },
+        {
+          path: 'transfer-history',
+          icon: 'assignment',
+          title: 'transfer_history_page.title',
+        },
+      ],
     },
     {
-      title: 'Providing',
+      title: 'Provide',
       items: [
         {
           path: 'create-asset',
@@ -35,26 +52,7 @@ export class NavItemsBuilder {
         },
       ],
     },
-    {
-      title: 'Consuming',
-      items: [
-        {
-          path: 'catalog-browser',
-          icon: 'sim_card',
-          title: 'catalog_browser_page.title',
-        },
-        {
-          path: 'contracts',
-          icon: 'assignment_turned_in',
-          title: 'contract_agreement_page.title',
-        },
-        {
-          path: 'transfer-history',
-          icon: 'assignment',
-          title: 'transfer_history_page.title',
-        },
-      ],
-    },
+
     {
       items: [
         {
