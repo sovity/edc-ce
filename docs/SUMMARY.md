@@ -22,7 +22,7 @@
 ## Backend
 
 * [Postman](Backend/Postman/setting-up-postman.md)
-* [Data Transfer Modes](getting-started/documentation/data-transfer-methods.md)
+* [Data Transfer Types](getting-started/documentation/data-transfer-types.md)
 * [Health Check APIs](getting-started/documentation/health-check-api.md)
 * [API-Wrapper vs Management-API](Backend/API-Wrapper/relationship.md)
 * [API-Wrapper](Backend/API-Wrapper/what-is-the-api-wrapper.md)
