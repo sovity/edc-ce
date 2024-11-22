@@ -65,3 +65,7 @@ The `AmazonS3-Push` transfer type allows the provider to upload data directly to
 | **AmazonS3-Push**   | Provides S3 bucket details and credentials | Uploads data to consumer's S3 bucket | Asynchronous            | Large-scale data transfers |
 
 The choice of transfer type depends on factors like real-time requirements, control over data flow, and system architecture.
+
+## **Understanding Data-Source and Data-Sink types**
+
+When working with transfer types, it’s important not to confuse transfer types with data-source and data-sink types. For example, `HttpData` refers to REST APIs typically used as data-sources or data-sinks for transfer types like `HttpData-Push`, while `AmazonS3` is the typical data-sink type for the `AmazonS3-Push` transfer type. Other data-source and data-sink types may also apply depending on the scenario. If you have any questions or need clarification, please don’t hesitate to contact us.
