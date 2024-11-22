@@ -6,7 +6,7 @@ icon: database
 
 The Connector supports various transfer types to enable secure and efficient data exchange. Below is an overview of the currently supported transfer types and their detailed workflows.
 
-The transfer types **HttpData-Pull** and **AmazonS3-Push** are currently available only in our hosted Enterprise Edition.
+The transfer types HttpData-Pull and AmazonS3-Push are currently available only in our hosted Enterprise Edition. The available transfer types may vary depending on the Connector, for any questions about which types are supported by your specific connector, please feel free to contact us.
 
 ![Data Transfer Types](images/data-transfer-types.png)
 
