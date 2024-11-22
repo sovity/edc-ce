@@ -14,7 +14,7 @@ The transfer types **HttpData-Pull** and **AmazonS3-Push** are currently availab
 
 The `HttpData-Push` transfer type involves the provider fetching the data from its internal data source and pushing it to the consumer's desired data sink. This mode ensures the consumer receives the data without directly accessing the provider’s source system.
 
-### **Workflow**
+**Workflow**
 1. **Initiation**:
    - The consumer triggers the transfer request, either through the EDC-UI or via API calls from a backend application. This backend can also act as the data sink (`a1`).
    - The consumer's control plane sends a transfer request to the provider's control plane (`a2`), including the consumer's sink URL and access credentials.
@@ -30,7 +30,7 @@ The `HttpData-Push` transfer type involves the provider fetching the data from i
 
 In the `HttpData-Pull` transfer type, the consumer actively retrieves data directly from the provider's endpoint using the details provided in an **Endpoint Data Reference (EDR)**.
 
-### **Workflow**
+**Workflow**
 1. **Contract Negotiation**:
    - The consumer and provider agree on a contract agreement.
 
@@ -44,7 +44,7 @@ In the `HttpData-Pull` transfer type, the consumer actively retrieves data direc
 
 The `AmazonS3-Push` transfer type allows the provider to upload data directly to an Amazon S3 bucket managed by the consumer.
 
-### **Workflow**
+**Workflow**
 1. **Initiation**:
    - The consumer initiates the transfer request via the EDC-UI or API.
    - The consumer provides the S3 bucket details (e.g., bucket name, region) and credentials, such as an AWS access key or a pre-signed URL.
