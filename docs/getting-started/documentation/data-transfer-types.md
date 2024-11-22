@@ -26,7 +26,7 @@ The `HttpData-Push` transfer type involves the provider fetching the data from i
    - The provider's data plane retrieves the data from the defined source (e.g., a REST endpoint) based on the asset's data address (`a4`).
    - The fetched data is cached temporarily (`a5`) and then pushed to the consumer's data sink (`a6`).
 
-## **2. HTTPData-Pull**
+## **2. HttpData-Pull**
 
 In the `HttpData-Pull` transfer type, the consumer actively retrieves data directly from the provider's endpoint using the details provided in an **Endpoint Data Reference (EDR)**.
 
