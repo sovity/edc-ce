@@ -1,4 +1,4 @@
-{% hint style="info" %} Welcome to the OpenAPI Documentation page! This section provides an overview of all available APIs that adhere to the OpenAPI Specification. All APIs listed are loaded from the OpenAPI specification file: <a href="https://raw.githubusercontent.com/sovity/edc-ce/main/docs/api/eclipse-edc-management-api.yaml">Link</a>. Please note that the API paths may differ depending on the connector, the specific API base-path of a connector can be seen in its UI dashboard.{% endhint %}. 
+{% hint style="info" %} This section provides an overview of all available APIs that adhere to the OpenAPI specification. All APIs are loaded from the OpenAPI specification file: <a href="https://raw.githubusercontent.com/sovity/edc-ce/main/docs/api/eclipse-edc-management-api.yaml">Link</a>. Please note that the API base-paths may differ depending on the connector, the specific API base-path can be seen in the UI dashboard.{% endhint %}.
 
 ---------------------------------------
 
