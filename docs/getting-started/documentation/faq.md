@@ -88,3 +88,7 @@ Yes, the architecture relys on the data provider directly connecting to the data
 ### What happens during policy evaluation, if a not-supported contraint is used in a policy?
 
 If the EDC encounters a constraint it does not recognize within a policy, the EDC is designed to simply ignore that constraint during the evaluation process of the access- or contract-policy. This means that the unrecognized constraint will not impact the outcome of the evaluation.
+
+### Is it possible to exchange data between different organizations in a data space?
+
+If two connectors, regardless of their organization, are in the same data space, they can request the catalog from each other and then see the data offers that they are allowed to see according to the access policy and also negotiate successfully if they meet the contract policy.
