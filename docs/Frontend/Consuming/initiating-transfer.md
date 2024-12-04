@@ -30,7 +30,7 @@ To transfer data to a REST-API endpoint, select an HTTP method and provide the U
 
 **Parameterization**
 
-```{% hint style="warning" %} The HttpData-Push transfer-type no longer supports parameterization in the latest connector versions, so this functionality will soon no longer be available from a consumer perspective. {% endhint %}```
+{% hint style="warning" %} The HttpData-Push transfer-type no longer supports parameterization in the latest connector versions, so this functionality will soon no longer be available from a consumer perspective. {% endhint %}
 
 Depending on whether the provider allows parameterization and the types of parameterization allowed, you can customize the request to the provider's data source by specifying:
 - Custom method
