@@ -37,10 +37,6 @@ This MDS patch makes the Catalog Crawler compatible with the v4.1.3 AP release
 
 ### Detailed Changes
 
-#### Major Changes
-
-#### Minor Changes
-
 #### Patch Changes
 
 - Synced database migrations with AP v4.1.3
