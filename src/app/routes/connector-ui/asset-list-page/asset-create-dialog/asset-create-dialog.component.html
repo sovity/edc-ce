@@ -638,9 +638,6 @@
           <!-- Data Source Type ON_REQUEST -->
           <ng-container *ngIf="form.dataAddressType === 'On-Request'">
             <!-- Contact E-Mail -->
-            <div class="form-section-title">
-              {{ 'create_data_offer_page.contact_email' | translate }}
-            </div>
 
             <mat-form-field
               *ngIf="form.datasource.controls.contactEmail; let ctrl"
@@ -667,9 +664,6 @@
             </mat-form-field>
 
             <!-- Contact E-Mail Preferred Subject -->
-            <div class="form-section-title">
-              {{ 'create_data_offer_page.email_subject' | translate }}
-            </div>
 
             <mat-form-field
               *ngIf="
