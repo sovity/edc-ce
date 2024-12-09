@@ -29,30 +29,6 @@ _No special deployment migration steps required_
   - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:{{ VERSION }}`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:{{ UI VERSION }}`
 
-## [10.4.3] - 2024-12-04
-
-### Overview
-
-This MDS patch makes the Catalog Crawler compatible with the v4.1.3 AP release
-
-### Detailed Changes
-
-#### Patch Changes
-
-- Synced database migrations with AP v4.1.3
-
-### Deployment Migration Notes
-
-_No special deployment migration steps required_
-
-#### Compatible Versions
-
-- Connector Backend Docker Images:
-  - Dev EDC: `ghcr.io/sovity/edc-dev:10.4.3`
-  - sovity EDC CE: `ghcr.io/sovity/edc-ce:10.4.3`
-  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:10.4.3`
-- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:4.1.6`
-
 ## [10.4.2] - 2024-10-07
 
 ### Overview
