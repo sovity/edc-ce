@@ -29,6 +29,30 @@ _No special deployment migration steps required_
   - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:{{ VERSION }}`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:{{ UI VERSION }}`
 
+## [10.4.4] - 2024-12-09
+
+### Overview
+
+MDS patch update
+
+### Detailed Changes
+
+#### Patch Changes
+
+- Synchronized Crawler DB migrations with AP
+
+### Deployment Migration Notes
+
+_No special deployment migration steps required_
+
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+  - Dev EDC: `ghcr.io/sovity/edc-dev:10.4.4`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:10.4.4`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:10.4.4`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:4.1.6`
+
 ## [10.4.2] - 2024-10-07
 
 ### Overview
