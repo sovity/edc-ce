@@ -51,7 +51,7 @@ class DatasetTest {
         // act & assert
         prepareDatasetApiCall(
                 consumerConnector,
-                providerConfig.getProtocolApiUrl(),
+                providerConfig.getProtocolEndpoint().getUri().toString(),
                 assetId)
                 .then()
                 .statusCode(200)
@@ -73,7 +73,7 @@ class DatasetTest {
         // act & assert
         prepareDatasetApiCall(
                 consumerConnector,
-                providerConfig.getProtocolApiUrl(),
+                providerConfig.getProtocolEndpoint().getUri().toString(),
                 assetId)
                 .then()
                 .statusCode(502);
@@ -96,14 +96,14 @@ class DatasetTest {
         // act & assert
         prepareDatasetApiCall(
                 consumerConnector,
-                providerConfig.getProtocolApiUrl(),
+                providerConfig.getProtocolEndpoint().getUri().toString(),
                 notOfferedAssetId)
                 .then()
                 .statusCode(502);
 
         prepareDatasetApiCall(
                 consumerConnector,
-                providerConfig.getProtocolApiUrl(),
+                providerConfig.getProtocolEndpoint().getUri().toString(),
                 offeredAssetId)
                 .then()
                 .statusCode(200)
