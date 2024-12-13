@@ -13,11 +13,37 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Minor Changes
 
-- Only return `Datasets` with valid `Offers` ([#1065](https://github.com/sovity/edc-ce/issues/1065))
+#### Patch Changes
+
+### Deployment Migration Notes
+
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+  - Dev EDC: `ghcr.io/sovity/edc-dev:{VERSION}`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:{VERSION}`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:{VERSION}`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:{UI_VERSION}`
+
+## [10.5.0] - 2024-12-13
+
+### Overview
+
+MDS Patch Update
+
+### Detailed Changes
+
+#### Minor Changes
+
+- Catalog now only returns `Datasets` with valid `Offers` ([#1065](https://github.com/sovity/edc-ce/issues/1065))
 
 #### Patch Changes
 
-- Fix issues with the Create Data Offer Endpoint ([PR#1055](https://github.com/sovity/edc-ce/pull/1055))
+- EDC UI:
+  - Fix wrong placeholders for On Request data offer type
+    ([#878](https://github.com/sovity/edc-ui/issues/878))
+  - Rearrange Sidebar Navigation Groups
+    ([#836](https://github.com/sovity/edc-ui/issues/836))
 
 ### Deployment Migration Notes
 
@@ -26,10 +52,10 @@ _No special deployment migration steps required_
 #### Compatible Versions
 
 - Connector Backend Docker Images:
-  - Dev EDC: `ghcr.io/sovity/edc-dev:{{ VERSION }}`
-  - sovity EDC CE: `ghcr.io/sovity/edc-ce:{{ VERSION }}`
-  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:{{ VERSION }}`
-- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:{{ UI VERSION }}`
+  - Dev EDC: `ghcr.io/sovity/edc-dev:10.5.0`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:10.5.0`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:10.5.0`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:4.1.8`
 
 ## [10.4.4] - 2024-12-09
 
