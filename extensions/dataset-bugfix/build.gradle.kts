@@ -27,3 +27,11 @@ dependencies {
     api(libs.edc.webSpi)
     api(libs.edc.dspApiConfiguration)
 }
+
+publishing {
+    publications {
+        create<MavenPublication>(project.name) {
+            from(components["java"])
+        }
+    }
+}
