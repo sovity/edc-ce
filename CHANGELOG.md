@@ -25,6 +25,32 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
   - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:{VERSION}`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:{UI_VERSION}`
 
+## [10.5.1] - 2024-12-16
+
+### Overview
+
+Update for publishing missing dependencies.
+Content and function wise, this version is identical to version **10.5.0**.
+
+### Detailed Changes
+
+#### Patch Changes
+
+- EDC:
+  - Added missing publish statements in certain dependencies
+
+### Deployment Migration Notes
+
+_No special deployment migration steps required_
+
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+  - Dev EDC: `ghcr.io/sovity/edc-dev:10.5.1`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:10.5.1`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:10.5.1`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:4.1.8`
+
 ## [10.5.0] - 2024-12-13
 
 ### Overview
