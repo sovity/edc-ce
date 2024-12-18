@@ -99,7 +99,7 @@ To identify and resolve these issues, follow these steps:
 
 2. Iterate and verify individual policies: For each policy, perform a GET request via the Management-API to identify the specific policies causing the issue, they will return an error at the call execution instead of policy details. This method helps pinpoint the problematic policies.
 
-A typical issue stems from missing contexts during the policy creation process. Ensure that all necessary context is provided to minimize error possibilites.
+A typical issue stems from missing contexts during the policy creation process. Ensure that all necessary context is provided to minimize error possibilites or delete the policy if not needed. If a contract offer exists with the policy that has been deleted, this must also be deleted.
 
 ### Is it possible to exchange data between different organizations in a data space?
 
