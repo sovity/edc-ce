@@ -89,6 +89,18 @@ Yes, the architecture relys on the data provider directly connecting to the data
 
 If the EDC encounters a constraint it does not recognize within a policy, the EDC is designed to simply ignore that constraint during the evaluation process of the access- or contract-policy. This means that the unrecognized constraint will not impact the outcome of the evaluation.
 
+### How can I identify and resolve issues caused by invalid policies?
+
+When invalid policies exist, typical symptoms include the inability to fetch all policies via the Management-API, and if the policy is part of a Contract-Offer, the Catalog-Request may fail for a Consumer EDC.
+
+To identify and resolve these issues, follow these steps:
+
+1. Use the UI to list all created policies: The UI can display all policies created in the Connector. It utilizes the API-Wrapper, which operates differently than the Management-API/Catalog Request and can serve as a first reference point.
+
+2. Iterate and verify individual policies: For each policy, perform a GET request via the Management-API to identify the specific policies causing the issue, they will return an error at the call execution instead of policy details. This method helps pinpoint the problematic policies.
+
+A typical issue stems from missing contexts during the policy creation process. Ensure that all necessary context is provided to minimize error possibilites.
+
 ### Is it possible to exchange data between different organizations in a data space?
 
 If two connectors, regardless of their organization, are in the same data space, they can request the catalog from each other and then see the data offers that they are allowed to see according to the access policy and also negotiate successfully if they meet the contract policy.
