@@ -6,12 +6,10 @@ labels: "kind/epic"
 assignees: ""
 ---
 
-# Epic
-
 ## Description
 <!-- Brief summary of what this Epic is, whether it's a larger project, goal, or user story. Describe the job to be done, which persona this Epic is mainly for, or if more multiple, break it down by user and job story. -->
 
-### Requirements
+## Requirements
 <!-- Which requirements do you have to be fulfilled? -->
 <!-- Which security-related requirements must be satisfied? -->
 
@@ -23,17 +21,10 @@ assignees: ""
 - [ ] Create Stories which can be converted into issues
 ```
 
-### Security Constraints
-<!-- Which constraints can be checked that must be covered by the work breakdown? -->
-- [ ] Final solution design has been challenged for security related topics
-
-## Initiative / goal
-<!-- Describe how this Epic impacts an initiative the business is working on. -->
-
-### Hypothesis
+## Hypothesis
 <!-- What is your hypothesis on the success of this Epic? Describe how success will be measured and what leading indicators the team will have to know if success has been hit. -->
 
-## Acceptance criteria and must have scope
+## Acceptance Criteria
 <!-- Define what is a must-have for launch and in-scope (e.g. security-related tasks like successful pen-tests). Keep this section fluid and dynamic until you lock-in priority during planning. Please list your criteria below. -->
 
 ## Stakeholders
