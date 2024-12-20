@@ -6,8 +6,6 @@ labels: ["task/refine-process","task/documentation"]
 assignees: ""
 ---
 
-# Process Refinement Request
-
 ## Description
 <!-- Provide a brief description of the process that needs refinement and the reason behind it. -->
 
