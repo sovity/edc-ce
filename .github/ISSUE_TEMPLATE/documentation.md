@@ -6,8 +6,6 @@ labels: "task/documentation"
 assignees: ""
 ---
 
-# Documentation Update Request
-
 ## Description
 <!-- Provide a brief overview of the documentation update request. What section or topic needs to be updated? -->
 
