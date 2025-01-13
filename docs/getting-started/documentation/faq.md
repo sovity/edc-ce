@@ -104,3 +104,9 @@ A typical issue stems from missing contexts during the policy creation process. 
 ### Is it possible to exchange data between different organizations in a data space?
 
 If two connectors, regardless of their organization, are in the same data space, they can request the catalog from each other and then see the data offers that they are allowed to see according to the access policy and also negotiate successfully if they meet the contract policy.
+
+### Does the EDC pass on error codes received from other systems through its API calls unchanged, or does it modify them?
+
+The EDC does not always pass through error codes as they are received from other systems. Instead, it is known to modify certain error codes before returning them, which can make diagnosing the original issue more challenging.
+
+For example: When the EDC receives an error code like 403 Forbidden from another system, it might map and return this as a 400 Bad Request instead. This behavior can obscure the original issue, as the returned error code does not reflect the root cause accurately. This mapping behavior can make debugging and understanding the actual problem more complex. As a result, users need to be aware of this behavior when troubleshooting issues with the EDC.
