@@ -1,0 +1,32 @@
+name: Create Release Branch
+
+on:
+  release:
+    types:
+      - created
+
+jobs:
+  create-release-branch:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out the repository
+      uses: actions/checkout@v3
+
+    - name: Set up Git
+      run: |
+        git config user.name "${{ github.actor }}"
+        git config user.email "${{ github.actor }}@users.noreply.github.com"
+
+    - name: Create a new branch from the release
+      run: |
+        # Normalize the release tag to ensure it is a valid branch name
+        SAFE_TAG_NAME=$(echo "${{ github.event.release.tag_name }}" | sed 's/[^a-zA-Z0-9._-]/-/g')
+        BRANCH_NAME="release/$SAFE_TAG_NAME"
+        echo "Creating branch $BRANCH_NAME"
+        git branch $BRANCH_NAME
+        git push origin $BRANCH_NAME
+
+    - name: Confirm branch creation
+      run: |
+        echo "Release-Branch created successfully."
