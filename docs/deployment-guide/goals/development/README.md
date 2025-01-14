@@ -1,3 +1,7 @@
+---
+icon: code
+---
+
 Deployment Goal: Development
 ========
 

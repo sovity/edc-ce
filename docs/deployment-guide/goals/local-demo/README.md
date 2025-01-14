@@ -1,3 +1,7 @@
+---
+icon: tv
+---
+
 Deployment Goal: Local Demo
 ========
 

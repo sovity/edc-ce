@@ -447,9 +447,9 @@ MDS Bugfix Release
 - Fixed naming of the `nutsLocations` field for MDS assets.
 - UI: Removed HTTP Verb "HEAD" as it was not supported by the backend
 - Docs: Updated image to explain data-transfer-methods
-- Docs: Updated documentation for parameterization using [only the UI](https://github.com/sovity/edc-ce/blob/main/docs/getting-started/documentation/parameterized_assets_via_ui.md) or the [Management-API](https://github.com/sovity/edc-ce/blob/main/docs/getting-started/documentation/parameterized_assets.md)
-- Docs: Updated [OAuth2 documentation](https://github.com/sovity/edc-ce/blob/main/docs/getting-started/documentation/oauth-data-address.md) about necessary parameters that need to use the vault key instead of providing a secret directly
-- Docs: Updated documentation for the [pull-data-transfer](https://github.com/sovity/edc-ce/blob/main/docs/getting-started/documentation/pull-data-transfer.md)
+- Docs: Updated documentation for parameterization using only the UI or the Management-API
+- Docs: Updated OAuth2 documentation about necessary parameters that need to use the vault key instead of providing a secret directly
+- Docs: Updated documentation for the pull-data-transfer
 - Dev Utils: Parallel test support for our Test Backend for some requests.
 
 ### Deployment Migration Notes

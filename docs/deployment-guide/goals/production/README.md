@@ -1,3 +1,7 @@
+---
+icon: cube
+---
+
 # Productive Deployment Guide
 
 ## About this Guide

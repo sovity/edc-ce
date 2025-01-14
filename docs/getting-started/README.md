@@ -1,3 +1,7 @@
+---
+icon: grid
+---
+
 Getting Started
 ========
 
