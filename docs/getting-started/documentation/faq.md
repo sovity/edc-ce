@@ -53,7 +53,9 @@ ContractDefinitions can always be deleted. As a result, the offering will no lon
 
 ### Is it possible to delete an existing contract?
 
-No, this is neither possible via the frontend nor via the backend APIs. Contracts can only be viewed but not edited or deleted.
+No, this is neither possible via the frontend nor via the backend APIs. Contracts can only be viewed but not edited or deleted. 
+
+However, the assets associated with a contract can be modified on the Provider side. This allows, for example, changes to the data-source behind an asset and thus to facilitate scenarios like a data-source system migration and thus maybe API-changes of the data-source. This ensures that the Consumer (contracting party) can continue using the contract and transfer data without negotiating a new contract, as the changes to the asset are seamlessly applied under the existing contract.
 
 ### Can a user publish third-party data assets, such as REST API endpoints?
 
