@@ -53,6 +53,7 @@ import de.sovity.edc.extension.e2e.connector.remotes.management_api.ManagementAp
 import de.sovity.edc.extension.e2e.connector.remotes.test_backend_controller.TestBackendRemote;
 import de.sovity.edc.extension.e2e.junit.CeE2eTestExtension;
 import de.sovity.edc.extension.e2e.junit.CeE2eTestSide;
+import de.sovity.edc.extension.e2e.junit.Janitor;
 import de.sovity.edc.extension.e2e.junit.utils.Consumer;
 import de.sovity.edc.extension.e2e.junit.utils.Provider;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
@@ -67,7 +68,11 @@ import org.eclipse.edc.protocol.dsp.http.spi.types.HttpMessageProtocol;
 import org.eclipse.edc.spi.system.configuration.Config;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.time.LocalDate;
@@ -90,6 +95,7 @@ import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class UiApiWrapperTest {
 
     private static final String PROVIDER_PARTICIPANT_ID = CeE2eTestSide.PROVIDER.getParticipantId();
@@ -1107,6 +1113,7 @@ class UiApiWrapperTest {
             .hasSize(0);
     }
 
+    @Order(Order.DEFAULT + 1)
     @Test
     void canLoadTheDashboardWithLargeNumberOfAssets(
         E2eTestScenario scenario,
