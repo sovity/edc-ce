@@ -254,7 +254,6 @@ public class WrapperExtensionContextBuilder {
         var dashboardDataFetcher = new DashboardDataFetcher(
             contractNegotiationStore,
             transferProcessService,
-            assetIndex,
             policyDefinitionService,
             contractDefinitionService
         );

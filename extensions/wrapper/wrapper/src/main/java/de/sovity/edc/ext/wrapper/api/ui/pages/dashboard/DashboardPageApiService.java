@@ -26,6 +26,7 @@ import org.eclipse.edc.connector.controlplane.contract.spi.types.agreement.Contr
 import org.eclipse.edc.connector.controlplane.contract.spi.types.negotiation.ContractNegotiation;
 import org.eclipse.edc.connector.controlplane.transfer.spi.types.TransferProcess;
 import org.jetbrains.annotations.NotNull;
+import org.jooq.DSLContext;
 
 import java.util.List;
 import java.util.Objects;
@@ -45,7 +46,7 @@ public class DashboardPageApiService {
     private final SelfDescriptionService selfDescriptionService;
 
     @NotNull
-    public DashboardPage dashboardPage() {
+    public DashboardPage dashboardPage(DSLContext dsl) {
         var transferProcesses = dashboardDataFetcher.getTransferProcesses();
         var negotiations = dashboardDataFetcher.getAllContractNegotiations();
 
@@ -65,7 +66,7 @@ public class DashboardPageApiService {
                 .collect(toSet());
 
         DashboardPage dashboardPage = new DashboardPage();
-        dashboardPage.setNumAssets(dashboardDataFetcher.getNumberOfAssets());
+        dashboardPage.setNumAssets(dashboardDataFetcher.getNumberOfAssets(dsl));
         dashboardPage.setNumPolicies(dashboardDataFetcher.getNumberOfPolicies());
         dashboardPage.setNumContractDefinitions(dashboardDataFetcher.getNumberOfContractDefinitions());
         dashboardPage.setNumContractAgreementsProviding(providingAgreements.size());

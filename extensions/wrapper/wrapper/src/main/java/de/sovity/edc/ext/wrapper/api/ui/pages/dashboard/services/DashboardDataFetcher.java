@@ -14,9 +14,9 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services;
 
+import de.sovity.edc.ext.db.jooq.Tables;
 import de.sovity.edc.ext.wrapper.api.ServiceException;
 import lombok.RequiredArgsConstructor;
-import org.eclipse.edc.connector.controlplane.asset.spi.index.AssetIndex;
 import org.eclipse.edc.connector.controlplane.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.controlplane.contract.spi.types.negotiation.ContractNegotiation;
 import org.eclipse.edc.connector.controlplane.services.spi.contractdefinition.ContractDefinitionService;
@@ -25,6 +25,7 @@ import org.eclipse.edc.connector.controlplane.services.spi.transferprocess.Trans
 import org.eclipse.edc.connector.controlplane.transfer.spi.types.TransferProcess;
 import org.eclipse.edc.spi.query.QuerySpec;
 import org.jetbrains.annotations.NotNull;
+import org.jooq.DSLContext;
 
 import java.util.List;
 
@@ -32,12 +33,11 @@ import java.util.List;
 public class DashboardDataFetcher {
     private final ContractNegotiationStore contractNegotiationStore;
     private final TransferProcessService transferProcessService;
-    private final AssetIndex assetIndex;
     private final PolicyDefinitionService policyDefinitionService;
     private final ContractDefinitionService contractDefinitionService;
 
-    public int getNumberOfAssets() {
-        return assetIndex.queryAssets(QuerySpec.max()).toList().size();
+    public int getNumberOfAssets(DSLContext dsl) {
+        return dsl.fetchCount(Tables.EDC_ASSET);
     }
 
     public int getNumberOfPolicies() {

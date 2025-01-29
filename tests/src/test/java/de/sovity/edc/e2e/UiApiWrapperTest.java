@@ -77,6 +77,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 
 import static de.sovity.edc.client.gen.model.ContractAgreementDirection.CONSUMING;
 import static de.sovity.edc.client.gen.model.ContractAgreementDirection.PROVIDING;
@@ -86,6 +87,7 @@ import static de.sovity.edc.extension.e2e.connector.remotes.management_api.DataT
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class UiApiWrapperTest {
@@ -1103,6 +1105,22 @@ class UiApiWrapperTest {
 
         assertThat(providerClient.uiApi().getContractDefinitionPage().getContractDefinitions())
             .hasSize(0);
+    }
+
+    @Test
+    void canLoadTheDashboardWithLargeNumberOfAssets(
+        E2eTestScenario scenario,
+        @Provider EdcClient providerClient
+    ) {
+        // arrange
+        int target = 5500;
+        IntStream.range(1, target).forEach((it) -> {
+            val assetId = scenario.createAsset();
+            scenario.createPolicy(assetId + "-pol", OffsetDateTime.now(), OffsetDateTime.now());
+        });
+
+        // act
+        assertDoesNotThrow(() -> providerClient.uiApi().getDashboardPage());
     }
 
     private static @NotNull List<PolicyDefinitionDto> getPolicyNamed(String name, EdcClient edcClient) {

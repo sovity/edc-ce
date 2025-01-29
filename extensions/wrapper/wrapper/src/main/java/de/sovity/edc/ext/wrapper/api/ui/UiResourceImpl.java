@@ -77,7 +77,7 @@ public class UiResourceImpl implements UiResource {
 
     @Override
     public DashboardPage getDashboardPage() {
-        return dashboardPageApiService.dashboardPage();
+        return dslContextFactory.transactionResult(dashboardPageApiService::dashboardPage);
     }
 
     @Override
@@ -159,13 +159,13 @@ public class UiResourceImpl implements UiResource {
     @Override
     public ContractAgreementPage getContractAgreementPage(@Nullable ContractAgreementPageQuery contractAgreementPageQuery) {
         return dslContextFactory.transactionResult(dsl ->
-            contractAgreementApiService.contractAgreementPage(dsl, contractAgreementPageQuery));
+                contractAgreementApiService.contractAgreementPage(dsl, contractAgreementPageQuery));
     }
 
     @Override
     public ContractAgreementCard getContractAgreementCard(String contractAgreementId) {
         return dslContextFactory.transactionResult(dsl ->
-            contractAgreementApiService.contractAgreement(dsl, contractAgreementId));
+                contractAgreementApiService.contractAgreement(dsl, contractAgreementId));
     }
 
     @Override
@@ -180,12 +180,12 @@ public class UiResourceImpl implements UiResource {
 
     @Override
     public IdResponseDto terminateContractAgreement(
-        String contractAgreementId,
-        ContractTerminationRequest contractTerminationRequest
+            String contractAgreementId,
+            ContractTerminationRequest contractTerminationRequest
     ) {
         validate(contractTerminationRequest);
         return dslContextFactory.transactionResult(dsl ->
-            contractAgreementTerminationApiService.terminate(dsl, contractAgreementId, contractTerminationRequest));
+                contractAgreementTerminationApiService.terminate(dsl, contractAgreementId, contractTerminationRequest));
     }
 
     @Override
@@ -201,18 +201,18 @@ public class UiResourceImpl implements UiResource {
     @Override
     public IdAvailabilityResponse isPolicyIdAvailable(String policyId) {
         return dslContextFactory.transactionResult(dsl ->
-            dataOfferPageApiService.checkIfPolicyIdAvailable(dsl, policyId));
+                dataOfferPageApiService.checkIfPolicyIdAvailable(dsl, policyId));
     }
 
     @Override
     public IdAvailabilityResponse isAssetIdAvailable(String assetId) {
         return dslContextFactory.transactionResult(dsl ->
-            dataOfferPageApiService.checkIfAssetIdAvailable(dsl, assetId));
+                dataOfferPageApiService.checkIfAssetIdAvailable(dsl, assetId));
     }
 
     @Override
     public IdAvailabilityResponse isContractDefinitionIdAvailable(String contractDefinitionId) {
         return dslContextFactory.transactionResult(dsl ->
-            dataOfferPageApiService.checkIfContractDefinitionIdAvailable(dsl, contractDefinitionId));
+                dataOfferPageApiService.checkIfContractDefinitionIdAvailable(dsl, contractDefinitionId));
     }
 }
