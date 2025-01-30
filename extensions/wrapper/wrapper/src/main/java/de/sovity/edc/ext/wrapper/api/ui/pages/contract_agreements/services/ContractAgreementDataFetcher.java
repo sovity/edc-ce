@@ -31,6 +31,7 @@ import org.eclipse.edc.spi.query.QuerySpec;
 import org.jetbrains.annotations.NotNull;
 import org.jooq.DSLContext;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -55,7 +56,7 @@ public class ContractAgreementDataFetcher {
     @NotNull
     public List<ContractAgreementData> getContractAgreements(DSLContext dsl) {
         var agreements = getAllContractAgreements();
-        var assets = MapUtils.associateBy(getAllAssets(), Asset::getId);
+        var assets = new HashMap<String, Asset>();
 
         var negotiations = getAllContractNegotiations().stream()
             .filter(it -> it.getContractAgreement() != null)
@@ -73,7 +74,7 @@ public class ContractAgreementDataFetcher {
             .flatMap(agreement -> negotiations.getOrDefault(agreement.getId(), List.of())
                 .stream()
                 .map(negotiation -> {
-                    var asset = getAsset(agreement, negotiation, assets::get);
+                    var asset = getAsset(agreement, negotiation, (id) -> assets.computeIfAbsent(id, assetIndex::findById));
                     var contractTransfers = transfers.getOrDefault(agreement.getId(), List.of());
                     return new ContractAgreementData(agreement, negotiation, asset, contractTransfers, terminations.get(agreement.getId()));
                 }))
@@ -141,10 +142,6 @@ public class ContractAgreementDataFetcher {
 
     private Asset dummyAsset(String assetId) {
         return Asset.Builder.newInstance().id(assetId).build();
-    }
-
-    private List<Asset> getAllAssets() {
-        return assetIndex.queryAssets(QuerySpec.max()).toList();
     }
 
     @NotNull
