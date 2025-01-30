@@ -314,7 +314,8 @@ public class WrapperExtensionContextBuilder {
         var useCaseResource = new UseCaseResourceImpl(
             kpiApiService,
             supportedPolicyApiService,
-            useCaseCatalogApiService
+            useCaseCatalogApiService,
+            dslContextFactory
         );
         val placeholderEndpointController = new PlaceholderEndpointController();
 

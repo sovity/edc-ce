@@ -14,7 +14,7 @@
 
 package de.sovity.edc.ext.wrapper.api.usecase.services;
 
-import de.sovity.edc.ext.wrapper.api.ServiceException;
+import de.sovity.edc.ext.db.jooq.Tables;
 import de.sovity.edc.ext.wrapper.api.ui.model.TransferProcessSimplifiedState;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferProcessStateService;
 import de.sovity.edc.ext.wrapper.api.usecase.model.KpiResult;
@@ -27,6 +27,7 @@ import org.eclipse.edc.connector.controlplane.services.spi.contractagreement.Con
 import org.eclipse.edc.connector.controlplane.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.connector.controlplane.transfer.spi.types.TransferProcess;
 import org.eclipse.edc.spi.query.QuerySpec;
+import org.jooq.DSLContext;
 
 import java.util.List;
 import java.util.Map;
@@ -43,24 +44,26 @@ public class KpiApiService {
     private final ContractAgreementService contractAgreementService;
     private final TransferProcessStateService transferProcessStateService;
 
-    public KpiResult getKpis() {
+    public KpiResult getKpis(DSLContext dsl) {
         var assetsCount = getAssetsCount();
         var policiesCount = getPoliciesCount();
         var contractDefinitionsCount = getContractDefinitionsCount();
-        var contractAgreements = getContractAgreementsCount();
+        var contractAgreements = getContractAgreementsCount(dsl);
         var transferProcessDto = getTransferProcessesDto();
 
         return new KpiResult(
-                assetsCount,
-                policiesCount,
-                contractDefinitionsCount,
-                contractAgreements,
-                transferProcessDto
+            assetsCount,
+            policiesCount,
+            contractDefinitionsCount,
+            contractAgreements,
+            transferProcessDto
         );
     }
 
-    private int getContractAgreementsCount() {
-        return contractAgreementService.query(QuerySpec.max()).orElseThrow(ServiceException::new).toList().size();
+    private int getContractAgreementsCount(DSLContext dsl) {
+        return dsl.selectCount()
+            .from(Tables.EDC_CONTRACT_AGREEMENT)
+            .fetchSingleInto(int.class);
     }
 
     private TransferProcessStatesDto getTransferProcessesDto() {
@@ -70,14 +73,14 @@ public class KpiApiService {
 
     private Map<TransferProcessSimplifiedState, Long> getIncoming(List<TransferProcess> transferProcesses) {
         return transferProcesses.stream()
-                .filter(it -> it.getType() == TransferProcess.Type.CONSUMER)
-                .collect(groupingBy(this::getTransferProcessStates, counting()));
+            .filter(it -> it.getType() == TransferProcess.Type.CONSUMER)
+            .collect(groupingBy(this::getTransferProcessStates, counting()));
     }
 
     private Map<TransferProcessSimplifiedState, Long> getOutgoing(List<TransferProcess> transferProcesses) {
         return transferProcesses.stream()
-                .filter(it -> it.getType() == TransferProcess.Type.PROVIDER)
-                .collect(groupingBy(this::getTransferProcessStates, counting()));
+            .filter(it -> it.getType() == TransferProcess.Type.PROVIDER)
+            .collect(groupingBy(this::getTransferProcessStates, counting()));
     }
 
     private TransferProcessSimplifiedState getTransferProcessStates(TransferProcess transferProcess) {

@@ -18,6 +18,7 @@ import de.sovity.edc.ext.wrapper.api.ServiceException;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionEntry;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
+import de.sovity.edc.ext.wrapper.utils.QueryUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.eclipse.edc.connector.controlplane.contract.spi.types.offer.ContractDefinition;
@@ -40,9 +41,9 @@ public class ContractDefinitionApiService {
         var definitions = getAllContractDefinitions();
 
         return definitions.stream()
-                .sorted(Comparator.comparing(ContractDefinition::getCreatedAt).reversed())
-                .map(this::buildContractDefinitionEntry)
-                .toList();
+            .sorted(Comparator.comparing(ContractDefinition::getCreatedAt).reversed())
+            .map(this::buildContractDefinitionEntry)
+            .toList();
     }
 
     @NotNull
@@ -69,6 +70,13 @@ public class ContractDefinitionApiService {
     }
 
     private List<ContractDefinition> getAllContractDefinitions() {
-        return contractDefinitionService.query(QuerySpec.max()).orElseThrow(ServiceException::new).toList();
+        return QueryUtils.fetchInBatches((offset, limit) ->
+            contractDefinitionService.search(
+                QuerySpec.Builder.newInstance()
+                    .offset(offset)
+                    .limit(limit)
+                    .build()
+            ).orElseThrow(ServiceException::new)
+        );
     }
 }

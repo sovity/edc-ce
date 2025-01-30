@@ -14,7 +14,6 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.pages.asset;
 
-import de.sovity.edc.ext.db.jooq.Tables;
 import de.sovity.edc.ext.wrapper.api.ServiceException;
 import de.sovity.edc.ext.wrapper.api.common.mappers.AssetMapper;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
@@ -22,13 +21,13 @@ import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetEditRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.SelfDescriptionService;
+import de.sovity.edc.ext.wrapper.utils.QueryUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.eclipse.edc.connector.controlplane.asset.spi.domain.Asset;
 import org.eclipse.edc.connector.controlplane.services.spi.asset.AssetService;
 import org.eclipse.edc.spi.query.QuerySpec;
 import org.jetbrains.annotations.NotNull;
-import org.jooq.DSLContext;
 
 import java.util.Comparator;
 import java.util.List;
@@ -75,14 +74,10 @@ public class AssetApiService {
     }
 
     private List<Asset> getAllAssets() {
-        return assetService.query(QuerySpec.max()).orElseThrow(ServiceException::new).toList();
-    }
-
-    public boolean assetExists(DSLContext dsl, String assetId) {
-        val a = Tables.EDC_ASSET;
-        return dsl.selectCount()
-            .from(a)
-            .where(a.ASSET_ID.eq(assetId))
-            .fetchSingleInto(Integer.class) > 0;
+        return QueryUtils.fetchInBatches((offset, size) ->
+            assetService.search(
+                QuerySpec.Builder.newInstance().offset(offset).limit(size).build()
+            ).orElseThrow(ServiceException::new)
+        );
     }
 }

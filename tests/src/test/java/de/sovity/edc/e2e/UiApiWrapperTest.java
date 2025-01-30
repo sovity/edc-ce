@@ -999,6 +999,7 @@ class UiApiWrapperTest {
             ApiException.class,
             () -> providerClient.uiApi()
                 .createDataOffer(DataOfferCreationRequest.builder()
+                    .policy(DataOfferCreationRequest.PolicyEnum.PUBLISH_RESTRICTED)
                     .uiAssetCreateRequest(UiAssetCreateRequest.builder()
                         .id(id)
                         .dataSource(UiDataSource.builder()
@@ -1117,7 +1118,7 @@ class UiApiWrapperTest {
             .hasSize(0);
     }
 
-    @Order(Order.DEFAULT + 1)
+    @Order(Order.DEFAULT + 100)
     @Test
     void canLoadTheDashboardWithLargeNumberOfAssets(
         E2eTestScenario scenario,
@@ -1132,7 +1133,7 @@ class UiApiWrapperTest {
         int consumerDspPort = firstPort + 3;
         System.out.println("first port " + firstPort);
 
-        IntStream.range(1, target).forEach((i) -> {
+        IntStream.range(999, 999 + target).forEach((i) -> {
             // insert new asset with jooq
             String assetId = "asset-" + i;
             insertAsset(dsl, assetId);
