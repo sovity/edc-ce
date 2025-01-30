@@ -40,16 +40,16 @@ public class DashboardDataFetcher {
         return dsl.fetchCount(Tables.EDC_ASSET);
     }
 
-    public int getNumberOfPolicies() {
-        return Math.toIntExact(policyDefinitionService.query(QuerySpec.max())
-                .orElseThrow(ServiceException::new)
-                .count());
+    public int getNumberOfPolicies(DSLContext dsl) {
+        return dsl.selectCount()
+                .from(Tables.EDC_POLICYDEFINITIONS)
+                .fetchSingleInto(Integer.class);
     }
 
-    public int getNumberOfContractDefinitions() {
-        return Math.toIntExact(contractDefinitionService.query(QuerySpec.max())
-                .orElseThrow(ServiceException::new)
-                .count());
+    public int getNumberOfContractDefinitions(DSLContext dsl) {
+        return dsl.selectCount()
+            .from(Tables.EDC_CONTRACT_DEFINITIONS)
+            .fetchSingleInto(Integer.class);
     }
 
     @NotNull

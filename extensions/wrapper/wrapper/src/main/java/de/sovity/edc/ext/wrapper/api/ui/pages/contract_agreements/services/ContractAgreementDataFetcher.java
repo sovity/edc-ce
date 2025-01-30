@@ -16,7 +16,7 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services;
 
 import de.sovity.edc.ext.db.jooq.tables.records.SovityContractTerminationRecord;
 import de.sovity.edc.ext.wrapper.api.ServiceException;
-import de.sovity.edc.ext.wrapper.utils.MapUtils;
+import de.sovity.edc.ext.wrapper.utils.QueryUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.eclipse.edc.connector.controlplane.asset.spi.domain.Asset;
@@ -74,7 +74,12 @@ public class ContractAgreementDataFetcher {
             .flatMap(agreement -> negotiations.getOrDefault(agreement.getId(), List.of())
                 .stream()
                 .map(negotiation -> {
-                    var asset = getAsset(agreement, negotiation, (id) -> assets.computeIfAbsent(id, assetIndex::findById));
+                    var asset = getAsset(
+                        agreement.getAssetId(),
+                        negotiation.getType(),
+                        (id) -> assets.computeIfAbsent(id, assetIndex::findById)
+                    );
+
                     var contractTransfers = transfers.getOrDefault(agreement.getId(), List.of());
                     return new ContractAgreementData(agreement, negotiation, asset, contractTransfers, terminations.get(agreement.getId()));
                 }))
@@ -96,7 +101,7 @@ public class ContractAgreementDataFetcher {
 
         val terminations = fetchTerminations(dsl, agreement.getId());
 
-        val asset = getAsset(agreement, negotiation, (it) -> assetIndex.findById(agreement.getAssetId()));
+        val asset = getAsset(agreement.getAssetId(), negotiation.getType(), (it) -> assetIndex.findById(agreement.getAssetId()));
 
         return new ContractAgreementData(
             agreement,
@@ -129,10 +134,8 @@ public class ContractAgreementDataFetcher {
             .collect(toMap(SovityContractTerminationRecord::getContractAgreementId, identity()));
     }
 
-    private Asset getAsset(ContractAgreement agreement, ContractNegotiation negotiation, Function<String, Asset> selector) {
-        var assetId = agreement.getAssetId();
-
-        if (negotiation.getType() == ContractNegotiation.Type.CONSUMER) {
+    private Asset getAsset(String assetId, ContractNegotiation.Type negotiationType, Function<String, Asset> selector) {
+        if (negotiationType == ContractNegotiation.Type.CONSUMER) {
             return dummyAsset(assetId);
         }
 
@@ -146,16 +149,31 @@ public class ContractAgreementDataFetcher {
 
     @NotNull
     private List<ContractNegotiation> getAllContractNegotiations() {
-        return contractNegotiationStore.queryNegotiations(QuerySpec.max()).toList();
+        return QueryUtils.fetchInBatches(
+            (offset, batchSize) -> contractNegotiationStore.queryNegotiations(
+                QuerySpec.Builder.newInstance()
+                    .offset(offset)
+                    .limit(batchSize)
+                    .build()
+            ).toList()
+        );
     }
 
     @NotNull
     private List<ContractAgreement> getAllContractAgreements() {
-        return contractAgreementService.query(QuerySpec.max()).orElseThrow(ServiceException::new).toList();
+        return QueryUtils.fetchInBatches(
+            (offset, batchSize) -> contractAgreementService.search(
+                QuerySpec.Builder.newInstance().offset(offset).limit(batchSize).build()
+            ).orElseThrow(ServiceException::new)
+        );
     }
 
     @NotNull
     private List<TransferProcess> getAllTransferProcesses() {
-        return transferProcessService.query(QuerySpec.max()).orElseThrow(ServiceException::new).toList();
+        return QueryUtils.fetchInBatches(
+            (offset, batchSize) -> transferProcessService.search(
+                QuerySpec.Builder.newInstance().offset(offset).limit(batchSize).build()
+            ).orElseThrow(ServiceException::new)
+        );
     }
 }

@@ -72,8 +72,8 @@ public class DashboardPageApiService {
 
         DashboardPage dashboardPage = new DashboardPage();
         dashboardPage.setNumAssets(dashboardDataFetcher.getNumberOfAssets(dsl));
-        dashboardPage.setNumPolicies(dashboardDataFetcher.getNumberOfPolicies());
-        dashboardPage.setNumContractDefinitions(dashboardDataFetcher.getNumberOfContractDefinitions());
+        dashboardPage.setNumPolicies(dashboardDataFetcher.getNumberOfPolicies(dsl));
+        dashboardPage.setNumContractDefinitions(dashboardDataFetcher.getNumberOfContractDefinitions(dsl));
         dashboardPage.setNumContractAgreementsProviding(providingAgreementsDb.size());
         dashboardPage.setNumContractAgreementsConsuming(consumingAgreementsDb.size());
         dashboardPage.setTransferProcessesProviding(getTransferAmounts(transferProcesses, providingAgreementsDb));
