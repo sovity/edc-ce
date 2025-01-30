@@ -1209,7 +1209,6 @@ class UiApiWrapperTest {
         val a = Tables.EDC_CONTRACT_AGREEMENT;
         val contractAgreementId = UUID.randomUUID().toString();
         dsl.insertInto(a)
-            // TODO: link to contract negotiation
             .set(a.AGR_ID, contractAgreementId)
             .set(a.PROVIDER_AGENT_ID, PROVIDER_PARTICIPANT_ID)
             .set(a.CONSUMER_AGENT_ID, CONSUMER_PARTICIPANT_ID)

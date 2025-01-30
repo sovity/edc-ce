@@ -151,10 +151,7 @@ public class ContractAgreementDataFetcher {
     private List<ContractNegotiation> getAllContractNegotiations() {
         return QueryUtils.fetchInBatches(
             (offset, batchSize) -> contractNegotiationStore.queryNegotiations(
-                QuerySpec.Builder.newInstance()
-                    .offset(offset)
-                    .limit(batchSize)
-                    .build()
+                QuerySpec.Builder.newInstance().offset(offset).limit(batchSize).build()
             ).toList()
         );
     }

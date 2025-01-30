@@ -55,8 +55,6 @@ public final class TestDatabaseExtension
         instances.put(testDatabase);
         instances.putLazy(DSLContext.class, () -> {
             val credentials = testDatabase.getJdbcCredentials();
-            System.out.println("jdbcUser " + credentials.jdbcUser());
-            System.out.println("jdbcPassword " + credentials.jdbcPassword());
             return DSL.using(credentials.jdbcUrl(), credentials.jdbcUser(), credentials.jdbcPassword());
         });
         instances.putLazy(Connection.class, () -> {
