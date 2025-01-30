@@ -1127,11 +1127,6 @@ class UiApiWrapperTest {
     ) {
         // arrange
         int target = 10000;
-//        IntStream.range(1, target).forEach((i) -> {
-//            val assetId = scenario.createAsset();
-//            scenario.createContractDefinition(assetId);
-//            scenario.negotiateAssetAndAwait(assetId);
-//        });
 
         int firstPort = config.getInteger("my.edc.first.port");
         int consumerDspPort = firstPort + 3;
