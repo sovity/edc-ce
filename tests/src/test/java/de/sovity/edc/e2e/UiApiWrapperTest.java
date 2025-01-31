@@ -16,6 +16,7 @@ package de.sovity.edc.e2e;
 
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.ApiException;
+import de.sovity.edc.client.gen.model.ContractAgreementPageQuery;
 import de.sovity.edc.client.gen.model.ContractDefinitionEntry;
 import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
 import de.sovity.edc.client.gen.model.ContractNegotiationRequest;
@@ -48,6 +49,7 @@ import de.sovity.edc.client.gen.model.UiPolicyExpression;
 import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
 import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
+import de.sovity.edc.ext.db.jooq.Tables;
 import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario;
 import de.sovity.edc.extension.e2e.connector.remotes.management_api.ManagementApiConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.remotes.test_backend_controller.TestBackendRemote;
@@ -66,17 +68,24 @@ import org.awaitility.Awaitility;
 import org.eclipse.edc.protocol.dsp.http.spi.types.HttpMessageProtocol;
 import org.eclipse.edc.spi.system.configuration.Config;
 import org.jetbrains.annotations.NotNull;
+import org.jooq.DSLContext;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 
 import static de.sovity.edc.client.gen.model.ContractAgreementDirection.CONSUMING;
 import static de.sovity.edc.client.gen.model.ContractAgreementDirection.PROVIDING;
@@ -86,8 +95,11 @@ import static de.sovity.edc.extension.e2e.connector.remotes.management_api.DataT
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
+import static org.jooq.JSON.json;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class UiApiWrapperTest {
 
     private static final String PROVIDER_PARTICIPANT_ID = CeE2eTestSide.PROVIDER.getParticipantId();
@@ -987,6 +999,7 @@ class UiApiWrapperTest {
             ApiException.class,
             () -> providerClient.uiApi()
                 .createDataOffer(DataOfferCreationRequest.builder()
+                    .policy(DataOfferCreationRequest.PolicyEnum.PUBLISH_RESTRICTED)
                     .uiAssetCreateRequest(UiAssetCreateRequest.builder()
                         .id(id)
                         .dataSource(UiDataSource.builder()
@@ -1103,6 +1116,154 @@ class UiApiWrapperTest {
 
         assertThat(providerClient.uiApi().getContractDefinitionPage().getContractDefinitions())
             .hasSize(0);
+    }
+
+    @Order(Order.DEFAULT + 100)
+    @Test
+    void canLoadTheDashboardWithLargeNumberOfAssets(
+        E2eTestScenario scenario,
+        @Provider DSLContext dsl,
+        @Provider EdcClient providerClient,
+        @Consumer Config config
+    ) {
+        // arrange
+        int target = 10000;
+
+        int firstPort = config.getInteger("my.edc.first.port");
+        int consumerDspPort = firstPort + 3;
+
+        IntStream.range(999, 999 + target).forEach((i) -> {
+            // insert new asset with jooq
+            String assetId = "asset-" + i;
+            insertAsset(dsl, assetId);
+            val contractAgreementId = insertContractAgreement(dsl, assetId);
+            val contractDefinition = insertContractDefinition(dsl, assetId);
+            val neg = insertContractNegotiation(dsl, consumerDspPort, assetId, contractDefinition, contractAgreementId);
+        });
+
+        // act
+        assertDoesNotThrow(() -> providerClient.uiApi().getDashboardPage());
+        assertDoesNotThrow(() -> providerClient.uiApi().getContractAgreementPage(new ContractAgreementPageQuery()));
+    }
+
+    private String insertContractNegotiation(
+        DSLContext dsl,
+        int consumerDspPort,
+        String assetId,
+        String contractDefinition,
+        String contractAgreementId
+    ) {
+        val n = Tables.EDC_CONTRACT_NEGOTIATION;
+        val contractNegotiationId = UUID.randomUUID().toString();
+        dsl.insertInto(n)
+            .set(n.ID, contractNegotiationId)
+            .set(n.CREATED_AT, System.currentTimeMillis())
+            .set(n.UPDATED_AT, System.currentTimeMillis())
+            .set(n.CORRELATION_ID, UUID.randomUUID().toString())
+            .set(n.COUNTERPARTY_ID, "consumer")
+            .set(n.COUNTERPARTY_ADDRESS, "http://localhost:" + consumerDspPort + "/api/dsp")
+            .set(n.PROTOCOL, "dataspace-protocol-http")
+            .set(n.TYPE, "PROVIDER")
+            .set(n.STATE, 1200)
+            .set(n.STATE_COUNT, 1)
+            .set(n.STATE_TIMESTAMP, System.currentTimeMillis())
+            .set(n.ERROR_DETAIL, (String) null)
+            .set(n.AGREEMENT_ID, contractAgreementId)
+            .set(n.CONTRACT_OFFERS, json(
+                "[{\"id\":\"" + base64(contractDefinition) + ":" + base64(assetId) + ":" + base64(assetId) +
+                    "\",\"policy\":{\"permissions\":[{\"edctype\":\"dataspaceconnector:permission\",\"action\":" +
+                    "{\"type\":\"USE\",\"includedIn\":null,\"constraint\":null},\"constraints\":[],\"duties\":[]}]," +
+                    "\"prohibitions\":[],\"obligations\":[],\"extensibleProperties\":{},\"inheritsFrom\":null," +
+                    "\"assigner\":null,\"assignee\":null,\"target\":\"" + assetId + "\",\"@type\":" +
+                    "{\"@policytype\":\"set\"}},\"assetId\":\"" + assetId + "\"}]"))
+            .set(n.CALLBACK_ADDRESSES, json("[]"))
+            .set(n.TRACE_CONTEXT, json("{}"))
+            .set(n.PENDING, false)
+            .set(n.PROTOCOL_MESSAGES, json("{\"lastSent\":null,\"received\":[]}"))
+            .set(n.LEASE_ID, (String) null)
+            .execute();
+
+        return contractNegotiationId;
+    }
+
+    private static String base64(String contractDefinition) {
+        return Base64.getEncoder().encodeToString(contractDefinition.getBytes());
+    }
+
+    private String insertContractDefinition(DSLContext dsl, String assetId) {
+        val cd = Tables.EDC_CONTRACT_DEFINITIONS;
+        val contractDefinitionId = "cd-always-true-" + assetId;
+        dsl.insertInto(cd)
+            .set(cd.CREATED_AT, System.currentTimeMillis())
+            .set(cd.CONTRACT_DEFINITION_ID, contractDefinitionId)
+            .set(cd.ACCESS_POLICY_ID, "always-true")
+            .set(cd.CONTRACT_POLICY_ID, "always-true")
+            .set(cd.ASSETS_SELECTOR, json("""
+                [{"operandLeft":"https://w3id.org/edc/v0.0.1/ns/id","operator":"=","operandRight":\"""" + assetId + """
+                "}]"""))
+            .set(cd.PRIVATE_PROPERTIES, json("{}"))
+            .execute();
+
+        return contractDefinitionId;
+    }
+
+    private String insertContractAgreement(DSLContext dsl, String assetId) {
+
+        val a = Tables.EDC_CONTRACT_AGREEMENT;
+        val contractAgreementId = UUID.randomUUID().toString();
+        dsl.insertInto(a)
+            .set(a.AGR_ID, contractAgreementId)
+            .set(a.PROVIDER_AGENT_ID, PROVIDER_PARTICIPANT_ID)
+            .set(a.CONSUMER_AGENT_ID, CONSUMER_PARTICIPANT_ID)
+            .set(a.SIGNING_DATE, System.currentTimeMillis())
+            .set(a.ASSET_ID, assetId)
+            .set(a.POLICY, json("""
+                {
+                  "permissions": [
+                    {
+                      "edctype": "dataspaceconnector:permission",
+                      "action": {
+                        "type": "USE",
+                        "includedIn": null,
+                        "constraint": null
+                      },
+                      "constraints": [],
+                      "duties": []
+                    }
+                  ],
+                  "prohibitions": [],
+                  "obligations": [],
+                  "extensibleProperties": {},
+                  "inheritsFrom": null,
+                  "assigner": null,
+                  "assignee": null,
+                  "target": \"""" + assetId + """
+                                   ",
+                                   "@type": {
+                                     "@policytype": "contract"
+                                   }
+                                 }
+                """))
+            .execute();
+
+        return contractAgreementId;
+    }
+
+    private static void insertAsset(DSLContext dsl, String assetId) {
+        val a = Tables.EDC_ASSET;
+        dsl.insertInto(a)
+            .set(a.ASSET_ID, assetId)
+            .set(a.CREATED_AT, System.currentTimeMillis())
+            .set(a.PROPERTIES, json("""
+                {"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyBody":"false","http://www.w3.org/ns/dcat#version":"1.0.0","http://purl.org/dc/terms/creator":{"http://xmlns.com/foaf/0.1/name":[{"@value":"Curator Name provider"}]},"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyPath":"false","http://purl.org/dc/terms/title":"AssetName_""" + assetId + """
+                ","http://purl.org/dc/terms/language":"en","https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyMethod":"false","https://w3id.org/edc/v0.0.1/ns/id":\"""" + assetId + """
+                ","https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyQueryParams":"false"}
+                """))
+            .set(a.PRIVATE_PROPERTIES, json("{}"))
+            .set(a.DATA_ADDRESS, json("""
+                {"https://w3id.org/edc/v0.0.1/ns/type":"HttpData","https://w3id.org/edc/v0.0.1/ns/baseUrl":"http://example.com"}
+                """))
+            .execute();
     }
 
     private static @NotNull List<PolicyDefinitionDto> getPolicyNamed(String name, EdcClient edcClient) {

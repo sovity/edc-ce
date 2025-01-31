@@ -20,6 +20,7 @@ import de.sovity.edc.ext.wrapper.api.usecase.model.KpiResult;
 import de.sovity.edc.ext.wrapper.api.usecase.pages.catalog.UseCaseCatalogApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.KpiApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.SupportedPolicyApiService;
+import de.sovity.edc.extension.db.directaccess.DslContextFactory;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -33,10 +34,11 @@ public class UseCaseResourceImpl implements UseCaseResource {
     private final KpiApiService kpiApiService;
     private final SupportedPolicyApiService supportedPolicyApiService;
     private final UseCaseCatalogApiService useCaseCatalogApiService;
+    private final DslContextFactory dslContextFactory;
 
     @Override
     public KpiResult getKpis() {
-        return kpiApiService.getKpis();
+        return dslContextFactory.transactionResult(kpiApiService::getKpis);
     }
 
     @Override

@@ -32,6 +32,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static de.sovity.edc.utils.JsonUtils.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -49,7 +50,7 @@ class DspCatalogServiceTest {
             eq(participantId),
             eq(endpoint),
             eq("dataspace-protocol-http"),
-            eq(QuerySpec.max()))
+            any())
         ).thenReturn(result);
 
         var monitor = mock(Monitor.class);

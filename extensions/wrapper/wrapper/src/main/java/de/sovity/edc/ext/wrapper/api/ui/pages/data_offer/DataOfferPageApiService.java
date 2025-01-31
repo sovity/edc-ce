@@ -69,9 +69,7 @@ public class DataOfferPageApiService {
     }
 
     public IdResponseDto createDataOffer(DSLContext dsl, DataOfferCreationRequest dataOfferCreationRequest) {
-
         val commonId = dataOfferCreationRequest.getUiAssetCreateRequest().getId();
-
         return switch (dataOfferCreationRequest.getPolicy()) {
             case DONT_PUBLISH -> createButDontPublish(dsl, dataOfferCreationRequest, commonId);
             case PUBLISH_UNRESTRICTED -> createAndPublishUnrestricted(dsl, dataOfferCreationRequest, commonId);
