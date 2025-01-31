@@ -189,8 +189,12 @@ class DashboardPageApiServiceTest {
         List<TransferProcess> transferProcesses
     ) {
         when(assetIndex.queryAssets(eq(QuerySpec.max()))).thenAnswer(i -> assets.stream());
-        when(transferProcessService.query(eq(QuerySpec.max())))
-            .thenAnswer(i -> ServiceResult.success(transferProcesses.stream()));
+
+        when(transferProcessService.search(eq(QuerySpec.Builder.newInstance().offset(0).limit(1000).build())))
+            .thenAnswer(i -> ServiceResult.success(transferProcesses));
+        when(transferProcessService.search(eq(QuerySpec.Builder.newInstance().offset(1000).limit(1000).build())))
+            .thenAnswer(i -> ServiceResult.success(List.<TransferProcess>of()));
+
         when(policyDefinitionService.query(eq(QuerySpec.max())))
             .thenAnswer(i -> ServiceResult.success(policyDefinitions.stream()));
         when(contractNegotiationStore.queryNegotiations(eq(QuerySpec.max())))

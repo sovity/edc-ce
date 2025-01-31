@@ -252,10 +252,7 @@ public class WrapperExtensionContextBuilder {
         var cxDidConfigService = new CxDidConfigService(config);
         var dapsConfigService = new DapsConfigService(config);
         var dashboardDataFetcher = new DashboardDataFetcher(
-            contractNegotiationStore,
-            transferProcessService,
-            policyDefinitionService,
-            contractDefinitionService
+            transferProcessService
         );
         var dashboardApiService = new DashboardPageApiService(
             dashboardDataFetcher,

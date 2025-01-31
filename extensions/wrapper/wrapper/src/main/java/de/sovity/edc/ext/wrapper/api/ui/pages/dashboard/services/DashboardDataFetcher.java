@@ -16,11 +16,7 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services;
 
 import de.sovity.edc.ext.db.jooq.Tables;
 import de.sovity.edc.ext.wrapper.api.ServiceException;
-import de.sovity.edc.ext.wrapper.utils.QueryUtils;
 import lombok.RequiredArgsConstructor;
-import org.eclipse.edc.connector.controlplane.contract.spi.negotiation.store.ContractNegotiationStore;
-import org.eclipse.edc.connector.controlplane.services.spi.contractdefinition.ContractDefinitionService;
-import org.eclipse.edc.connector.controlplane.services.spi.policydefinition.PolicyDefinitionService;
 import org.eclipse.edc.connector.controlplane.services.spi.transferprocess.TransferProcessService;
 import org.eclipse.edc.connector.controlplane.transfer.spi.types.TransferProcess;
 import org.eclipse.edc.spi.query.QuerySpec;
@@ -31,10 +27,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 public class DashboardDataFetcher {
-    private final ContractNegotiationStore contractNegotiationStore;
     private final TransferProcessService transferProcessService;
-    private final PolicyDefinitionService policyDefinitionService;
-    private final ContractDefinitionService contractDefinitionService;
 
     public int getNumberOfAssets(DSLContext dsl) {
         return dsl.fetchCount(Tables.EDC_ASSET);
@@ -54,9 +47,8 @@ public class DashboardDataFetcher {
 
     @NotNull
     public List<TransferProcess> getTransferProcesses() {
-        return transferProcessService.query(
-            // TODO: WTF is this shit? .max() works but a limited query doesn't!?
+        return transferProcessService.search(
             QuerySpec.Builder.newInstance().offset(0).limit(1000).build()
-        ).orElseThrow(ServiceException::new).toList();
+        ).orElseThrow(ServiceException::new);
     }
 }
