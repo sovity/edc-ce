@@ -1172,7 +1172,11 @@ class UiApiWrapperTest {
             .set(n.AGREEMENT_ID, contractAgreementId)
             .set(n.CONTRACT_OFFERS, json(
                 "[{\"id\":\"" + base64(contractDefinition) + ":" + base64(assetId) + ":" + base64(assetId) +
-                    "\",\"policy\":{\"permissions\":[{\"edctype\":\"dataspaceconnector:permission\",\"action\":{\"type\":\"USE\",\"includedIn\":null,\"constraint\":null},\"constraints\":[],\"duties\":[]}],\"prohibitions\":[],\"obligations\":[],\"extensibleProperties\":{},\"inheritsFrom\":null,\"assigner\":null,\"assignee\":null,\"target\":\"" + assetId + "\",\"@type\":{\"@policytype\":\"set\"}},\"assetId\":\"" + assetId + "\"}]"))
+                    "\",\"policy\":{\"permissions\":[{\"edctype\":\"dataspaceconnector:permission\",\"action\":" +
+                    "{\"type\":\"USE\",\"includedIn\":null,\"constraint\":null},\"constraints\":[],\"duties\":[]}]," +
+                    "\"prohibitions\":[],\"obligations\":[],\"extensibleProperties\":{},\"inheritsFrom\":null," +
+                    "\"assigner\":null,\"assignee\":null,\"target\":\"" + assetId + "\",\"@type\":" +
+                    "{\"@policytype\":\"set\"}},\"assetId\":\"" + assetId + "\"}]"))
             .set(n.CALLBACK_ADDRESSES, json("[]"))
             .set(n.TRACE_CONTEXT, json("{}"))
             .set(n.PENDING, false)

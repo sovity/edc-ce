@@ -15,9 +15,21 @@
 package de.sovity.edc.ext.wrapper.api.ui.pages.dashboard;
 
 import de.sovity.edc.client.EdcClient;
+import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
+import de.sovity.edc.client.gen.model.DataSourceType;
+import de.sovity.edc.client.gen.model.PolicyDefinitionCreateDto;
+import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
+import de.sovity.edc.client.gen.model.UiCriterion;
+import de.sovity.edc.client.gen.model.UiCriterionLiteral;
+import de.sovity.edc.client.gen.model.UiCriterionLiteralType;
+import de.sovity.edc.client.gen.model.UiCriterionOperator;
+import de.sovity.edc.client.gen.model.UiDataSource;
+import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
+import de.sovity.edc.client.gen.model.UiPolicyExpression;
 import de.sovity.edc.extension.e2e.junit.CeIntegrationTestExtension;
 import de.sovity.edc.utils.config.CeConfigProps;
 import de.sovity.edc.utils.config.ConfigUtils;
+import de.sovity.edc.utils.jsonld.vocab.Prop;
 import org.eclipse.edc.connector.controlplane.asset.spi.domain.Asset;
 import org.eclipse.edc.connector.controlplane.asset.spi.index.AssetIndex;
 import org.eclipse.edc.connector.controlplane.contract.spi.negotiation.store.ContractNegotiationStore;
@@ -41,6 +53,7 @@ import org.mockito.Mockito;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
@@ -73,11 +86,11 @@ class DashboardPageApiServiceTest {
             .property("edc.iam.sts.dim.url", "dimUrl")
         )
         .beforeEdcStartup(runtime -> {
-            runtime.registerServiceMock(AssetIndex.class, assetIndex);
-            runtime.registerServiceMock(PolicyDefinitionService.class, policyDefinitionService);
+//            runtime.registerServiceMock(AssetIndex.class, assetIndex);
+//            runtime.registerServiceMock(PolicyDefinitionService.class, policyDefinitionService);
             runtime.registerServiceMock(TransferProcessService.class, transferProcessService);
             runtime.registerServiceMock(ContractNegotiationStore.class, contractNegotiationStore);
-            runtime.registerServiceMock(ContractDefinitionService.class, contractDefinitionService);
+//            runtime.registerServiceMock(ContractDefinitionService.class, contractDefinitionService);
         })
         .build();
 
@@ -86,11 +99,70 @@ class DashboardPageApiServiceTest {
     @Disabled("Stopped working because now using jooQ to count from the DB directly")
     @Test
     void testKpis(EdcClient client) {
+
+        var id = new AtomicInteger(0);
+
+        // create assets
+        repeat(9, () -> {
+            client.uiApi().createAsset(
+                UiAssetCreateRequest.builder()
+                    .id("dataOffer-" + (id.incrementAndGet()))
+                    .dataSource(
+                        UiDataSource.builder()
+                            .type(DataSourceType.HTTP_DATA)
+                            .httpData(UiDataSourceHttpData.builder()
+                                .baseUrl("http://localhost")
+                                .build())
+                            .build()
+                    )
+                    .build()
+            );
+            return null;
+        });
+
+        // create policies
+        id.set(0);
+        repeat(8 - 1 /*always-true*/, () -> {
+            client.uiApi().createPolicyDefinitionV2(
+                PolicyDefinitionCreateDto.builder()
+                    .policyDefinitionId("policy-" + id.incrementAndGet())
+                    .expression(UiPolicyExpression.builder().build())
+                    .build()
+            );
+            return null;
+        });
+
+        // create contract definitions
+        id.set(0);
+        repeat(7, () -> {
+            id.incrementAndGet();
+            client.uiApi().createContractDefinition(
+                ContractDefinitionRequest.builder()
+                    .contractDefinitionId("cd-" + id.get())
+                    .accessPolicyId("policy-" + id.get())
+                    .contractPolicyId("policy-" + id.get())
+                    .assetSelector(List.of(UiCriterion.builder()
+                        .operandLeft(Prop.Edc.ID)
+                        .operator(UiCriterionOperator.EQ)
+                        .operandRight(UiCriterionLiteral.builder()
+                            .type(UiCriterionLiteralType.VALUE)
+                            .value("asset-" + id.get())
+                            .build())
+                        .build()))
+                    .build()
+            );
+            return null;
+        });
+
+        // TODO create contract negotiation
+        // TODO create transfer processes
+
         // arrange
         mockAmounts(
-            repeat(7, Mockito::mock),
-            repeat(8, Mockito::mock),
-            repeat(9, Mockito::mock),
+            // 0 because it's replaced by DB data
+            repeat(0, Mockito::mock),
+            repeat(0, Mockito::mock),
+            repeat(0, Mockito::mock),
             List.of(
                 mockContractNegotiation(1, CONSUMER),
                 mockContractNegotiation(2, PROVIDER),
@@ -110,11 +182,11 @@ class DashboardPageApiServiceTest {
 
         // act
         var dashboardPage = client.uiApi().getDashboardPage();
-        assertThat(dashboardPage.getNumAssets()).isEqualTo(7);
+        assertThat(dashboardPage.getNumAssets()).isEqualTo(9);
         assertThat(dashboardPage.getNumPolicies()).isEqualTo(8);
-        assertThat(dashboardPage.getNumContractDefinitions()).isEqualTo(9);
-        assertThat(dashboardPage.getNumContractAgreementsConsuming()).isEqualTo(1);
-        assertThat(dashboardPage.getNumContractAgreementsProviding()).isEqualTo(2);
+        assertThat(dashboardPage.getNumContractDefinitions()).isEqualTo(7);
+//        assertThat(dashboardPage.getNumContractAgreementsConsuming()).isEqualTo(1);
+//        assertThat(dashboardPage.getNumContractAgreementsProviding()).isEqualTo(2);
         assertThat(dashboardPage.getTransferProcessesConsuming().getNumTotal()).isEqualTo(1 + 2 + 3);
         assertThat(dashboardPage.getTransferProcessesConsuming().getNumRunning()).isEqualTo(1);
         assertThat(dashboardPage.getTransferProcessesConsuming().getNumError()).isEqualTo(2);
