@@ -90,8 +90,12 @@ public class ContractAgreementDataFetcher {
     public ContractAgreementData getContractAgreement(DSLContext dsl, String contractAgreementId) {
         val agreement = getContractAgreementById(contractAgreementId);
 
-        val negotiationQuery = QuerySpec.max();
-        val negotiation = contractNegotiationStore.queryNegotiations(negotiationQuery)
+        val negotiation = QueryUtils.fetchInBatches((offset, limit) ->
+                contractNegotiationStore.queryNegotiations(
+                    QuerySpec.Builder.newInstance().offset(offset).limit(limit).build())
+                    .toList()
+            )
+            .stream()
             .filter(it -> it.getContractAgreement().getId().equals(contractAgreementId))
             .findFirst()
             .orElseThrow(

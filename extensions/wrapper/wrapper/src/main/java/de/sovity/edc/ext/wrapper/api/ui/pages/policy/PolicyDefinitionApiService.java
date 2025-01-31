@@ -23,13 +23,12 @@ import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.PolicyDefinitionCreateDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.PolicyDefinitionDto;
-import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.SelfDescriptionService;
+import de.sovity.edc.ext.wrapper.utils.QueryUtils;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.controlplane.policy.spi.PolicyDefinition;
 import org.eclipse.edc.connector.controlplane.services.spi.policydefinition.PolicyDefinitionService;
 import org.eclipse.edc.spi.query.QuerySpec;
-import org.eclipse.edc.spi.system.configuration.Config;
 
 import java.util.Comparator;
 import java.util.List;
@@ -73,7 +72,10 @@ public class PolicyDefinitionApiService {
     }
 
     private List<PolicyDefinition> getAllPolicyDefinitions() {
-        return policyDefinitionService.query(QuerySpec.max()).orElseThrow(ServiceException::new).toList();
+        return QueryUtils.fetchInBatches((offset, limit) ->
+            policyDefinitionService.search(QuerySpec.Builder.newInstance().offset(offset).limit(limit).build())
+                .orElseThrow(ServiceException::new)
+        );
     }
 
     public PolicyDefinitionDto buildPolicyDefinitionDto(PolicyDefinition policyDefinition) {

@@ -19,6 +19,7 @@ import de.sovity.edc.ext.wrapper.api.ui.model.TransferProcessSimplifiedState;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferProcessStateService;
 import de.sovity.edc.ext.wrapper.api.usecase.model.KpiResult;
 import de.sovity.edc.ext.wrapper.api.usecase.model.TransferProcessStatesDto;
+import de.sovity.edc.ext.wrapper.utils.QueryUtils;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.controlplane.asset.spi.index.AssetIndex;
 import org.eclipse.edc.connector.controlplane.contract.spi.offer.store.ContractDefinitionStore;
@@ -67,7 +68,9 @@ public class KpiApiService {
     }
 
     private TransferProcessStatesDto getTransferProcessesDto() {
-        var transferProcesses = transferProcessStore.findAll(QuerySpec.max()).toList();
+        var transferProcesses = QueryUtils.fetchInBatches((offset, limit) ->
+            transferProcessStore.findAll(QuerySpec.Builder.newInstance().offset(offset).limit(limit).build()).toList()
+        );
         return new TransferProcessStatesDto(getIncoming(transferProcesses), getOutgoing(transferProcesses));
     }
 
@@ -88,17 +91,23 @@ public class KpiApiService {
     }
 
     private int getContractDefinitionsCount() {
-        var contractDefinitions = contractDefinitionStore.findAll(QuerySpec.max()).toList();
+        var contractDefinitions = QueryUtils.fetchInBatches((offset, limit) ->
+            contractDefinitionStore.findAll(QuerySpec.Builder.newInstance().offset(offset).limit(limit).build()).toList()
+        );
         return contractDefinitions.size();
     }
 
     private int getPoliciesCount() {
-        var policies = policyDefinitionStore.findAll(QuerySpec.max()).toList();
+        var policies = QueryUtils.fetchInBatches((offset, limit) ->
+            policyDefinitionStore.findAll(QuerySpec.Builder.newInstance().offset(offset).limit(limit).build()).toList()
+        );
         return policies.size();
     }
 
     private int getAssetsCount() {
-        var assets = assetIndex.queryAssets(QuerySpec.max()).toList();
+        var assets = QueryUtils.fetchInBatches((offset, limit) ->
+            assetIndex.queryAssets(QuerySpec.Builder.newInstance().offset(offset).limit(limit).build()).toList()
+        );
         return assets.size();
     }
 }

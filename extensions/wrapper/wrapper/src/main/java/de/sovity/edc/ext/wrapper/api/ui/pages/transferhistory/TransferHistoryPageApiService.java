@@ -138,16 +138,26 @@ public class TransferHistoryPageApiService {
 
     @NotNull
     private List<ContractAgreement> getAllContractAgreements() {
-        return contractAgreementService.query(QuerySpec.max()).orElseThrow(ServiceException::new).toList();
+        return QueryUtils.fetchInBatches((offset, limit) ->
+            contractAgreementService.search(QuerySpec.Builder.newInstance().offset(offset).limit(limit).build())
+                .orElseThrow(ServiceException::new)
+        );
     }
 
     @NotNull
     private List<TransferProcess> getAllTransferProcesses() {
-        return transferProcessService.query(QuerySpec.max()).orElseThrow(ServiceException::new).toList();
+        return QueryUtils.fetchInBatches((offset, limit) ->
+            transferProcessService.search(
+                QuerySpec.Builder.newInstance().offset(offset).limit(limit).build()
+            ).orElseThrow(ServiceException::new)
+        );
     }
 
     @NotNull
     private List<Asset> getAllAssets() {
-        return assetService.query(QuerySpec.max()).orElseThrow(ServiceException::new).toList();
+        return QueryUtils.fetchInBatches((offset, limit) ->
+            assetService.search(QuerySpec.Builder.newInstance().offset(offset).limit(limit).build())
+                .orElseThrow(ServiceException::new)
+        );
     }
 }
