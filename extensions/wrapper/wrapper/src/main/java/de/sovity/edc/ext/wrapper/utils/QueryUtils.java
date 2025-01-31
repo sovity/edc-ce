@@ -9,17 +9,18 @@ import java.util.List;
 
 @UtilityClass
 public class QueryUtils {
+    public static final int BATCH_SIZE = 4000;
+
     public @NotNull <T> ArrayList<T> fetchAllInBatches(FetchBatch<T> fetcher) {
-        val batchSize = 4000;
         var position = 0;
         val all = new ArrayList<T>();
 
         List<T> batch;
 
         do {
-            batch = fetcher.fetchBatch(position, batchSize);
+            batch = fetcher.fetchBatch(position, BATCH_SIZE);
             all.addAll(batch);
-            position += batchSize;
+            position += BATCH_SIZE;
         } while (!batch.isEmpty());
 
         System.out.println("ALL   " + all.size());

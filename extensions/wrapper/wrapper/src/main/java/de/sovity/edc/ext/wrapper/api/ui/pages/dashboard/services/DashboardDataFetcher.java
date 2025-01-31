@@ -16,6 +16,7 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services;
 
 import de.sovity.edc.ext.db.jooq.Tables;
 import de.sovity.edc.ext.wrapper.api.ServiceException;
+import de.sovity.edc.ext.wrapper.utils.QueryUtils;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.controlplane.services.spi.transferprocess.TransferProcessService;
 import org.eclipse.edc.connector.controlplane.transfer.spi.types.TransferProcess;
@@ -47,8 +48,9 @@ public class DashboardDataFetcher {
 
     @NotNull
     public List<TransferProcess> getTransferProcesses() {
-        return transferProcessService.search(
-            QuerySpec.Builder.newInstance().offset(0).limit(1000).build()
-        ).orElseThrow(ServiceException::new);
+        return QueryUtils.fetchAllInBatches( (offset, limit) -> transferProcessService.search(
+                QuerySpec.Builder.newInstance().offset(offset).limit(limit).build()
+            ).orElseThrow(ServiceException::new)
+        );
     }
 }

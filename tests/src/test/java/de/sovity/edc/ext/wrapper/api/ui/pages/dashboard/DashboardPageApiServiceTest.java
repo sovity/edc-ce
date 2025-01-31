@@ -57,6 +57,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
+import static de.sovity.edc.ext.wrapper.utils.QueryUtils.BATCH_SIZE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.eclipse.edc.connector.controlplane.contract.spi.types.negotiation.ContractNegotiation.Type.CONSUMER;
 import static org.eclipse.edc.connector.controlplane.contract.spi.types.negotiation.ContractNegotiation.Type.PROVIDER;
@@ -262,9 +263,9 @@ class DashboardPageApiServiceTest {
     ) {
         when(assetIndex.queryAssets(eq(QuerySpec.max()))).thenAnswer(i -> assets.stream());
 
-        when(transferProcessService.search(eq(QuerySpec.Builder.newInstance().offset(0).limit(1000).build())))
+        when(transferProcessService.search(eq(QuerySpec.Builder.newInstance().offset(0).limit(BATCH_SIZE).build())))
             .thenAnswer(i -> ServiceResult.success(transferProcesses));
-        when(transferProcessService.search(eq(QuerySpec.Builder.newInstance().offset(1000).limit(1000).build())))
+        when(transferProcessService.search(eq(QuerySpec.Builder.newInstance().offset(BATCH_SIZE).limit(BATCH_SIZE).build())))
             .thenAnswer(i -> ServiceResult.success(List.<TransferProcess>of()));
 
         when(policyDefinitionService.query(eq(QuerySpec.max())))

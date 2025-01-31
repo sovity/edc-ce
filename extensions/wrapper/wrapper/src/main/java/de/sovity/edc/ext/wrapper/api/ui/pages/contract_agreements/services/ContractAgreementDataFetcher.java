@@ -77,7 +77,7 @@ public class ContractAgreementDataFetcher {
                     var asset = getAsset(
                         agreement.getAssetId(),
                         negotiation.getType(),
-                        (id) -> assets.computeIfAbsent(id, assetIndex::findById)
+                        assets::get
                     );
 
                     var contractTransfers = transfers.getOrDefault(agreement.getId(), List.of());
