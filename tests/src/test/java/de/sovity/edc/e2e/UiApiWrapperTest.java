@@ -1131,7 +1131,6 @@ class UiApiWrapperTest {
 
         int firstPort = config.getInteger("my.edc.first.port");
         int consumerDspPort = firstPort + 3;
-        System.out.println("first port " + firstPort);
 
         IntStream.range(999, 999 + target).forEach((i) -> {
             // insert new asset with jooq

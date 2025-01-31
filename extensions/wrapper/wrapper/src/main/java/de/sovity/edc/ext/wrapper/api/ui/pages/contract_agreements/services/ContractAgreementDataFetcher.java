@@ -16,6 +16,7 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services;
 
 import de.sovity.edc.ext.db.jooq.tables.records.SovityContractTerminationRecord;
 import de.sovity.edc.ext.wrapper.api.ServiceException;
+import de.sovity.edc.ext.wrapper.utils.MapUtils;
 import de.sovity.edc.ext.wrapper.utils.QueryUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -31,7 +32,6 @@ import org.eclipse.edc.spi.query.QuerySpec;
 import org.jetbrains.annotations.NotNull;
 import org.jooq.DSLContext;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -56,7 +56,7 @@ public class ContractAgreementDataFetcher {
     @NotNull
     public List<ContractAgreementData> getContractAgreements(DSLContext dsl) {
         var agreements = getAllContractAgreements();
-        var assets = new HashMap<String, Asset>();
+        var assets = MapUtils.associateBy(getAllAssets(), Asset::getId);
 
         var negotiations = getAllContractNegotiations().stream()
             .filter(it -> it.getContractAgreement() != null)
@@ -90,9 +90,9 @@ public class ContractAgreementDataFetcher {
     public ContractAgreementData getContractAgreement(DSLContext dsl, String contractAgreementId) {
         val agreement = getContractAgreementById(contractAgreementId);
 
-        val negotiation = QueryUtils.fetchInBatches((offset, limit) ->
+        val negotiation = QueryUtils.fetchAllInBatches((offset, limit) ->
                 contractNegotiationStore.queryNegotiations(
-                    QuerySpec.Builder.newInstance().offset(offset).limit(limit).build())
+                        QuerySpec.Builder.newInstance().offset(offset).limit(limit).build())
                     .toList()
             )
             .stream()
@@ -151,9 +151,17 @@ public class ContractAgreementDataFetcher {
         return Asset.Builder.newInstance().id(assetId).build();
     }
 
+    private List<Asset> getAllAssets() {
+        return QueryUtils.fetchAllInBatches((offset, batchSize) ->
+            assetIndex.queryAssets(
+                QuerySpec.Builder.newInstance().offset(offset).limit(batchSize).build()
+            ).toList()
+        );
+    }
+
     @NotNull
     private List<ContractNegotiation> getAllContractNegotiations() {
-        return QueryUtils.fetchInBatches(
+        return QueryUtils.fetchAllInBatches(
             (offset, batchSize) -> contractNegotiationStore.queryNegotiations(
                 QuerySpec.Builder.newInstance().offset(offset).limit(batchSize).build()
             ).toList()
@@ -162,8 +170,8 @@ public class ContractAgreementDataFetcher {
 
     @NotNull
     private List<ContractAgreement> getAllContractAgreements() {
-        return QueryUtils.fetchInBatches(
-            (offset, batchSize) -> contractAgreementService.search(
+        return QueryUtils.fetchAllInBatches((offset, batchSize) ->
+            contractAgreementService.search(
                 QuerySpec.Builder.newInstance().offset(offset).limit(batchSize).build()
             ).orElseThrow(ServiceException::new)
         );
@@ -171,8 +179,8 @@ public class ContractAgreementDataFetcher {
 
     @NotNull
     private List<TransferProcess> getAllTransferProcesses() {
-        return QueryUtils.fetchInBatches(
-            (offset, batchSize) -> transferProcessService.search(
+        return QueryUtils.fetchAllInBatches((offset, batchSize) ->
+            transferProcessService.search(
                 QuerySpec.Builder.newInstance().offset(offset).limit(batchSize).build()
             ).orElseThrow(ServiceException::new)
         );

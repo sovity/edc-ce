@@ -9,8 +9,8 @@ import java.util.List;
 
 @UtilityClass
 public class QueryUtils {
-    public @NotNull <T> ArrayList<T> fetchInBatches(FetchBatch<T> fetcher) {
-        val batchSize = 1000;
+    public @NotNull <T> ArrayList<T> fetchAllInBatches(FetchBatch<T> fetcher) {
+        val batchSize = 4000;
         var position = 0;
         val all = new ArrayList<T>();
 
@@ -18,11 +18,11 @@ public class QueryUtils {
 
         do {
             batch = fetcher.fetchBatch(position, batchSize);
-
             all.addAll(batch);
-
             position += batchSize;
         } while (!batch.isEmpty());
+
+        System.out.println("ALL   " + all.size());
 
         return all;
     }

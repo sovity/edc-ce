@@ -70,7 +70,7 @@ public class ContractDefinitionApiService {
     }
 
     private List<ContractDefinition> getAllContractDefinitions() {
-        return QueryUtils.fetchInBatches((offset, limit) ->
+        return QueryUtils.fetchAllInBatches((offset, limit) ->
             contractDefinitionService.search(
                 QuerySpec.Builder.newInstance()
                     .offset(offset)

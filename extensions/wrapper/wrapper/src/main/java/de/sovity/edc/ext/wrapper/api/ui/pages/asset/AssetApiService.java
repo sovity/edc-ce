@@ -74,7 +74,7 @@ public class AssetApiService {
     }
 
     private List<Asset> getAllAssets() {
-        return QueryUtils.fetchInBatches((offset, size) ->
+        return QueryUtils.fetchAllInBatches((offset, size) ->
             assetService.search(
                 QuerySpec.Builder.newInstance().offset(offset).limit(size).build()
             ).orElseThrow(ServiceException::new)

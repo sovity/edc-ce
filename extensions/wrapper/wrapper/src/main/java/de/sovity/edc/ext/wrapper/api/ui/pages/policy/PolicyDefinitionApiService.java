@@ -72,7 +72,7 @@ public class PolicyDefinitionApiService {
     }
 
     private List<PolicyDefinition> getAllPolicyDefinitions() {
-        return QueryUtils.fetchInBatches((offset, limit) ->
+        return QueryUtils.fetchAllInBatches((offset, limit) ->
             policyDefinitionService.search(QuerySpec.Builder.newInstance().offset(offset).limit(limit).build())
                 .orElseThrow(ServiceException::new)
         );

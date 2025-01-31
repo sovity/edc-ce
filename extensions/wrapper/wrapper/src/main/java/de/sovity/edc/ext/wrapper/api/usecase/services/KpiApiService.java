@@ -68,7 +68,7 @@ public class KpiApiService {
     }
 
     private TransferProcessStatesDto getTransferProcessesDto() {
-        var transferProcesses = QueryUtils.fetchInBatches((offset, limit) ->
+        var transferProcesses = QueryUtils.fetchAllInBatches((offset, limit) ->
             transferProcessStore.findAll(QuerySpec.Builder.newInstance().offset(offset).limit(limit).build()).toList()
         );
         return new TransferProcessStatesDto(getIncoming(transferProcesses), getOutgoing(transferProcesses));
@@ -91,21 +91,21 @@ public class KpiApiService {
     }
 
     private int getContractDefinitionsCount() {
-        var contractDefinitions = QueryUtils.fetchInBatches((offset, limit) ->
+        var contractDefinitions = QueryUtils.fetchAllInBatches((offset, limit) ->
             contractDefinitionStore.findAll(QuerySpec.Builder.newInstance().offset(offset).limit(limit).build()).toList()
         );
         return contractDefinitions.size();
     }
 
     private int getPoliciesCount() {
-        var policies = QueryUtils.fetchInBatches((offset, limit) ->
+        var policies = QueryUtils.fetchAllInBatches((offset, limit) ->
             policyDefinitionStore.findAll(QuerySpec.Builder.newInstance().offset(offset).limit(limit).build()).toList()
         );
         return policies.size();
     }
 
     private int getAssetsCount() {
-        var assets = QueryUtils.fetchInBatches((offset, limit) ->
+        var assets = QueryUtils.fetchAllInBatches((offset, limit) ->
             assetIndex.queryAssets(QuerySpec.Builder.newInstance().offset(offset).limit(limit).build()).toList()
         );
         return assets.size();

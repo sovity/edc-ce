@@ -126,7 +126,7 @@ public class TransferHistoryPageApiService {
 
     @NotNull
     private List<ContractNegotiation> getAllContractNegotiations() {
-        return QueryUtils.fetchInBatches((offset, limit) ->
+        return QueryUtils.fetchAllInBatches((offset, limit) ->
             contractNegotiationStore.queryNegotiations(
                 QuerySpec.Builder.newInstance()
                     .offset(offset)
@@ -138,7 +138,7 @@ public class TransferHistoryPageApiService {
 
     @NotNull
     private List<ContractAgreement> getAllContractAgreements() {
-        return QueryUtils.fetchInBatches((offset, limit) ->
+        return QueryUtils.fetchAllInBatches((offset, limit) ->
             contractAgreementService.search(QuerySpec.Builder.newInstance().offset(offset).limit(limit).build())
                 .orElseThrow(ServiceException::new)
         );
@@ -146,7 +146,7 @@ public class TransferHistoryPageApiService {
 
     @NotNull
     private List<TransferProcess> getAllTransferProcesses() {
-        return QueryUtils.fetchInBatches((offset, limit) ->
+        return QueryUtils.fetchAllInBatches((offset, limit) ->
             transferProcessService.search(
                 QuerySpec.Builder.newInstance().offset(offset).limit(limit).build()
             ).orElseThrow(ServiceException::new)
@@ -155,7 +155,7 @@ public class TransferHistoryPageApiService {
 
     @NotNull
     private List<Asset> getAllAssets() {
-        return QueryUtils.fetchInBatches((offset, limit) ->
+        return QueryUtils.fetchAllInBatches((offset, limit) ->
             assetService.search(QuerySpec.Builder.newInstance().offset(offset).limit(limit).build())
                 .orElseThrow(ServiceException::new)
         );
