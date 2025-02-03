@@ -252,11 +252,7 @@ public class WrapperExtensionContextBuilder {
         var cxDidConfigService = new CxDidConfigService(config);
         var dapsConfigService = new DapsConfigService(config);
         var dashboardDataFetcher = new DashboardDataFetcher(
-            contractNegotiationStore,
-            transferProcessService,
-            assetIndex,
-            policyDefinitionService,
-            contractDefinitionService
+            transferProcessService
         );
         var dashboardApiService = new DashboardPageApiService(
             dashboardDataFetcher,
@@ -315,7 +311,8 @@ public class WrapperExtensionContextBuilder {
         var useCaseResource = new UseCaseResourceImpl(
             kpiApiService,
             supportedPolicyApiService,
-            useCaseCatalogApiService
+            useCaseCatalogApiService,
+            dslContextFactory
         );
         val placeholderEndpointController = new PlaceholderEndpointController();
 

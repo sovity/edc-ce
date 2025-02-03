@@ -31,7 +31,8 @@ public class DspCatalogService {
     private final DspDataOfferBuilder dspDataOfferBuilder;
 
     public DspCatalog fetchDataOffers(String participantId, String endpoint) throws DspCatalogServiceException {
-        var catalogJson = fetchDcatResponse(participantId, endpoint, QuerySpec.max());
+        var first4kItems = QuerySpec.Builder.newInstance().offset(0).limit(4000).build();
+        var catalogJson = fetchDcatResponse(participantId, endpoint, first4kItems);
         return dspDataOfferBuilder.buildDataOffers(endpoint, catalogJson);
     }
 

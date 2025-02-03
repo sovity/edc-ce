@@ -22,7 +22,6 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.edc.connector.controlplane.services.spi.catalog.CatalogService;
 import org.eclipse.edc.jsonld.TitaniumJsonLd;
 import org.eclipse.edc.spi.monitor.Monitor;
-import org.eclipse.edc.spi.query.QuerySpec;
 import org.eclipse.edc.spi.response.StatusResult;
 import org.junit.jupiter.api.Test;
 
@@ -32,6 +31,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static de.sovity.edc.utils.JsonUtils.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -49,7 +49,7 @@ class DspCatalogServiceTest {
             eq(participantId),
             eq(endpoint),
             eq("dataspace-protocol-http"),
-            eq(QuerySpec.max()))
+            any())
         ).thenReturn(result);
 
         var monitor = mock(Monitor.class);

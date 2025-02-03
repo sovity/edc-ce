@@ -17,6 +17,7 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory;
 import de.sovity.edc.ext.wrapper.api.ServiceException;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementDirection;
 import de.sovity.edc.ext.wrapper.api.ui.model.TransferHistoryEntry;
+import de.sovity.edc.ext.wrapper.utils.QueryUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -61,20 +62,20 @@ public class TransferHistoryPageApiService {
     public List<TransferHistoryEntry> getTransferHistoryEntries() {
 
         var negotiationsById = getAllContractNegotiations().stream()
-                .filter(Objects::nonNull)
-                .filter(negotiation -> negotiation.getContractAgreement() != null)
-                .collect(toMap(
-                        it -> it.getContractAgreement().getId(),
-                        Function.identity(),
-                        BinaryOperator.maxBy(Comparator.comparing(Entity::getCreatedAt))
-                ));
+            .filter(Objects::nonNull)
+            .filter(negotiation -> negotiation.getContractAgreement() != null)
+            .collect(toMap(
+                it -> it.getContractAgreement().getId(),
+                Function.identity(),
+                BinaryOperator.maxBy(Comparator.comparing(Entity::getCreatedAt))
+            ));
 
         var agreementsById = getAllContractAgreements().stream().collect(toMap(
-                ContractAgreement::getId, Function.identity()
+            ContractAgreement::getId, Function.identity()
         ));
 
         var assetsById = getAllAssets().stream()
-                .collect(toMap(Asset::getId, Function.identity()));
+            .collect(toMap(Asset::getId, Function.identity()));
 
         var transferProcesses = getAllTransferProcesses();
 
@@ -91,9 +92,9 @@ public class TransferHistoryPageApiService {
                     transferHistoryEntry.setAssetName(asset.getId());
                 } else {
                     transferHistoryEntry.setAssetName(
-                            StringUtils.isBlank((String) asset.getProperties().get(Prop.Dcterms.TITLE))
-                                    ? asset.getId()
-                                    : asset.getProperties().get(Prop.Dcterms.TITLE).toString()
+                        StringUtils.isBlank((String) asset.getProperties().get(Prop.Dcterms.TITLE))
+                            ? asset.getId()
+                            : asset.getProperties().get(Prop.Dcterms.TITLE).toString()
                     );
                 }
             }
@@ -125,21 +126,38 @@ public class TransferHistoryPageApiService {
 
     @NotNull
     private List<ContractNegotiation> getAllContractNegotiations() {
-        return contractNegotiationStore.queryNegotiations(QuerySpec.max()).toList();
+        return QueryUtils.fetchAllInBatches((offset, limit) ->
+            contractNegotiationStore.queryNegotiations(
+                QuerySpec.Builder.newInstance()
+                    .offset(offset)
+                    .limit(limit)
+                    .build()
+            ).toList()
+        );
     }
 
     @NotNull
     private List<ContractAgreement> getAllContractAgreements() {
-        return contractAgreementService.query(QuerySpec.max()).orElseThrow(ServiceException::new).toList();
+        return QueryUtils.fetchAllInBatches((offset, limit) ->
+            contractAgreementService.search(QuerySpec.Builder.newInstance().offset(offset).limit(limit).build())
+                .orElseThrow(ServiceException::new)
+        );
     }
 
     @NotNull
     private List<TransferProcess> getAllTransferProcesses() {
-        return transferProcessService.query(QuerySpec.max()).orElseThrow(ServiceException::new).toList();
+        return QueryUtils.fetchAllInBatches((offset, limit) ->
+            transferProcessService.search(
+                QuerySpec.Builder.newInstance().offset(offset).limit(limit).build()
+            ).orElseThrow(ServiceException::new)
+        );
     }
 
     @NotNull
     private List<Asset> getAllAssets() {
-        return assetService.query(QuerySpec.max()).orElseThrow(ServiceException::new).toList();
+        return QueryUtils.fetchAllInBatches((offset, limit) ->
+            assetService.search(QuerySpec.Builder.newInstance().offset(offset).limit(limit).build())
+                .orElseThrow(ServiceException::new)
+        );
     }
 }
