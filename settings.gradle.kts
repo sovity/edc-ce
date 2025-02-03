@@ -39,3 +39,5 @@ include(":utils:jooq-database-access")
 include(":utils:json-and-jsonld-utils")
 include(":utils:test-utils")
 include(":utils:versions")
+include("extensions:wrapper:clients:benchmark")
+findProject(":extensions:wrapper:clients:benchmark")?.name = "benchmark"

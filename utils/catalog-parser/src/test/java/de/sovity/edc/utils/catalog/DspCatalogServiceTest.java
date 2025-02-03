@@ -22,7 +22,6 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.edc.connector.controlplane.services.spi.catalog.CatalogService;
 import org.eclipse.edc.jsonld.TitaniumJsonLd;
 import org.eclipse.edc.spi.monitor.Monitor;
-import org.eclipse.edc.spi.query.QuerySpec;
 import org.eclipse.edc.spi.response.StatusResult;
 import org.junit.jupiter.api.Test;
 

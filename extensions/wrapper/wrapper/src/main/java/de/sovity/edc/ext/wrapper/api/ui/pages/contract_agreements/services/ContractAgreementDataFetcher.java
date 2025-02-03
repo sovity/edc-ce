@@ -92,8 +92,8 @@ public class ContractAgreementDataFetcher {
 
         val negotiation = QueryUtils.fetchAllInBatches((offset, limit) ->
                 contractNegotiationStore.queryNegotiations(
-                        QuerySpec.Builder.newInstance().offset(offset).limit(limit).build())
-                    .toList()
+                        QuerySpec.Builder.newInstance().offset(offset).limit(limit).build()
+                ).toList()
             )
             .stream()
             .filter(it -> it.getContractAgreement().getId().equals(contractAgreementId))
