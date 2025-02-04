@@ -14,7 +14,7 @@ A datasource API can be structured with a base URL and path parameters to differ
 
 In this case, the base URL remains: `https://example.com/dataset/`.
 
-#### Defining the Asset in the EDC
+#### Defining the Asset
 
 To add an asset that references such a base URL which supports parameterization, use the following API request:
 
@@ -62,7 +62,7 @@ To access the dataset, query the Provider's EDC catalog and identify the require
 - `dcat:dataset.{asset}.odrl:hasPolicy.@id` - The data offer ID, later to be used for `{{data-offer-id}}`
 - `dcat:dataset.{asset}.odrl:hasPolicy.odrl:permission` - The policies in this case permissions, needed to start the negotiation, later used for `{{permissions}}`
 
-#### Step 2: Negotiating the EDR Token
+#### Step 2: Negotiating the EDR
 
 Next, request the `EDR token` to access the data plane:
 
@@ -97,7 +97,7 @@ Extract the `@id` from the response, later to be used for `{{edr-id}}`.
 This ID represents the EDR token and is required for the next steps.
 Successfully reaching this stage confirms a successful negotiation.
 
-#### Step 3: Creating the Transfer Process
+#### Step 3: Transfer Process
 
 Use the EDR token ID to retrieve the `transferProcessId`:
 
@@ -125,7 +125,7 @@ Use the EDR token ID to retrieve the `transferProcessId`:
 
 Copy the `transferProcessId` from the response to proceed, later to be used for `{{transferProcessId}}`.
 
-#### Step 4: Retrieving the Data Address
+#### Step 4: Data Address
 
 To obtain the data address from which the dataset can be requested:
 
@@ -150,7 +150,7 @@ Any additional path parameters appended to `{{endpoint}}` will be included in th
 
 {% hint style="info" %} As parameterization is optional for the Provider, the additional parameters like {{dataset-id}} in this example do not need to be set by the Consumer if the Provider doesn't support it. {% endhint %}
 
-#### Parameterized Example Request
+#### Parameterized Example
 
 If requesting dataset `1` from the Provider in the example at the top, the final request will be plus additonal authorization headers (information obtained from the EDR):
 
