@@ -4,7 +4,7 @@
 
 {% hint style="info" %} Parameterization is optional and does not have to be activated by the Provider if the datasource API does not require or enable it. In this case, the corresponding parameters do not have to be enabled when creating an asset and the Consumer does not have to add any additional paramters to the endpoint from the EDR. {% endhint %}
 
-### Providing Parameterized Data
+### Provider: Asset
 
 A datasource API can be structured with a base URL and path parameters to differentiate datasets:
 - `https://example.com/dataset/1`
@@ -51,6 +51,8 @@ Ensure that `proxyPath` and `proxyQueryParams` are correctly set and enabled `tr
 - `"proxyQueryParams": "true"`: allows dynamic query parameter inclusion for the Consumer (Parameterization)
 
 {% hint style="info" %} As parameterization is optional, these settings do not need to be set to "true" if the datasource API doesn't support it, then either don't add them at all or set them to "false". {% endhint %}
+
+After adding the asset, the asset only needs to be linked in a Contract Definition/Data Offer along with Policies in order to make it available for potential Consumers to consume.
 
 ### Consuming Data
 
