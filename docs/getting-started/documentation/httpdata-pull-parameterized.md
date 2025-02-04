@@ -56,7 +56,7 @@ After adding the asset, the asset only needs to be linked in a Contract Definiti
 
 ### Consumer: Consuming Data
 
-#### Step 1: Querying the Catalog
+#### Step 1: Catalog Querying
 
 To access the dataset, query the Provider's EDC catalog and identify the required asset. Extract the following details:
 - `dcat:dataset.{asset}.odrl:hasPolicy.@id` - The data offer ID, later to be used for `{{data-offer-id}}`
