@@ -4,7 +4,7 @@
 
 {% hint style="info" %} Parameterization is optional and does not have to be activated by the Provider if the datasource API does not require or enable it. In this case, the corresponding parameters do not have to be enabled when creating an asset and the Consumer does not have to add any additional paramters to the endpoint from the EDR. {% endhint %}
 
-### Providing Data
+### Providing Parameterized Data
 
 A datasource API can be structured with a base URL and path parameters to differentiate datasets:
 - `https://example.com/dataset/1`
