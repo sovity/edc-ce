@@ -66,7 +66,7 @@ To access the dataset, query the Provider's EDC catalog and identify the require
 
 Next, request the `EDR token`:
 
-`POST {{control_url}}/v3/assets`
+`POST {{MANAGEMENT-API}}/v2/edrs`
 
 {% code title="JSON" overflow="wrap" lineNumbers="true" %}
 ```json
