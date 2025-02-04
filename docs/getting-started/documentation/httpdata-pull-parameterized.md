@@ -4,6 +4,8 @@
 
 In certain scenarios, it is beneficial to expose multiple datasets via a single asset, reducing contract negotiations and catalog size, thus improving Connector scalability.
 
+{% hint style="info" %} Parameterization is optional and does not have to be activated by the Provider if the datasource API does not require or enable it. In this case, the corresponding parameters do not have to be enabled when creating an asset and the Consumer does not have to add any additional paramters to the endpoint from the EDR. {% endhint %}
+
 ### Providing Data
 
 A datasource API can be structured with a base URL and path parameters to differentiate datasets:
@@ -50,11 +52,13 @@ Ensure that `proxyPath` and `proxyQueryParams` are correctly set and enabled `tr
 - `"proxyPath": "true"`: enables path-based dataset retrieval
 - `"proxyQueryParams": "true"`: allows dynamic query parameter inclusion
 
+{% hint style="info" %} As parameterization is optional, these settings do not need to be set to true if the datasource API doesn't support it. {% endhint %}
+
 ### Consuming Data
 
 #### Step 1: Querying the Catalog
 
-To access the dataset, query the provider's EDC catalog and identify the required asset. Extract the following details:
+To access the dataset, query the Provider's EDC catalog and identify the required asset. Extract the following details:
 - `dcat:dataset.{asset}.odrl:hasPolicy.@id` - The data offer ID, later to be used for `{{data-offer-id}}`
 - `dcat:dataset.{asset}.odrl:hasPolicy.odrl:permission` - The policies in this case permissions, needed to start the negotiation, later used for `{{permissions}}`
 
@@ -141,11 +145,13 @@ Append the dataset ID as a path parameter:
 - Ensure that the **Authorization header** is set with the previously obtained authorization information (token).
 
 The EDC uses the token to map the request to the appropriate data source.
-The request will be forwarded to the provider’s `baseUrl` configured in the asset.
+The request will be forwarded to the Provider’s `baseUrl` configured in the asset.
 Any additional path parameters appended to `{{endpoint}}` will be included in the request to the data source.
+
+{% hint style="info" %} As parameterization is optional for the Provider, the additional parameters like {{dataset-id}} in this example do not need to be set by the Consumer if the Provider doesn't support it. {% endhint %}
 
 #### Example Request Flow
 
-If requesting dataset `1` from the provideras in the example at the top, the final request will be:
+If requesting dataset `1` from the Provideras in the example at the top, the final request will be:
 
 `GET https://example.com/dataset/1`
