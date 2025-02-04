@@ -2,22 +2,21 @@
 
 ### Overview
 
-In certain scenarios, it is beneficial to be able to provide multiple datasets and data-source APIs through a single asset.
-This approach enhances the scalability of the Connector by minimizing the number of contract negotiations and reducing the catalog size.
+In certain scenarios, it is beneficial to expose multiple datasets via a single asset, reducing contract negotiations and catalog size, thus improving Connector scalability.
 
 ### Providing Data
 
-In this example, multiple datasets of the same API are identified using a unique path parameter but having the same base-url:
+A datasource API can be structured with a base URL and path parameters to differentiate datasets:
 - `https://example.com/dataset/1`
 - `https://example.com/dataset/2`
 - `https://example.com/dataset/3`
 - `https://example.com/dataset/4`
 
-This implies that the `baseUrl` of all datasets is `https://example.com/dataset/`.
+In this case, the base URL remains: `https://example.com/dataset/`.
 
 #### Defining the Asset in the EDC
 
-To enable this example by using a single asset, use the following way to create an asset in the EDC:
+To register a **single asset** in the EDC that references multiple datasets, use the following API request:
 
 `POST {{MANAGEMENT-API}}/v3/assets`
 
@@ -48,16 +47,18 @@ To enable this example by using a single asset, use the following way to create 
 {% endcode %}
 
 Ensure that `proxyPath` and `proxyQueryParams` are correctly set and enabled `true`.
+- `"proxyPath": "true"`: enables path-based dataset retrieval
+- `"proxyQueryParams": "true"`: allows dynamic query parameter inclusion
 
 ### Consuming Data
 
-#### Querying the Catalog
+#### Step 1: Querying the Catalog
 
 To access the dataset, query the provider's EDC catalog and identify the required asset. Extract the following details:
 - `dcat:dataset.{asset}.odrl:hasPolicy.@id` - The data offer ID, later to be used for `{{data-offer-id}}`
 - `dcat:dataset.{asset}.odrl:hasPolicy.odrl:permission` - The policies in this case permissions, needed to start the negotiation, later used for `{{permissions}}`
 
-#### Negotiating the EDR Token
+#### Step 2: Negotiating the EDR Token
 
 Next, request the `EDR token` to access the data plane:
 
@@ -92,7 +93,7 @@ Extract the `@id` from the response, later to be used for `{{edr-id}}`.
 This ID represents the EDR token and is required for the next steps.
 Successfully reaching this stage confirms a successful negotiation.
 
-#### Creating the Transfer Process
+#### Step 3: Creating the Transfer Process
 
 Use the EDR token ID to retrieve the `transferProcessId`:
 
@@ -120,7 +121,7 @@ Use the EDR token ID to retrieve the `transferProcessId`:
 
 Copy the `transferProcessId` from the response to proceed, later to be used for `{{transferProcessId}}`.
 
-#### Retrieving the Data Address
+#### Step 4: Retrieving the Data Address
 
 To obtain the data address from which the dataset can be requested:
 
@@ -130,7 +131,7 @@ The response contains two crucial data points:
 - `endpoint` – The URL of the data plane providing the requested asset, later to be used for `{{endpoint}}`.
 - `authorization` – The authorization information required for data retrieval, e.g. a token.
 
-#### Requesting the Data
+#### Step 5: Requesting the Data
 
 Finally, execute a `GET` request using the endpoint and authorization information.
 
