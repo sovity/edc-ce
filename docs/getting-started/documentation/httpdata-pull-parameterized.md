@@ -16,7 +16,7 @@ In this case, the base URL remains: `https://example.com/dataset/`.
 
 #### Defining the Asset in the EDC
 
-To register a **single asset** in the EDC that references multiple datasets, use the following API request:
+To add an asset that references such a base URL which supports parameterization, use the following API request:
 
 `POST {{MANAGEMENT-API}}/v3/assets`
 
@@ -50,7 +50,7 @@ Ensure that `proxyPath` and `proxyQueryParams` are correctly set and enabled `tr
 - `"proxyPath": "true"`: enables path-based dataset retrieval
 - `"proxyQueryParams": "true"`: allows dynamic query parameter inclusion
 
-{% hint style="info" %} As parameterization is optional, these settings do not need to be set to true if the datasource API doesn't support it. {% endhint %}
+{% hint style="info" %} As parameterization is optional, these settings do not need to be set to "true" if the datasource API doesn't support it, then either don't add them at all or set them to "false". {% endhint %}
 
 ### Consuming Data
 
