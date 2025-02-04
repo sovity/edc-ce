@@ -47,8 +47,8 @@ To add an asset that references such a base URL which supports parameterization,
 {% endcode %}
 
 Ensure that `proxyPath` and `proxyQueryParams` are correctly set and enabled `true`.
-- `"proxyPath": "true"`: enables path-based dataset retrieval
-- `"proxyQueryParams": "true"`: allows dynamic query parameter inclusion
+- `"proxyPath": "true"`: enables path-based dataset retrieval for the Consumer (Parameterization)
+- `"proxyQueryParams": "true"`: allows dynamic query parameter inclusion for the Consumer (Parameterization)
 
 {% hint style="info" %} As parameterization is optional, these settings do not need to be set to "true" if the datasource API doesn't support it, then either don't add them at all or set them to "false". {% endhint %}
 
