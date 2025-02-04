@@ -58,3 +58,8 @@
 * [Local Demo](deployment-guide/goals/local-demo/README.md)
 * [Development](deployment-guide/goals/development/README.md)
 * [Production](deployment-guide/goals/production/README.md)
+
+## Customer Links
+* [Glossary](https://docs.sovity.de/glossary/glossary)
+* [Customer Portal](https://portal-main.prod-sovity.azure.sovity.io/)
+* [Service Desk](https://support.sovity.de/)
