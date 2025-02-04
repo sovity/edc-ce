@@ -64,7 +64,7 @@ To access the dataset, query the Provider's EDC catalog and identify the require
 
 #### Step 2: Negotiating the EDR
 
-Next, request the `EDR token` to access the data plane:
+Next, request the `EDR token`:
 
 `POST {{control_url}}/v3/assets`
 
