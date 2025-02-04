@@ -148,7 +148,7 @@ Any additional path parameters appended to `{{endpoint}}` will be included in th
 
 {% hint style="info" %} As parameterization is optional for the Provider, the additional parameters like {{dataset-id}} in this example do not need to be set by the Consumer if the Provider doesn't support it. {% endhint %}
 
-#### Example Request Flow
+#### Parameterized Example Request
 
 If requesting dataset `1` from the Provideras in the example at the top, the final request will be:
 
