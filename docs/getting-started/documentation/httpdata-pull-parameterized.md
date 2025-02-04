@@ -8,10 +8,10 @@ This approach enhances the scalability of the Connector by minimizing the number
 ### Providing Data
 
 In this example, multiple datasets of the same API are identified using a unique path parameter but having the same base-url:
-- https://example.com/dataset/1
-- https://example.com/dataset/2
-- https://example.com/dataset/3
-- https://example.com/dataset/4
+- `https://example.com/dataset/1`
+- `https://example.com/dataset/2`
+- `https://example.com/dataset/3`
+- `https://example.com/dataset/4`
 
 This implies that the `baseUrl` of all datasets is `https://example.com/dataset/`.
 
