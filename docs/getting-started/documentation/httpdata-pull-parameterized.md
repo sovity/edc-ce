@@ -54,7 +54,7 @@ Ensure that `proxyPath` and `proxyQueryParams` are correctly set and enabled `tr
 
 After adding the asset, the asset only needs to be linked in a Contract Definition/Data Offer along with Policies in order to make it available for potential Consumers to consume.
 
-### Consuming Data
+### Consumer: Consuming Data
 
 #### Step 1: Querying the Catalog
 
