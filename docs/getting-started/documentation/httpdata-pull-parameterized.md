@@ -150,6 +150,6 @@ Any additional path parameters appended to `{{endpoint}}` will be included in th
 
 #### Parameterized Example Request
 
-If requesting dataset `1` from the Provideras in the example at the top, the final request will be:
+If requesting dataset `1` from the Provideras in the example at the top, the final request will be plus additonal authorization headers:
 
 `GET https://example.com/dataset/1`
