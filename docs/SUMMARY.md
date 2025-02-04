@@ -23,6 +23,7 @@
 
 * [Postman](Backend/Postman/setting-up-postman.md)
 * [Data Transfer Types](getting-started/documentation/data-transfer-types.md)
+  * [Parameterized HttpData-Pull](getting-started/documentation/httpdata-pull-parameterized.md)
 * [Health Check APIs](getting-started/documentation/health-check-api.md)
 * [API-Wrapper vs Management-API](Backend/API-Wrapper/relationship.md)
 * [API-Wrapper](Backend/API-Wrapper/what-is-the-api-wrapper.md)
