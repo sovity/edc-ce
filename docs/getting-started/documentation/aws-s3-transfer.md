@@ -1,8 +1,6 @@
 ## AWS S3 Transfer Documentation
 
-### AWS Setup
-
-To enable access to an AWS S3 bucket, follow these steps:
+**AWS Setup:** To enable access to an AWS S3 bucket, follow these steps:
 
 1. Create an `IAM User`
    - Navigate to `IAM` > `Users` > `Add User`
