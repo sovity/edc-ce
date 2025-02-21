@@ -112,3 +112,13 @@ If two connectors, regardless of their organization, are in the same data space,
 The EDC does not always pass through error codes as they are received from other systems. Instead, it is known to modify certain error codes before returning them, which can make diagnosing the original issue more challenging.
 
 For example: When the EDC receives an error code like 403 Forbidden from another system, it might map and return this as a 400 Bad Request instead. This behavior can obscure the original issue, as the returned error code does not reflect the root cause accurately. This mapping behavior can make debugging and understanding the actual problem more complex. As a result, users need to be aware of this behavior when troubleshooting issues with the EDC.
+
+### Why do changes to the Provider’s asset not immediately affect the Consumer’s data transfer?
+
+If you are using the **HttpData-Pull Flow with an EDR** (Endpoint Data Reference), any changes made to the asset on the Provider’s side will not automatically impact the Consumer’s data retrieval process.
+
+The reason is that the EDR contains all necessary details for the Consumer to retrieve data, including the baseURL and authentication information. Once an EDR is negotiated and remains valid, the Consumer continues to use the previously negotiated EDR information, even if the Provider updates the asset.
+
+To ensure that updates, such as a new URL, are recognized by the Consumer, one of the following must happen:
+- The EDR must be renegotiated by the Consumer.
+- The EDR must expire, triggering a new negotiation or refresh process.
