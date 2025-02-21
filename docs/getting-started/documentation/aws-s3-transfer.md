@@ -7,7 +7,7 @@
    - Assign the necessary permissions to allow access to the S3 bucket
    - A broad permission example: `AmazonS3FullAccess`
 
-2. Create an `Access Key
+2. Create an `Access Key`
    - Go to the IAM user details page
    - Select the `Security credentials` tab
    - Generate an `Access Key`: `Thirdparty-Service`
