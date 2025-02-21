@@ -50,10 +50,8 @@ For more advanced data-sink endpoints not directly supported by the UI, you can 
 {% code title="JSON" overflow="wrap" lineNumbers="true" %}
 ```json
 {
-  "properties": {
-    "type": "HttpData",
-    "baseUrl": "https://webhook.site/86b9b7e6-eb27-4c5f-b7e5-336d5f157f15"
-  }
+  "type": "HttpData",
+  "baseUrl": "https://webhook.site/86b9b7e6-eb27-4c5f-b7e5-336d5f157f15"
 }
 ```
 {% endcode %}
@@ -72,11 +70,9 @@ For passing parameters to the providing Connector or detailed configuration of E
   "assetId": "this-will-be-overriden-by-the-ui",
   "contractId": "this-will-be-overriden-by-the-ui",
   "dataDestination": {
-    "properties": {
-      "type": "HttpData",
-      "baseUrl": "https://my-data-sink/",
-      "method": "POST"
-    }
+    "type": "HttpData",
+    "baseUrl": "https://my-data-sink/",
+    "method": "POST"
   },
   "properties": {
     "pathSegments": "12345/some-resource/6890",
