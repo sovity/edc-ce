@@ -12,9 +12,7 @@
    - Select the `Security credentials` tab
    - Generate an `Access Key`: `Thirdparty-Service`
 
-### EDC Transfer
-
-The AWS S3 asset can be created using the EDC Management-API with the following payload:
+**EDC Asset with AWS S3 datasource**: The EDC asset can be created using the EDC Management-API with the following payload:
 
 {% code title="JSON" overflow="wrap" lineNumbers="true" %}
 ```json
