@@ -4,6 +4,8 @@ icon: file-excel
 
 # Contract Termination
 
+{% hint style="warning" %} This functionality is not available in all Connector versions. If there is no "Terminate" button in the contract-view, your connector version does not support this functionality. {% endhint %}
+
 In the latest Connector versions, both the provider and the consumer have the option of terminating an existing contract. To initiate a termination, simply click on an existing contract in the Contracts area, regardless of whether it is Providing or Consuming, and the red button at the bottom left of the Contract detail view. Please be sure that you want to terminate the contract, because this process is irreversible and a new contract would have to be negotiated if a contract was terminated by mistake.
 
 ![Terminate Contract](/docs/images/edc-ui-terminate-1.png)
