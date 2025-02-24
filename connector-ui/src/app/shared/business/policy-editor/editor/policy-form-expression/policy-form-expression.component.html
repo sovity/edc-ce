@@ -1,0 +1,14 @@
+<!-- type EMPTY -->
+<policy-form-expression-empty
+  *ngIf="expr.type === 'EMPTY'"
+  [treeNode]="treeNode"></policy-form-expression-empty>
+
+<!-- type MULTI -->
+<policy-form-expression-multi
+  *ngIf="expr.type === 'MULTI'"
+  [treeNode]="treeNode"></policy-form-expression-multi>
+
+<!-- type CONSTRAINT -->
+<policy-form-expression-constraint
+  *ngIf="expr.type === 'CONSTRAINT'"
+  [treeNode]="treeNode"></policy-form-expression-constraint>

@@ -1,0 +1,145 @@
+<div id="wrapper">
+  <div class="flex flex-row">
+    <div class="grow"></div>
+    <mat-paginator
+      *ngIf="transferProcessesList.isReady"
+      [hidePageSize]="true"
+      [disabled]="true"
+      [pageSize]="transferProcessesList.data.transferProcesses.length"
+      [length]="
+        transferProcessesList.data.transferProcesses.length
+      "></mat-paginator>
+  </div>
+  <div class="flex flex-row justify-center">
+    <loading-state
+      *ngIf="transferProcessesList.isLoading"
+      class="min-h-[35rem]"></loading-state>
+    <error-state
+      *ngIf="transferProcessesList.isError"
+      class="min-h-[35rem]"
+      [error]="transferProcessesList.errorOrUndefined"></error-state>
+    <empty-state
+      *ngIf="
+        transferProcessesList.isReady &&
+        !transferProcessesList.data.transferProcesses.length
+      "
+      class="min-h-[35rem]"
+      [emptyMessage]="
+        'tranfer_history_page.no_trans' | translate
+      "></empty-state>
+  </div>
+  <div
+    *ngIf="
+      transferProcessesList.isReady &&
+      !!transferProcessesList.data.transferProcesses.length
+    ">
+    <table
+      class="transfer-history-table"
+      mat-table
+      [dataSource]="transferProcessesList.data.transferProcesses">
+      <ng-container matColumnDef="direction">
+        <th *matHeaderCellDef class="w-[50px]" mat-header-cell scope="col">
+          {{ 'general.direction' | translate }}
+        </th>
+        <td *matCellDef="let item" class="w-[50px]" mat-cell>
+          <mat-icon class="mat-icon-[28px]">
+            {{ item.direction === 'PROVIDING' ? 'upload' : 'download' }}
+          </mat-icon>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="lastUpdated">
+        <th *matHeaderCellDef class="w-[150px]" mat-header-cell scope="col">
+          {{ 'general.updated' | translate }}
+        </th>
+        <td *matCellDef="let item" class="w-[150px]" mat-cell>
+          <ago [date]="item.lastUpdatedDate"></ago>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="assetName">
+        <th *matHeaderCellDef mat-header-cell scope="col">
+          {{ 'general.asset' | translate }}
+        </th>
+        <td *matCellDef="let item" mat-cell>
+          <div *ngIf="item.direction === 'PROVIDING'">
+            <a
+              class="link"
+              href="javascript:void(0)"
+              (click)="onAssetDetailsClick(item)">
+              <mat-icon class="mat-icon-[14px]">open_in_new</mat-icon>
+              <div>
+                {{ item.assetName }}
+              </div>
+            </a>
+          </div>
+          <div *ngIf="item.direction === 'CONSUMING'">
+            {{ item.assetName }}
+          </div>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="state">
+        <th *matHeaderCellDef class="w-[150px]" mat-header-cell scope="col">
+          {{ 'general.state' | translate }}
+        </th>
+        <td *matCellDef="let item" class="w-[150px]" mat-cell>
+          <div class="flex flex-row items-center space-x-[5px]">
+            <span>
+              {{ item.state.name }}
+              {{
+                item.state.name === 'CUSTOM' ? ' (' + item.state.code + ')' : ''
+              }}
+            </span>
+            <!-- Error Icon -->
+            <mat-icon
+              *ngIf="item.state.simplifiedState === 'ERROR'"
+              class="text-warn mat-icon-[14px]"
+              [matTooltip]="item.errorMessage!!"
+              >warning
+            </mat-icon>
+            <!-- Progress Spinner -->
+            <mat-progress-spinner
+              *ngIf="item.state.simplifiedState === 'RUNNING'"
+              class="mat-icon-[14px]"
+              diameter="14"
+              color="primary"
+              mode="indeterminate">
+            </mat-progress-spinner>
+          </div>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="counterPartyParticipantId">
+        <th *matHeaderCellDef mat-header-cell scope="col">
+          {{ 'transfer_history_page.counter_id' | translate }}
+        </th>
+        <td *matCellDef="let item" mat-cell>
+          {{ item.counterPartyParticipantId }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="counterPartyConnectorEndpoint">
+        <th *matHeaderCellDef mat-header-cell scope="col">
+          {{ 'transfer_history_page.counter_endpoint' | translate }}
+        </th>
+        <td *matCellDef="let item" mat-cell>
+          {{ item.counterPartyConnectorEndpoint }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="details">
+        <th *matHeaderCellDef class="w-[100px]" mat-header-cell scope="col">
+          {{ 'general.details' | translate }}
+        </th>
+        <td *matCellDef="let item" class="w-[100px]" mat-cell>
+          <a
+            class="link"
+            href="javascript:void(0)"
+            (click)="onTransferHistoryDetailsClick(item)">
+            {{ 'general.details' | translate }}
+          </a>
+        </td>
+      </ng-container>
+      <tr
+        *matHeaderRowDef="columns"
+        class="transfer-history-table-header"
+        mat-header-row></tr>
+      <tr *matRowDef="let row; columns: columns" mat-row></tr>
+    </table>
+  </div>
+</div>

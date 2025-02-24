@@ -1,0 +1,240 @@
+<div class="flex flex-row justify-between space-x-2">
+  <div class="mat-card-header" mat-dialog-title removeClass="mat-dialog-title">
+    <mat-icon
+      *ngIf="data.type === 'asset-details'"
+      class="mat-card-avatar-icon">
+      {{ asset.dataSourceAvailability === 'LIVE' ? 'upload' : 'contact_page' }}
+    </mat-icon>
+    <mat-icon
+      *ngIf="data.type === 'contract-agreement'"
+      class="mat-card-avatar-icon"
+      [class.text-warn]="
+        data.contractAgreement?.terminationStatus === 'TERMINATED'
+      ">
+      {{
+        data.contractAgreement!.direction === 'PROVIDING'
+          ? data.contractAgreement!.isTerminated
+            ? 'file_upload_off'
+            : 'file_upload'
+          : data.contractAgreement!.isTerminated
+          ? 'file_download_off'
+          : 'file_download'
+      }}
+    </mat-icon>
+    <contract-offer-icon
+      *ngIf="data.type === 'data-offer'"
+      [dataOffer]="data.dataOffer!"></contract-offer-icon>
+    <div class="mat-card-header-text">
+      <div class="mat-card-title">
+        {{ asset.title }}
+      </div>
+      <div class="mat-card-subtitle">
+        {{ asset.creatorOrganizationName }}
+      </div>
+    </div>
+  </div>
+  <div
+    *ngIf="data.showDeleteButton || data.showEditButton"
+    class="flex flex-row">
+    <button
+      *ngIf="data.showEditButton"
+      mat-icon-button
+      [matTooltip]="'general.edit' | translate"
+      (click)="onEditClick()">
+      <mat-icon class="mat-icon-[22px]">edit</mat-icon>
+    </button>
+    <button
+      *ngIf="data.showDeleteButton"
+      mat-icon-button
+      [matTooltip]="'general.delete' | translate"
+      (click)="onDeleteClick()">
+      <mat-icon class="mat-icon-[22px]">delete</mat-icon>
+    </button>
+  </div>
+</div>
+
+<div class="flex flex-col space-y-[10px]" mat-dialog-content>
+  <!-- Progress Bar -->
+  <mat-progress-bar
+    *ngIf="isProgressBarVisible"
+    color="primary"
+    mode="indeterminate"></mat-progress-bar>
+
+  <!-- Termination notice -->
+  <div
+    *ngIf="data.contractAgreement?.isTerminated"
+    class="rounded-md bg-red-50 p-4">
+    <div class="flex">
+      <div class="flex-shrink-0">
+        <svg
+          class="h-5 w-5 text-red-400"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          aria-hidden="true">
+          <path
+            fill-rule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z"
+            clip-rule="evenodd" />
+        </svg>
+      </div>
+      <div class="flex flex-col ml-3 grow">
+        <div class="text-base text-red-800">
+          {{ data.contractAgreement!.terminationInformation!.reason }}
+        </div>
+        <div class="text-[0.9rem] text-red-700 mt-2">
+          {{ data.contractAgreement!.terminationInformation!.detail }}
+        </div>
+        <div class="text-xs text-red-700 mt-2">
+          <ago
+            [date]="
+              data.contractAgreement!.terminationInformation!.terminatedAt
+            "></ago>
+          · {{ 'general.terminated_by' | translate }}
+          {{
+            data.contractAgreement!.terminationInformation?.terminatedBy ===
+            'SELF'
+              ? 'you'
+              : 'the counter-party'
+          }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Description -->
+  <markdown-description
+    class="pt-3"
+    [description]="asset.description"></markdown-description>
+
+  <div>
+    <hr class="h-px my-5 bg-gray-200 border-0" />
+  </div>
+
+  <!-- Tag List -->
+  <div *ngIf="asset.keywords?.length">
+    <mat-chip-list aria-label="Tags">
+      <mat-chip *ngFor="let keyword of asset.keywords">{{ keyword }}</mat-chip>
+    </mat-chip-list>
+  </div>
+
+  <!-- Transfer History -->
+  <ng-container *ngIf="data.type === 'contract-agreement'">
+    <div
+      class="flex flex-row flex-wrap property-grid-group-title"
+      [style.margin-top.px]="30">
+      {{ 'component_library.t_history' | translate }}
+    </div>
+    <transfer-history-mini-list [contractAgreement]="data.contractAgreement!!">
+    </transfer-history-mini-list>
+  </ng-container>
+
+  <!-- Properties -->
+  <property-grid-group class="mt-[15px]" [propGroups]="propGroups">
+  </property-grid-group>
+
+  <!-- Contract Offers -->
+  <contract-offer-mini-list
+    *ngIf="isLiveDataOffer"
+    [data]="data.dataOffer!"
+    (negotiateClick)="onNegotiateClick($event)">
+  </contract-offer-mini-list>
+
+  <ng-container *ngIf="isOnRequestDataOffer">
+    <div class="property-grid-group-title">
+      {{ 'asset_detail_dialog.on_request_data_offer_title' | translate }}
+    </div>
+    <div
+      [innerHTML]="
+        'asset_detail_dialog.on_request_data_offer_description_html' | translate
+      "></div>
+  </ng-container>
+</div>
+
+<mat-dialog-actions>
+  <div class="w-full flex flex-row justify-between">
+    <div class="flex gap-1 items-center">
+      <button
+        *ngIf="
+          data.type === 'contract-agreement' &&
+          !data.contractAgreement?.isTerminated
+        "
+        mat-raised-button
+        color="warn"
+        [disabled]="data.contractAgreement?.isTerminated ?? false"
+        (click)="onTerminateClick()">
+        {{ 'general.terminate' | translate }}
+      </button>
+    </div>
+
+    <div class="flex gap-1 items-center">
+      <button mat-stroked-button [mat-dialog-close]="null" [disabled]="loading">
+        {{ 'general.close' | translate }}
+      </button>
+
+      <ng-container
+        *ngIf="isLiveDataOffer && data.dataOffer!.contractOffers.length === 1">
+        <button
+          *ngIf="data.asset.isOwnConnector"
+          disabled
+          mat-raised-button
+          [matTooltip]="'tooltip.negotiate' | translate">
+          {{ 'component_library.negotiate' | translate }}
+        </button>
+
+        <button
+          *ngIf="!data.asset.isOwnConnector"
+          mat-raised-button
+          color="primary"
+          [matTooltip]="
+            limitsExceeded
+              ? ('asset_detail_dialog.limit_exceeded_tooltip' | translate)
+              : ''
+          "
+          [disabled]="
+            limitsExceeded ||
+            contractNegotiationService.negotiationState(
+              data.dataOffer!.contractOffers[0]
+            ) != 'ready'
+          "
+          [ngSwitch]="
+            contractNegotiationService.negotiationState(
+              data.dataOffer!.contractOffers[0]
+            )
+          "
+          (click)="onNegotiateClick(data.dataOffer!.contractOffers[0])">
+          <ng-container *ngSwitchCase="'ready'">{{
+            'component_library.negotiate' | translate
+          }}</ng-container>
+          <ng-container *ngSwitchCase="'negotiating'">
+            {{ 'component_library.negotiating' | translate }}
+          </ng-container>
+          <ng-container *ngSwitchCase="'negotiated'">
+            {{ 'component_library.succ_negotiating' | translate }}
+          </ng-container>
+        </button>
+      </ng-container>
+
+      <button
+        *ngIf="isOnRequestDataOffer"
+        mat-raised-button
+        color="primary"
+        (click)="onContactClick()">
+        {{ 'general.contact' | translate }}
+      </button>
+
+      <!-- Contact Agreement Buttons -->
+      <button
+        *ngIf="
+          data.type === 'contract-agreement' &&
+          data.contractAgreement?.direction === 'CONSUMING' &&
+          !data.contractAgreement?.isTerminated
+        "
+        mat-raised-button
+        color="primary"
+        [disabled]="data.contractAgreement?.isTerminated"
+        (click)="onTransferClick()">
+        {{ 'component_library.transfer' | translate }}
+      </button>
+    </div>
+  </div>
+</mat-dialog-actions>

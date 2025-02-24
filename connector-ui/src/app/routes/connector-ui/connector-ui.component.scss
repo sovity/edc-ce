@@ -1,0 +1,36 @@
+.sidenav-container {
+  height: 100%;
+}
+
+.sidenav {
+  width: 300px;
+}
+
+.sidenav .mat-toolbar {
+  background: inherit;
+}
+
+.mat-toolbar.mat-primary {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+#contact-form {
+  text-align: center;
+  background: #ffffff;
+}
+
+#contact-form a {
+  display: block;
+  margin: 16px 16px;
+}
+
+.custom-toolbar {
+  margin: 3px 3px;
+}
+
+.is-active {
+  cursor: pointer;
+  background-color: #dedede;
+}

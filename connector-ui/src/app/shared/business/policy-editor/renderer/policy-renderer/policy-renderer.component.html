@@ -1,0 +1,6 @@
+<div class="flex flex-col gap-1">
+  <div *ngFor="let error of errors" class="text-sm text-red-500">
+    {{ error }}
+  </div>
+</div>
+<policy-expression [expression]="expression"></policy-expression>

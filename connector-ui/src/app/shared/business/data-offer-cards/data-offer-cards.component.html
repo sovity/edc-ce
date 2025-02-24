@@ -1,0 +1,35 @@
+<mat-card *ngFor="let dataOffer of dataOffers" class="asset-card">
+  <ng-container *ngIf="dataOffer.asset; let asset">
+    <mat-card-header>
+      <contract-offer-icon
+        mat-card-avatar
+        [dataOffer]="dataOffer"></contract-offer-icon>
+      <mat-card-title>
+        <a
+          class="link"
+          href="javascript:void(0)"
+          (click)="dataOfferClick.emit(dataOffer)">
+          {{ asset.title }}
+        </a>
+      </mat-card-title>
+      <mat-card-subtitle>{{ asset.creatorOrganizationName }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="flex flex-col space-y-[16px]">
+      <!-- Progress Bar -->
+      <mat-progress-bar
+        *ngIf="isBusy(dataOffer)"
+        color="primary"
+        mode="indeterminate"></mat-progress-bar>
+
+      <!-- Description Short Text -->
+      <truncated-short-description
+        [text]="asset.descriptionShortText"></truncated-short-description>
+
+      <!-- Tag List -->
+      <asset-card-tag-list
+        *ngIf="asset.keywords?.length || asset.version"
+        [keywords]="asset.keywords"
+        [version]="asset.version"></asset-card-tag-list>
+    </mat-card-content>
+  </ng-container>
+</mat-card>

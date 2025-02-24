@@ -1,0 +1,76 @@
+<div id="wrapper">
+  <div class="flex flex-row">
+    <!-- Search -->
+    <mat-form-field
+      class="search-form-field"
+      appearance="outline"
+      color="accent">
+      <mat-label>
+        {{ 'contract_agreement_page.search_def' | translate }}</mat-label
+      >
+      <input matInput [formControl]="searchText" />
+      <mat-icon matPrefix>search</mat-icon>
+      <button
+        *ngIf="searchText.value"
+        mat-icon-button
+        matSuffix
+        (click)="searchText.setValue('')">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <!-- Create Button -->
+    <button
+      id="create-button"
+      color="primary"
+      mat-raised-button
+      style="margin-top: 8px; height: 44px"
+      (click)="onCreate()">
+      <mat-icon>add_circle_outline</mat-icon>
+      {{ 'contract_agreement_page.create_def' | translate }}
+    </button>
+
+    <!-- Spacer -->
+    <div class="grow"></div>
+
+    <!-- Paginator -->
+    <mat-paginator
+      *ngIf="contractDefinitionList.isReady"
+      [hidePageSize]="true"
+      [disabled]="true"
+      [pageSize]="contractDefinitionList.data.contractDefinitionCards.length"
+      [length]="
+        contractDefinitionList.data.numTotalContractDefinitions
+      "></mat-paginator>
+  </div>
+
+  <div class="flex flex-row justify-center">
+    <loading-state
+      *ngIf="contractDefinitionList.isLoading"
+      class="min-h-[35rem]"></loading-state>
+    <error-state
+      *ngIf="contractDefinitionList.isError"
+      class="min-h-[35rem]"
+      [error]="contractDefinitionList.errorOrUndefined"></error-state>
+    <empty-state
+      *ngIf="
+        contractDefinitionList.isReady &&
+        (!contractDefinitionList.data.numTotalContractDefinitions ||
+          !contractDefinitionList.data.contractDefinitionCards.length)
+      "
+      class="min-h-[35rem]"
+      [emptyMessage]="
+        'contract_agreement_page.con_def' | translate
+      "></empty-state>
+  </div>
+  <contract-definition-cards
+    *ngIf="
+      contractDefinitionList.isReady &&
+      !!contractDefinitionList.data.contractDefinitionCards.length
+    "
+    [contractDefinitionCards]="
+      contractDefinitionList.data.contractDefinitionCards
+    "
+    [deleteBusy]="deleteBusy"
+    (deleteDone)="refresh()"></contract-definition-cards>
+</div>

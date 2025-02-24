@@ -1,0 +1,21 @@
+#wrapper {
+  margin: 20px;
+}
+
+.policy-card {
+  width: calc(100% / 2 - 48px);
+}
+
+#create-button {
+  margin-left: 10px;
+}
+
+mat-paginator {
+  display: inline-block;
+  background-color: transparent;
+}
+
+.search-form-field {
+  min-width: 200px;
+  width: 30%;
+}

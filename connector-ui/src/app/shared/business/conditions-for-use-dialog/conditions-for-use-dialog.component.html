@@ -1,0 +1,28 @@
+<div class="flex flex-row justify-between space-x-2">
+  <div class="mat-card-header" mat-dialog-title removeClass="mat-dialog-title">
+    <mat-icon class="mat-card-avatar-icon">
+      {{ data.icon }}
+    </mat-icon>
+    <div class="mat-card-header-text">
+      <div class="mat-card-title">
+        {{ data.title }}
+      </div>
+      <div class="mat-card-subtitle">
+        {{ data.subtitle }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  mat-dialog-content
+  style="display: block; min-width: 40rem; max-width: 40rem; max-height: 60vh">
+  <div *ngIf="data.description">
+    <markdown-description
+      [description]="data.description"></markdown-description>
+  </div>
+</div>
+
+<div class="w-full justify-end flex flex-row" mat-dialog-actions>
+  <button mat-button color="default" [mat-dialog-close]="null">Close</button>
+</div>

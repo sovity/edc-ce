@@ -1,0 +1,9 @@
+<mat-form-field class="grow form-field" color="accent">
+  <mat-label>{{ label }}</mat-label>
+  <mat-select [formControl]="control" [compareWith]="compareWith">
+    <mat-option [value]="null"></mat-option>
+    <mat-option *ngFor="let policy of policies" [value]="policy">
+      {{ policyId(policy) }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>

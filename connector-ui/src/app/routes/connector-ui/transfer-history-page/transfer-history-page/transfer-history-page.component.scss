@@ -1,0 +1,46 @@
+#wrapper {
+  margin: 20px;
+}
+
+.transfer-history-table {
+  width: 100%;
+}
+
+.transfer-history-table-header th {
+  font-weight: bold;
+}
+
+.mat-table {
+  overflow-x: scroll;
+}
+
+.mat-cell,
+.mat-header-cell {
+  padding: 0px 10px;
+}
+
+.singleline-cell {
+  white-space: nowrap;
+}
+
+mat-paginator {
+  display: inline-block;
+  background-color: transparent;
+}
+
+.info-box {
+  display: flex;
+  align-items: center;
+
+  .text {
+    padding-left: 10px;
+  }
+
+  .button {
+    margin-left: auto;
+  }
+}
+
+.action-button {
+  margin-right: 5px;
+}

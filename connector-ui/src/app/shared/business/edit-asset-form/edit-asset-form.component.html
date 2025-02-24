@@ -1,0 +1,996 @@
+<div id="edit-asset-form">
+  <form class="flex flex-col gap-y-12 mt-4" [formGroup]="form.all">
+    <edit-asset-form-group
+      *ngIf="form.datasource"
+      [myTitle]="'create_data_offer_page.data_offer_type' | translate"
+      [description]="'create_data_offer_page.define_data_offer' | translate">
+      <!-- Data offer Type -->
+      <div *ngIf="multipleDataSourceOptionsAvailable()">
+        <edit-asset-form-label
+          htmlFor="create-asset-form-datasource-type"
+          [label]="'create_data_offer_page.offer_type' | translate"
+          [ctrl]="
+            form.datasource.controls.dataSourceAvailability
+          "></edit-asset-form-label>
+        <mat-radio-group
+          class="!flex !flex-col !gap-1 w-full mt-2"
+          aria-label="Select an option"
+          [formControl]="form.datasource.controls.dataSourceAvailability">
+          <mat-radio-button *ngIf="form.mode === 'EDIT'" value="Unchanged">
+            {{ 'create_data_offer_page.unchanged' | translate }}
+          </mat-radio-button>
+          <mat-radio-button value="Datasource">
+            {{ 'create_data_offer_page.readily_available' | translate }}
+          </mat-radio-button>
+          <mat-radio-button
+            *ngIf="this.activeFeatureSet.hasMdsFields()"
+            value="On-Request">
+            {{ 'create_data_offer_page.on_request' | translate }}
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+
+      <ng-container
+        *ngIf="form.datasource.value.dataSourceAvailability === 'On-Request'">
+        <!-- Contact E-Mail for On Request Assets -->
+        <edit-asset-form-input
+          class="mt-2"
+          fieldId="create-asset-form-contact-email"
+          [placeholder]="
+            'create_data_offer_page.contact_email_placeholder' | translate
+          "
+          [tooltip]="'create_data_offer_page.contact_email_tooltip' | translate"
+          [label]="'create_data_offer_page.contact_email' | translate"
+          [ctrl]="
+            form.datasource.controls.contactEmail
+          "></edit-asset-form-input>
+
+        <!-- Contact E-Mail Subject for On Request Assets -->
+        <edit-asset-form-input
+          class="mt-5"
+          fieldId="create-asset-form-contact-subject"
+          label="Preferred E-Mail Subject"
+          [placeholder]="
+            'create_data_offer_page.email_subject_placeholder' | translate
+          "
+          [tooltip]="'create_data_offer_page.email_subject_tooltip' | translate"
+          [ctrl]="form.datasource.controls.contactPreferredEmailSubject">
+        </edit-asset-form-input>
+      </ng-container>
+
+      <ng-container
+        *ngIf="
+          form.datasource.controls.dataSourceAvailability.value === 'Datasource'
+        ">
+        <!-- Data Address Type -->
+        <div class="mt-5">
+          <edit-asset-form-data-address-type-select
+            mode="Datasource-Create"
+            [label]="'create_data_offer_page.type' | translate"
+            [control]="form.datasource.controls.dataAddressType">
+          </edit-asset-form-data-address-type-select>
+        </div>
+
+        <!-- Data Source Type CUSTOM -->
+        <edit-asset-form-textarea
+          *ngIf="
+            form.dataAddressType === 'Custom-Data-Address-Json' &&
+              form.datasource.controls.dataDestination;
+            let ctrl
+          "
+          fieldId="create-asset-form-custom-datasource-json"
+          placeholder='{"https://w3id.org/edc/v0.0.1/ns/type": "HttpData", ...}'
+          [label]="
+            'create_data_offer_page.custom_datasource_config_json_label'
+              | translate
+          "
+          [ctrl]="ctrl"></edit-asset-form-textarea>
+
+        <!-- Data Source Type HTTP -->
+        <ng-container *ngIf="form.dataAddressType === 'Http'">
+          <!-- Method (Rest-Api) -->
+          <div>
+            <edit-asset-form-label
+              htmlFor="create-asset-form-http-method"
+              [label]="'create_data_offer_page.method' | translate"
+              [ctrl]="
+                form.datasource.controls.httpMethod
+              "></edit-asset-form-label>
+            <mat-form-field
+              *ngIf="form.datasource.controls.httpMethod; let ctrl"
+              class="w-full">
+              <mat-select
+                id="create-asset-form-http-method"
+                [formControl]="ctrl">
+                <mat-option *ngFor="let method of methods" [value]="method"
+                  >{{ method }}
+                </mat-option>
+              </mat-select>
+              <mat-hint class="mat-hint">
+                {{
+                  'create_data_offer_page.custom_http_method_hint' | translate
+                }}
+              </mat-hint>
+            </mat-form-field>
+            <!-- Toggle Method Parametrization Button -->
+            <div
+              *ngIf="form.datasource.controls.httpProxyMethod; let ctrl"
+              class="mt-1 flex flex-col gap-1">
+              <button
+                class="w-min"
+                mat-button
+                [color]="ctrl.value ? 'warn' : 'accent'"
+                (click)="$event.preventDefault(); ctrl.setValue(!ctrl.value)">
+                {{
+                  ctrl.value
+                    ? ('general.disable' | translate)
+                    : ('general.enable' | translate)
+                }}
+                {{
+                  'create_data_offer_page.method_parameterization' | translate
+                }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Base Path (Rest-Api) -->
+          <div *ngIf="form.datasource.controls.httpUrl; let ctrl" class="mt-4">
+            <edit-asset-form-input
+              fieldId="create-asset-form-url"
+              placeholder="https://my-data-source.com/api"
+              [hideHint]="!form.proxyPath"
+              [ctrl]="ctrl"
+              [label]="form.proxyPath ? 'Base URL' : 'URL'"
+              >{{
+                'create_data_offer_page.custom_http_subpath_hint' | translate
+              }}
+            </edit-asset-form-input>
+
+            <!-- Toggle Proxy Path Button -->
+            <div
+              *ngIf="form.datasource.controls.httpProxyPath; let ctrl"
+              [ngClass]="ctrl.value ? 'mt-4' : '-mt-2'">
+              <button
+                mat-button
+                [color]="ctrl.value ? 'warn' : 'accent'"
+                (click)="$event.preventDefault(); ctrl.setValue(!ctrl.value)">
+                {{
+                  ctrl.value
+                    ? ('general.disable' | translate)
+                    : ('general.enable' | translate)
+                }}
+                {{ 'create_data_offer_page.path_parameterization' | translate }}
+              </button>
+            </div>
+          </div>
+
+          <div class="mt-3">
+            <edit-asset-form-label
+              [label]="
+                (form.proxyQueryParams ? 'Default' : '') +
+                ('create_data_offer_page.query_params' | translate)
+              "></edit-asset-form-label>
+            <div class="mt-6"></div>
+            <div
+              *ngFor="
+                let header of form.datasource.controls.httpQueryParams.controls;
+                let i = index
+              "
+              class="flex flex-row space-x-[10px] -mt-3">
+              <!-- Query Param Name -->
+              <mat-form-field class="w-1/3">
+                <mat-label>{{ 'general.name' | translate }}</mat-label>
+                <input
+                  matInput
+                  placeholder="q"
+                  required
+                  autocomplete="new-query-param-name"
+                  [formControl]="header.controls.paramName" />
+                {{ header.errors }}
+                <mat-error
+                  *ngIf="
+                    header.controls.paramName.invalid &&
+                    header.controls.paramName.errors?.invalidQueryParam
+                  "
+                  >{{ validationMessages.invalidQueryParam }}
+                </mat-error>
+              </mat-form-field>
+              <!-- Query Param Value -->
+              <mat-form-field class="grow">
+                <mat-label>{{ 'general.value' | translate }}</mat-label>
+                <input
+                  matInput
+                  placeholder="..."
+                  autocomplete="new-query-param-value"
+                  [formControl]="header.controls.paramValue" />
+                <mat-error
+                  *ngIf="
+                    header.controls.paramValue.invalid &&
+                    header.controls.paramValue.errors?.invalidQueryParam
+                  "
+                  >{{ validationMessages.invalidQueryParam }}
+                </mat-error>
+              </mat-form-field>
+              <!-- Query Param Delete Button -->
+              <button
+                class="shrink"
+                mat-button
+                color="warn"
+                style="height: 42px; margin-top: 4px; margin-left: 8px"
+                (click)="form.onHttpQueryParamsRemoveClick($event, i)">
+                {{ 'general.remove' | translate }}
+              </button>
+            </div>
+            <mat-hint *ngIf="form.proxyQueryParams" class="mat-hint">
+              {{
+                'create_data_offer_page.query_param_enabled_hint' | translate
+              }}
+            </mat-hint>
+            <div class="flex flex-row mb-[10px] space-x-[10px] mt-2">
+              <!-- Add Query Param Button -->
+              <button
+                mat-button
+                color="accent"
+                (click)="form.onHttpQueryParamsAddClick($event)">
+                {{ 'general.add' | translate }}
+                {{ form.proxyQueryParams ? 'Default' : '' }}
+                {{ 'create_data_offer_page.query_param' | translate }}
+              </button>
+              <!-- Toggle Proxy Query Param Parameterization Button -->
+              <button
+                *ngIf="form.datasource.controls.httpProxyQueryParams; let ctrl"
+                mat-button
+                [color]="ctrl.value ? 'warn' : 'accent'"
+                (click)="$event.preventDefault(); ctrl.setValue(!ctrl.value)">
+                {{
+                  ctrl.value
+                    ? ('general.disable' | translate)
+                    : ('general.enable' | translate)
+                }}
+                {{
+                  'create_data_offer_page.query_param_parametrization'
+                    | translate
+                }}
+              </button>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-1 mt-3">
+            <edit-asset-form-label
+              [label]="
+                'create_data_offer_page.request_body' | translate
+              "></edit-asset-form-label>
+            <mat-hint class="mat-hint">
+              {{ 'asset_list_page.info_body' | translate }}
+            </mat-hint>
+            <!-- Toggle Proxy Body Button -->
+            <div
+              *ngIf="form.datasource.controls.httpProxyBody; let ctrl"
+              class="flex flex-row mb-[10px]">
+              <button
+                mat-button
+                [color]="ctrl.value ? 'warn' : 'accent'"
+                (click)="$event.preventDefault(); ctrl.setValue(!ctrl.value)">
+                {{
+                  ctrl.value
+                    ? ('general.disable' | translate)
+                    : ('general.enable' | translate)
+                }}
+                {{
+                  'create_data_offer_page.request_body_parameterization'
+                    | translate
+                }}
+              </button>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-1 mt-3">
+            <edit-asset-form-label
+              [label]="'general.auth' | translate"></edit-asset-form-label>
+            <!-- Add Authentication Button -->
+            <div
+              *ngIf="
+                form.datasource.controls.httpAuthHeaderType.value === 'None'
+              "
+              class="flex flex-row">
+              <button
+                mat-button
+                color="accent"
+                (click)="
+                  form.datasource.controls.httpAuthHeaderType.setValue(
+                    'Vault-Secret'
+                  )
+                ">
+                {{ 'general.add' | translate }} {{ 'general.auth' | translate }}
+              </button>
+            </div>
+            <!-- Auth Header Value Type -->
+            <mat-form-field
+              *ngIf="
+                form.datasource.controls.httpAuthHeaderType.value !== 'None'
+              "
+              class="grow mt-4">
+              <mat-label>{{ 'general.type' | translate }}</mat-label>
+              <mat-select
+                [formControl]="form.datasource.controls.httpAuthHeaderType">
+                <mat-option value="Vault-Secret">
+                  {{
+                    'create_data_offer_page.header_with_vault_secret'
+                      | translate
+                  }}
+                </mat-option>
+                <mat-option value="Value">{{
+                  'create_data_offer_page.header_with_value' | translate
+                }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <div
+              *ngIf="
+                form.datasource.controls.httpAuthHeaderType.value !== 'None'
+              "
+              class="flex flex-row space-x-[10px] -mt-3">
+              <!-- Auth Header Name -->
+              <mat-form-field class="w-1/3">
+                <mat-label>{{
+                  'create_data_offer_page.auth_header_name' | translate
+                }}</mat-label>
+                <input
+                  matInput
+                  autocomplete="new-auth-header-name"
+                  [placeholder]="
+                    'create_data_offer_page.authorization_header_placeholder'
+                      | translate
+                  "
+                  [formControl]="form.datasource.controls.httpAuthHeaderName" />
+              </mat-form-field>
+              <!-- Auth Header Value -->
+              <mat-form-field
+                *ngIf="
+                  form.datasource.controls.httpAuthHeaderType.value === 'Value'
+                "
+                class="grow">
+                <mat-label>{{
+                  'create_data_offer_page.auth_header_value' | translate
+                }}</mat-label>
+                <input
+                  matInput
+                  [placeholder]="
+                    'create_data_offer_page.bearer_placeholder' | translate
+                  "
+                  [formControl]="
+                    form.datasource.controls.httpAuthHeaderValue
+                  " />
+              </mat-form-field>
+              <!-- Auth Header Secret Name -->
+              <mat-form-field
+                *ngIf="
+                  form.datasource.controls.httpAuthHeaderType.value ===
+                  'Vault-Secret'
+                "
+                class="grow">
+                <mat-label>{{
+                  'create_data_offer_page.vault_secret_name' | translate
+                }}</mat-label>
+                <input
+                  matInput
+                  placeholder="MySecret123"
+                  [formControl]="
+                    form.datasource.controls.httpAuthHeaderSecretName
+                  " />
+              </mat-form-field>
+            </div>
+            <!-- Remove Authentication Button -->
+            <div
+              *ngIf="
+                form.datasource.controls.httpAuthHeaderType.value !== 'None'
+              "
+              class="flex flex-row -mt-4">
+              <button
+                mat-button
+                color="warn"
+                (click)="
+                  form.datasource.controls.httpAuthHeaderType.setValue('None')
+                ">
+                {{ 'general.remove' | translate }}
+                {{ 'general.auth' | translate }}
+              </button>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <edit-asset-form-label
+              [label]="
+                'create_data_offer_page.additional_headers' | translate
+              "></edit-asset-form-label>
+            <div class="mt-8"></div>
+            <div
+              *ngFor="
+                let header of form.datasource.controls.httpHeaders.controls;
+                let i = index
+              "
+              class="flex flex-row space-x-[10px] -mt-3">
+              <!-- Header Name -->
+              <mat-form-field class="w-1/3">
+                <mat-label>{{
+                  'create_data_offer_page.header_name' | translate
+                }}</mat-label>
+                <input
+                  matInput
+                  autocomplete="new-header-name"
+                  [placeholder]="'create_data_offer_page.header' | translate"
+                  [formControl]="header.controls.headerName" />
+              </mat-form-field>
+              <!-- Header Value -->
+              <mat-form-field class="grow">
+                <mat-label>{{
+                  'create_data_offer_page.header_value' | translate
+                }}</mat-label>
+                <input
+                  matInput
+                  placeholder="..."
+                  autocomplete="new-header-value"
+                  [formControl]="header.controls.headerValue" />
+              </mat-form-field>
+              <!-- Header Delete Button -->
+              <button
+                mat-button
+                color="warn"
+                style="height: 42px; margin-top: 4px; margin-left: 8px"
+                (click)="form.onHttpHeadersRemoveClick($event, i)">
+                {{ 'general.remove' | translate }}
+              </button>
+            </div>
+            <!-- Add Header Button -->
+            <div class="flex flex-row -mt-3">
+              <button
+                mat-button
+                color="accent"
+                (click)="form.onHttpHeadersAddClick($event)">
+                {{ 'general.add' | translate }}
+                {{ 'create_data_offer_page.additional_headers' | translate }}
+              </button>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+    </edit-asset-form-group>
+
+    <edit-asset-form-group
+      [myTitle]="'create_data_offer_page.general_information' | translate"
+      [description]="
+        'create_data_offer_page.general_information_description' | translate
+      ">
+      <!-- Title -->
+      <edit-asset-form-input
+        fieldId="create-asset-form-name"
+        [tooltip]="'create_data_offer_page.title_tooltip' | translate"
+        [label]="'create_data_offer_page.title_label' | translate"
+        [placeholder]="'create_data_offer_page.title_placeholder' | translate"
+        [ctrl]="form.general.controls.name"></edit-asset-form-input>
+
+      <!-- Asset ID -->
+      <edit-asset-form-input
+        *ngIf="form.general.controls.id; let ctrl"
+        fieldId="create-asset-form-id"
+        [tooltip]="'create_data_offer_page.asset_id_tooltip' | translate"
+        [placeholder]="'create_data_offer_page.asset_id_label' | translate"
+        [label]="'create_data_offer_page.asset_id_label' | translate"
+        [ctrl]="ctrl"></edit-asset-form-input>
+
+      <!-- Description -->
+      <edit-asset-form-textarea
+        fieldId="create-asset-form-description"
+        [label]="'create_data_offer_page.description' | translate"
+        [placeholder]="
+          '# My Asset\n\nAt vero eos et accusam et justo duo dolores et ea rebum.\n\n## Details\n\nAt vero eos et accusam et justo duo dolores et ea **rebum**.'
+        "
+        [ctrl]="form.general.controls.description">
+        <div class="flex flex-row items-center gap-1 mb-1">
+          {{ 'create_data_offer_page.description_uses' | translate }}
+          <a
+            class="link"
+            externalLink
+            href="https://www.markdownguide.org/basic-syntax/"
+            >Markdown syntax</a
+          >
+        </div>
+      </edit-asset-form-textarea>
+
+      <!-- Keywords -->
+      <div class="mt-3">
+        <keyword-select
+          [label]="'create_data_offer_page.keywords' | translate"
+          [control]="form.general.controls.keywords"></keyword-select>
+      </div>
+
+      <!-- Show Advanced Fields -->
+      <mat-checkbox [formControl]="form.general.controls.showAdvancedFields">{{
+        'create_data_offer_page.show_advanced_fields' | translate
+      }}</mat-checkbox>
+
+      <ng-container *ngIf="form.general.value.showAdvancedFields">
+        <!-- Version -->
+        <edit-asset-form-input
+          class="mt-4"
+          fieldId="create-asset-form-version"
+          placeholder="1.0.0"
+          [tooltip]="'create_data_offer_page.version_tooltip' | translate"
+          [label]="'create_data_offer_page.version' | translate"
+          [ctrl]="form.general.controls.version"></edit-asset-form-input>
+
+        <!-- Language -->
+        <language-select
+          [label]="'create_data_offer_page.language' | translate"
+          [control]="form.general.controls.language"></language-select>
+      </ng-container>
+    </edit-asset-form-group>
+
+    <edit-asset-form-group
+      *ngIf="form.general.controls.dataCategory"
+      [myTitle]="
+        'create_data_offer_page.mobility_information_my_title' | translate
+      "
+      [description]="
+        'create_data_offer_page.mobility_information_description' | translate
+      ">
+      <!-- Data Category -->
+      <data-category-select
+        *ngIf="form.general.controls.dataCategory"
+        class="grow"
+        [label]="'create_data_offer_page.data_category' | translate"
+        [control]="form.general.controls.dataCategory"></data-category-select>
+
+      <!-- Data Subcategory -->
+      <data-subcategory-select
+        *ngIf="form.general.controls.dataSubcategory"
+        class="grow"
+        [label]="'create_data_offer_page.data_subcategory' | translate"
+        [dataCategory]="form.dataCategory"
+        [control]="
+          form.general.controls.dataSubcategory
+        "></data-subcategory-select>
+
+      <ng-container
+        *ngIf="form.general.value.showAdvancedFields && form.advanced">
+        <!-- Transport Mode -->
+        <transport-mode-select
+          [label]="'create_data_offer_page.transport_mode' | translate"
+          [control]="
+            form.advanced.controls.transportMode
+          "></transport-mode-select>
+
+        <!-- Data Model -->
+        <edit-asset-form-input
+          fieldId="create-asset-form-data-model"
+          [placeholder]="
+            'create_data_offer_page.data_model_placeholder' | translate
+          "
+          [tooltip]="'create_data_offer_page.data_model_tooltip' | translate"
+          [label]="'create_data_offer_page.data_model' | translate"
+          [ctrl]="form.advanced.controls.dataModel"></edit-asset-form-input>
+      </ng-container>
+    </edit-asset-form-group>
+
+    <edit-asset-form-group
+      *ngIf="form.general.value.showAdvancedFields"
+      [description]="
+        'create_data_offer_page.context_information_description' | translate
+      "
+      [myTitle]="'create_data_offer_page.documentation' | translate">
+      <!-- Endpoint Documentation -->
+      <edit-asset-form-input
+        fieldId="create-asset-form-endpoint-documentation"
+        placeholder="https://"
+        [label]="'create_data_offer_page.endpoint_documentation' | translate"
+        [tooltip]="
+          'create_data_offer_page.endpoint_documentation_tooltip' | translate
+        "
+        [ctrl]="
+          form.general.controls.endpointDocumentation
+        "></edit-asset-form-input>
+
+      <!-- Content Type -->
+      <edit-asset-form-input
+        fieldId="create-asset-form-content-type"
+        placeholder="application/json"
+        [label]="'create_data_offer_page.content_type' | translate"
+        [contentTypeHint]="true"
+        [ctrl]="form.general.controls.contentType"></edit-asset-form-input>
+
+      <ng-container *ngIf="form.advanced">
+        <!-- Data sample URLs -->
+        <div class="mt-4">
+          <edit-asset-form-label
+            [label]="
+              'create_data_offer_page.data_samples' | translate
+            "></edit-asset-form-label>
+          <button
+            class="!scale-[0.9]"
+            mat-icon-button
+            matSuffix
+            matTooltipPosition="right"
+            [matTooltip]="
+              'create_data_offer_page.data_samples_tooltip' | translate
+            ">
+            <mat-icon>info_outline</mat-icon>
+          </button>
+          <div class="mt-6"></div>
+          <div
+            *ngFor="
+              let sample of form.advanced.controls.dataSampleUrls.controls;
+              let i = index
+            "
+            class="flex flex-row space-x-2 -mt-2">
+            <mat-form-field class="grow">
+              <mat-label>URL</mat-label>
+              <input
+                matInput
+                placeholder="https://my-org.com/my-data-offer/samples/1"
+                [formControl]="sample" />
+            </mat-form-field>
+            <button
+              mat-button
+              color="warn"
+              style="height: 42px; margin-top: 4px; margin-left: 8px"
+              (click)="form.onDataSampleUrlsRemoveClick($event, i)">
+              {{ 'general.remove' | translate }}
+            </button>
+          </div>
+          <div class="-mt-2">
+            <button
+              mat-button
+              color="accent"
+              (click)="form.onDataSampleUrlsAddClick($event)">
+              {{ 'create_data_offer_page.add_data_sample' | translate }}
+            </button>
+          </div>
+        </div>
+        <!-- Reference file URLs -->
+        <div class="mt-4">
+          <edit-asset-form-label
+            [label]="
+              'create_data_offer_page.reference_files' | translate
+            "></edit-asset-form-label>
+          <button
+            class="!scale-[0.9]"
+            mat-icon-button
+            matSuffix
+            matTooltipPosition="right"
+            [matTooltip]="
+              'create_data_offer_page.reference_files_tooltip' | translate
+            ">
+            <mat-icon>info_outline</mat-icon>
+          </button>
+          <div class="mt-6"></div>
+          <div
+            *ngFor="
+              let file of form.advanced.controls.referenceFileUrls.controls;
+              let i = index
+            "
+            class="flex flex-row space-x-2 -mt-2">
+            <mat-form-field class="grow">
+              <mat-label>URL</mat-label>
+              <input
+                matInput
+                placeholder="https://my-org.com/my-data-offer/documentation/api-reference"
+                [formControl]="file" />
+            </mat-form-field>
+            <button
+              mat-button
+              color="warn"
+              style="height: 42px; margin-top: 4px; margin-left: 8px"
+              (click)="form.onReferenceFileUrlsRemoveClick($event, i)">
+              {{ 'general.remove' | translate }}
+            </button>
+          </div>
+          <div class="-mt-2">
+            <button
+              mat-button
+              color="accent"
+              (click)="form.onReferenceFileUrlsAddClick($event)">
+              {{ 'create_data_offer_page.add_reference_file' | translate }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <edit-asset-form-textarea
+          *ngIf="form.advanced.controls.referenceFileUrls.length"
+          fieldId="edit-asset-form-reference-files-description"
+          [label]="
+            'create_data_offer_page.reference_files_description_label'
+              | translate
+          "
+          [ctrl]="form.advanced.controls.referenceFilesDescription"
+          [placeholder]="
+            '# My Asset\n\nAt vero eos et accusam et justo duo dolores et ea rebum.\n\n## Details\n\nAt vero eos et accusam et justo duo dolores et ea **rebum**.'
+          ">
+          <div class="flex flex-row items-center gap-1 mb-1">
+            {{
+              'create_data_offer_page.reference_files_description' | translate
+            }}
+            <a
+              class="link"
+              externalLink
+              href="https://www.markdownguide.org/basic-syntax/"
+              >Markdown syntax</a
+            >
+          </div>
+        </edit-asset-form-textarea>
+      </ng-container>
+    </edit-asset-form-group>
+
+    <edit-asset-form-group
+      *ngIf="form.general.value.showAdvancedFields && form.advanced"
+      [description]="
+        'create_data_offer_page.location_time_description' | translate
+      "
+      [myTitle]="'create_data_offer_page.location_time_title' | translate">
+      <!-- Temporal coverage -->
+      <div
+        *ngIf="form.advanced.controls.temporalCoverage; let ctrl"
+        class="mt-4">
+        <edit-asset-form-label
+          [label]="
+            'create_data_offer_page.temporal_coverage' | translate
+          "></edit-asset-form-label>
+        <mat-form-field class="w-full" color="accent">
+          <mat-date-range-input [formGroup]="ctrl" [rangePicker]="picker">
+            <input
+              matStartDate
+              formControlName="from"
+              [placeholder]="'create_data_offer_page.start_date' | translate" />
+            <input
+              matEndDate
+              formControlName="toInclusive"
+              [placeholder]="
+                'create_data_offer_page.end_date_inclusive' | translate
+              " />
+          </mat-date-range-input>
+          <mat-hint
+            >{{ 'create_data_offer_page.temporal_coverage_hint' | translate }}
+          </mat-hint>
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"></mat-datepicker-toggle>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+          <mat-error *ngIf="ctrl.invalid"
+            >{{ validationMessages.invalidDateRangeMessage }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Data update frequency -->
+      <edit-asset-form-input
+        class="mt-3"
+        fieldId="create-asset-form-data-update-frequency"
+        [label]="
+          'create_data_offer_page.data_update_frequency_label' | translate
+        "
+        [placeholder]="
+          'create_data_offer_page.data_update_frequency_placeholder' | translate
+        "
+        [tooltip]="
+          'create_data_offer_page.data_update_frequency_tooltip' | translate
+        "
+        [ctrl]="
+          form.advanced.controls.dataUpdateFrequency
+        "></edit-asset-form-input>
+
+      <!-- Geo reference method -->
+      <edit-asset-form-input
+        fieldId="create-asset-form-geo-ref-method"
+        [placeholder]="
+          'create_data_offer_page.geo_reference_placeholder' | translate
+        "
+        [tooltip]="'create_data_offer_page.geo_reference_tooltip' | translate"
+        [label]="'create_data_offer_page.geo_reference_method' | translate"
+        [ctrl]="
+          form.advanced.controls.geoReferenceMethod
+        "></edit-asset-form-input>
+
+      <!-- Geo location -->
+      <edit-asset-form-input
+        fieldId="create-asset-form-geo-location"
+        placeholder="40.741895,-73.989308"
+        [tooltip]="
+          'create_data_offer_page.geo_location_description' | translate
+        "
+        [label]="'create_data_offer_page.geo_location_label' | translate"
+        [ctrl]="form.advanced.controls.geoLocation"></edit-asset-form-input>
+
+      <!-- NUTS locations -->
+      <div>
+        <edit-asset-form-label
+          [label]="
+            'create_data_offer_page.nuts_locations_label' | translate
+          "></edit-asset-form-label>
+        <button
+          class="!scale-[0.9]"
+          mat-icon-button
+          matSuffix
+          matTooltipPosition="right"
+          [matTooltip]="
+            'create_data_offer_page.nuts_locations_tooltip' | translate
+          ">
+          <mat-icon>info_outline</mat-icon>
+        </button>
+        <div class="mt-6"></div>
+        <div
+          *ngFor="
+            let location of form.advanced.controls.nutsLocations.controls;
+            let i = index
+          "
+          class="flex flex-row space-x-2 -mt-2">
+          <mat-form-field class="grow">
+            <mat-label>{{
+              'create_data_offer_page.nuts_location' | translate
+            }}</mat-label>
+            <input matInput placeholder="DE929" [formControl]="location" />
+          </mat-form-field>
+          <button
+            mat-button
+            color="warn"
+            style="height: 42px; margin-top: 4px; margin-left: 8px"
+            (click)="form.onNutsLocationsRemoveClick($event, i)">
+            {{ 'general.remove' | translate }}
+          </button>
+        </div>
+        <div class="-mt-2">
+          <button
+            mat-button
+            color="accent"
+            (click)="form.onNutsLocationsAddClick($event)">
+            {{ 'create_data_offer_page.add_location' | translate }}
+          </button>
+        </div>
+      </div>
+    </edit-asset-form-group>
+
+    <edit-asset-form-group
+      *ngIf="form.general.value.showAdvancedFields"
+      [myTitle]="'create_data_offer_page.legal_information_title' | translate"
+      [description]="
+        'create_data_offer_page.legal_information_description' | translate
+      ">
+      <!-- Sovereign legal name -->
+      <edit-asset-form-input
+        *ngIf="form.advanced"
+        fieldId="create-asset-form-sovereign"
+        [placeholder]="
+          'create_data_offer_page.sovereign_placeholder' | translate
+        "
+        [tooltip]="'create_data_offer_page.sovereign_tooltip' | translate"
+        [label]="'create_data_offer_page.sovereign_label' | translate"
+        [ctrl]="
+          form.advanced.controls.sovereignLegalName
+        "></edit-asset-form-input>
+
+      <!-- Publisher -->
+      <edit-asset-form-input
+        class="mt-3"
+        fieldId="create-asset-form-publisher"
+        placeholder="https://"
+        [tooltip]="'create_data_offer_page.publisher_tooltip' | translate"
+        [label]="'create_data_offer_page.publisher_label' | translate"
+        [ctrl]="form.general.controls.publisher"></edit-asset-form-input>
+
+      <!-- Standard License -->
+      <edit-asset-form-input
+        fieldId="create-asset-form-standard-license"
+        placeholder="https://"
+        [label]="'create_data_offer_page.standard_license_label' | translate"
+        [tooltip]="
+          'create_data_offer_page.standard_license_tooltip' | translate
+        "
+        [ctrl]="form.general.controls.standardLicense"></edit-asset-form-input>
+
+      <!-- Conditions for use -->
+      <edit-asset-form-textarea
+        *ngIf="form.advanced"
+        textareaClasses="h-28"
+        fieldId="create-asset-form-conditions-for-use"
+        [label]="'create_data_offer_page.conditions_for_use_label' | translate"
+        [ctrl]="form.advanced.controls.conditionsForUse"
+        [placeholder]="
+          '# My Asset\n\nAt vero eos et accusam et justo duo dolores et ea rebum.\n\n## Details\n\nAt vero eos et accusam et justo duo dolores et ea **rebum**.'
+        ">
+        <div class="flex flex-row items-center gap-1 mb-1">
+          {{
+            'create_data_offer_page.conditions_for_use_description_hint'
+              | translate
+          }}
+          <a
+            class="link"
+            externalLink
+            href="https://www.markdownguide.org/basic-syntax/"
+            >Markdown syntax</a
+          >
+        </div>
+      </edit-asset-form-textarea>
+    </edit-asset-form-group>
+
+    <edit-asset-form-group
+      *ngIf="form.mode === 'CREATE'"
+      [myTitle]="'create_data_offer_page.publishing' | translate"
+      [description]="
+        'create_data_offer_page.publishing_description' | translate
+      ">
+      <!-- Publish Mode -->
+      <div *ngIf="form.all.controls.publishMode; let ctrl">
+        <edit-asset-form-label
+          htmlFor="create-asset-form-publish-type"
+          [label]="'create_data_offer_page.publishing_mode_label' | translate"
+          [ctrl]="ctrl"></edit-asset-form-label>
+        <mat-radio-group
+          class="!flex !flex-col !gap-1 w-full mt-2"
+          [formControl]="ctrl">
+          <mat-radio-button value="PUBLISH_UNRESTRICTED">
+            {{ 'create_data_offer_page.publish_unrestricted' | translate }}
+            <button
+              class="!scale-[0.9]"
+              mat-icon-button
+              matSuffix
+              matTooltipPosition="right"
+              [matTooltip]="
+                'create_data_offer_page.publish_unrestricted_tooltip'
+                  | translate
+              ">
+              <mat-icon>info_outline</mat-icon>
+            </button>
+          </mat-radio-button>
+          <mat-radio-button value="PUBLISH_RESTRICTED">
+            {{ 'create_data_offer_page.publish_restricted' | translate }}
+            <button
+              class="!scale-[0.9]"
+              mat-icon-button
+              matSuffix
+              matTooltipPosition="right"
+              [matTooltip]="
+                'create_data_offer_page.publish_restricted_tooltip' | translate
+              ">
+              <mat-icon>info_outline</mat-icon>
+            </button>
+          </mat-radio-button>
+          <mat-radio-button value="DO_NOT_PUBLISH">
+            {{ 'create_data_offer_page.publish_asset_only' | translate }}
+            <button
+              class="!scale-[0.9]"
+              mat-icon-button
+              matSuffix
+              matTooltipPosition="right"
+              [matTooltip]="
+                'create_data_offer_page.publish_asset_only_tooltip' | translate
+              ">
+              <mat-icon>info_outline</mat-icon>
+            </button>
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+
+      <!-- Policy Expression -->
+      <div *ngIf="form.all.controls.publishMode.value === 'PUBLISH_RESTRICTED'">
+        <edit-asset-form-label
+          [label]="'policy_definition_page.expression' | translate"
+          [ctrl]="form.all.controls.policyControls"></edit-asset-form-label>
+        <policy-form-expression
+          [treeNode]="expressionFormHandler.tree.root"></policy-form-expression>
+      </div>
+    </edit-asset-form-group>
+
+    <button
+      class="w-40 h-10 self-end"
+      mat-raised-button
+      color="primary"
+      [disabled]="!form.all.valid || isLoading"
+      (click)="$event.preventDefault(); submitClicked.emit()">
+      {{
+        form.mode === 'CREATE'
+          ? form.all.controls.publishMode.value === 'DO_NOT_PUBLISH'
+            ? 'Create'
+            : 'Publish'
+          : 'Update'
+      }}
+    </button>
+  </form>
+</div>

@@ -1,0 +1,58 @@
+<div class="flex flex-row justify-between space-x-2">
+  <div class="mat-card-header" mat-dialog-title removeClass="mat-dialog-title">
+    <mat-icon class="mat-card-avatar-icon">
+      {{ data.icon }}
+    </mat-icon>
+    <div class="mat-card-header-text">
+      <div class="mat-card-title">
+        {{ data.title }}
+      </div>
+      <div class="mat-card-subtitle">
+        {{ data.subtitle }}
+      </div>
+    </div>
+  </div>
+  <button
+    *ngIf="data.toolbarButton"
+    mat-icon-button
+    [tabIndex]="-1"
+    [matTooltip]="data.toolbarButton.text"
+    (click)="onAction(data.toolbarButton)">
+    <mat-icon class="mat-icon-[22px]">{{ data.toolbarButton.icon }}</mat-icon>
+  </button>
+</div>
+
+<div mat-dialog-content>
+  <ngx-json-viewer
+    class="grow shrink-0"
+    style="
+      display: block;
+      min-width: 40rem;
+      min-height: 60vh;
+      max-width: 40rem;
+      max-height: 60vh;
+    "
+    [json]="visibleJson"
+    [expanded]="true"
+    [depth]="-1"></ngx-json-viewer>
+</div>
+
+<div class="w-full flex flex-row justify-between" mat-dialog-actions>
+  <div>
+    <mat-checkbox
+      class="example-margin"
+      [(ngModel)]="removeNulls"
+      (ngModelChange)="updateVisibleJson()">
+      {{ 'component_library.json' | translate }}
+    </mat-checkbox>
+  </div>
+  <div class="flex flex-row">
+    <button
+      mat-button
+      color="default"
+      [mat-dialog-close]="null"
+      [disabled]="busy">
+      {{ 'general.close' | translate }}
+    </button>
+  </div>
+</div>

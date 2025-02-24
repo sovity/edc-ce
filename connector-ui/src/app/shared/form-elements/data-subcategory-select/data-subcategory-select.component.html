@@ -1,0 +1,18 @@
+<edit-asset-form-label
+  htmlFor="create-asset-form-data-subcategory"
+  [ctrl]="control"
+  [label]="label"></edit-asset-form-label>
+<mat-form-field class="w-full" color="accent">
+  <mat-select
+    id="create-asset-form-data-subcategory"
+    placeholder="Select data subcategory..."
+    [formControl]="control"
+    [compareWith]="'id' | compareByField">
+    <mat-option [value]="null">-</mat-option>
+    <mat-option
+      *ngFor="let item of dataCategory | dataSubcategoryItems"
+      [value]="item">
+      {{ item.label }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>

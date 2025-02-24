@@ -1,0 +1,53 @@
+<edit-asset-form-label
+  [htmlFor]="fieldId"
+  [label]="label"
+  [ctrl]="ctrl"></edit-asset-form-label>
+
+<mat-form-field class="w-full mt-1">
+  <input
+    matInput
+    type="text"
+    [id]="fieldId"
+    [formControl]="ctrl"
+    [placeholder]="placeholder" />
+  <button
+    *ngIf="tooltip"
+    class="!scale-[0.8]"
+    mat-icon-button
+    matSuffix
+    [matTooltip]="tooltip">
+    <mat-icon>info_outline</mat-icon>
+  </button>
+  <mat-error *ngIf="ctrl.errors?.url">
+    {{ validationMessages.invalidUrlMessage }}
+  </mat-error>
+  <mat-error *ngIf="ctrl.errors?.email">
+    {{ validationMessages.invalidEmailMessage }}
+  </mat-error>
+  <mat-error *ngIf="ctrl.errors?.pattern">
+    {{ validationMessages.invalidWhitespacesOrColonsMessage }}
+  </mat-error>
+  <mat-error *ngIf="ctrl.errors?.requiresPrefix">
+    {{ validationMessages.invalidPrefix('ID', 'urn:artifact') }}
+  </mat-error>
+  <mat-error *ngIf="ctrl.errors?.exists">
+    {{ ctrl.errors?.exists }}
+  </mat-error>
+  <mat-hint *ngIf="hint" class="flex flex-row items-center gap-1 mb-1">
+    {{ hint }}
+  </mat-hint>
+  <mat-hint *ngIf="!hideHint">
+    <ng-content></ng-content>
+  </mat-hint>
+  <mat-hint
+    *ngIf="contentTypeHint"
+    class="flex flex-row items-center gap-1 mt-2">
+    Describes the content type of the data as a MIME type, see
+    <a
+      class="link"
+      externalLink
+      href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types"
+      >common types</a
+    >
+  </mat-hint>
+</mat-form-field>

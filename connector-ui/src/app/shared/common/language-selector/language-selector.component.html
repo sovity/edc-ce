@@ -1,0 +1,25 @@
+<button mat-icon-button [matMenuTriggerFor]="menu">
+  <mat-icon>
+    <img
+      *ngIf="selectedLanguage.value"
+      class="h-[1em]"
+      src="../../../../assets/images/flags/{{ selectedLanguage.value }}.svg"
+      alt="Selected Flag" />
+  </mat-icon>
+</button>
+
+<mat-menu #menu="matMenu">
+  <button
+    *ngFor="let language of supportedLanguages"
+    class="flex items-center"
+    mat-menu-item
+    [value]="language.code"
+    (click)="setSelectedLanguage(language)">
+    <mat-icon>
+      <img
+        class="h-[1em]"
+        src="../../../../assets/images/flags/{{ language.code }}.svg" />
+    </mat-icon>
+    <span>{{ language.name }}</span>
+  </button>
+</mat-menu>

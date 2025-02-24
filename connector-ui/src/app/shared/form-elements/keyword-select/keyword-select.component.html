@@ -1,0 +1,33 @@
+<edit-asset-form-label
+  htmlFor="create-asset-form-keywords"
+  [ctrl]="control"
+  [label]="label"></edit-asset-form-label>
+<mat-form-field class="w-full">
+  <mat-chip-list
+    #chipList
+    aria-label="keyword selection"
+    [formControl]="control">
+    <mat-chip
+      *ngFor="let keyword of control?.value ?? []"
+      (removed)="remove(keyword)">
+      {{ keyword }}
+      <button matChipRemove>
+        <mat-icon>{{ 'general.cancel' | translate }}</mat-icon>
+      </button>
+    </mat-chip>
+    <input
+      id="create-asset-form-keywords"
+      [placeholder]="'asset_list_page.add_keyword' | translate"
+      [matChipInputAddOnBlur]="true"
+      [matChipInputFor]="chipList"
+      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+      (matChipInputTokenEnd)="add($event)" />
+  </mat-chip-list>
+  <button
+    class="!scale-[0.9]"
+    mat-icon-button
+    matSuffix
+    matTooltip="Keywords make the data offer easier to find. They appear as tags on 'Assets' and 'Catalog Browser' pages.">
+    <mat-icon>info_outline</mat-icon>
+  </button>
+</mat-form-field>

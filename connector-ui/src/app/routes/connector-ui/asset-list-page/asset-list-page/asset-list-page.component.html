@@ -1,0 +1,70 @@
+<div id="wrapper">
+  <div class="flex flex-row !space-x-[10px] items-start">
+    <!-- Search Bar -->
+    <mat-form-field
+      class="search-form-field"
+      appearance="outline"
+      color="primary">
+      <mat-label>{{ 'asset_list_page.search_assets' | translate }}</mat-label>
+      <input matInput [(ngModel)]="searchText" (input)="onSearch()" />
+      <mat-icon matPrefix>search</mat-icon>
+      <button
+        *ngIf="searchText"
+        mat-icon-button
+        matSuffix
+        (click)="searchText = ''; onSearch()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <!-- Create Button -->
+    <button
+      id="create-button"
+      color="primary"
+      mat-raised-button
+      style="margin-top: 8px; height: 44px"
+      (click)="onCreate()">
+      <div class="flex justify-center items-center h-full gap-1">
+        <mat-icon class="mt-[1px]">add_circle_outline</mat-icon>
+        {{ 'asset_list_page.create_asset' | translate }}
+      </div>
+    </button>
+
+    <!-- Spacer -->
+    <div class="grow"></div>
+
+    <!-- Paginator -->
+    <mat-paginator
+      *ngIf="assetList.isReady"
+      [hidePageSize]="true"
+      [disabled]="true"
+      [pageSize]="assetList.data.numTotalAssets"
+      [length]="assetList.data.filteredAssets.length">
+    </mat-paginator>
+  </div>
+
+  <div class="flex flex-row justify-center">
+    <loading-state
+      *ngIf="assetList.isLoading"
+      class="min-h-[35rem]"></loading-state>
+    <error-state
+      *ngIf="assetList.isError"
+      class="min-h-[35rem]"
+      [error]="assetList.errorOrUndefined"></error-state>
+    <empty-state
+      *ngIf="
+        assetList.isReady &&
+        (!assetList.data.numTotalAssets ||
+          !assetList.data.filteredAssets.length)
+      "
+      class="min-h-[35rem]"
+      [emptyMessage]="'asset_list_page.no_assets' | translate"></empty-state>
+  </div>
+
+  <div class="flex flex-row flex-wrap">
+    <asset-cards
+      *ngIf="assetList.isReady && !!assetList.data.numTotalAssets"
+      [assets]="assetList.data.filteredAssets"
+      (assetClick)="onAssetClick($event)"></asset-cards>
+  </div>
+</div>
