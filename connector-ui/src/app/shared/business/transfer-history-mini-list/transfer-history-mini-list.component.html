@@ -1,0 +1,49 @@
+<i *ngIf="!contractAgreement?.transferProcesses?.length">
+  {{ 'component_library.no_transfer' | translate }}
+</i>
+<div
+  *ngFor="let transfer of contractAgreement!.transferProcesses"
+  class="flex flex-row space-x-[10px]"
+  trackByField="transferProcessId">
+  <mat-icon class="mat-icon-[28px]" style="flex-shrink: 0; margin-top: 6px">{{
+    contractAgreement!.direction === 'PROVIDING' ? 'upload' : 'download'
+  }}</mat-icon>
+
+  <div class="flex flex-col">
+    <div
+      class="flex flex-row uppercase text-slate text-sm items-center space-x-[5px]">
+      <span>
+        <!-- Last Updated Date -->
+        <ago [date]="transfer.lastUpdatedDate"></ago>
+        ·
+        <!-- State -->
+        <span [title]="'State Code ' + transfer.state.code + ''">
+          {{ transfer.state.name }}
+          {{
+            transfer.state.name === 'CUSTOM'
+              ? ' (' + transfer.state.code + ')'
+              : ''
+          }}
+        </span>
+      </span>
+      <!-- Error Icon -->
+      <mat-icon
+        *ngIf="transfer.state.simplifiedState === 'ERROR'"
+        class="text-warn mat-icon-[14px]"
+        [matTooltip]="transfer.errorMessage!!"
+        >warning
+      </mat-icon>
+      <!-- Progress Spinner -->
+      <mat-progress-spinner
+        *ngIf="transfer.state.simplifiedState === 'RUNNING'"
+        class="mat-icon-[14px]"
+        diameter="14"
+        color="primary"
+        mode="indeterminate">
+      </mat-progress-spinner>
+    </div>
+
+    <!-- Transfer Process ID -->
+    <span class="break-all">{{ transfer.transferProcessId }}</span>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+<div class="flex flex-row flex-wrap gap-[16px] justify-start">
+  <mat-card
+    *ngFor="let policyCard of policyCards"
+    style="width: 400px; min-height: 120px">
+    <mat-card-header>
+      <mat-icon mat-card-avatar>policy</mat-icon>
+      <mat-card-title>
+        <a
+          class="link"
+          href="javascript:void(0)"
+          (click)="onPolicyDetailClick(policyCard)">
+          {{ policyCard.id }}
+        </a>
+      </mat-card-title>
+      <mat-card-subtitle>{{ 'general.policy' | translate }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="flex flex-col space-y-[16px]">
+      <app-policy-renderer
+        [expression]="policyCard.expression"
+        [errors]="policyCard.irregularities"></app-policy-renderer>
+    </mat-card-content>
+  </mat-card>
+</div>

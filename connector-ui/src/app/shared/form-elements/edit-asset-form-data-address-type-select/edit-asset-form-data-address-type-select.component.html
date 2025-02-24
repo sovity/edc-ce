@@ -1,0 +1,9 @@
+<edit-asset-form-label [label]="label" [ctrl]="control"></edit-asset-form-label>
+<mat-form-field class="w-full m-1" color="accent">
+  <mat-select [formControl]="control">
+    <mat-option *ngIf="!control.value" [value]="null"></mat-option>
+    <mat-option *ngFor="let item of items" [value]="item.id">
+      {{ item.label }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>

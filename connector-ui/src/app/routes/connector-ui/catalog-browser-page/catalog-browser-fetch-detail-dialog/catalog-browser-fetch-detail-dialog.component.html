@@ -1,0 +1,36 @@
+<div class="mat-card-header" mat-dialog-title removeClass="mat-dialog-title">
+  <mat-icon class="mat-card-avatar-icon">view_timeline </mat-icon>
+  <div class="mat-card-header-text">
+    <div class="mat-card-title">
+      {{ 'catalog_browser_page.fetch' | translate }}
+    </div>
+    <div class="mat-card-subtitle">
+      {{ 'catalog_browser_page.endpoint_catalogs' | translate }}
+    </div>
+  </div>
+</div>
+
+<div mat-dialog-content>
+  <ul>
+    <li *ngFor="let request of data?.requests">
+      {{ request.url }}
+      <ul>
+        <li *ngIf="!request.data.isError">
+          {{ request.data.state }}
+        </li>
+        <li *ngFor="let errorMessage of errorMessages(request.data)">
+          {{ errorMessage }}
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+<div class="w-full flex flex-row justify-end" mat-dialog-actions>
+  <button mat-button color="default" [mat-dialog-close]="null">
+    {{ 'general.cancel' | translate }}
+  </button>
+  <button mat-flat-button color="primary" (click)="dialogData.refresh()">
+    {{ 'general.refresh' | translate }}
+  </button>
+</div>

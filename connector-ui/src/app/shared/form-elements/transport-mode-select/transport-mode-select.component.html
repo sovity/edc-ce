@@ -1,0 +1,12 @@
+<edit-asset-form-label [label]="label" [ctrl]="control"></edit-asset-form-label
+><mat-form-field class="w-full">
+  <mat-select
+    placeholder="Select transport mode..."
+    [formControl]="control"
+    [compareWith]="'id' | compareByField">
+    <mat-option [value]="null"></mat-option>
+    <mat-option *ngFor="let item of items" [value]="item">
+      {{ item.label }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>

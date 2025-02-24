@@ -1,0 +1,77 @@
+<empty-state
+  *ngIf="!props?.length"
+  class=""
+  emptyMessage="No properties."></empty-state>
+<div
+  *ngFor="let prop of props; trackBy: trackByIndex"
+  class="flex flex-row space-x-[10px] overflow-hidden"
+  [ngClass]="prop.additionalContainerClasses">
+  <!-- Property Icon -->
+  <mat-icon
+    style="flex-shrink: 0; margin-top: 6px"
+    [matTooltip]="prop.tooltip!"
+    [attr.title]="prop.labelTitle"
+    [ngClass]="prop.additionalIconClasses">
+    {{ prop.icon }}
+  </mat-icon>
+  <div class="flex flex-col">
+    <!-- Property Label -->
+    <div
+      class="uppercase text-slate text-sm break-all"
+      [matTooltip]="prop.tooltip!"
+      [attr.title]="prop.labelTitle">
+      {{ prop.label }}
+    </div>
+
+    <a
+      *ngIf="prop.hideFieldValue"
+      class="link break-all"
+      href="javascript:void(0)"
+      (click)="prop.hideFieldValue = false"
+      >Show {{ prop.label }}</a
+    >
+
+    <ng-container *ngIf="!prop.hideFieldValue">
+      <app-policy-renderer
+        *ngIf="prop.policy"
+        [expression]="prop.policy"
+        [errors]="prop.policyErrors">
+      </app-policy-renderer>
+      <!-- Property Value (URL) -->
+      <a
+        *ngIf="!prop.policy && prop.url"
+        class="link break-all"
+        externalLink
+        [ngClass]="prop.additionalClasses"
+        [attr.href]="prop.url"
+        >{{ prop.text }}</a
+      >
+      <!-- Property Value (OnClick Event) -->
+      <a
+        *ngIf="!prop.policy && !prop.url && prop.onclick"
+        class="link break-all"
+        href="javascript:void(0)"
+        [ngClass]="prop.additionalClasses"
+        (click)="prop.onclick()"
+        >{{ prop.text }}</a
+      >
+      <!-- Property Value (Text) with tooltip -->
+      <span
+        *ngIf="!(prop.policy || prop.url || prop.onclick)"
+        [matTooltip]="prop.tooltip!"
+        [ngClass]="prop.additionalClasses">
+        {{ prop.text }}
+        <mat-icon *ngIf="prop.textIconAfter" class="mat-icon-[12px]">
+          {{ prop.textIconAfter }}
+        </mat-icon>
+      </span>
+    </ng-container>
+  </div>
+  <button
+    *ngIf="prop.copyButton && !prop.hideFieldValue"
+    mat-icon-button
+    color="accent"
+    [cdkCopyToClipboard]="prop.url ?? prop.text">
+    <mat-icon>content_copy</mat-icon>
+  </button>
+</div>

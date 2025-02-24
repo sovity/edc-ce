@@ -1,0 +1,50 @@
+<!-- type EMPTY -->
+<div *ngIf="expression.type === 'EMPTY'" class="italic">Unrestricted</div>
+
+<!-- type MULTI -->
+<div *ngIf="expression.type === 'MULTI'" class="flex flex-col gap-1">
+  <div
+    class="font-medium"
+    [matTooltip]="
+      expression.multiExpression!.title +
+      ': ' +
+      expression.multiExpression!.description
+    ">
+    {{ expression.multiExpression!.title }}
+  </div>
+  <div
+    class="border-solid border-0 border-l-2 border-gray-500 flex flex-col gap-1 ml-2 pl-4">
+    <div
+      *ngFor="let expression of expression.expressions; let last = last"
+      class="flex">
+      <span
+        class="border-solid border-0 border-gray-500 border-t-2 w-2 mt-[0.6rem]"
+        style="margin-left: calc(-1rem - 2px); margin-right: calc(0.5rem + 2px)"
+        [class.bg-white]="last"></span>
+      <policy-expression [expression]="expression"></policy-expression>
+    </div>
+  </div>
+</div>
+
+<!-- type CONSTRAINT -->
+<div *ngIf="expression.type === 'CONSTRAINT'" class="flex gap-1 items-center">
+  <span
+    [matTooltip]="
+      expression.verb!.operandLeftId +
+      ': ' +
+      expression.verb!.operandLeftDescription
+    ">
+    {{ expression.verb!.operandLeftTitle }}
+  </span>
+
+  <span
+    [matTooltip]="
+      expression.operator!.id + ': ' + expression.operator!.description
+    ">
+    {{ expression.operator!.title }}
+  </span>
+
+  <span class="break-all" [matTooltip]="expression.valueJson ?? ''">{{
+    expression.displayValue
+  }}</span>
+</div>

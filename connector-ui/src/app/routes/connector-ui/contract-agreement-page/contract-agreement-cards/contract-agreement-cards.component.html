@@ -1,0 +1,96 @@
+<div class="flex flex-row flex-wrap gap-[16px] justify-start">
+  <mat-card
+    *ngFor="let card of contractAgreements"
+    trackByField="contractAgreementId"
+    style="width: 400px; min-height: 120px">
+    <mat-card-header>
+      <mat-icon mat-card-avatar [class.text-warn]="card.isTerminated">
+        {{
+          card.direction === 'PROVIDING'
+            ? card.isTerminated
+              ? 'file_upload_off'
+              : 'file_upload'
+            : card.isTerminated
+            ? 'file_download_off'
+            : 'file_download'
+        }}
+      </mat-icon>
+      <mat-card-title>
+        <a
+          class="link"
+          href="javascript:void(0)"
+          (click)="onContractAgreementClick(card)">
+          {{ card.asset.title }}
+        </a>
+      </mat-card-title>
+      <mat-card-subtitle>
+        {{ card.asset.creatorOrganizationName }}
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="flex flex-col space-y-[16px]">
+      <!-- Progress Bar -->
+      <mat-progress-bar
+        *ngIf="card.isInProgress"
+        color="primary"
+        mode="indeterminate"></mat-progress-bar>
+
+      <div class="flex flex-row space-x-[10px] justify-between">
+        <!-- Signed -->
+        <div class="flex flex-col flex-grow">
+          <div class="text-slate text-sm uppercase tracking-wider">
+            {{ 'general.signed' | translate }}
+          </div>
+          <div>
+            <ago [date]="card.contractSigningDate"></ago>
+          </div>
+        </div>
+
+        <!-- Transfers -->
+        <div class="flex flex-col text-center">
+          <div class="text-slate text-sm uppercase tracking-wider">
+            Transfers
+          </div>
+          <div class="text-right">
+            {{ card.transferProcesses.length | number }}
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-row space-x-[10px] justify-between">
+        <!-- Counterparty Address -->
+        <div class="flex flex-col">
+          <div class="text-slate text-sm uppercase">
+            {{ 'general.oth_connector' | translate }}
+          </div>
+          <div>
+            <a
+              class="link break-all"
+              externalLink
+              [attr.href]="card.counterPartyAddress"
+              >{{ card.counterPartyAddress }}</a
+            >
+          </div>
+        </div>
+        <!-- Status -->
+        <div class="flex flex-col">
+          <div class="text-slate text-sm uppercase tracking-wider text-right">
+            Status
+          </div>
+          <div class="text-right" [class.text-warn]="card.isTerminated">
+            {{ card.isTerminated ? 'Terminated' : 'Active' }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Description Short Text -->
+      <truncated-short-description
+        [text]="card.asset.descriptionShortText"></truncated-short-description>
+
+      <!-- Tag List -->
+      <asset-card-tag-list
+        *ngIf="card.asset.keywords?.length || card.asset.version"
+        [keywords]="card.asset.keywords"
+        [version]="card.asset.version"
+        [numberOfKeywordsDisplayed]="5"></asset-card-tag-list>
+    </mat-card-content>
+  </mat-card>
+</div>

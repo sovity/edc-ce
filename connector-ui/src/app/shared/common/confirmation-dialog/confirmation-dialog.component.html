@@ -1,0 +1,16 @@
+<h1 mat-dialog-title>
+  {{ data.title }}
+</h1>
+
+<div mat-dialog-content>
+  <p>{{ data.message }}</p>
+</div>
+
+<div class="w-full flex flex-row justify-end" mat-dialog-actions>
+  <button mat-button [color]="data.cancelColor" (click)="onCancel()">
+    {{ data.cancelText }}
+  </button>
+  <button mat-raised-button [color]="data.confirmColor" (click)="onConfirm()">
+    {{ data.confirmText }}
+  </button>
+</div>

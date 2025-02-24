@@ -1,0 +1,88 @@
+@use '@angular/material' as mat;
+@use 'sass:map';
+
+/* Theming (MDS EDC UI) */
+
+// theme set as per http://mcg.mbitson.com/#!?mcgpalette0=%23ffff00&themename=mds
+$theme-colors-primary: (
+  50: #ffffe0,
+  100: #ffffb3,
+  200: #ffff80,
+  300: #ffff4d,
+  400: #ffff26,
+  500: #ffff00,
+  600: #ffff00,
+  700: #ffff00,
+  800: #ffff00,
+  900: #ffff00,
+  A100: #ffffff,
+  A200: #fffff2,
+  A400: #ffffbf,
+  A700: #ffffa6,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #000000,
+    400: #000000,
+    500: #000000,
+    600: #000000,
+    700: #000000,
+    800: #000000,
+    900: #000000,
+    A100: #000000,
+    A200: #000000,
+    A400: #000000,
+    A700: #000000,
+  ),
+);
+
+$link-color: darken (map.get($theme-colors-primary, 500), 15%);
+
+$theme-colors-accent: (
+  50: #ffffff,
+  100: #000000,
+  200: #000000,
+  300: #000000,
+  400: #000000,
+  500: #000000,
+  600: #000000,
+  700: #000000,
+  800: #000000,
+  900: #000000,
+  A100: #000000,
+  A200: #000000,
+  A400: #000000,
+  A700: #000000,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #ffffff,
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: #000000,
+    A200: #ffffff,
+    A400: #ffffff,
+    A700: #ffffff,
+  ),
+);
+
+$theme-palette-primary: mat.define-palette($theme-colors-primary);
+$theme-palette-accent: mat.define-palette(
+  $theme-colors-accent,
+  A200,
+  A100,
+  A400
+);
+$theme-palette-warn: mat.define-palette(mat.$red-palette);
+
+$theme: mat.define-light-theme(
+  $theme-palette-primary,
+  $theme-palette-accent,
+  $theme-palette-warn
+);

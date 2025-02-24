@@ -1,0 +1,124 @@
+@use '@angular/material' as mat;
+@use 'theme-colors' as sovityColors;
+@use 'theme-colors.mds' as mdsColors;
+@use 'theme-generated-variables' as themeGeneratedVars;
+
+// Import styles that aren't theme dependant (including typography)
+
+@font-face {
+  font-display: swap;
+  font-family: 'Sans';
+  font-style: normal;
+  font-weight: 300;
+  src: url('assets/fonts/Inter-Light.woff2') format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url('assets/fonts/Inter-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Sans';
+  font-style: normal;
+  font-weight: 500;
+  src: url('assets/fonts/Inter-Medium.woff2') format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Sans';
+  font-style: normal;
+  font-weight: 600;
+  src: url('assets/fonts/Inter-SemiBold.woff2') format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: url('assets/fonts/Inter-Bold.woff2') format('woff2');
+}
+
+/* material-icons-regular - latin */
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url('assets/fonts/material-icons-v140-latin-regular.woff2')
+    format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+$custom-typography: mat.define-typography-config(
+  $font-family: 'Sans',
+);
+@include mat.core($custom-typography);
+
+// Import theme and theme-dependant styles
+.theme-sovity {
+  @include mat.all-component-themes(sovityColors.$theme);
+  @include themeGeneratedVars.theme-vars(
+    sovityColors.$theme,
+    sovityColors.$link-color
+  );
+}
+
+.theme-mds {
+  @include mat.all-component-themes(mdsColors.$theme);
+  @include themeGeneratedVars.theme-vars(
+    mdsColors.$theme,
+    mdsColors.$link-color
+  );
+}
+
+// fix paginator background, it was white before, but our background is gray
+mat-paginator {
+  background: transparent !important;
+}
+
+// Fix Icon sizes used in card avatars
+mat-icon[mat-card-avatar],
+.mat-card-avatar-icon {
+  font-size: 40px !important;
+  width: 40px !important;
+  height: 40px !important;
+  line-height: 40px !important;
+  margin-top: 1px;
+  margin-right: -3px;
+  margin-left: 2px;
+}
+
+// Fix mat-chips exploding out and/or having multiline exploding strings
+mat-chip {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Fix Date range second-date-text being "higher" than first-date-text
+.mat-date-range-input-container {
+  align-items: unset !important;
+}

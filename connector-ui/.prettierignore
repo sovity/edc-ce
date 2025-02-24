@@ -1,0 +1,11 @@
+build
+coverage
+e2e
+node_modules
+.angular
+.github
+dist
+
+package-lock.json
+
+openapi

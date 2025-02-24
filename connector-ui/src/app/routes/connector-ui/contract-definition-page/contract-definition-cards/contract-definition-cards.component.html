@@ -1,0 +1,76 @@
+<div class="flex flex-row flex-wrap gap-[16px] justify-start">
+  <mat-card
+    *ngFor="let card of contractDefinitionCards"
+    style="width: 400px; min-height: 120px">
+    <mat-card-header>
+      <mat-icon mat-card-avatar>policy</mat-icon>
+      <mat-card-title>
+        <a
+          class="link"
+          href="javascript:void(0)"
+          (click)="onContractDefinitionClick(card)">
+          {{ card.id }}
+        </a>
+      </mat-card-title>
+      <mat-card-subtitle>{{ 'general.con_def' | translate }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="flex flex-col space-y-[16px]">
+      <div class="flex flex-col">
+        <div class="text-slate text-sm uppercase tracking-wider">
+          {{ 'general.access_pol' | translate }}
+        </div>
+        <div>
+          <a
+            *ngIf="card.accessPolicy.policyDefinition; else policyNotFound"
+            class="link"
+            href="javascript:void(0)"
+            (click)="onPolicyClick(card.accessPolicy.policyDefinition)">
+            {{ card.accessPolicy.policyDefinitionId }}
+          </a>
+          <ng-template #policyNotFound>
+            {{ card.accessPolicy.policyDefinitionId }}
+          </ng-template>
+        </div>
+      </div>
+      <div class="flex flex-col">
+        <div class="text-slate text-sm uppercase tracking-wider">
+          {{ 'general.contract_policy' | translate }}
+        </div>
+        <div>
+          <a
+            *ngIf="card.contractPolicy.policyDefinition; else policyNotFound"
+            class="link"
+            href="javascript:void(0)"
+            (click)="onPolicyClick(card.contractPolicy.policyDefinition)">
+            {{ card.contractPolicy.policyDefinitionId }}
+          </a>
+          <ng-template #policyNotFound>
+            {{ card.contractPolicy.policyDefinitionId }}
+          </ng-template>
+        </div>
+      </div>
+      <div *ngFor="let criterion of card.criteria" class="flex flex-col">
+        <div class="text-slate text-sm uppercase tracking-wider">
+          {{ criterion.label }}
+        </div>
+        <div
+          *ngFor="let value of criterion.values"
+          class="flex flex-row space-x-[5px]">
+          <ng-container *ngIf="value.type === 'string'">{{
+            value.value
+          }}</ng-container>
+          <ng-container *ngIf="value.type === 'json'">{{
+            value.json | json
+          }}</ng-container>
+          <a
+            *ngIf="value.type === 'asset'"
+            class="link"
+            href="javascript:void(0)"
+            (click)="onAssetClick(value.asset!!)">
+            {{ value.asset!.title }}
+          </a>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

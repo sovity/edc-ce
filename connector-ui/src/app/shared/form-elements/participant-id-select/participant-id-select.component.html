@@ -1,0 +1,29 @@
+<mat-form-field class="grow" appearance="outline" color="accent">
+  <mat-label>Consumer's Participant IDs</mat-label>
+  <mat-chip-list
+    #chipList
+    [attr.aria-label]="'Other ' + participantIdLocalization.participantIdPlural"
+    [formControl]="control">
+    <mat-chip
+      *ngFor="let participantId of control?.value ?? []"
+      (removed)="remove(participantId)">
+      {{ participantId }}
+      <button matChipRemove>
+        <mat-icon>cancel</mat-icon>
+      </button>
+    </mat-chip>
+    <input
+      [placeholder]="
+        participantIdLocalization.participantIdPlaceholder + ', ...'
+      "
+      [matChipInputAddOnBlur]="true"
+      [matChipInputFor]="chipList"
+      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+      (matChipInputTokenEnd)="add($event)" />
+  </mat-chip-list>
+  <mat-hint>
+    You can find the connector’s Participant ID under “Connector Properties” on
+    its dashboard. Ask for it from the data consumers you want to share your
+    data offer with.
+  </mat-hint>
+</mat-form-field>

@@ -1,0 +1,41 @@
+<div class="flex items-center gap-4 h-[4rem]">
+  <div class="font-medium grow">
+    <span [matTooltip]="expr.multiExpression!.description">{{
+      expr.multiExpression!.title
+    }}</span>
+  </div>
+  <policy-form-remove-button [treeNode]="treeNode"></policy-form-remove-button>
+</div>
+<div
+  class="border-solid border-0 border-l-2 border-gray-500 flex flex-col gap-1 ml-2 pl-4">
+  <div
+    *ngFor="
+      let childNode of treeNode.children;
+      trackBy: trackByFn;
+      let last = last
+    "
+    class="flex">
+    <span
+      class="border-solid border-0 border-gray-500 border-t-2 w-[1rem] mr-[1rem]"
+      style="
+        margin-top: calc(2rem - 1px);
+        margin-left: calc(-1rem - 2px);
+        margin-right: calc(0.5rem + 2px);
+      "></span>
+    <policy-form-expression
+      class="grow"
+      [treeNode]="childNode"></policy-form-expression>
+  </div>
+  <div class="flex">
+    <span
+      class="border-solid border-0 border-gray-500 border-t-2 w-[1rem] mr-[1rem] bg-white"
+      style="
+        margin-top: calc(2rem - 1px);
+        margin-left: calc(-1rem - 2px);
+        margin-right: calc(0.5rem + 2px);
+      "></span>
+    <div class="h-[4rem] flex items-center">
+      <policy-form-add-menu [treeNode]="treeNode"></policy-form-add-menu>
+    </div>
+  </div>
+</div>

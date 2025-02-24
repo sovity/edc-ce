@@ -1,0 +1,10 @@
+<mat-chip-list aria-label="Tags">
+  <mat-chip *ngIf="version" color="primary" selected>{{ version }}</mat-chip>
+  <mat-chip
+    *ngFor="let keyword of keywords | slice : 0 : numberOfKeywordsDisplayed"
+    >{{ keyword }}</mat-chip
+  >
+  <mat-chip *ngIf="(keywords ?? []).length > numberOfKeywordsDisplayed">
+    +{{ keywords!.length - numberOfKeywordsDisplayed }}
+  </mat-chip>
+</mat-chip-list>

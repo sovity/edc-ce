@@ -1,0 +1,3 @@
+# This concerns the dev dependency @angular-devkit/build-angular.
+# This dependency uses webpack-merge@5.8.0 that uses wildcard which uses minimist 1.2.0 (which is causing the error)
+CVE-2021-44906

@@ -1,0 +1,15 @@
+<div class="p-8">
+  <div class="flex flex-row justify-center">
+    <loading-state
+      *ngIf="asset.isLoading"
+      class="min-h-[35rem]"></loading-state>
+    <error-state
+      *ngIf="asset.isError"
+      class="min-h-[35rem]"
+      [error]="asset.errorOrUndefined"></error-state>
+  </div>
+  <edit-asset-form
+    *ngIf="asset.isReady"
+    [isLoading]="isLoading"
+    (submitClicked)="onSubmit()"></edit-asset-form>
+</div>

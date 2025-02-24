@@ -1,0 +1,26 @@
+<h1 mat-dialog-title>{{ 'component_library.data_offer' | translate }}</h1>
+
+<div mat-dialog-content>
+  <p>
+    {{ 'component_library.accept_licence' | translate }}
+  </p>
+</div>
+
+<div class="w-full flex flex-col justify-center">
+  <mat-checkbox [checked]="checkboxChecked" (change)="onCheckboxChange($event)">
+    {{ 'component_library.agree' | translate }}
+  </mat-checkbox>
+
+  <div class="w-full flex flex-row justify-end" mat-dialog-actions>
+    <button mat-button color="accent" (click)="onCancel()">
+      {{ 'general.cancel' | translate }}
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      [disabled]="!checkboxChecked"
+      (click)="onConfirm()">
+      {{ 'general.confirm' | translate }}
+    </button>
+  </div>
+</div>

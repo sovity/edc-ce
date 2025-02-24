@@ -1,0 +1,27 @@
+<mat-card *ngFor="let asset of assets" class="asset-card">
+  <mat-card-header>
+    <mat-icon mat-card-avatar>{{
+      asset.dataSourceAvailability === 'LIVE' ? 'upload' : 'contact_page'
+    }}</mat-icon>
+    <mat-card-title>
+      <a
+        class="link"
+        href="javascript:void(0)"
+        (click)="assetClick.emit(asset)">
+        {{ asset.title }}
+      </a>
+    </mat-card-title>
+    <mat-card-subtitle>{{ asset.creatorOrganizationName }}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content class="flex flex-col space-y-[16px]">
+    <!-- Description Short Text -->
+    <truncated-short-description
+      [text]="asset.descriptionShortText"></truncated-short-description>
+
+    <!-- Tag List -->
+    <asset-card-tag-list
+      *ngIf="asset.keywords?.length || asset.version"
+      [keywords]="asset.keywords"
+      [version]="asset.version"></asset-card-tag-list>
+  </mat-card-content>
+</mat-card>
