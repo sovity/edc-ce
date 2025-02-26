@@ -130,3 +130,7 @@ To ensure that updates, such as a new URL, are recognized by the Consumer, one o
 **Common Causes & Solutions:**
 - **API Pagination**: Many APIs, including EDC Catalog and DTR APIs can be used with pagination to avoid timeouts, e.g. limit & cursor query-parameters for the DTR.
 - **Third-Party or Backend Services**: Some responses depend on external APIs the EDC or other Services, which may be slow or unresponsive leading a to a timeout in the EDC which then gets returned to you.
+
+### Do you need to always add a policy to a contract definition / data offer?
+
+Yes, at least one policy must always be specified to create a data offer. If you want to make your offer available to all participants, you need to define an empty policy or use the predefined "Always True" policy.
