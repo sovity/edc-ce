@@ -122,3 +122,11 @@ The reason is that the EDR contains all necessary details for the Consumer to re
 To ensure that updates, such as a new URL, are recognized by the Consumer, one of the following must happen:
 - The EDR must be renegotiated by the Consumer.
 - The EDR must expire, triggering a new negotiation or refresh process.
+
+### Why Do 504 Timeout Errors Occur?
+
+504 errors happen when a service request times out, often due to delayed responses from APIs or backend systems.
+
+**Common Causes & Solutions:**
+- **API Pagination**: Many APIs, including EDC Catalog and DTR APIs can be used with pagination to avoid timeouts, e.g. limit & cursor query-parameters for the DTR.
+- **Third-Party or Backend Services**: Some responses depend on external APIs the EDC or other Services, which may be slow or unresponsive leading a to a timeout in the EDC which then gets returned to you.
