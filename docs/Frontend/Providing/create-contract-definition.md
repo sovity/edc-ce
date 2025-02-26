@@ -6,6 +6,8 @@ Here you can also get an overview of all contract definitions currently offered 
 
 To create a new contract definition click on ```Create Contract Definition```. This opens a pop-up window where you can define the contract definition details.
 
+{% hint style="info" %} Note: At least one policy must always be specified to create a data offer. If you want to make your offer available to all participants, you need to define an empty policy or use the predefined "Always True" policy. {% endhint %}
+
 ![Create contract definition](/docs/images/edc-ui-contract-definition.png)
 
 - **ID**: Give your contract definition a unique name.
