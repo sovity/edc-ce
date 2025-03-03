@@ -24,6 +24,7 @@
 * [Postman](Backend/Postman/setting-up-postman.md)
 * [Data Transfer Types](getting-started/documentation/data-transfer-types.md)
   * [HttpData-Pull (Parameterized)](getting-started/documentation/httpdata-pull-parameterized.md)
+  * [HttpData-Post (Parameterized)](Backend/Management-API/parameterized-data-sources.md)
   * [AWS S3 Transfer](getting-started/documentation/aws-s3-transfer.md)
 * [Health Check APIs](getting-started/documentation/health-check-api.md)
 * [API-Wrapper vs Management-API](Backend/API-Wrapper/relationship.md)
@@ -51,7 +52,6 @@
   * [Contract Definition: Multiple Assets](Backend/Management-API/contract-definition-multiple-assets.md)
   * [Editing Existing Asset](Backend/Management-API/editing-existing-data-assets.md)
   * [Data-Transfer](Backend/Management-API/initiate-data-transfer.md)
-  * [Parameterized Data-Sources](Backend/Management-API/parameterized-data-sources.md)
   * [QuerySpec](Backend/Management-API/queryspec.md)
 
 ## Community Edition Deployment
