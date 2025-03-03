@@ -16,10 +16,8 @@ assignees: ""
 ## Work Breakdown
 <!-- If you already know what needs to be done, plase add a tasklist. -->
 
-```[tasklist]
 ### Stories
 - [ ] Create Stories which can be converted into issues
-```
 
 ## Hypothesis
 <!-- What is your hypothesis on the success of this Epic? Describe how success will be measured and what leading indicators the team will have to know if success has been hit. -->
