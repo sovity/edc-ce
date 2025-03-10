@@ -6,7 +6,7 @@
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "sourceMap": true,
@@ -18,7 +18,10 @@
     "target": "es2020",
     "module": "es2020",
     "lib": ["es2021", "dom"],
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "paths": {
+      "@sovity.de/edc-client": ["src/app/core/services/api/client/index.ts"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

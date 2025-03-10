@@ -1,0 +1,9 @@
+http://* {
+  map {path} {target_host} {target_port} {
+    ~^/api/management($|/.*) {$CONNECTOR_UPSTREAM_HOST}      11002
+    ~^/api/dsp($|/.*)        {$CONNECTOR_UPSTREAM_HOST}      11003
+    default                  {$FRONTEND_UPSTREAM_HOST}       8080
+  }
+
+  reverse_proxy {target_host}:{target_port}
+}

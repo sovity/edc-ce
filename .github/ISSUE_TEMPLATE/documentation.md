@@ -1,10 +1,12 @@
 ---
-name: Documentation Update Request
+name: "Product: Documentation Update Request"
 about: Create a report to help us improve our documentation
 title: ""
 labels: "task/documentation"
 assignees: ""
 ---
+
+# Documentation Update Request
 
 ## Description
 <!-- Provide a brief overview of the documentation update request. What section or topic needs to be updated? -->

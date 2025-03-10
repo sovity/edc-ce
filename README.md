@@ -1,8 +1,4 @@
-<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
-
 <a name="readme-top"></a>
-
-<!-- PROJECT SHIELDS -->
 
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url] [![Stargazers][stars-shield]][stars-url]
@@ -10,7 +6,6 @@
 [![Apache 2.0][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
-<!-- PROJECT LOGO -->
 <br />
 <div align="center">
 <a href="https://github.com/sovity/edc-ce">
@@ -27,22 +22,17 @@ Extended EDC Connector by sovity.
 </p>
 </div>
 
-<!-- TABLE OF CONTENTS -->
 <details>
    <summary>Table of Contents</summary>
    <ol>
       <li><a href="#about-the-project">About The Project</a></li>
-      <li><a href="#our-edc-community-edition">sovity Community Edition EDC</a></li>
-      <li><a href="#our-edc-extensions">sovity Community Edition EDC Extensions</a></li>
-      <li><a href="#compatibility">Compatibility</a></li>
       <li><a href="#getting-started">Getting Started</a></li>
+      <li><a href="#compatibility">Compatibility</a></li>
       <li><a href="#contributing">Contributing</a></li>
       <li><a href="#license">License</a></li>
       <li><a href="#contact">Contact</a></li>
    </ol>
 </details>
-
-<!-- ABOUT THE PROJECT -->
 
 ## About The Project
 
@@ -53,55 +43,34 @@ for building dataspaces, exchanging data securely with ensured data sovereignty.
 enterprise-ready managed services like "Connector-as-a-Service", out-of-the-box fully configured DAPS
 and integrations to existing other dataspace technologies.
 
-This repository contains our sovity Community Edition EDCs, containing pre-configured open source EDC extensions.
+This repository contains our sovity Community Edition EDCs, providing a self-hostable sovity EDC Connector.
 
 Check out our [Getting Started Section](#getting-started) on how to run a local sovity Community Edition EDC.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<!-- COMPATIBILITY -->
+<div>
+  <img src="docs/images/screenshot-dashboard.png" width="30%" />
+  <img src="docs/images/screenshot-contracts.png" width="30%" />
+  <img src="docs/images/screenshot-assets.png" width="30%" />
+</div>
 
-## sovity Community Edition EDC
+## Getting Started
 
-Our sovity Community Edition EDC takes available Open Source EDC extensions and combines them with our own
-open source EDC extensions from this repository to build ready-to-use EDC Docker Images.
-
-See [here](launchers/README.md) for a list of our sovity Community Edition EDC Docker images.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-## sovity Community Edition EDC extensions
-
-Feel free to explore and use our [EDC extensions](./extensions) with your EDC setup.
-
-We packaged critical extensions for compatibility with our EDC UI and general usability features into
-[sovity EDC Extensions Package](./extensions/sovity-edc-extensions-package).
+The fastest way to get started is our [Getting Started Guide](docs/getting-started/README.md).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Compatibility
 
-Our sovity Community Edition EDC and it's extensions are targeted to run with
-our [sovity/edc-ui](https://github.com/sovity/edc-ui).
+Our sovity Community Edition EDC is compatible with productive Tractus-X versions. We stay in sync with the Eclipse EDC that Tractus-X is using.
 
-Our sovity Community Edition EDC will use the current EDC Milestone with a certain delay
-to ensure reliability with a new release. Earlier releases currently are not supported, but will be
-supported, once the base EDC has a reliable version.
+Some parallel versions might be maintained, although done as sparingly as possible.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- GETTING STARTED -->
-
-## Getting Started
-
-The fastest way to get started is our [Getting Started Guide](docs/getting-started/README.md)
-which takes you through the steps of either starting a local [docker-compose.yaml](docker-compose.yaml) or deploying a
-productive sovity EDC CE or MDS EDC CE Connector.
+Each sovity Enterprise Edition EDC release also releases a sovity Community Edition with the same
+version ensuring same version usage and naming across API Clients, Connector and Connector UI.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-<!-- CONTRIBUTING -->
 
 ## Contributing
 
@@ -109,8 +78,7 @@ Contributions are what make the open source community such an amazing place to
 learn, inspire, and create. Any contributions you make are **greatly
 appreciated**.
 
-If you have a suggestion that would improve this project, please fork the repo and
-create a pull request. You can also simply open
+If you have a suggestion that would improve this project, feel free to open
 a [feature request](https://github.com/sovity/edc-ce/issues/new?template=feature_request.md). Don't forget to
 leave the project a ⭐, if you like the effort put into this version!
 
@@ -120,19 +88,16 @@ Our contribution guideline can be found in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Development
 
-### Developer Documentation
+Please note that our sovity Community Edition EDC gets automatically released with our
+sovity Enterprise Edition EDC. Because of this, most of the tooling and development processes are not public,
+such as our E2E Test suite and most of our JUnit Integration tests are not present here.
 
-- Local Development Guide (further below)
-- [IntelliJ](docs/dev/intellij/intelliJ.md)
-- [Changelog Updates](docs/dev/changelog_updates.md)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-### Requirements
+#### Requirements
 
 - Docker Environment
 - JDK 17
 - GitHub Maven Registry Access
+- Node 20
 
 To access the GitHub Maven Registry you need to provide the following properties, e.g. by providing
 a `~/.gradle/gradle.properties`.
@@ -142,17 +107,42 @@ gpr.user={your github username}
 gpr.key={your github pat with packages.read}
 ```
 
+### Local Development: Backend
+
+The backend can be developed fully using tests.
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<!-- LICENSE -->
+### Local Development: Frontend
+
+As soon as the API model is ready the
+[Fake Backend](connector-ui/src/app/core/services/api/fake-backend/edc-fake-backend.ts)
+can be adjusted. The fake backend is mostly type-safe by using the generated API model classes and mappers.
+
+To launch the frontend dev server with the Fake Backend, run:
+
+```shell script
+# Bash, Git Bash or WSL
+
+# Install dependencies (only required once)
+(cd connector-ui && npm i)
+
+# Run the dev server with Fake Backend (Local Development)
+# Also regenerates the API Client Library
+(cd connector-ui && npm run cold-start)
+```
+
+This starts the frontend at http://localhost:3000
+
+The configuration can be found in [connector-ui/.env.local-dev](connector-ui/.env.local-dev).
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## License
 
-Distributed under the Apache 2.0 License. See `LICENSE` for more information.
+Distributed under the `LICENSE`. Some deliverables such as APIs, API Clients and Utility Libraries remain under the `Apache License 2.0`. See [LICENSE](LICENSE) for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- CONTACT -->
 
 ## Contact
 
@@ -160,8 +150,6 @@ contact@sovity.de
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
 [contributors-shield]:
 https://img.shields.io/github/contributors/sovity/edc-ce.svg?style=for-the-badge

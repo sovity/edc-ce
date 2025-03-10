@@ -219,7 +219,7 @@
     "completed": "Abgeschlossen",
     "con_agree": "Vertragliche Vereinbarungen",
     "con_def": "Vertragsefinitions",
-    "conn_end": "Konnektor Endpunkte",
+    "connector_endpoint": "Konnektor Endpunkte",
     "conn_prop": "Konnektor Eigenschaften",
     "conn_service": "Konnektor als Dienstleistung",
     "contact": "Kontaktieren Sie uns",

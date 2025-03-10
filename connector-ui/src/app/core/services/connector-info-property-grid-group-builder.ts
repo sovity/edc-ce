@@ -1,13 +1,36 @@
-import {Injectable} from '@angular/core';
+/*
+ * Copyright 2025 sovity GmbH
+ * Copyright 2024 Fraunhofer Institute for Applied Information Technology FIT
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Contributors:
+ *     sovity - init and continued development
+ *     Fraunhofer FIT - contributed initial internationalization support
+ */
+import {Inject, Injectable} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {TranslateService} from '@ngx-translate/core';
-import {DashboardPage} from '@sovity.de/edc-client';
+import {BuildInfo, DashboardPage} from '@sovity.de/edc-client';
+import {formatDateAgo} from '../../shared/common/ago/formatDateAgo';
 import {JsonDialogComponent} from '../../shared/common/json-dialog/json-dialog.component';
 import {JsonDialogData} from '../../shared/common/json-dialog/json-dialog.data';
 import {PropertyGridGroup} from '../../shared/common/property-grid-group/property-grid-group';
 import {PropertyGridField} from '../../shared/common/property-grid/property-grid-field';
 import {PropertyGridFieldService} from '../../shared/common/property-grid/property-grid-field.service';
-import {LastCommitInfo} from './api/model/last-commit-info';
+import {APP_CONFIG, AppConfig} from '../config/app-config';
 import {Fetched} from './models/fetched';
 import {ParticipantIdLocalization} from './participant-id-localization';
 
@@ -18,6 +41,7 @@ export class ConnectorInfoPropertyGridGroupBuilder {
     private propertyGridUtils: PropertyGridFieldService,
     private matDialog: MatDialog,
     private translateService: TranslateService,
+    @Inject(APP_CONFIG) private config: AppConfig,
   ) {}
 
   private onShowConnectorVersionClick(title: string, versionData: any) {
@@ -32,93 +56,6 @@ export class ConnectorInfoPropertyGridGroupBuilder {
 
   private asDate(dateString?: string) {
     return dateString ? new Date(dateString!).toLocaleString() : '';
-  }
-
-  getBackendVersionFields(
-    lastCommitInfo: Fetched<LastCommitInfo>,
-  ): PropertyGridField[] {
-    const buildProp = (
-      label: string,
-      dateProp: keyof LastCommitInfo,
-      detailsProp: keyof LastCommitInfo,
-    ) =>
-      lastCommitInfo.match({
-        ifOk: (lastCommitInfo) => ({
-          icon: 'link',
-          label,
-          text: lastCommitInfo[dateProp]
-            ? this.asDate(lastCommitInfo[dateProp] ?? undefined)
-            : 'Show Details',
-          onclick: () =>
-            this.onShowConnectorVersionClick('Version Information', {
-              [`${label} Last Commit Information"`]:
-                lastCommitInfo[detailsProp],
-            }),
-        }),
-        ifError: (error) => ({
-          icon: 'link',
-          label,
-          text: 'Show Details',
-          onclick: () =>
-            this.onShowConnectorVersionClick('Version Information', {
-              Error: error.failureMessage,
-            }),
-        }),
-        ifLoading: () => ({
-          icon: 'link',
-          label,
-          text: 'Loading...',
-        }),
-      });
-
-    return [
-      buildProp('CE Extensions', 'jarBuildDate', 'jarLastCommitInfo'),
-      buildProp('Connector', 'envBuildDate', 'envLastCommitInfo'),
-    ];
-  }
-
-  getUiVersionField(
-    uiBuildDate: Fetched<string>,
-    uiCommitDetails: Fetched<string>,
-  ): PropertyGridField[] {
-    return uiBuildDate.match({
-      ifOk: (data) => [
-        {
-          icon: 'link',
-          label: 'UI Version',
-          text: data.trim().toString()
-            ? this.asDate(data.trim().toString())
-            : this.translateService.instant('general.details'),
-          onclick: () =>
-            this.onShowConnectorVersionClick('Version Information', {
-              'UI Last Commit Information': uiCommitDetails.match({
-                ifOk: (uiCommitdata) => uiCommitdata,
-                ifError: (error) => error.failureMessage,
-                ifLoading: () =>
-                  this.translateService.instant('general.still_loading'),
-              }),
-            }),
-        },
-      ],
-      ifError: (error) => [
-        {
-          icon: 'link',
-          label: 'UI Version',
-          text: this.translateService.instant('general.details'),
-          onclick: () =>
-            this.onShowConnectorVersionClick('Version Information', {
-              'UI Commit Information': error.failureMessage,
-            }),
-        },
-      ],
-      ifLoading: () => [
-        {
-          icon: 'link',
-          label: 'UI Version',
-          text: this.translateService.instant('general.loading'),
-        },
-      ],
-    });
   }
 
   buildConnectorPropertyGridGroup(
@@ -214,25 +151,39 @@ export class ConnectorInfoPropertyGridGroupBuilder {
       );
     }
 
-    if (data.connectorMiwConfig != null) {
+    if (data.connectorCxDidConfig != null) {
       fields.push(
         {
           icon: 'category',
-          label: 'MIW Authority ID',
+          label: 'Your DID',
+          ...this.propertyGridUtils.guessValue(data.connectorCxDidConfig.myDid),
+        },
+        {
+          icon: 'vpn_key',
+          label: 'Wallet Token URL',
           ...this.propertyGridUtils.guessValue(
-            data.connectorMiwConfig.authorityId,
+            data.connectorCxDidConfig.walletTokenUrl,
+          ),
+        },
+        {
+          icon: 'category',
+          label: 'Trusted VC Issuer',
+          ...this.propertyGridUtils.guessValue(
+            data.connectorCxDidConfig.trustedVcIssuer,
           ),
         },
         {
           icon: 'link',
-          label: 'MIW URL',
-          ...this.propertyGridUtils.guessValue(data.connectorMiwConfig.url),
+          label: 'BDRS URL',
+          ...this.propertyGridUtils.guessValue(
+            data.connectorCxDidConfig.bdrsUrl,
+          ),
         },
         {
-          icon: 'vpn_key',
-          label: 'MIW Token URL',
+          icon: 'link',
+          label: 'DIM URL',
           ...this.propertyGridUtils.guessValue(
-            data.connectorMiwConfig.tokenUrl,
+            data.connectorCxDidConfig.dimUrl,
           ),
         },
       );
@@ -241,33 +192,40 @@ export class ConnectorInfoPropertyGridGroupBuilder {
     return fields;
   }
 
-  buildConnectorVersionGroup(
-    lastCommitInfo: Fetched<LastCommitInfo>,
-    uiBuildDate: Fetched<string>,
-    uiCommitDetails: Fetched<string>,
-  ): PropertyGridGroup {
+  buildConnectorVersionGroup(buildInfo: Fetched<BuildInfo>): PropertyGridGroup {
+    const properties: PropertyGridField[] = [
+      {
+        icon: 'link',
+        label: 'Connector Version',
+        text: buildInfo.dataOrUndefined?.buildVersion,
+        tooltip: formatDateAgo(buildInfo.dataOrUndefined?.buildDate),
+        copyButton: true,
+      },
+    ];
+
+    if (this.config.buildVersion !== buildInfo.dataOrUndefined?.buildVersion) {
+      properties.push({
+        icon: 'link',
+        label: 'UI Version',
+        text: this.config.buildVersion,
+        tooltip: formatDateAgo(this.config.buildDate),
+        copyButton: true,
+      });
+    }
+
     return {
       groupLabel: 'Version Information',
-      properties: [
-        ...this.getBackendVersionFields(lastCommitInfo),
-        ...this.getUiVersionField(uiBuildDate, uiCommitDetails),
-      ],
+      properties,
     };
   }
 
   buildPropertyGridGroups(
-    lastCommitInformation: Fetched<LastCommitInfo>,
-    UiBuildDate: Fetched<string>,
-    UiCommitDetails: Fetched<string>,
+    versionInfo: Fetched<BuildInfo>,
     dashboardPageData: Fetched<DashboardPage>,
   ): PropertyGridGroup[] {
     const fieldGroups: PropertyGridGroup[] = [
       this.buildConnectorPropertyGridGroup(null, dashboardPageData),
-      this.buildConnectorVersionGroup(
-        lastCommitInformation,
-        UiBuildDate,
-        UiCommitDetails,
-      ),
+      this.buildConnectorVersionGroup(versionInfo),
     ];
 
     return fieldGroups.filter((it) => it.properties.length);

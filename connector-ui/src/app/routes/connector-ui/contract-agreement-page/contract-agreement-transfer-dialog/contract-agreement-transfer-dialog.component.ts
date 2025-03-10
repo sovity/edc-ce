@@ -1,3 +1,25 @@
+/*
+ * Copyright 2025 sovity GmbH
+ * Copyright 2024 Fraunhofer Institute for Applied Information Technology FIT
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Contributors:
+ *     sovity - init and continued development
+ *     Fraunhofer FIT - contributed initial internationalization support
+ */
 import {Component, Inject, OnDestroy} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {Observable, Subject} from 'rxjs';
@@ -10,12 +32,8 @@ import {
 import {EdcApiService} from '../../../../core/services/api/edc-api.service';
 import {DataAddressMapper} from '../../../../core/services/data-address-mapper';
 import {NotificationService} from '../../../../core/services/notification.service';
-import {TransferDataSinkMapper} from '../../../../core/services/transfer-data-sink-mapper';
 import {ValidationMessages} from '../../../../core/validators/validation-messages';
-import {
-  DATA_SINK_HTTP_METHODS,
-  DATA_SOURCE_HTTP_METHODS,
-} from '../../../../shared/business/edit-asset-form/form/http-methods';
+import {DATA_SINK_HTTP_METHODS} from '../../../../shared/business/edit-asset-form/form/http-methods';
 import {ContractAgreementTransferDialogData} from './contract-agreement-transfer-dialog-data';
 import {ContractAgreementTransferDialogForm} from './contract-agreement-transfer-dialog-form';
 import {ContractAgreementTransferDialogFormValue} from './contract-agreement-transfer-dialog-form-model';
@@ -30,48 +48,6 @@ export class ContractAgreementTransferDialogComponent implements OnDestroy {
   loading = false;
 
   dataSinkMethods = DATA_SINK_HTTP_METHODS;
-  dataSourceMethods = DATA_SOURCE_HTTP_METHODS;
-
-  get proxyMethod(): boolean {
-    return (
-      this.showAllHttpParameterizationFields ||
-      this.data.asset.httpDatasourceHintsProxyMethod === true
-    );
-  }
-
-  get proxyPath(): boolean {
-    return (
-      this.showAllHttpParameterizationFields ||
-      this.data.asset.httpDatasourceHintsProxyPath === true
-    );
-  }
-
-  get proxyQueryParams(): boolean {
-    return (
-      this.showAllHttpParameterizationFields ||
-      this.data.asset.httpDatasourceHintsProxyQueryParams === true
-    );
-  }
-
-  get proxyBody(): boolean {
-    return (
-      this.showAllHttpParameterizationFields ||
-      this.data.asset.httpDatasourceHintsProxyBody === true
-    );
-  }
-
-  get showHttpParameterizationToggleButton(): boolean {
-    return (
-      this.data.asset.httpDatasourceHintsProxyMethod !== true ||
-      this.data.asset.httpDatasourceHintsProxyPath !== true ||
-      this.data.asset.httpDatasourceHintsProxyQueryParams !== true ||
-      this.data.asset.httpDatasourceHintsProxyBody !== true
-    );
-  }
-
-  get showAllHttpParameterizationFields(): boolean {
-    return this.form.all.controls.showAllHttpParameterizationFields.value;
-  }
 
   constructor(
     public form: ContractAgreementTransferDialogForm,
@@ -79,7 +55,6 @@ export class ContractAgreementTransferDialogComponent implements OnDestroy {
     private dialogRef: MatDialogRef<ContractAgreementTransferDialogComponent>,
     private edcApiService: EdcApiService,
     private notificationService: NotificationService,
-    private httpRequestParamsMapper: TransferDataSinkMapper,
     private dataAddressMapper: DataAddressMapper,
     @Inject(MAT_DIALOG_DATA) public data: ContractAgreementTransferDialogData,
   ) {}
@@ -140,19 +115,14 @@ export class ContractAgreementTransferDialogComponent implements OnDestroy {
   private buildTransferRequest(
     value: ContractAgreementTransferDialogFormValue,
   ): InitiateTransferRequest {
-    const transferProcessProperties =
-      this.httpRequestParamsMapper.encodeHttpProxyTransferRequestProperties(
-        this.data.asset,
-        value,
-      );
-
     const dataSinkProperties =
       this.dataAddressMapper.buildDataAddressProperties(value) ?? {};
 
     return {
       contractAgreementId: this.data.contractId,
-      transferProcessProperties,
+      transferProcessProperties: {},
       dataSinkProperties,
+      transferType: 'HttpData-PUSH',
     };
   }
 

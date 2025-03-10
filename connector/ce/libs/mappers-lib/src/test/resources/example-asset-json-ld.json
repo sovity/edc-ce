@@ -1,0 +1,90 @@
+{
+  "@id": "urn:artifact:my-asset",
+  "@type": "https://w3id.org/edc/v0.0.1/ns/Asset",
+  "https://w3id.org/edc/v0.0.1/ns/properties": {
+    "https://w3id.org/edc/v0.0.1/ns/id": "urn:artifact:my-asset",
+    "http://purl.org/dc/terms/identifier": "urn:artifact:my-asset",
+    "http://purl.org/dc/terms/title": "My Asset",
+    "http://purl.org/dc/terms/language": "https://w3id.org/idsa/code/EN",
+    "http://purl.org/dc/terms/description": "# Lorem Ipsum...\n## h2 title\n[Link text Here](example.com) 0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789",
+    "http://purl.org/dc/terms/creator": {
+      "@type": "http://xmlns.com/foaf/0.1/Organization",
+      "http://xmlns.com/foaf/0.1/name": "My Organization Name"
+    },
+    "https://semantic.sovity.io/dcat-ext#distribution": {
+      "@type": "http://www.w3.org/ns/dcat#Distribution",
+      "http://www.w3.org/ns/dcat#mediaType": "application/json",
+      "https://w3id.org/mobilitydcat-ap/mobilityDataStandard": {
+        "@id": "my-data-model-001",
+        "https://w3id.org/mobilitydcat-ap/schema": {
+          "http://www.w3.org/ns/dcat#downloadURL": [
+            "my-reference-files1",
+            "my-reference-files2"
+          ],
+          "http://www.w3.org/2000/01/rdf-schema#Literal": "my-additional-description"
+        }
+      },
+      "http://www.w3.org/ns/adms#sample": [
+        "my-data-sample-urls1",
+        "my-data-sample-urls2"
+      ],
+      "http://purl.org/dc/terms/rights": {
+        "http://www.w3.org/2000/01/rdf-schema#label": "my-conditions-for-use"
+      }
+    },
+    "http://purl.org/dc/terms/publisher": {
+      "@type": "http://xmlns.com/foaf/0.1/Organization",
+      "http://xmlns.com/foaf/0.1/homepage": "https://data-source.my-org/about"
+    },
+    "http://purl.org/dc/terms/license": "https://data-source.my-org/license",
+    "http://www.w3.org/ns/dcat#version": "1.1",
+    "http://www.w3.org/ns/dcat#keyword": [
+      "some",
+      "keywords"
+    ],
+    "http://www.w3.org/ns/dcat#landingPage": "https://data-source.my-org/docs",
+    "https://w3id.org/mobilitydcat-ap/mobilityTheme": {
+      "https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-category": "Infrastructure and Logistics",
+      "https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category": "General Information About Planning Of Routes"
+    },
+    "https://w3id.org/mobilitydcat-ap/georeferencingMethod": "my-geo-reference-method",
+    "https://w3id.org/mobilitydcat-ap/transportMode": "my-transport-mode",
+    "http://purl.org/dc/terms/rightsHolder": "my-sovereign",
+    "http://purl.org/dc/terms/spatial": {
+      "http://www.w3.org/2004/02/skos/core#prefLabel": "my-geolocation",
+      "http://purl.org/dc/terms/identifier": [
+        "my-nuts-location1",
+        "my-nuts-location2"
+      ]
+    },
+    "http://purl.org/dc/terms/accrualPeriodicity": "my-data-update-frequency",
+    "http://purl.org/dc/terms/temporal": {
+      "http://www.w3.org/ns/dcat#startDate": "2007-12-03",
+      "http://www.w3.org/ns/dcat#endDate": "2024-01-22"
+    },
+    "https://semantic.sovity.io/dcat-ext#customJson": "{\"array\":[3,1,4,1,5],\"boolean\":false,\"null\":null,\"number\":116,\"object\":{\"key\":\"value\"},\"string\":\"value\"}",
+    "http://unknown/some-custom-string": "some-string-value",
+    "http://unknown/some-custom-obj": {
+      "http://unknown/a": "b"
+    },
+    "https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyMethod": "true",
+    "https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyPath": "true",
+    "https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyQueryParams": "true",
+    "https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyBody": "true"
+  },
+  "https://w3id.org/edc/v0.0.1/ns/privateProperties": {
+    "https://semantic.sovity.io/dcat-ext#privateCustomJson": "{\"priv_array\":[3,1,4,1,5],\"priv_boolean\":false,\"priv_null\":null,\"priv_number\":116,\"priv_object\":{\"key\":\"value\"},\"priv_string\":\"value\"}",
+    "http://unknown/some-custom-private-string": "some-private-value",
+    "http://unknown/some-custom-private-obj": {
+      "http://unknown/a-private": "b-private"
+    }
+  },
+  "https://w3id.org/edc/v0.0.1/ns/DataAddress": {
+    "https://w3id.org/edc/v0.0.1/ns/type": "HttpData",
+    "https://w3id.org/edc/v0.0.1/ns/baseUrl": "https://data-source.my-org",
+    "https://w3id.org/edc/v0.0.1/ns/proxyMethod": "true",
+    "https://w3id.org/edc/v0.0.1/ns/proxyPath": "true",
+    "https://w3id.org/edc/v0.0.1/ns/proxyQueryParams": "true",
+    "https://w3id.org/edc/v0.0.1/ns/proxyBody": "true"
+  }
+}

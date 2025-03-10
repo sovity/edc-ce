@@ -1,5 +1,5 @@
 name: "Build EDC Connector Image"
-description: "Builds and deploys the React frontend to AWS S3"
+description: "Build EDC Connector Image"
 inputs:
   registry-url:
     required: true
@@ -16,18 +16,18 @@ inputs:
   image-name:
     required: true
     description: "Docker Image Name (Artifact Name)"
-  connector-name:
-    required: true
-    description: "EDC Connector Name in launchers/connectors/{connector-name}"
-  deployment-type:
-    required: true
-    description: "Type of deployment: 'connector'"
-  title:
+  image-title:
     required: true
     description: "Docker Image Title"
-  description:
+  image-description:
     required: true
     description: "Docker Image Description"
+  connector-dir:
+    required: true
+    description: "Connector Gradle Module directory relative to project root"
+  build-args:
+    required: false
+    description: "Additional Docker Build Arguments"
 runs:
   using: "composite"
   steps:
@@ -38,22 +38,19 @@ runs:
         username: ${{ inputs.registry-user }}
         password: ${{ inputs.registry-password }}
     - name: "Docker: Store last commit info and build date"
-      id: last-commit-information
       shell: bash
+      id: build_info
       run: |
-        echo "LAST_COMMIT_INFO<<EOF" >> $GITHUB_ENV
-        export LAST_COMMIT_INFO=$(git log -1)
-        echo "$LAST_COMMIT_INFO" >> $GITHUB_ENV
-        echo "EOF" >> $GITHUB_ENV
-        echo "BUILD_DATE=$(date --utc +%FT%TZ)" >> $GITHUB_ENV
+        echo "SOVITY_BUILD_VERSION_ARG=$(git describe --tags ${CI_PR_SHA})" >> "$GITHUB_OUTPUT"
+        echo "SOVITY_BUILD_DATE_ARG=$(date --utc +%FT%TZ)" >> "$GITHUB_OUTPUT"
     - name: "Docker: Extract metadata (tags, labels)"
       id: meta
       uses: docker/metadata-action@v4
       with:
         images: ${{ inputs.registry-url }}/${{ inputs.image-base-name }}/${{ inputs.image-name }}
         labels: |
-          org.opencontainers.image.title=${{ inputs.title }}
-          org.opencontainers.image.description=${{ inputs.description }}
+          org.opencontainers.image.title=${{ inputs.image-title }}
+          org.opencontainers.image.description=${{ inputs.image-description }}
         tags: |
           type=schedule
           type=semver,pattern={{version}}
@@ -65,15 +62,14 @@ runs:
           type=raw,value=latest,enable={{is_default_branch}}
           type=raw,value=release,enable=${{ startsWith(github.ref, 'refs/tags/') }}
     - name: "Docker: Build and Push"
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v4
       with:
-        file: launchers/Dockerfile
-        context: .
+        file: ${{ inputs.connector-dir }}/src/main/docker/Dockerfile
+        context: ${{ inputs.connector-dir }}
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
         build-args: |
-          CONNECTOR_NAME=${{ inputs.connector-name }}
-          CONNECTOR_TYPE=${{ inputs.deployment-type }}
-          "EDC_LAST_COMMIT_INFO_ARG=${{ env.LAST_COMMIT_INFO }}"
-          EDC_BUILD_DATE_ARG=${{ env.BUILD_DATE }}
+          "SOVITY_BUILD_VERSION_ARG=${{ steps.build_info.outputs.SOVITY_BUILD_VERSION_ARG }}"
+          "SOVITY_BUILD_DATE_ARG=${{ steps.build_info.outputs.SOVITY_BUILD_DATE_ARG }}"
+          ${{ inputs.build-args }}

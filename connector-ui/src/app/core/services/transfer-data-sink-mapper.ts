@@ -1,3 +1,28 @@
+/*
+ * Copyright 2025 sovity GmbH
+ * Copyright 2024 Benedikt Imbusch
+ * Copyright 2024 Fraunhofer Institute for Applied Information Technology FIT
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Contributors:
+ *     sovity - init and continued development
+ *     Benedikt Imbusch - bugfix for content-type header
+ *     Fraunhofer FIT - bugfix for missing auth header
+ *     Fraunhofer FIT - contributed initial internationalization support
+ */
 import {Injectable} from '@angular/core';
 import {ContractAgreementTransferDialogFormValue} from '../../routes/connector-ui/contract-agreement-page/contract-agreement-transfer-dialog/contract-agreement-transfer-dialog-form-model';
 import {HttpDatasourceHeaderFormValue} from '../../shared/business/edit-asset-form/form/model/http-datasource-header-form-model';
@@ -5,7 +30,6 @@ import {getAuthFields} from '../utils/form-value-utils';
 import {mapKeys, removeNullValues} from '../utils/record-utils';
 import {DataAddressProperty} from './models/data-address-properties';
 import {HttpDataAddressParams} from './models/http-data-address-params';
-import {UiAssetMapped} from './models/ui-asset-mapped';
 import {QueryParamsMapper} from './query-params-mapper';
 
 @Injectable({providedIn: 'root'})
@@ -18,45 +42,6 @@ export class TransferDataSinkMapper {
     const params = this.buildHttpRequestParams(formValue);
     return this.encodeHttpRequestParams(params);
   }
-
-  encodeHttpProxyTransferRequestProperties(
-    asset: UiAssetMapped,
-    value: ContractAgreementTransferDialogFormValue,
-  ): Record<string, string> {
-    const method = value.httpProxiedMethod?.trim() ?? '';
-    const pathSegments = this.queryParamsMapper.getBaseUrlWithoutQueryParams(
-      value.httpProxiedPath!!,
-    );
-    const queryParams = this.queryParamsMapper.getFullQueryString(
-      value.httpProxiedPath!!,
-      value.httpProxiedQueryParams ?? [],
-    );
-    const body = value.httpProxiedBody?.trim() || null;
-    const contentType = value.httpProxiedBodyContentType?.trim() || null;
-
-    const proxyMethod =
-      value.showAllHttpParameterizationFields ||
-      asset.httpDatasourceHintsProxyMethod;
-    const proxyPath =
-      value.showAllHttpParameterizationFields ||
-      asset.httpDatasourceHintsProxyPath;
-    const proxyQueryParams =
-      value.showAllHttpParameterizationFields ||
-      asset.httpDatasourceHintsProxyQueryParams;
-    const proxyBody =
-      value.showAllHttpParameterizationFields ||
-      asset.httpDatasourceHintsProxyBody;
-
-    return removeNullValues({
-      [DataAddressProperty.method]: proxyMethod && method ? method : null,
-      [DataAddressProperty.pathSegments]: proxyPath ? pathSegments : null,
-      [DataAddressProperty.queryParams]: proxyQueryParams ? queryParams : null,
-      [DataAddressProperty.body]: proxyBody ? body : null,
-      [DataAddressProperty.contentType]: proxyBody ? contentType : null,
-      [DataAddressProperty.mediaType]: proxyBody ? contentType : null,
-    });
-  }
-
   encodeHttpRequestParams(
     httpRequestParams: HttpDataAddressParams,
   ): Record<string, string> {

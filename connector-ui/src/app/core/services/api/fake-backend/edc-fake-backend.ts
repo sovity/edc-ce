@@ -1,5 +1,13 @@
+/*
+ * Copyright sovity GmbH and/or licensed to sovity GmbH under one or
+ * more contributor license agreements. You may not use this file except
+ * in compliance with the "Elastic License 2.0".
+ *
+ * SPDX-License-Identifier: Elastic-2.0
+ */
 import {
   AssetPageToJSON,
+  BuildInfoToJSON,
   ConnectorLimitsToJSON,
   ContractAgreementPageQueryFromJSON,
   ContractAgreementPageToJSON,
@@ -8,7 +16,7 @@ import {
   ContractNegotiationRequestFromJSON,
   ContractTerminationRequestFromJSON,
   DashboardPageToJSON,
-  DataOfferCreationRequestFromJSON,
+  DataOfferCreateRequestFromJSON,
   FetchAPI,
   IdAvailabilityResponseToJSON,
   IdResponseDtoToJSON,
@@ -30,6 +38,7 @@ import {
   deleteAsset,
   editAsset,
 } from './connector-fake-impl/asset-fake-service';
+import {buildInfo} from './connector-fake-impl/buildinfo-fake-service';
 import {getCatalogPageDataOffers} from './connector-fake-impl/catalog-fake-service';
 import {
   contractAgreementInitiateTransfer,
@@ -240,7 +249,7 @@ export const EDC_FAKE_BACKEND: FetchAPI = async (
 
     .url('ui/pages/create-data-offer')
     .on('POST', () => {
-      const response = createDataOffer(DataOfferCreationRequestFromJSON(body));
+      const response = createDataOffer(DataOfferCreateRequestFromJSON(body));
       return ok(IdResponseDtoToJSON(response));
     })
 
@@ -260,6 +269,12 @@ export const EDC_FAKE_BACKEND: FetchAPI = async (
     .on('GET', (contractDefinitionId) => {
       const response = contractDefinitionIdAvailable(contractDefinitionId);
       return ok(IdAvailabilityResponseToJSON(response));
+    })
+
+    .url('ui/build-info')
+    .on('GET', () => {
+      let versionsInfo = buildInfo();
+      return ok(BuildInfoToJSON(versionsInfo));
     })
 
     .tryMatch();

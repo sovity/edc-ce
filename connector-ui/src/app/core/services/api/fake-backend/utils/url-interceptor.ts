@@ -1,3 +1,10 @@
+/*
+ * Copyright sovity GmbH and/or licensed to sovity GmbH under one or
+ * more contributor license agreements. You may not use this file except
+ * in compliance with the "Elastic License 2.0".
+ *
+ * SPDX-License-Identifier: Elastic-2.0
+ */
 /**
  * Collects URLs + Method + ResponseFn and then matches them in order.
  *
@@ -40,11 +47,11 @@ export class UrlInterceptor {
         continue;
       }
 
-      match = match
+      const urlMatch = match
         .filter((_, index) => index > 0)
         .map((pathSegment) => decodeURIComponent(pathSegment));
 
-      return await entry.response(...match);
+      return await entry.response(...urlMatch);
     }
 
     console.warn(
@@ -59,7 +66,3 @@ export class UrlInterceptor {
 }
 
 export type ResponseFn = (...match: string[]) => Promise<Response>;
-
-export interface MethodMatcher {
-  on(method: string, accept: ResponseFn): MethodMatcher;
-}

@@ -1,3 +1,10 @@
+/*
+ * Copyright sovity GmbH and/or licensed to sovity GmbH under one or
+ * more contributor license agreements. You may not use this file except
+ * in compliance with the "Elastic License 2.0".
+ *
+ * SPDX-License-Identifier: Elastic-2.0
+ */
 import {
   ContractNegotiationRequest,
   ContractNegotiationSimplifiedState,
@@ -63,7 +70,7 @@ export const initiateContractNegotiation = (
       direction: 'CONSUMING',
       counterPartyAddress: request.counterPartyAddress,
       transferProcesses: [],
-      counterPartyId: request.counterPartyParticipantId,
+      counterPartyId: request.counterPartyId,
       asset: getAssetById(request.assetId)!,
       contractSigningDate: new Date(),
       contractPolicy: getPolicyDefinitionByJsonLd(request.policyJsonLd)!,

@@ -1,3 +1,0 @@
-The GitHub Pipeline will replace this file during build time with
-the commit information (SHA, author and commit message) of the built image.
-This file will be served to allow checking for the exact source code version of a deployed edc-ui.
