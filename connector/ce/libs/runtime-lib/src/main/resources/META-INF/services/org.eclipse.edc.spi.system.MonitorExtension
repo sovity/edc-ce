@@ -1,0 +1,2 @@
+# Rare case of us using the Java ServiceLoader mechanism, because all static code will access the logger this way
+de.sovity.edc.runtime.logging.Log4jMonitorExtension

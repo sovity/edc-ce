@@ -8,6 +8,13 @@
     {"pattern": "https://(.*?)\\.azure\\.sovity\\.io"},
     {"pattern": "http://edc2?:"},
     {"pattern": "^https?://connector:"},
+    {"pattern": "^https?://provider:"},
+    {"pattern": "^https?://consumer:"},
+    {"pattern": "^https?://provider-connector:"},
+    {"pattern": "^https?://consumer-connector:"},
+    {"pattern": "^https://github\\.com/sovity/edc-ee/security" },
+
+    {"pattern": ".*edc/e2e/ApiWrapperDemoTest.java$" },
     {"pattern": "\\.png$"}
   ],
   "replacementPatterns": [

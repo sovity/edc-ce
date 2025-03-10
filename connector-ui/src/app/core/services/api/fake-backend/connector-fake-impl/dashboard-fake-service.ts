@@ -1,3 +1,10 @@
+/*
+ * Copyright sovity GmbH and/or licensed to sovity GmbH under one or
+ * more contributor license agreements. You may not use this file except
+ * in compliance with the "Elastic License 2.0".
+ *
+ * SPDX-License-Identifier: Elastic-2.0
+ */
 import {DashboardPage} from '@sovity.de/edc-client';
 
 export const dashboardPage = (): DashboardPage => ({
@@ -26,10 +33,12 @@ export const dashboardPage = (): DashboardPage => ({
   connectorCuratorName: 'Example GmbH',
   connectorCuratorUrl: 'https://example.com',
   connectorEndpoint: 'https://edc.fake-backend/api/dsp',
-  connectorMiwConfig: {
-    url: 'https://miw.fake-backend',
-    tokenUrl: 'https://miw.fake-backend/token',
-    authorityId: 'fake-miw',
+  connectorCxDidConfig: {
+    myDid: 'your-did-long-number:1234567890:idk',
+    bdrsUrl: 'https://bdrs.fake-backend',
+    dimUrl: 'https://dim.fake-backend',
+    trustedVcIssuer: 'https://trusted-vc-issuer.fake-backend',
+    walletTokenUrl: 'https://wallet-token.fake-backend',
   },
   connectorDapsConfig: {
     tokenUrl: 'https://daps.fake-backend/token',

@@ -1,6 +1,13 @@
+/*
+ * Copyright sovity GmbH and/or licensed to sovity GmbH under one or
+ * more contributor license agreements. You may not use this file except
+ * in compliance with the "Elastic License 2.0".
+ *
+ * SPDX-License-Identifier: Elastic-2.0
+ */
 import {
-  DataOfferCreationRequest,
-  DataOfferCreationRequestPolicyEnum,
+  DataOfferCreateRequest,
+  DataOfferPublishType,
   IdResponseDto,
   UiCriterionLiteralType,
 } from '@sovity.de/edc-client';
@@ -37,28 +44,28 @@ const checkIfNoAlwaysTruePolicyExists = (): void => {
 };
 
 export const createDataOffer = (
-  request: DataOfferCreationRequest,
+  request: DataOfferCreateRequest,
 ): IdResponseDto => {
-  const commonId = request.uiAssetCreateRequest.id;
+  const commonId = request.asset.id;
   let accessPolicyId = null;
   let contractPolicyId = null;
 
   checkIfNoAlwaysTruePolicyExists();
   checkIdAvailability(commonId);
-  createAsset(request.uiAssetCreateRequest);
+  createAsset(request.asset);
 
-  switch (request.policy) {
-    case DataOfferCreationRequestPolicyEnum.DontPublish:
+  switch (request.publishType) {
+    case DataOfferPublishType.DontPublish:
       return {id: commonId, lastUpdatedDate: new Date()};
-    case DataOfferCreationRequestPolicyEnum.PublishRestricted:
+    case DataOfferPublishType.PublishRestricted:
       createPolicyDefinitionV2({
         policyDefinitionId: commonId,
-        expression: request.uiPolicyExpression!,
+        expression: request.policyExpression!,
       });
       accessPolicyId = commonId;
       contractPolicyId = commonId;
       break;
-    case DataOfferCreationRequestPolicyEnum.PublishUnrestricted:
+    case DataOfferPublishType.PublishUnrestricted:
       accessPolicyId = ALWAYS_TRUE_POLICY_ID;
       contractPolicyId = ALWAYS_TRUE_POLICY_ID;
       break;

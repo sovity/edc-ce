@@ -1,0 +1,53 @@
+{
+  "isOwnConnector": false,
+  "connectorEndpoint": "endpoint",
+  "participantId": "participant-id",
+  "assetId": "urn:artifact:my-asset",
+  "title": "My Asset",
+  "language": "https://w3id.org/idsa/code/EN",
+  "description": "# Lorem Ipsum...\n## h2 title\n[Link text Here](example.com) 0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789",
+  "descriptionShortText": "Lorem Ipsum... h2 title Link text Here 012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890",
+  "creatorOrganizationName": "My Organization Name",
+  "mediaType": "application/json",
+  "dataModel": "my-data-model-001",
+  "referenceFileUrls": [
+    "my-reference-files1",
+    "my-reference-files2"
+  ],
+  "referenceFilesDescription": "my-additional-description",
+  "dataSampleUrls": [
+    "my-data-sample-urls1",
+    "my-data-sample-urls2"
+  ],
+  "conditionsForUse": "my-conditions-for-use",
+  "publisherHomepage": "https://data-source.my-org/about",
+  "licenseUrl": "https://data-source.my-org/license",
+  "version": "1.1",
+  "keywords": [
+    "some",
+    "keywords"
+  ],
+  "landingPageUrl": "https://data-source.my-org/docs",
+  "dataCategory": "Infrastructure and Logistics",
+  "dataSubcategory": "General Information About Planning Of Routes",
+  "geoReferenceMethod": "my-geo-reference-method",
+  "transportMode": "my-transport-mode",
+  "sovereignLegalName": "my-sovereign",
+  "geoLocation": "my-geolocation",
+  "nutsLocations": [
+    "my-nuts-location1",
+    "my-nuts-location2"
+  ],
+  "dataUpdateFrequency": "my-data-update-frequency",
+  "temporalCoverageFrom": "2007-12-03",
+  "temporalCoverageToInclusive": "2024-01-22",
+  "customJsonAsString": "{\"array\":[3,1,4,1,5],\"boolean\":false,\"null\":null,\"number\":116,\"object\":{\"key\":\"value\"},\"string\":\"value\"}",
+  "customJsonLdAsString": "{\"http://unknown/some-custom-string\":\"some-string-value\",\"http://unknown/some-custom-obj\":{\"http://unknown/a\":\"b\"}}",
+  "privateCustomJsonAsString": "{\"priv_array\":[3,1,4,1,5],\"priv_boolean\":false,\"priv_null\":null,\"priv_number\":116,\"priv_object\":{\"key\":\"value\"},\"priv_string\":\"value\"}",
+  "privateCustomJsonLdAsString": "{\"http://unknown/some-custom-private-string\":\"some-private-value\",\"http://unknown/some-custom-private-obj\":{\"http://unknown/a-private\":\"b-private\"}}",
+  "dataSourceAvailability": "LIVE",
+  "httpDatasourceHintsProxyMethod": true,
+  "httpDatasourceHintsProxyPath": true,
+  "httpDatasourceHintsProxyQueryParams": true,
+  "httpDatasourceHintsProxyBody": true
+}

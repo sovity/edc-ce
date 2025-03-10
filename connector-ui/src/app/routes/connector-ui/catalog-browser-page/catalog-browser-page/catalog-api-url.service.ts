@@ -1,3 +1,10 @@
+/*
+ * Copyright sovity GmbH and/or licensed to sovity GmbH under one or
+ * more contributor license agreements. You may not use this file except
+ * in compliance with the "Elastic License 2.0".
+ *
+ * SPDX-License-Identifier: Elastic-2.0
+ */
 import {Inject, Injectable} from '@angular/core';
 import {APP_CONFIG, AppConfig} from '../../../../core/config/app-config';
 
@@ -11,7 +18,7 @@ export class CatalogApiUrlService {
   /**
    * Preset Connector Endpoints to be used in catalog.
    *
-   * From app-config.json, not user editable
+   * From app-configuration.json, not user editable
    */
   private readonly presetProviders = new Array<string>();
 

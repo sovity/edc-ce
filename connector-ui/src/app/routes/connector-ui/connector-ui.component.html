@@ -1,6 +1,7 @@
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav
     class="sidenav"
+    data-testid="sidenav"
     #drawer
     fixedInViewport
     [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
@@ -24,7 +25,9 @@
           <a
             *ngFor="let navItem of navItemGroup.items"
             [routerLink]="[navItem.path]">
-            <mat-list-item [routerLinkActive]="['is-active']">
+            <mat-list-item
+              [routerLinkActive]="['is-active']"
+              [attr.data-testid]="navItem.testId">
               <mat-icon mat-list-icon>{{ navItem.icon }}</mat-icon>
               <span matLine>{{ navItem.title | translate }}</span>
             </mat-list-item>

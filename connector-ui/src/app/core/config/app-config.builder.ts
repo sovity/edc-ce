@@ -1,3 +1,10 @@
+/*
+ * Copyright sovity GmbH and/or licensed to sovity GmbH under one or
+ * more contributor license agreements. You may not use this file except
+ * in compliance with the "Elastic License 2.0".
+ *
+ * SPDX-License-Identifier: Elastic-2.0
+ */
 import {Injectable} from '@angular/core';
 import {AppConfig} from './app-config';
 import {AppConfigProperties} from './app-config-properties';
@@ -41,6 +48,10 @@ export class AppConfigBuilder {
       // Enterprise Edition
       showEeBasicMarketing:
         vars[AppConfigProperties.showEeBasicMarketing] === 'true',
+
+      // versions
+      buildDate: vars[AppConfigProperties.buildDate] ?? 'unknown',
+      buildVersion: vars[AppConfigProperties.buildVersion] ?? 'unknown',
     };
   }
 }

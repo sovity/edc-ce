@@ -15,11 +15,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run static analysis
-        uses: aquasecurity/trivy-action@0.26.0
+        uses: aquasecurity/trivy-action@0.24.0
         env:
-          #try default GitHub DBs, if failing, use AWS mirror instead (https://github.com/aquasecurity/trivy-action/issues/389)
-          TRIVY_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-db,public.ecr.aws/aquasecurity/trivy-db
-          TRIVY_JAVA_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-java-db,public.ecr.aws/aquasecurity/trivy-java-db
+          TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
         with:
           scan-type: 'fs'
           security-checks: 'vuln,secret,config'

@@ -1,10 +1,32 @@
+/*
+ * Copyright 2025 sovity GmbH
+ * Copyright 2024 Fraunhofer Institute for Applied Information Technology FIT
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Contributors:
+ *     sovity - init and continued development
+ *     Fraunhofer FIT - contributed initial internationalization support
+ */
 import {Injectable} from '@angular/core';
 import {Observable, combineLatest, merge, of, sampleTime, scan} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {TranslateService} from '@ngx-translate/core';
 import {DashboardTransferAmounts, UiDataOffer} from '@sovity.de/edc-client';
 import {EdcApiService} from '../../../../core/services/api/edc-api.service';
-import {LastCommitInfoService} from '../../../../core/services/api/last-commit-info.service';
+import {ConnectorEndpointUrlMapper} from '../../../../core/services/connector-endpoint-url-mapper';
 import {ConnectorInfoPropertyGridGroupBuilder} from '../../../../core/services/connector-info-property-grid-group-builder';
 import {Fetched} from '../../../../core/services/models/fetched';
 import {CatalogApiUrlService} from '../../catalog-browser-page/catalog-browser-page/catalog-api-url.service';
@@ -16,9 +38,9 @@ export class DashboardPageDataService {
   constructor(
     private edcApiService: EdcApiService,
     private catalogApiUrlService: CatalogApiUrlService,
-    private lastCommitInfoService: LastCommitInfoService,
     private connectorInfoPropertyGridGroupBuilder: ConnectorInfoPropertyGridGroupBuilder,
     private translateService: TranslateService,
+    private connectorEndpointUrlMapper: ConnectorEndpointUrlMapper,
   ) {}
 
   /**
@@ -56,11 +78,17 @@ export class DashboardPageDataService {
   private getAllDataOffers(): Observable<UiDataOffer[]> {
     const catalogUrls = this.catalogApiUrlService.getAllProviders();
 
-    const dataOffers = catalogUrls.map((it) =>
-      this.edcApiService
-        .getCatalogPageDataOffers(it)
-        .pipe(catchError(() => of([]))),
-    );
+    const dataOffers = catalogUrls
+      .map((it) =>
+        this.connectorEndpointUrlMapper.extractConnectorEndpointAndParticipantId(
+          it,
+        ),
+      )
+      .map((it) =>
+        this.edcApiService
+          .getCatalogPageDataOffers(it.connectorEndpoint, it.participantId)
+          .pipe(catchError(() => of([]))),
+      );
 
     return merge(...dataOffers).pipe(
       sampleTime(50),
@@ -122,24 +150,10 @@ export class DashboardPageDataService {
 
   private dashboardData(): Observable<Partial<DashboardPageData>> {
     return combineLatest([
-      this.lastCommitInfoService.getLastCommitInfoData().pipe(
+      this.edcApiService.buildInfo().pipe(
         Fetched.wrap({
           failureMessage: this.translateService.instant(
-            'dashboard_page.failed_env',
-          ),
-        }),
-      ),
-      this.lastCommitInfoService.getUiBuildDateDetails().pipe(
-        Fetched.wrap({
-          failureMessage: this.translateService.instant(
-            'dashboard_page.failed_ui_build',
-          ),
-        }),
-      ),
-      this.lastCommitInfoService.getUiCommitDetails().pipe(
-        Fetched.wrap({
-          failureMessage: this.translateService.instant(
-            'dashboard_page.failed_ui',
+            'dashboard_page.failed_versions',
           ),
         }),
       ),
@@ -151,7 +165,7 @@ export class DashboardPageDataService {
         }),
       ),
     ]).pipe(
-      map(([lastCommitInfo, uiBuildDate, uiCommitDetails, fetched]) => ({
+      map(([versionInfo, fetched]) => ({
         title: this.extractString(fetched, (it) => it.connectorTitle),
         description: this.extractString(
           fetched,
@@ -165,9 +179,11 @@ export class DashboardPageDataService {
             it.numContractAgreementsConsuming +
             it.numContractAgreementsProviding,
         ),
-        connectorEndpoint: this.extractString(
-          fetched,
-          (it) => it.connectorEndpoint,
+        connectorEndpointAndParticipantId: this.extractString(fetched, (it) =>
+          this.connectorEndpointUrlMapper.mergeConnectorEndpointAndParticipantId(
+            it.connectorEndpoint,
+            it.connectorParticipantId,
+          ),
         ),
         incomingTransfersChart: fetched.map((it) =>
           this.buildTransferChart(it.transferProcessesConsuming, 'CONSUMING'),
@@ -177,9 +193,7 @@ export class DashboardPageDataService {
         ),
         connectorProperties:
           this.connectorInfoPropertyGridGroupBuilder.buildPropertyGridGroups(
-            lastCommitInfo,
-            uiBuildDate,
-            uiCommitDetails,
+            versionInfo,
             fetched,
           ),
       })),

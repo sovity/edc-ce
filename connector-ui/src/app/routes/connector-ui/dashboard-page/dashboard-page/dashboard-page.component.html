@@ -84,20 +84,22 @@
         {{ 'dashboard_page.descrip' | translate }}
       </p>
       <mat-form-field class="w-full" style="margin-bottom: -10px">
-        <mat-label>{{ 'dashboard_page.conn_end' | translate }}</mat-label>
+        <mat-label>{{
+          'dashboard_page.connector_endpoint' | translate
+        }}</mat-label>
         <input
           #input
           matInput
           ngDefaultControl
           readonly
-          [ngModel]="data.connectorEndpoint"
+          [ngModel]="data.connectorEndpointAndParticipantId"
           (focus)="input.select()" />
         <mat-icon matPrefix>link</mat-icon>
         <button
           mat-icon-button
           matSuffix
           [matTooltip]="'general.copy_to_clipboard_tooltip' | translate"
-          [cdkCopyToClipboard]="data.connectorEndpoint">
+          [cdkCopyToClipboard]="data.connectorEndpointAndParticipantId">
           <mat-icon>content_copy</mat-icon>
         </button>
       </mat-form-field>

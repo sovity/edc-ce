@@ -1,27 +1,141 @@
-# Changelog
+# sovity EDC CE Changelog
 
-For documentation on how to update this changelog,
-please see [changelog_updates.md](docs/dev/changelog_updates.md).
+The versions of the sovity EDC CE are aligned with the sovity EDC EE.
 
-
-## [x.x.x] - UNRELEASED
+## [v11.0.0] - 2025-03-10
 
 ### Overview
 
-### Detailed Changes
+Catena-X support. New custom module system with a single launcher. Migrate to Tractus-X 24.08 and Core EDC 0.7.2. Relicensing to Elastic License 2.0.
 
 #### Major Changes
 
-- Removed Catalog Crawler as it will be added to the Authority Portal to prevent circular dependencies ([#1052](https://github.com/sovity/edc-ce/pull/1052))
+- After careful deliberation we have decided to re-license the sovity Community Edition EDC to `Elastic License 2.0`
+  - If you are self-hosting your connectors, nothing changes for you.
+  - If you plan to contribute to this repository or have contributed to this repository in the past, your source code will remain under `Apache License 2.0`.
+  - If you are hosting connectors for a third party, please make sure to carefully read the `Elastic License 2.0` and our explanation [here](https://github.com/sovity)
+  - For more details, please see our vision behind the sovity Community Edition [here](https://github.com/sovity)
+- Breaking changes to Connector Docker Images, Versions and Configuration:
+  - Unified versioning across all the sovity EDC Connectors and the sovity EDC UI for simplicity
+  - Unified variants through new config and module system
+  - Auto-documented configuration system
+  - All sovity-specific configuration related to the EDC is now prefixed as `sovity.`
+- Ongoing migration from Java to Kotlin
+- Bumped Eclipse EDC to `0.7.2`
+- Bumped Tractus-X EDC to `0.7.7` / `24.08 Jupiter`
+- Parameterization for HTTP Push Transfers is no longer available
+  - Due to our UI only supporting HTTP Push, parameterization when initiating transfers is no longer available in our UI
+- Referring connector policy no longer evaluates the `EQ` operator like `IN`:
+  - For the participant `x` a policy using`REFERRING_CONNECTOR EQ "x, y"` does not evaluate to `true` anymore, because `["x"] != ["x", "y"]`.
+  - Both `REFERRING_CONNECTOR IN "a, b"` and `REFERRING_CONNECTOR IN ["a", "b"]` would work.
+  - Separating values by comma is still supported for the referring connector policy, it's just that it doesn't work with the `EQ` operator.
+- API Wrapper: Renamed some fields and classes for the `createDataOffer` endpoint
+- API Wrapper + Management API: Catalog requests now require a participantId
+  - For `sovity-daps` variants this is optional, because we don't use SSI, but we align ourselves with Catena-X because it is easier to maintain one way of working with the EDC than maintain two
+  - The UI Dashboard now gives you a `Connector Endpoint + Participant ID` with an appended `?participantId=...` instead of just a `Connector Endpoint`.
+    This is so the UI flow of `Copy one URL from the dashboard -> Paste one URL into the Catalog` remains unchanged
+  - The API now requires additional information of a Participant ID
+- API Wrapper + Management API: Transfer Initiation Requests now have an additional required "transfer type". Here's an overview over what "types" we now have:
+  - **Transfer Type**:
+    - Data plane architectural flow type of the transfer
+    - Decided by the consumer when initiating the transfer
+    - Both data planes must support this transfer type
+    - The selection might further limit what data address types are supported.
+    - E.g. `HttpData-PUSH`,`HttpData-PULL`,`AmazonS3-PUSH`
+  - **Data Source Type**:
+    - How the data plane gets the byte array of data when providing
+    - Decided by the provider when creating the asset
+    - The provider data plane must support this transfer type
+    - E.g. `HttpData`, `HttpProxy`, `HttpPush`, `AzureStorage`, `AmazonS3`
+  - **Data Sink Type**:
+    - How the data plane stores away the received byte array when consuming
+    - Decided by the consumer when initiating a transfer
+    - The consumer data plane must support this transfer type
+    - E.g. `HttpData`, `HttpProxy`, `HttpPush`, `AzureStorage`, `AmazonS3`
+- Asset JSON-LD changes:
+  - All asset metadata under the DCAT Dataset field `http://www.w3.org/ns/dcat#distribution` such as `mediaType`
+    has been moved to `https://semantic.sovity.io/dcat-ext#distribution` because the Eclipse EDC now overrides the field with information
+    regarding available data planes, causing asset metadata to get swallowed when querying the catalog. Previously the Eclipse EDC was
+    already appropriating the `distribution` field for its own purposes, but because they used an incorrect DCAT context
+    prefix `https://` instead of `http://`, it did not collide. Now they corrected it, so it collides, so we had to move our asset metadata
+    to a custom field instead of following the DCAT standard.
+- Published JARs have changed:
+  - `api` - JAX-RS Interfaces for both our sovity EDC CE and sovity EDC EE
+  - `java-client` - Java API Client library for both our sovity EDC CE and sovity EDC EE
+  - `mappers-lib` - Utilities for parsing Asset JSON-LD, Policy JSON-LD and DCAT Catalog JSON-LD payloads
+  - `jsonlld-lib` - Utilities for dealing with Eclipse EDC JSON-LD
+- Reworked DAPS interaction:
+  - The Client ID in the Keycloak must now be the Participant ID
+    - SKI/AKI as a concept does not exist anymore
+    - DAPS variants require re-registration of the connector at the DAPS under a new Client ID
+    - The certificate can be re-used, but by experience a new client needs to be registered in the Keycloak, renaming does not seem to work.
+  - The provider audience remains unchanged. It is expected to be the same as the Token URL
+  - The endpoint audience was changed from ~~`idsc:IDS_CONNECTORS_ALL`~~ to `edc:dsp-api`
+  - The claim ~~`referringConnector`~~ has been removed in favor of `azp`, which is a default claim and should contain the Client ID
+    which should now coincide with the Participant ID
 
 #### Minor Changes
 
-- Only return `Datasets` with valid `Offers` ([#1065](https://github.com/sovity/edc-ce/issues/1065))
+- All variants now support being launched as Control Plane with an integrated Data Plane
+- Hashicorp vault support
+- Build information now shows release version instead of commit information
+- Developer XP and debugging utilities:
+  - `sovity.print.config` - Print effective config, dependency jars and extensions. Never use on customer connectors!
+  - In-memory vault with initialization via env
+  - Improved ability to test variants and versions thanks to the new module system
+  - Improved ability to surgically replace EDC Extensions thanks to the new module system
+  - All used EDC Configuration is now documented
+  - All used vault entries are now documented
+- Added more explicit legacy Omejdn DAPS support. Note, that this is not tested
 
 #### Patch Changes
 
-- Refactoring: Config as Java Code ([#1051](https://github.com/sovity/edc-ce/pull/1051))
-- Fix issues with the Create Data Offer Endpoint ([PR#1055](https://github.com/sovity/edc-ce/pull/1055))
+- Fixed a bug fetching over 5000 elements by fixing transaction use for API enpdoints.
+
+#### Known Issues
+
+Known issues to be fixed in upcoming releases.
+
+- Documentation is currently still not up-to-date.
+- Catena-X policies are currently not properly supported via the UI.
+
+### Deployment Migration Notes
+
+- Please re-deploy all connectors using our reworked [Productive Deployment Guide](docs/deployment-guide/goals/production-ce/README.md)
+  - The configuration of our connectors has been reworked for better documentation and flexibility.
+  - Database migration histories are not compatible. Migrating was unfortunately not possible due to missing information in the DB, that would have to be amended on both provider and consumer sides.
+  - Note that the sovity EDC CE UI image is now  named `edc-ce-ui` instead of ~~`edc-ui`~~.
+- Preconfigured Catalog URLs now require a suffix of `?particpantId=...` as they are no longer pure `Connector Endpoints` but a list of `Connector Endpoint + Participant ID`
+- Base Paths for the Connector Backends are no longer opinionated. If you continue to want to have given base paths `/control` / `/data`,
+  you need to configure them using the recommended properties.
+
+#### Compatible Versions
+
+- EDC CE Backend: `ghcr.io/sovity/edc-ce:11.0.0`
+- EDC CE Frontend: `ghcr.io/sovity/edc-ce-ui:11.0.0`
+- PostgreSQL: `16`
+- Eclipse EDC Fork: [v0.7.2.1](https://github.com/sovity/core-edc/releases/tag/v0.7.2.1)
+- Tractus-X: `0.7.7`
+
+## [v10.5.0] - 2024-12-13
+
+### Overview
+
+MDS Patch Update
+
+### Detailed Changes
+
+#### Minor Changes
+
+- Catalog now only returns `Datasets` with valid `Offers` ([#1065](https://github.com/sovity/edc-ce/issues/1065))
+
+#### Patch Changes
+
+- EDC UI:
+  - Fix wrong placeholders for On Request data offer type
+    ([#878](https://github.com/sovity/edc-ui/issues/878))
+  - Rearrange Sidebar Navigation Groups
+    ([#836](https://github.com/sovity/edc-ui/issues/836))
 
 ### Deployment Migration Notes
 
@@ -30,12 +144,40 @@ _No special deployment migration steps required_
 #### Compatible Versions
 
 - Connector Backend Docker Images:
-  - Dev EDC: `ghcr.io/sovity/edc-dev:{{ VERSION }}`
-  - sovity EDC CE: `ghcr.io/sovity/edc-ce:{{ VERSION }}`
-  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:{{ VERSION }}`
-- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:{{ UI VERSION }}`
+  - Dev EDC: `ghcr.io/sovity/edc-dev:10.5.0`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:10.5.0`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:10.5.0`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:4.1.8`
 
-## [10.4.2] - 2024-10-07
+## [v11.0.0] - 2025-02-05
+
+_This release has no EDC CE release, it is EDC EE only._
+
+## [v10.4.4] - 2024-12-09
+
+### Overview
+
+MDS patch update
+
+### Detailed Changes
+
+#### Patch Changes
+
+- Synchronized Crawler DB migrations with AP
+
+### Deployment Migration Notes
+
+_No special deployment migration steps required_
+
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+  - Dev EDC: `ghcr.io/sovity/edc-dev:10.4.4`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:10.4.4`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:10.4.4`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:4.1.6`
+
+## [v10.4.2] - 2024-10-07
 
 ### Overview
 
@@ -63,11 +205,9 @@ _No special deployment migration steps required_
   - Dev EDC: `ghcr.io/sovity/edc-dev:10.4.2`
   - sovity EDC CE: `ghcr.io/sovity/edc-ce:10.4.2`
   - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:10.4.2`
-  - Dev Catalog Crawler: `ghcr.io/sovity/catalog-crawler-dev:10.4.2`
-  - Catalog Crawler CE: `ghcr.io/sovity/catalog-crawler-ce:10.4.2`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:4.1.6`
 
-## [10.4.1] - 2024-09-26
+## [v10.4.1] - 2024-09-26
 
 ### Overview
 
@@ -109,7 +249,7 @@ _No special deployment migration steps required_
   - Catalog Crawler CE: `ghcr.io/sovity/catalog-crawler-ce:10.4.1`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:4.1.5`
 
-## [10.4.0] - 2024-09-18
+## [v10.4.0] - 2024-09-18
 
 ### Overview
 
@@ -147,7 +287,7 @@ _No special deployment migration steps required_
   - Catalog Crawler CE: `ghcr.io/sovity/catalog-crawler-ce:10.4.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:4.1.4`
 
-## [10.3.0] - 2024-09-04
+## [v10.3.0] - 2024-09-04
 
 ### Overview
 
@@ -183,7 +323,7 @@ Minor updates for contracts termination
   - Catalog Crawler CE: `ghcr.io/sovity/catalog-crawler-ce:10.3.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:4.1.3`
 
-## [10.2.0] - 2024-08-20
+## [v10.2.0] - 2024-08-20
 
 ### Overview
 
@@ -237,7 +377,7 @@ If the extension is to be switched off, the following must now be set, as the ex
   - Catalog Crawler CE: `ghcr.io/sovity/catalog-crawler-ce:10.2.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:4.1.2`
 
-## [10.1.0] - 2024-08-09
+## [v10.1.0] - 2024-08-09
 
 ### Overview
 
@@ -249,7 +389,7 @@ This release contained a major bug that prevented the EDC from starting when the
 
 This was fixed in 10.2.0
 
-## [10.0.0] - 2024-07-24
+## [v10.0.0] - 2024-07-24
 
 ### Overview
 
@@ -293,7 +433,7 @@ _No special migration notes required_
   - Catalog Crawler CE: `ghcr.io/sovity/catalog-crawler-ce:10.0.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:4.1.0`
 
-## [9.0.0] - 2024-07-15
+## [v9.0.0] - 2024-07-15
 
 ### Overview
 
@@ -342,7 +482,7 @@ MDS 2.2 intermediate release
   - Catalog Crawler CE: `ghcr.io/sovity/catalog-crawler-ce:9.0.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:4.0.0`
 
-## [8.1.0] - 2024-06-14
+## [v8.1.0] - 2024-06-14
 
 ### Overview
 
@@ -373,7 +513,7 @@ Support for Multiplicity Constraints in the API Wrapper.
   - Broker CE: `ghcr.io/sovity/broker-server-ce:8.1.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:3.2.2`
 
-## [8.0.0] - 2024-06-05
+## [v8.0.0] - 2024-06-05
 
 ### Overview
 
@@ -402,7 +542,7 @@ The functionalities of each part, Broker and Extensions, on this release, is the
   - Broker CE: `ghcr.io/sovity/broker-server-ce:8.0.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:3.2.2`
 
-## [7.5.0] - 2024-05-16
+## [v7.5.0] - 2024-05-16
 
 ### Overview
 
@@ -433,7 +573,7 @@ Security updates
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:3.2.2`
 - Connector UI Release: https://github.com/sovity/edc-ui/releases/tag/v3.2.2
 
-## [7.4.2] - 2024-04-20
+## [v7.4.2] - 2024-04-20
 
 ### Overview
 
@@ -447,9 +587,9 @@ MDS Bugfix Release
 - Fixed naming of the `nutsLocations` field for MDS assets.
 - UI: Removed HTTP Verb "HEAD" as it was not supported by the backend
 - Docs: Updated image to explain data-transfer-methods
-- Docs: Updated documentation for parameterization using only the UI or the Management-API
-- Docs: Updated OAuth2 documentation about necessary parameters that need to use the vault key instead of providing a secret directly
-- Docs: Updated documentation for the pull-data-transfer
+- Docs: Updated documentation for parameterization using [only the UI](https://github.com/sovity/edc-ce/blob/v7.4.2/docs/getting-started/documentation/parameterized_assets_via_ui.md) or the [Management-API](https://github.com/sovity/edc-ce/blob/v7.4.2/docs/getting-started/documentation/parameterized_assets.md)
+- Docs: Updated [OAuth2 documentation](https://github.com/sovity/edc-ce/blob/v7.4.2/docs/getting-started/documentation/oauth-data-address.md) about necessary parameters that need to use the vault key instead of providing a secret directly
+- Docs: Updated documentation for the [pull-data-transfer](https://github.com/sovity/edc-ce/blob/v7.4.2/docs/getting-started/documentation/pull-data-transfer.md)
 - Dev Utils: Parallel test support for our Test Backend for some requests.
 
 ### Deployment Migration Notes
@@ -465,7 +605,7 @@ Contains DB migrations, DB backups advised.
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:3.2.2`
 - Connector UI Release: https://github.com/sovity/edc-ui/releases/tag/v3.2.2
 
-## [7.4.0] - 2024-04-11
+## [v7.4.0] - 2024-04-11
 
 ### Overview
 
@@ -497,7 +637,7 @@ https://github.com/sovity/edc-ui/releases/tag/v3.1.0
   - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.4.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:3.1.0`
 
-## [7.3.0] - 2024-03-28
+## [v7.3.0] - 2024-03-28
 
 ### Overview
 
@@ -539,7 +679,7 @@ https://github.com/sovity/edc-ui/releases/tag/v3.0.0
   - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.3.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:3.0.0`
 
-## [7.2.2] - 2024-03-13
+## [v7.2.2] - 2024-03-13
 
 ### Overview
 
@@ -567,7 +707,7 @@ _No special deployment migration steps required_
   - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.2.2`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:2.4.0`
 
-## [7.2.1] - 2024-02-21
+## [v7.2.1] - 2024-02-21
 
 ### Overview
 
@@ -596,7 +736,7 @@ _No special deployment migration steps required_
   - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.2.1`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:2.4.0`
 
-## [7.2.0] - 2024-02-14
+## [v7.2.0] - 2024-02-14
 
 ### Overview
 
@@ -629,7 +769,7 @@ _No special deployment migration steps required_
   - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.2.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:2.4.0`
 
-## [7.1.1] - 2024-01-18
+## [v7.1.1] - 2024-01-18
 
 ### Overview
 
@@ -651,7 +791,7 @@ _No special deployment migration steps required_
   - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.1.1`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:2.3.1`
 
-## [7.1.0] - 2024-01-17
+## [v7.1.0] - 2024-01-17
 
 ### Overview
 
@@ -679,7 +819,7 @@ https://github.com/sovity/edc-ui/releases/tag/v2.3.0
   - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.1.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:2.3.0`
 
-## [7.0.0] - 2023-12-06
+## [v7.0.0] - 2023-12-06
 
 ### Overview
 
@@ -729,7 +869,7 @@ https://github.com/sovity/edc-ui/releases/tag/v2.2.0
   - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.0.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:2.2.0`
 
-## [6.0.0] - 2023-11-17
+## [v6.0.0] - 2023-11-17
 
 ### Overview
 
@@ -770,7 +910,7 @@ EDC_AGENT_IDENTITY_KEY: client_id
   - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:6.0.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:2.1.0`
 
-## [5.0.0] - 10.10.2023
+## [v5.0.0] - 10.10.2023
 
 ### Overview
 
@@ -828,7 +968,7 @@ https://github.com/sovity/edc-ui/releases/tag/v2.0.0
 2. The Connector Endpoint changed to `https://[FQDN]/api/dsp` from ~~`https://[FQDN]/api/v1/ids/data`~~.
 3. The Management Endpoint changed to `https://[FQDN]/api/management` from ~~`https://[FQDN]/api/v1/management`~~.
 4. The `v1` Eclipse EDC Management API has been replaced by the Eclipse EDC `JSON-LD` `v2` Management API. Our Postman Collection shows some example requests.
-   However, a switch to our [API Wrapper](extensions/wrapper/README.md) is recommended. Despite our Use Case API Wrapper API still being in development,
+   However, a switch to our [API Wrapper](https://github.com/sovity/edc-ce/tree/v5.0.0/extensions/wrapper/README.md) is recommended. Despite our Use Case API Wrapper API still being in development,
    the Connector UI API Wrapper is fully functional and can be used in concatenation with our type-safe generated API Client Libraries to both provide and
    consume data offers.
 5. The Connector now uses the Data Space Protocol (DSP) instead of the IDS Protocol. This requires different paths to be available from the internet.
@@ -844,7 +984,7 @@ https://github.com/sovity/edc-ui/releases/tag/v2.0.0
   - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:5.0.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:2.0.0`
 
-## [4.2.0] - 2023-09-01
+## [v4.2.0] - 2023-09-01
 
 ### Overview
 
@@ -870,7 +1010,7 @@ MDS 1.2 release using MS8 EDC.
   - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:4.2.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity13`
 
-## [4.1.0] - 2023-07-24
+## [v4.1.0] - 2023-07-24
 
 ### Overview
 
@@ -908,7 +1048,7 @@ Security improvements of container image and enhancements for the `ReferringConn
   - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:4.1.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity12`
 
-## [4.0.1] - 2023-07-07
+## [v4.0.1] - 2023-07-07
 
 ### Overview
 
@@ -936,7 +1076,7 @@ No changes besides docker image versions.
   - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:4.0.1`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity11`
 
-## [4.0.0] - 2023-07-05
+## [v4.0.0] - 2023-07-05
 
 ### Overview
 
@@ -972,7 +1112,7 @@ No changes besides docker image versions.
   - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:4.0.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity9`
 
-## [3.3.0] - 2023-06-06
+## [v3.3.0] - 2023-06-06
 
 ### Minor Changes
 
@@ -984,7 +1124,7 @@ No changes besides docker image versions.
 
 - Minor EE API adjustments.
 
-## [3.2.0] - 2023-05-17
+## [v3.2.0] - 2023-05-17
 
 ### Minor Changes
 
@@ -998,7 +1138,7 @@ No changes besides docker image versions.
 - Bumped EDC UI version to `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity5` in production `docker-compose.yaml`. This
   fixes a CORS-related issue.
 
-## [3.1.0] - 2023-04-27
+## [v3.1.0] - 2023-04-27
 
 ### Minor Changes
 
@@ -1011,7 +1151,7 @@ No changes besides docker image versions.
 - fix: update postman collection
 - bump org.junit.jupiter:junit-jupiter-api from 5.9.2 to 5.9.3
 
-## [3.0.1] - 2023-04-06
+## [v3.0.1] - 2023-04-06
 
 ### Fixed
 
@@ -1022,7 +1162,7 @@ No changes besides docker image versions.
 
 - Reverted docker-compose.yaml to run only one connector
 
-## [3.0.0] - 2023-04-04
+## [v3.0.0] - 2023-04-04
 
 ### Major Changes
 
@@ -1051,26 +1191,26 @@ No changes besides docker image versions.
 - bump io.swagger.core.v3:swagger-annotations-jakarta
 - bump io.swagger:swagger-annotations from 1.6.8 to 1.6.10
 
-## [2.0.3] - 2023-03-24
+## [v2.0.3] - 2023-03-24
 
 ### Fixed
 
 - Bug in postman collection, ports needed to be updated due to release 2.0.2.
 
-## [2.0.2] - 2023-03-23
+## [v2.0.2] - 2023-03-23
 
 ### Fixed
 
 - Bug in migration scripts, for existing contract negotiations the embedded JSON array of contract offers was missing
   contractStart, contractEnd.
 
-## [2.0.1] - 2023-03-21
+## [v2.0.1] - 2023-03-21
 
 ### Fixed
 
 - Bug in migration scripts, default values are now set.
 
-## [2.0.0] - 2023-03-20
+## [v2.0.0] - 2023-03-20
 
 ### Fixed
 
@@ -1081,25 +1221,25 @@ No changes besides docker image versions.
 
 - Updated to EDC-Connector 0.0.1-milestone-8.
 
-## [1.5.1] - 2023-03-17
+## [v1.5.1] - 2023-03-17
 
 ### Fixed
 
 - Changed docker-compose file to use released instead of latest versions of EDC-Connector and EDC-UI
 
-## [1.5.0] - 2023-03-07
+## [v1.5.0] - 2023-03-07
 
 ### Feature
 
 - `EDC_FLYWAY_REPAIR=true` variable can now be set to run flyway repair when migrations failed
 
-## [1.4.0] - 2023-03-06
+## [v1.4.0] - 2023-03-06
 
 ### Feature
 
 - EDC UI Config Extension
 
-## [1.3.0] - 2023-02-27
+## [v1.3.0] - 2023-02-27
 
 ### Feature:
 
@@ -1114,7 +1254,7 @@ No changes besides docker image versions.
 - Added unregister connector to puml diagram
 - Cannot fetch own catalog due to wrong port mapping
 
-## [1.2.0] - 2023-02-02
+## [v1.2.0] - 2023-02-02
 
 ### Feature:
 
@@ -1125,7 +1265,7 @@ No changes besides docker image versions.
 
 - Extend get_client script to add support for OpenSSL version 3.x
 
-## [1.1.0] - 2023-01-23
+## [v1.1.0] - 2023-01-23
 
 ### Feature:
 
@@ -1141,7 +1281,7 @@ No changes besides docker image versions.
 - Bump junit-jupiter-engine from 5.8.1 to 5.9.2
 - Bump com.github.johnrengelman.shadow from 7.0.0 to 7.1.2
 
-## [1.0.1] - 2023-01-11
+## [v1.0.1] - 2023-01-11
 
 ### Fixed:
 
@@ -1152,6 +1292,6 @@ No changes besides docker image versions.
 
 - Add ski/aki and jks extraction script
 
-## [1.0.0] - 2022-12-19
+## [v1.0.0] - 2022-12-19
 
 - initial release

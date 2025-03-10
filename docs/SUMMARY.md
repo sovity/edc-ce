@@ -53,7 +53,7 @@
   * [QuerySpec](Backend/Management-API/queryspec.md)
 
 ## Community Edition Deployment
+
 * [Overview](getting-started/README.md)
-* [Local Demo](deployment-guide/goals/local-demo/README.md)
-* [Development](deployment-guide/goals/development/README.md)
-* [Production](deployment-guide/goals/production/README.md)
+* [Local Demo](deployment-guide/goals/local-demo-ce/README.md)
+* [Production](deployment-guide/goals/production-ce/README.md)

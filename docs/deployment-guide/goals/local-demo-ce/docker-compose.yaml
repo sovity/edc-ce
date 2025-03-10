@@ -1,0 +1,136 @@
+services:
+  consumer:
+    image: 'caddy:2.8'
+    restart: 'always'
+    ports:
+      - '22000:80'
+    volumes:
+      - './caddyfiles/Caddyfile.cp-with-integrated-dp:/etc/caddy/Caddyfile'
+    environment:
+      CONNECTOR_UPSTREAM_HOST: 'consumer-connector'
+      FRONTEND_UPSTREAM_HOST: 'consumer-ui'
+  consumer-ui:
+    image: 'ghcr.io/sovity/edc-ce-ui:11.0.0'
+    restart: 'always'
+    environment:
+      EDC_UI_MANAGEMENT_API_URL: '/api/management'
+      EDC_UI_MANAGEMENT_API_KEY: 'SomeOtherApiKey'
+      EDC_UI_CONFIG_URL: 'edc-ui-config'
+      NGINX_ACCESS_LOG: 'off'
+  consumer-connector:
+    image: 'ghcr.io/sovity/edc-ce:11.0.0'
+    restart: 'always'
+    depends_on:
+      consumer-connector-db:
+        condition: 'service_healthy'
+    environment:
+      sovity.deployment.kind: 'control-plane-with-integrated-data-plane'
+      sovity.edc.fqdn.public: 'consumer'
+      sovity.edc.fqdn.internal: 'localhost'
+      sovity.jdbc.url: 'jdbc:postgresql://consumer-connector-db:5432/db-name'
+      sovity.jdbc.user: 'db-user'
+      sovity.jdbc.password: 'db-pass'
+      edc.ui.active.profile: 'sovity-open-source'
+      edc.ui.logout.url: 'https://example.com'
+      edc.ui.catalog.urls: 'http://provider/api/dsp'
+      sovity.management.api.iam.kind: 'management-iam-api-key'
+      edc.api.auth.key: 'SomeOtherApiKey'
+      sovity.edc.title: 'consumer Title'
+      sovity.edc.description: 'consumer Description'
+      sovity.edc.maintainer.name: 'consumer Maintainer'
+      sovity.edc.maintainer.url: 'https://consumer/maintainer'
+      sovity.edc.curator.name: 'consumer Curator'
+      sovity.edc.curator.url: 'https://consumer/curator'
+      sovity.dataspace.kind: 'sovity-mock-iam'
+      edc.participant.id: 'consumer'
+      sovity.http.protocol: 'http://'
+      sovity.print.config: 'true'
+      sovity.logging.level: 'DEBUG'
+      sovity.logging.kind: 'console'
+      sovity.micrometer.enabled: 'true'
+  consumer-connector-db:
+    image: 'docker.io/postgres:16-alpine'
+    restart: 'always'
+    environment:
+      POSTGRES_USER: 'db-user'
+      POSTGRES_PASSWORD: 'db-pass'
+      POSTGRES_DB: 'db-name'
+    healthcheck:
+      test:
+        - 'CMD-SHELL'
+        - 'pg_isready -U db-user --dbname=db-name'
+      interval: '1s'
+      timeout: '5s'
+      retries: 10
+    volumes:
+      - 'consumer-connector-db-data:/var/lib/postgresql/data'
+  provider:
+    image: 'caddy:2.8'
+    restart: 'always'
+    ports:
+      - '11000:80'
+    volumes:
+      - './caddyfiles/Caddyfile.cp-with-integrated-dp:/etc/caddy/Caddyfile'
+    environment:
+      CONNECTOR_UPSTREAM_HOST: 'provider-connector'
+      FRONTEND_UPSTREAM_HOST: 'provider-ui'
+  provider-ui:
+    image: 'ghcr.io/sovity/edc-ce-ui:11.0.0'
+    restart: 'always'
+    environment:
+      EDC_UI_MANAGEMENT_API_URL: '/api/management'
+      EDC_UI_MANAGEMENT_API_KEY: 'SomeOtherApiKey'
+      EDC_UI_CONFIG_URL: 'edc-ui-config'
+      NGINX_ACCESS_LOG: 'off'
+  provider-connector:
+    image: 'ghcr.io/sovity/edc-ce:11.0.0'
+    restart: 'always'
+    depends_on:
+      provider-connector-db:
+        condition: 'service_healthy'
+    environment:
+      sovity.deployment.kind: 'control-plane-with-integrated-data-plane'
+      sovity.edc.fqdn.public: 'provider'
+      sovity.edc.fqdn.internal: 'localhost'
+      sovity.jdbc.url: 'jdbc:postgresql://provider-connector-db:5432/db-name'
+      sovity.jdbc.user: 'db-user'
+      sovity.jdbc.password: 'db-pass'
+      edc.ui.active.profile: 'sovity-open-source'
+      edc.ui.logout.url: 'https://example.com'
+      edc.ui.catalog.urls: 'http://consumer/api/dsp'
+      sovity.management.api.iam.kind: 'management-iam-api-key'
+      edc.api.auth.key: 'SomeOtherApiKey'
+      sovity.edc.title: 'provider Title'
+      sovity.edc.description: 'provider Description'
+      sovity.edc.maintainer.name: 'provider Maintainer'
+      sovity.edc.maintainer.url: 'https://provider/maintainer'
+      sovity.edc.curator.name: 'provider Curator'
+      sovity.edc.curator.url: 'https://provider/curator'
+      sovity.dataspace.kind: 'sovity-mock-iam'
+      edc.participant.id: 'provider'
+      sovity.http.protocol: 'http://'
+      sovity.print.config: 'true'
+      sovity.logging.level: 'DEBUG'
+      sovity.logging.kind: 'console'
+      sovity.micrometer.enabled: 'true'
+  provider-connector-db:
+    image: 'docker.io/postgres:16-alpine'
+    restart: 'always'
+    environment:
+      POSTGRES_USER: 'db-user'
+      POSTGRES_PASSWORD: 'db-pass'
+      POSTGRES_DB: 'db-name'
+    healthcheck:
+      test:
+        - 'CMD-SHELL'
+        - 'pg_isready -U db-user --dbname=db-name'
+      interval: '1s'
+      timeout: '5s'
+      retries: 10
+    volumes:
+      - 'provider-connector-db-data:/var/lib/postgresql/data'
+volumes:
+  consumer-connector-db-data:
+    driver: 'local'
+  provider-connector-db-data:
+    driver: 'local'

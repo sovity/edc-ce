@@ -1,1 +1,0 @@
-The GitHub Pipeline will replace this file during build time with the current date.

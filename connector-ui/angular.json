@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "edc-demo-client": {
+    "edc-ui": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -21,7 +21,7 @@
           "builder": "ngx-build-plus:browser",
           "options": {
             "extraWebpackConfig": "webpack.config.js",
-            "outputPath": "dist/edc-demo-client",
+            "outputPath": "dist/edc-ui",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -73,10 +73,10 @@
           "builder": "ngx-build-plus:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "edc-demo-client:build:production"
+              "browserTarget": "edc-ui:build:production"
             },
             "development": {
-              "browserTarget": "edc-demo-client:build:development"
+              "browserTarget": "edc-ui:build:development"
             }
           },
           "options": {
@@ -88,7 +88,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "edc-demo-client:build"
+            "browserTarget": "edc-ui:build"
           }
         },
         "test": {

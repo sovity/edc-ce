@@ -1,36 +1,27 @@
-# Stage 1: Install node modules
-FROM docker.io/library/node:lts as npm-install
-
-WORKDIR /app
-COPY ./package*.json /app/
-RUN npm install
-
-# Stage 2: Build Project
-FROM docker.io/library/node:lts as build
-
-WORKDIR /app
-COPY --from=npm-install /app/node_modules /app/node_modules
-COPY ./ /app/
-RUN npm run ng build --no-progress --configuration=production
-
-# Stage 3: Serve app with nginx
+# Serve app with nginx
 FROM docker.io/nginxinc/nginx-unprivileged:1.27-alpine3.20
 
 # Temporarily switch to root to install packages and create symlink in restricted location
 USER root
 RUN apk add --no-cache jq curl
 
-COPY --from=build /app/dist/edc-demo-client /usr/share/nginx/html
-COPY --from=build /app/src/assets /usr/share/nginx/html/assets
+COPY ./dist/edc-ui /usr/share/nginx/html
+COPY ./src/assets /usr/share/nginx/html/assets
 COPY docker/default.conf.template etc/nginx/templates/default.conf.template
-# Before starting nginx, apply ENV vars to create app-config.json from EDC_UI_* ENV Vars
+# Before starting nginx, apply ENV vars to create app-configuration.json from EDC_UI_* ENV Vars
 # Use an entrypoint drop-in instead of modifying the default entrypoint or command,
 # so that the automatic envsubst templating is not disabled.
-COPY docker/99-generate-app-config.sh /docker-entrypoint.d/99-generate-app-config.sh
+COPY --chmod=755 --chown=root:root docker/99-generate-app-config.sh /docker-entrypoint.d/99-generate-app-config.sh
 
-RUN ln -sf /tmp/app-config.json /usr/share/nginx/html/assets/config/app-configuration.json \
+RUN ln -sf /tmp/app-configuration.json /usr/share/nginx/html/assets/config/app-configuration.json \
   # Nginx is configured to reject symlinks that point to a file owned by a different user, for security reasons
   && chown --no-dereference nginx:root /usr/share/nginx/html/assets/config/app-configuration.json
+
+ARG EDC_UI_BUILD_VERSION_ARG="The docker container was built outside of github actions and you didn't provide the build arg EDC_UI_BUILD_VERSION_ARG, so there's no git description."
+ENV EDC_UI_BUILD_VERSION=$EDC_UI_BUILD_VERSION_ARG
+
+ARG EDC_UI_BUILD_DATE_ARG="The docker container was built outside of github actions and you didn't provide the build arg EDC_UI_BUILD_DATE_ARG, so there's no build date."
+ENV EDC_UI_BUILD_DATE=$EDC_UI_BUILD_DATE_ARG
 
 # Switch back to unprivileged user for runtime
 USER nginx:nginx

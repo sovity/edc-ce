@@ -1,6 +1,7 @@
 name: CI
 
 on:
+  workflow_dispatch:
   push:
     branches: [ main ]
   release:
@@ -12,62 +13,34 @@ env:
   REGISTRY_URL: ghcr.io
   REGISTRY_USER: ${{ github.actor }}
   IMAGE_BASE_NAME: ${{ github.repository_owner }}
-  GITHUB_CI: true
 
 jobs:
-  build-gradle-project:
-    name: Build Gradle Project
+  build-connector-image-ce:
+    name: Build CE Connector Image
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
     permissions:
       contents: read
       packages: write
     steps:
-      - uses: FranzDiebold/github-env-vars-action@v2
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: "Set up JDK 17"
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
       - name: "Gradle: Validate Gradle Wrapper"
-        uses: gradle/wrapper-validation-action@ccb4328a959376b642e027874838f60f8e596de3
-      - name: "Gradle: Include last commit info and build date for JARs"
-        run: |
-          git log -1 > extensions/last-commit-info/src/main/resources/jar-last-commit-info.txt
-          echo $(date --utc +%FT%TZ) > extensions/last-commit-info/src/main/resources/jar-build-date.txt
-      - name: "Gradle: Overwrite Artifact Version (Release Only)"
-        if: ${{ startsWith(github.ref, 'refs/tags/v') }}
-        run: |
-          GRADLE_ARGS="-PsovityEdcExtensionsVersion=${GITHUB_REF#refs/tags/v}"
-          echo "GRADLE_ARGS=$GRADLE_ARGS" >> $GITHUB_ENV
-      - name: "Gradle: Build"
-        uses: gradle/gradle-build-action@v2.10.0
+        uses: gradle/wrapper-validation-action@v3
+      - name: "Gradle: Test & Build"
+        uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c
         with:
-          arguments: build ${{ env.GRADLE_ARGS }}
+          build-root-directory: connector
+          arguments: build -x test ${{ env.GRADLE_ARGS }}
         env:
-          USERNAME: ${{ github.actor }}
+          USERNAME: ${{ env.REGISTRY_USER }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: "Gradle: Publish (Main & Release Only)"
-        uses: gradle/gradle-build-action@v2.10.0
-        if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v') }}
-        with:
-          arguments: publish ${{ env.GRADLE_ARGS }}
-        env:
-          USERNAME: ${{ github.actor }}
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: "Docker Image: edc-dev"
-        uses: ./.github/actions/build-connector-image
-        with:
-          registry-url: ${{ env.REGISTRY_URL }}
-          registry-user: ${{ env.REGISTRY_USER }}
-          registry-password: ${{ secrets.GITHUB_TOKEN }}
-          image-base-name: ${{ env.IMAGE_BASE_NAME }}
-          image-name: "edc-dev"
-          connector-name: "sovity-dev"
-          deployment-type: "connector"
-          title: "sovity Dev EDC Connector"
-          description: "Extended EDC Connector built by sovity. This dev version contains no dataspace auth and can be used to quickly start a locally running EDC + EDC UI."
       - name: "Docker Image: edc-ce"
         uses: ./.github/actions/build-connector-image
         with:
@@ -76,35 +49,151 @@ jobs:
           registry-password: ${{ secrets.GITHUB_TOKEN }}
           image-base-name: ${{ env.IMAGE_BASE_NAME }}
           image-name: "edc-ce"
-          connector-name: "sovity-ce"
-          deployment-type: "connector"
-          title: "sovity Community Edition EDC Connector"
-          description: "EDC Connector built by sovity. Contains sovity's Community Edition EDC extensions and requires dataspace credentials to join an existing dataspace."
-      - name: "Docker Image: edc-ce-mds"
-        uses: ./.github/actions/build-connector-image
+          image-title: "sovity Community Edition EDC Connector"
+          image-description: "Eclipse EDC Connector built by sovity. This image supports multiple data spaces and contains multiple kinds of deployments: Standalone Control Plane, Standalone Dataplane, Combined Control and Dataplane"
+          connector-dir: "connector/ce/docker-image-ce"
+  build-connector-ui-image-ce:
+    name: Build CE Connector UI Image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v3
         with:
-          registry-url: ${{ env.REGISTRY_URL }}
-          registry-user: ${{ env.REGISTRY_USER }}
-          registry-password: ${{ secrets.GITHUB_TOKEN }}
-          image-base-name: ${{ env.IMAGE_BASE_NAME }}
-          image-name: "edc-ce-mds"
-          connector-name: "mds-ce"
-          deployment-type: "connector"
-          title: "MDS Community Edition EDC Connector"
-          description: "EDC Connector built by sovity and configured for compatibility with the Mobility Data Space (MDS). This EDC requires dataspace credentials, and additional MDS Services such as a Clearing House."
-      - name: "Docker Image: test-backend"
-        uses: ./.github/actions/build-connector-image
+          fetch-depth: 0
+
+      - name: "Set up JDK 17"
+        uses: actions/setup-java@v3
         with:
-          registry-url: ${{ env.REGISTRY_URL }}
-          registry-user: ${{ env.REGISTRY_USER }}
-          registry-password: ${{ secrets.GITHUB_TOKEN }}
-          image-base-name: ${{ env.IMAGE_BASE_NAME }}
-          image-name: "test-backend"
-          connector-name: "test-backend"
-          deployment-type: "connector"
-          title: "Test Data Source / Data Sink"
-          description: "Provides a minimal data source / data sink for E2E tests."
-  ts-api-client-library:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: "Gradle: Validate Gradle Wrapper"
+        uses: gradle/wrapper-validation-action@v3
+
+      - name: "Set up Node 20"
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: 'connector-ui/package-lock.json'
+
+      - name: "Install Dependencies"
+        working-directory: connector-ui
+        run: |
+          npm ci
+
+      - name: "Build Angular Project"
+        working-directory: connector-ui
+        run: |
+          npm run build-prod
+        env:
+          USERNAME: ${{ env.REGISTRY_USER }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Store the build date and version
+        id: build_info
+        run: |
+          echo "EDC_UI_BUILD_VERSION_ARG=$(git describe --tags ${CI_PR_SHA})" >> "$GITHUB_OUTPUT"
+          echo "EDC_UI_BUILD_DATE_ARG=$(date --utc +%FT%TZ)" >> "$GITHUB_OUTPUT"
+
+      - name: Log in to the Container registry (push-only)
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY_URL }}
+          username: ${{ env.REGISTRY_USER }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY_URL }}/${{ env.IMAGE_BASE_NAME }}/edc-ce-ui
+          labels: |
+            org.opencontainers.image.title=sovity EDC CE UI
+            org.opencontainers.image.description=UI for the sovity EDC CE Connector
+          tags: |
+            type=schedule
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=release,enable=${{ startsWith(github.ref, 'refs/tags/') }}
+      - name: Build EDC-UI image
+        uses: docker/build-push-action@v4
+        with:
+          file: connector-ui/docker/Dockerfile
+          context: connector-ui
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            "EDC_UI_BUILD_VERSION_ARG=${{ steps.build_info.outputs.EDC_UI_BUILD_VERSION_ARG }}"
+            "EDC_UI_BUILD_DATE_ARG=${{ steps.build_info.outputs.EDC_UI_BUILD_DATE_ARG }}"
+  run-connector-tests-ce:
+    name: Run CE Gradle Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v3
+      - name: "Set up JDK 17"
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: "Gradle: Validate Gradle Wrapper"
+        uses: gradle/wrapper-validation-action@v3
+      - name: "Gradle: Test"
+        uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c
+        with:
+          build-root-directory: connector
+          arguments: test -x :ce:docker-image-ce:assemble
+        env:
+          USERNAME: ${{ env.REGISTRY_USER }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  run-ui-karma-tests:
+    name: Run UI Karma Tests
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: "Set up JDK 17"
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: "Gradle: Validate Gradle Wrapper"
+        uses: gradle/wrapper-validation-action@v3
+
+      - name: "Set up Node 20"
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: 'connector-ui/package-lock.json'
+
+      - name: "Install Dependencies"
+        working-directory: connector-ui
+        run: |
+          npm ci
+
+      - name: "Run Karma Tests"
+        working-directory: connector-ui
+        run: |
+          npm run test-ci
+        env:
+          USERNAME: ${{ env.REGISTRY_USER }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  build-client-library-typescript:
     name: TS API Client Library
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -121,18 +210,19 @@ jobs:
         with:
           node-version: '16'
           cache: 'npm'
-          cache-dependency-path: extensions/wrapper/clients/typescript-client/package.json
+          cache-dependency-path: connector/ce/libs/api-clients/typescript-client/package.json
       - name: "Gradle: Validate Gradle Wrapper"
         uses: gradle/wrapper-validation-action@ccb4328a959376b642e027874838f60f8e596de3
       - name: "Gradle: Generate TS Code"
         uses: gradle/gradle-build-action@v2.10.0
         with:
-          arguments: :extensions:wrapper:wrapper:build -x test
+          build-root-directory: connector
+          arguments: :ce:libs:api-clients:typescript-client:build -x test
         env:
           USERNAME: ${{ github.actor }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: "NPM: Dist Tag & Version"
-        working-directory: ./extensions/wrapper/clients/typescript-client
+        working-directory: ./connector/ce/libs/api-clients/typescript-client
         run: |
           if [[ "$GITHUB_REF" == "refs/tags/v"* ]]; then
             # Full Release
@@ -145,11 +235,11 @@ jobs:
           npm version $VERSION
           echo "DIST_TAG=$DIST_TAG" >> $GITHUB_ENV
       - name: "NPM: Build"
-        working-directory: extensions/wrapper/clients/typescript-client
+        working-directory: connector/ce/libs/api-clients/typescript-client
         run: npm ci && npm run build
       - name: "NPM: Publish (Main & Releases Only)"
         if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v') }}
-        working-directory: extensions/wrapper/clients/typescript-client
+        working-directory: connector/ce/libs/api-clients/typescript-client
         run: |
           npm set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN
           npm set //registry.npmjs.org/:username $NODE_USER
@@ -157,3 +247,68 @@ jobs:
         env:
           NODE_USER: richardtreier-sovity
           NODE_AUTH_TOKEN: ${{ secrets.SOVITY_EDC_CLIENT_NPM_AUTH }}
+  check-migration-script-names:
+    name: "Check Migration Script Names"
+    env:
+      MIGRATIONS_DIR_CE: connector/ce/utils/db-schema-ce/src/main/resources/db/migration-ce
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Validate CE Migration Scripts
+        run: |
+          function check_migrations_dir () {
+            MIGRATIONS_DIR=$1
+            PATTERN=$2
+
+            FILES=$(ls -A "$MIGRATIONS_DIR")
+
+            if [[ ! (-d "$1" && -n $FILES) ]]; then
+              echo "Error: Directory either doesn't exist or is empty" >&2
+              exit 1
+            fi
+
+            echo "Checking $MIGRATIONS_DIR"
+
+            for filename in $FILES ; do
+              if [[ ! "$filename" =~ $PATTERN ]]; then
+                echo "Error: Invalid migration script name: ${filename##*/}"
+                echo "Expected format: $PATTERN"
+                exit 1
+              fi
+              echo "✓ ${filename}"
+            done
+
+            echo "✓ All migration scripts follow $PATTERN"
+          }
+
+          MIGRATION_DIR_CE='connector/ce/utils/db-schema-ce/src/main/resources/db/migration-ce'
+
+          PATTERN_CE='^V([0-9]+\.[0-9]+\.[0-9]+)__Release_\1_CE\.sql$'
+
+          if [[ ! "${{ github.ref }}" =~ '^refs/tags/v' ]] && [[ ! "${{ github.event.pull_request.head.ref }}" == "next" ]]; then
+            PATTERN_CE+='|^V99__Unreleased_CE.sql$'
+          fi
+
+          echo "Checking CE Migrations"
+          check_migrations_dir "$MIGRATION_DIR_CE" "$PATTERN_CE"
+
+
+  ci_status:
+    if: always()
+    name: CI Status
+
+    needs:
+      - build-connector-image-ce
+      - build-connector-ui-image-ce
+      - run-connector-tests-ce
+      - run-ui-karma-tests
+      - build-client-library-typescript
+      - check-migration-script-names
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Decide whether the needed jobs succeeded or failed
+        uses: re-actors/alls-green@release/v1
+        with:
+          jobs: ${{ toJSON(needs) }}

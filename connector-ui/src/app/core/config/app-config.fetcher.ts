@@ -1,3 +1,10 @@
+/*
+ * Copyright sovity GmbH and/or licensed to sovity GmbH under one or
+ * more contributor license agreements. You may not use this file except
+ * in compliance with the "Elastic License 2.0".
+ *
+ * SPDX-License-Identifier: Elastic-2.0
+ */
 import urlJoin from 'url-join';
 import {validUrlPattern} from '../validators/url-validator';
 import {AppConfigProperties} from './app-config-properties';
@@ -7,7 +14,7 @@ export class AppConfigFetcher {
   constructor(private appConfigMerger: AppConfigMerger) {}
 
   /**
-   * Fetches app-config.json, applies {@link AppConfigProperties.configJson},
+   * Fetches app-configuration.json, applies {@link AppConfigProperties.configJson},
    * fetches another config from {@link AppConfigProperties.configUrl}, and
    * merges the results.
    */
@@ -47,7 +54,10 @@ export class AppConfigFetcher {
     return fetch(path, {headers})
       .then((response) => response.json())
       .catch((err) => {
-        console.error(`Could not fetch app-config.json from ${path}`, err);
+        console.error(
+          `Could not fetch app-configuration.json from ${path}`,
+          err,
+        );
         return {};
       });
   }
@@ -55,8 +65,9 @@ export class AppConfigFetcher {
   private buildAdditionConfigUrl(
     config: Record<string, string | null>,
   ): string | null {
-    const relativeUrl = config[AppConfigProperties.configUrl];
-    if (!relativeUrl) {
+    const relativeUrl =
+      config[AppConfigProperties.configUrl] ?? '/edc-ui-config';
+    if (!relativeUrl || relativeUrl === 'false') {
       return null;
     }
 
