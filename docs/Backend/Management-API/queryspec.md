@@ -35,7 +35,7 @@ These APIs either have the QuerySpec as a complete body or the QuerySpec is part
 
 For example, pagination can be enabled by changing the number of returned data records using the `limit` parameter and setting the starting point using the `offset` or more specific filtering can be done using the `filterExpression` array.
 
-### Advanced Example Using the v3-API and a Custom Asset Property
+### Advanced Example: Custom Asset Property
 `POST {{Management-API}}/v3/assets/request`
 
 {% code title="JSON" overflow="wrap" lineNumbers="true" %}
@@ -56,6 +56,31 @@ For example, pagination can be enabled by changing the number of returned data r
 {% endcode %}
 
 The `POST` body should of course be adapted to the specific situation as needed.
+
+### Advanced Example: All Data-Offers for specific Asset
+`POST {{Management-API}}/v3/contractdefinitions/request`
+
+{% code title="JSON" overflow="wrap" lineNumbers="true" %}
+```json
+{
+   "@context": {
+       "edc": "https://w3id.org/edc/v0.0.1/ns/"
+   },
+   "@type": "QuerySpecDto",
+   "offset": 0,
+   "limit": 100,
+   "filterExpression": [
+       {
+           "operandLeft": "assetsSelector.operandRight",
+           "operator": "=",
+           "operandRight": "abc123"
+       }
+   ]
+}
+```
+{% endcode %}
+
+The `POST` body should of course be adapted to the specific situation as needed where `operandRight` is in this example the assetId.
 
 ### FAQ
 
