@@ -1,6 +1,6 @@
 ## Data-Transfer using HttpData-Pull and EDR
 
-### Enterprise Edition 5.0.0 and hihger (using core-edc 0.7.2)
+### Enterprise Edition 5.0.0 and hihger (core-edc 0.7.2)
 
 **Parameterization**: In certain scenarios, it is beneficial to expose multiple datasets via a single asset, reducing contract negotiations and catalog size, thus improving Connector scalability.
 
@@ -158,7 +158,7 @@ If requesting dataset `1` from the Provider in the example at the top, the final
 
 `GET https://example.com/dataset/1`
 
-### Enterprise Edition 4.6.0 and lower (using core-edc 0.2.1)
+### Enterprise Edition 4.6.0 and lower (core-edc 0.2.1)
 
 #### Requirements
 - An active contract agreement for a data offer you want to consume.
