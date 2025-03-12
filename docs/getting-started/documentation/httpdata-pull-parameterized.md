@@ -1,10 +1,12 @@
-## Parameterized Data-Transfer using HttpData-Pull and EDR
+## Data-Transfer using HttpData-Pull and EDR
+
+### With core-edc 0.7.2
 
 **Parameterization**: In certain scenarios, it is beneficial to expose multiple datasets via a single asset, reducing contract negotiations and catalog size, thus improving Connector scalability.
 
 {% hint style="info" %} Parameterization is optional and does not have to be activated by the Provider if the datasource API does not require or enable it. In this case, the corresponding parameters do not have to be enabled when creating an asset and the Consumer does not have to add any additional paramters to the endpoint from the EDR. {% endhint %}
 
-### Provider: Asset
+#### Provider: Asset
 
 A datasource API can be structured with a base URL and path parameters to differentiate datasets:
 - `https://example.com/dataset/1`
@@ -14,7 +16,7 @@ A datasource API can be structured with a base URL and path parameters to differ
 
 In this case, the base URL remains: `https://example.com/dataset/`.
 
-#### Defining the Asset
+##### Defining the Asset
 
 To add an asset that references such a base URL which supports parameterization, use the following API request:
 
@@ -54,15 +56,15 @@ Ensure that `proxyPath` and `proxyQueryParams` are correctly set and enabled `tr
 
 After adding the asset, the asset only needs to be linked in a Contract Definition/Data Offer along with Policies in order to make it available for potential Consumers to consume.
 
-### Consumer: Consuming Data
+#### Consumer: Consuming Data
 
-#### Step 1: Catalog Querying
+##### Step 1: Catalog Querying
 
 To access the dataset, query the Provider's EDC catalog and identify the required asset. Extract the following details:
 - `dcat:dataset.{asset}.odrl:hasPolicy.@id` - The data offer ID, later to be used for `{{data-offer-id}}`
 - `dcat:dataset.{asset}.odrl:hasPolicy.odrl:permission` - The policies in this case permissions, needed to start the negotiation, later used for `{{permissions}}`
 
-#### Step 2: Negotiating the EDR
+##### Step 2: Negotiating the EDR
 
 Next, request the `EDR token`:
 
@@ -97,7 +99,7 @@ Extract the `@id` from the response, later to be used for `{{edr-id}}`.
 This ID represents the EDR token and is required for the next steps.
 Successfully reaching this stage confirms a successful negotiation.
 
-#### Step 3: Transfer Process
+##### Step 3: Transfer Process
 
 Use the EDR token ID to retrieve the `transferProcessId`:
 
@@ -125,7 +127,7 @@ Use the EDR token ID to retrieve the `transferProcessId`:
 
 Copy the `transferProcessId` from the response to proceed, later to be used for `{{transferProcessId}}`.
 
-#### Step 4: Data Address
+##### Step 4: Data Address
 
 To obtain the data address from which the dataset can be requested:
 
@@ -135,7 +137,7 @@ The response contains two crucial data points:
 - `endpoint` – The URL of the data plane providing the requested asset, later to be used for `{{endpoint}}`.
 - `authorization` – The authorization information required for data retrieval, e.g. a token.
 
-#### Step 5: Requesting the Data
+##### Step 5: Requesting the Data
 
 Finally, execute a `GET` request using the endpoint and authorization information.
 
@@ -150,8 +152,69 @@ Any additional path parameters appended to `{{endpoint}}` will be included in th
 
 {% hint style="info" %} As parameterization is optional for the Provider, the additional parameters like {{dataset-id}} in this example do not need to be set by the Consumer if the Provider doesn't support it. {% endhint %}
 
-#### Parameterized Example
+##### Parameterized Example
 
 If requesting dataset `1` from the Provider in the example at the top, the final request will be plus additonal authorization headers (information obtained from the EDR):
 
 `GET https://example.com/dataset/1`
+
+### With core-edc 0.2.1
+
+#### Requirements
+- An active contract agreement for a data offer you want to consume.
+- A Use Case Application / Pull Backend that can be reached from the EDC, and that can reach the Data Planes of that EDC.
+
+#### Initiating the Transfer
+
+For the EDC send an EDR to your backend application, you need to initiate a transfer process.
+This "transfer process" represents the lifetime of your EDR in which your backend application can initiate as many transfers as it wants, using the EDR it has received.
+
+**Initiating the Transfer via the Management API**
+
+`POST to {{control_url}}/v2/transferprocesses`
+
+{% code title="JSON" overflow="wrap" lineNumbers="true" %}
+```json
+{
+  "@type": "https://w3id.org/edc/v0.0.1/ns/TransferRequest",
+  "https://w3id.org/edc/v0.0.1/ns/assetId": "{{ASSET_ID}}",
+  "https://w3id.org/edc/v0.0.1/ns/contractId": "{{CONTRACT_ID}}",
+  "https://w3id.org/edc/v0.0.1/ns/connectorAddress": "{{PROVIDER_DSP_ENDPOINT}}",
+  "https://w3id.org/edc/v0.0.1/ns/connectorId": "{{PROVIDER_CONNECTOR_ID}}",
+  "https://w3id.org/edc/v0.0.1/ns/dataDestination": {
+    "https://w3id.org/edc/v0.0.1/ns/type": "HttpProxy",
+    "https://w3id.org/edc/v0.0.1/ns/baseUrl": "{{DATA_SINIK_URL}}"
+  },
+  "https://w3id.org/edc/v0.0.1/ns/privateProperties": {
+    "https://w3id.org/edc/v0.0.1/ns/receiverHttpEndpoint": "{{TARGET_PULL_BACKEND_URL}}"
+  },
+  "https://w3id.org/edc/v0.0.1/ns/protocol": "dataspace-protocol-http",
+  "https://w3id.org/edc/v0.0.1/ns/managedResources": false
+}
+```
+{% endcode %}
+
+#### Receiving an Endpoint Data Reference (EDR)
+
+Your backend receives the **EDR** from the Provider-EDC by your EDC calling the `{{TARGET_PULL_BACKEND_URL}}` endpoint via `POST` method:
+{% code title="JSON" overflow="wrap" lineNumbers="true" %}
+```json
+{
+  "id": "2d5348ea-b1e0-4b69-a625-07e7b093944a",
+  "endpoint": "{{PROVIDER_DATAPLANE_PUBLIC_ENDPOINT}}",
+  "authKey": "Authorization",
+  "authCode": "{{TOKEN}}"
+}
+```
+{% endcode %}
+
+#### Getting the Data
+
+Using that EDR, requesting `GET` on the EDR's `{{endpoint}}` using the header `{{authKey}}: {{authCode}}` will return the data.
+Depending on the use-case, their can be more requirements, but this is use case specific. 
+
+#### Parameterized HTTP Data Sources
+- When method proxying is enabled on the providing side, the request method can be adjusted and will be used by the providing EDC when fetching data from the data source.
+- When path proxying is enabled on the providing side, any appended path to the `{{ endpoint }}` will be proxied through to the data source.
+- When query params proxying is enabled on the providing side, added query params will be passed through to the data source.
+- When request body proxying is enabled on the providing side, the request body and content-type headers will be proxied to the provider side.
