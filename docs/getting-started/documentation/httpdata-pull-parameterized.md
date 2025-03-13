@@ -1,6 +1,6 @@
 ## Data-Transfer using HttpData-Pull and EDR
 
-### Enterprise Edition 5.0.0 and hihger (core-edc 0.7.2)
+### Enterprise Edition 5.0.0 and higher (core-edc 0.7.2)
 
 **Parameterization**: In certain scenarios, it is beneficial to expose multiple datasets via a single asset, reducing contract negotiations and catalog size, thus improving Connector scalability.
 
