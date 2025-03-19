@@ -25,6 +25,7 @@
 * [Data Transfer Types](getting-started/documentation/data-transfer-types.md)
   * [HttpData-Pull (Parameterized)](getting-started/documentation/httpdata-pull-parameterized.md)
   * [AWS S3 Transfer](getting-started/documentation/aws-s3-transfer.md)
+  * [Data Source: Audit Headers](getting-started/documentation/data-source-audit-headers.md)
 * [Health Check APIs](getting-started/documentation/health-check-api.md)
 * [API-Wrapper vs Management-API](Backend/API-Wrapper/relationship.md)
 * [API-Wrapper](Backend/API-Wrapper/what-is-the-api-wrapper.md)
