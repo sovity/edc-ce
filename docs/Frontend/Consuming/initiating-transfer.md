@@ -77,7 +77,7 @@ For passing parameters to the providing Connector or detailed configuration of E
     "isFinite": true
   },
   "managedResources": false,
-  "connectorAddress": "this-will-be-overriden-by-the-ui--but-is-broken-right-now-as-said-above",
+  "connectorAddress": "this-will-be-overriden-by-the-ui",
   "connectorId": "consumer"
 }
 ```
