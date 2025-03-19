@@ -31,9 +31,6 @@
   * [Java Client Library](Backend/API-Wrapper/java-client-library-examples.md)
 * [Management-API](Backend/Management-API/what-is-the-management-api.md)
   * [Contract Definition: Multiple Assets](Backend/Management-API/contract-definition-multiple-assets.md)
-  * [Editing Existing Asset](Backend/Management-API/editing-existing-data-assets.md)
-  * [Data-Transfer](Backend/Management-API/initiate-data-transfer.md)
-  * [Parameterized Data-Sources](Backend/Management-API/parameterized-data-sources.md)
   * [QuerySpec](Backend/Management-API/queryspec.md)
 
 ## Community Edition Deployment
