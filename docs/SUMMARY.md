@@ -32,6 +32,7 @@
   * [Java Client Library](Backend/API-Wrapper/java-client-library-examples.md)
 * [Management-API](Backend/Management-API/what-is-the-management-api.md)
   * [Source/Sink: OAuth2/API-Key](Backend/Management-API/oauth2-or-api-keys.md)
+  * [Secrets API](Backend/Management-API/secrets-api.md)
   * [Contract Definition: Multiple Assets](Backend/Management-API/contract-definition-multiple-assets.md)
   * [QuerySpec](Backend/Management-API/queryspec.md)
 
