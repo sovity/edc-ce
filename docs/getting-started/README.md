@@ -7,7 +7,7 @@ Getting Started
 
 ### Quick Start
 
-For quickly starting two sovity EDC CE or MDS EDC CE Connectors locally, please check out
+For quickly starting two sovity EDC CE Connectors locally, please check out
 our [Deployment Goal: Local Demo](../deployment-guide/goals/local-demo-ce).
 
 ### Productive Deployments
