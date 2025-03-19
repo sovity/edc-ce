@@ -1,7 +1,5 @@
 ## Data-Transfer using HttpData-Pull and EDR
 
-### Enterprise Edition 5.0.0 and higher (core-edc 0.7.2)
-
 **Parameterization**: In certain scenarios, it is beneficial to expose multiple datasets via a single asset, reducing contract negotiations and catalog size, thus improving Connector scalability.
 
 {% hint style="info" %} Parameterization is optional and does not have to be activated by the Provider if the datasource API does not require or enable it. In this case, the corresponding parameters do not have to be enabled when creating an asset and the Consumer does not have to add any additional paramters to the endpoint from the EDR. {% endhint %}
@@ -157,64 +155,3 @@ Any additional path parameters appended to `{{endpoint}}` will be included in th
 If requesting dataset `1` from the Provider in the example at the top, the final request will be plus additonal authorization headers (information obtained from the EDR):
 
 `GET https://example.com/dataset/1`
-
-### Enterprise Edition 4.6.0 and lower (core-edc 0.2.1)
-
-#### Requirements
-- An active contract agreement for a data offer you want to consume.
-- A Use Case Application / Pull Backend that can be reached from the EDC, and that can reach the Data Planes of that EDC.
-
-#### Initiating the Transfer
-
-For the EDC send an EDR to your backend application, you need to initiate a transfer process.
-This "transfer process" represents the lifetime of your EDR in which your backend application can initiate as many transfers as it wants, using the EDR it has received.
-
-**Initiating the Transfer via the Management API**
-
-`POST to {{control_url}}/v2/transferprocesses`
-
-{% code title="JSON" overflow="wrap" lineNumbers="true" %}
-```json
-{
-  "@type": "https://w3id.org/edc/v0.0.1/ns/TransferRequest",
-  "https://w3id.org/edc/v0.0.1/ns/assetId": "{{ASSET_ID}}",
-  "https://w3id.org/edc/v0.0.1/ns/contractId": "{{CONTRACT_ID}}",
-  "https://w3id.org/edc/v0.0.1/ns/connectorAddress": "{{PROVIDER_DSP_ENDPOINT}}",
-  "https://w3id.org/edc/v0.0.1/ns/connectorId": "{{PROVIDER_CONNECTOR_ID}}",
-  "https://w3id.org/edc/v0.0.1/ns/dataDestination": {
-    "https://w3id.org/edc/v0.0.1/ns/type": "HttpProxy",
-    "https://w3id.org/edc/v0.0.1/ns/baseUrl": "{{DATA_SINIK_URL}}"
-  },
-  "https://w3id.org/edc/v0.0.1/ns/privateProperties": {
-    "https://w3id.org/edc/v0.0.1/ns/receiverHttpEndpoint": "{{TARGET_PULL_BACKEND_URL}}"
-  },
-  "https://w3id.org/edc/v0.0.1/ns/protocol": "dataspace-protocol-http",
-  "https://w3id.org/edc/v0.0.1/ns/managedResources": false
-}
-```
-{% endcode %}
-
-#### Receiving an Endpoint Data Reference (EDR)
-
-Your backend receives the **EDR** from the Provider-EDC by your EDC calling the `{{TARGET_PULL_BACKEND_URL}}` endpoint via `POST` method:
-{% code title="JSON" overflow="wrap" lineNumbers="true" %}
-```json
-{
-  "id": "2d5348ea-b1e0-4b69-a625-07e7b093944a",
-  "endpoint": "{{PROVIDER_DATAPLANE_PUBLIC_ENDPOINT}}",
-  "authKey": "Authorization",
-  "authCode": "{{TOKEN}}"
-}
-```
-{% endcode %}
-
-#### Getting the Data
-
-Using that EDR, requesting `GET` on the EDR's `{{endpoint}}` using the header `{{authKey}}: {{authCode}}` will return the data.
-Depending on the use-case, their can be more requirements, but this is use case specific. 
-
-#### Parameterized HTTP Data Sources
-- When method proxying is enabled on the providing side, the request method can be adjusted and will be used by the providing EDC when fetching data from the data source.
-- When path proxying is enabled on the providing side, any appended path to the `{{ endpoint }}` will be proxied through to the data source.
-- When query params proxying is enabled on the providing side, added query params will be passed through to the data source.
-- When request body proxying is enabled on the providing side, the request body and content-type headers will be proxied to the provider side.
