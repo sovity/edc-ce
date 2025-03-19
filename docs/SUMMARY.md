@@ -15,7 +15,7 @@
   * [4. Create Contract Definition](Frontend/Providing/create-contract-definition.md)
 * [Consuming](Frontend/Consuming/Readme.md)
   * [1. Finding Offers](Frontend/Consuming/finding-offers.md)
-  * [2. Initiating Transfers](Frontend/Consuming/initiating-transfer.md)
+  * [2. Initiating Transfers (HttpData-Push)](Frontend/Consuming/initiating-transfer.md)
   * [3. Transfer History](Frontend/Consuming/transfer-history.md)
 * [Contract Termination](Frontend/contract-termination.md)
    
