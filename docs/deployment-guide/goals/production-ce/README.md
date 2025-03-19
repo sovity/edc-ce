@@ -1,3 +1,7 @@
+---
+icon: cube
+---
+
 # Deployment Goal: Production
 
 Every deployment has to decide the following:
