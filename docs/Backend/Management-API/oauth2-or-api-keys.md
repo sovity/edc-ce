@@ -111,7 +111,7 @@ To start a transfer to an API-Key protected API using the EDC UI, a transfer wit
 
 To start a transfer to an API-Key protected API, the Management-API of the EDC can be used to send the following request:
 
-POST `to /v2/transferprocesses`
+POST `to /v3/transferprocesses`
 
 {% code title="JSON" overflow="wrap" lineNumbers="true" %}
 ```json
