@@ -2,7 +2,7 @@
 
 To find and consume data from another Connector, you first need to get the Connector Endpoint of the Connector you would like to explore for its offerings. Ensure that both Connectors are registered at the same DAPS/MIW. Note that the EDC does not support consuming its own Contract Definitions!
 
-{% hint style="info" %} The Connector Endpoint is provided on the Dashboard on the bottom as information and additionally in the top right corner. Please be aware, that the Connector Endpoint in in the top right may be extended by the Connector ID, depending on your used Connector version. In some Data Spaces, you can additionally find the Connector Endpoint via the Authority Portal (MDS) or Discovery Service (Catena-X/Cofinity-X). {% endhint %}
+{% hint style="info" %} The Connector Endpoint is provided on the Dashboard on the bottom as information and additionally in the top right corner. Please be aware, that the Connector Endpoint in in the top right is extended by the Connector ID. In some Data Spaces, you can additionally find the Connector Endpoint via the Dataspace Portal or other Discovery Service. {% endhint %}
 
 ![EDC UI Dashboard](/docs/images/edc-ui-dashboard.png)
 
