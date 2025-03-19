@@ -1,5 +1,7 @@
 # Data Transfer Process
 
+{% hint style="info" %} Only an **HttpData-Push** can be triggered via the UI, not an **HttpData-Pull**. The Management-API of the connector must be used for an **HttpData-Pull**. {% endhint %}
+
 To transfer the data to your desired data sink, navigate to the ```Contracts``` page. This page displays all your contract agreements, including both consuming and providing contract agreements. You can easily distinguish between them by the arrow next to the Contract Agreement (Up = providing, Down = consuming). You can inspect data on your contract agreements, such as the counterpart Connector.
 
 ## Initiating a Data Transfer
@@ -27,18 +29,6 @@ There are three data sink types supported:
 To transfer data to a REST-API endpoint, select an HTTP method and provide the URL of the data sink. You can also add additional headers, such as for authentication.
 
 ![Datasink properties](/docs/images/edc-ui-transfer-dialog.png)
-
-**Parameterization**
-
-{% hint style="info" %} The HttpData-Push transfer-type no longer supports parameterization in the latest connector versions, so this functionality will soon no longer be available from a consumer perspective. {% endhint %}
-
-Depending on whether the provider allows parameterization and the types of parameterization allowed, you can customize the request to the provider's data source by specifying:
-- Custom method
-- Custom path
-- Custom Request Body
-- Custom Request Body Content Type
-
-![Data-Source Parameterization](/docs/images/edc-ui-parameterization.png)
 
 #### 2. Transfer Data to a Custom Datasink Config (JSON)
 
