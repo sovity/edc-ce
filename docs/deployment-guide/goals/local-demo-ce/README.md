@@ -1,3 +1,7 @@
+---
+icon: tv
+---
+
 Deployment Goal: Local Demo
 ========
 
@@ -6,8 +10,8 @@ Deployment Goal: Local Demo
 
 ## Quick Start
 
-To quickly start using our sovity EDC CE or MDS EDC CE, we offer a quick
-start [docker-compose.yaml](docker-compose.yaml) file.
+To quickly start using our sovity EDC CE, we offer a quick
+start [docker-compose.yaml](docker-compose.yaml) file and don't forget to also download the needed caddyfile.
 
 ## Launching Two Connectors
 
