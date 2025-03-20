@@ -1,8 +1,8 @@
 # Table of contents
 
 * [Welcome](welcome.md)
-* [Key Concepts](getting-started/documentation/key-concepts.md)
-* [FAQ](getting-started/documentation/faq.md)
+* [Key Concepts](key-concepts.md)
+* [FAQ](faq.md)
 
 ## Frontend
 
@@ -22,11 +22,11 @@
 ## Backend
 
 * [Postman](Backend/Postman/setting-up-postman.md)
-* [Data Transfer Types](getting-started/documentation/data-transfer-types.md)
-  * [HttpData-Pull (Parameterized)](getting-started/documentation/httpdata-pull-parameterized.md)
-  * [AWS S3 Transfer](getting-started/documentation/aws-s3-transfer.md)
-  * [Data Source: Audit Headers](getting-started/documentation/data-source-audit-headers.md)
-* [Health Check APIs](getting-started/documentation/health-check-api.md)
+* [Data Transfer Types](Backend/data-transfer-types.md)
+  * [HttpData-Pull (Parameterized)](Backend/Management-API/httpdata-pull-parameterized.md)
+  * [AWS S3 Transfer](Backend/Management-API/aws-s3-transfer.md)
+  * [Data Source: Audit Headers](Backend/data-source-audit-headers.md)
+* [Health Check APIs](Backend/health-check-api.md)
 * [API-Wrapper vs Management-API](Backend/API-Wrapper/relationship.md)
 * [API-Wrapper](Backend/API-Wrapper/what-is-the-api-wrapper.md)
   * [Java Client Library](Backend/API-Wrapper/java-client-library-examples.md)
