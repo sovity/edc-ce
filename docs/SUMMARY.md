@@ -22,12 +22,6 @@
 ## Backend
 
 * [Postman](Backend/Postman/setting-up-postman.md)
-* [Data Transfer](Backend/data-transfer-types.md)
-  * [HttpData-Pull (Parameterized)](Backend/Management-API/httpdata-pull-parameterized.md)
-  * [AWS S3 Transfer](Backend/Management-API/aws-s3-transfer.md)
-  * [Source: Audit Headers](Backend/data-source-audit-headers.md)
-  * [Source/Sink: OAuth2/API-Key](Backend/Management-API/oauth2-or-api-keys.md)
-* [Health Check APIs](Backend/health-check-api.md)
 * [API-Wrapper vs Management-API](Backend/API-Wrapper/relationship.md)
 * [API-Wrapper](Backend/API-Wrapper/what-is-the-api-wrapper.md)
   * [Java Client Library](Backend/API-Wrapper/java-client-library-examples.md)
@@ -35,6 +29,12 @@
   * [Secrets API](Backend/Management-API/secrets-api.md)
   * [Contract Definition: Multiple Assets](Backend/Management-API/contract-definition-multiple-assets.md)
   * [QuerySpec](Backend/Management-API/queryspec.md)
+  * [Health Check APIs](Backend/health-check-api.md)
+* [Data Transfer](Backend/data-transfer-types.md)
+  * [HttpData-Pull (Parameterized)](Backend/Management-API/httpdata-pull-parameterized.md)
+  * [AWS S3 Transfer](Backend/Management-API/aws-s3-transfer.md)
+  * [Source: Audit Headers](Backend/data-source-audit-headers.md)
+  * [Source/Sink: OAuth2/API-Key](Backend/Management-API/oauth2-or-api-keys.md)
 
 ## Community Edition Deployment
 
