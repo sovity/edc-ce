@@ -83,9 +83,9 @@ Yes, Connectors need to have public-facing endpoints when deployed for productiv
 
 ### Do data sinks need to be public reachable in productive environments?
 
-Yes, the architecture relys on the data provider directly connecting to the data sink of the consumer, which is designed for scaling and technical efficiency. This setup reduces the need for data to pass through the consuming EDC, optimizing bandwidth, reducing latency and avoiding technical bottlenecks, this is thus a technical design decision. To secure the data sink, measures such as IP-whitelisting of data-providers or API-keys for the data sink should be used to ensure that only authorized parties can access and write to the data sink.
+Yes, the architecture relies on the data provider directly connecting to the data sink of the consumer, which is designed for scaling and technical efficiency. This setup reduces the need for data to pass through the consuming EDC, optimizing bandwidth, reducing latency and avoiding technical bottlenecks, this is thus a technical design decision. To secure the data sink, measures such as IP-whitelisting of data-providers or API-keys for the data sink should be used to ensure that only authorized parties can access and write to the data sink.
 
-### What happens during policy evaluation, if a not-supported contraint is used in a policy?
+### What happens during policy evaluation, if a not-supported constraint is used in a policy?
 
 If the EDC encounters a constraint it does not recognize within a policy, the EDC is designed to simply ignore that constraint during the evaluation process of the access- or contract-policy. This means that the unrecognized constraint will not impact the outcome of the evaluation.
 
@@ -99,7 +99,7 @@ To identify and resolve these issues, follow these steps:
 
 2. Iterate and verify individual policies: For each policy, perform a GET request via the Management-API to identify the specific policies causing the issue, they will return an error at the call execution instead of policy details. This method helps pinpoint the problematic policies.
 
-A typical issue stems from missing contexts during the policy creation process. Ensure that all necessary context is provided to minimize error possibilites or delete the policy if not needed. If a contract offer exists with the policy that has been deleted, this must also be deleted.
+A typical issue stems from missing contexts during the policy creation process. Ensure that all necessary context is provided to minimize error possibilities or delete the policy if not needed. If a contract offer exists with the policy that has been deleted, this must also be deleted.
 
 ### Is it possible to exchange data between different organizations in a data space?
 
