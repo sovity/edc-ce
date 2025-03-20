@@ -1,7 +1,3 @@
----
-icon: gear-complex-code
----
-
 ## Health Checks for Your Connectors
 
 In this article, we describe the recommended APIs for performing health checks on your connectors from the outside of a cluster. These APIs ensure the connectivity and functionality of your services and connected core-services by returning status codes and relevant statistics.
