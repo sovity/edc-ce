@@ -22,7 +22,7 @@ A **Policy** governs the usage of an asset by defining the conditions or restric
 
 ### 3. Contract Definition / Data Offer
 
-A **Contract Definition**, also referred to as a **Data Offer**, formalizes the terms and conditions of catalog crawling, negotiating for an asset and transfering the actual data. It includes the applicable policies and identifies the specific assets available for access.
+A **Contract Definition**, also referred to as a **Data Offer**, formalizes the terms and conditions of catalog crawling, negotiating for an asset and transferring the actual data. It includes the applicable policies and identifies the specific assets available for access.
 
 **Related Concepts**:
 - **Asset**: The contract definition specifies which assets are available to be crawled and negotiated for.
@@ -49,8 +49,8 @@ The **Catalog** is a collection of assets that a provider offers for sharing to 
 **Contract Negotiation** is the process through which two parties agree on the terms for concluding a contract. The negotiation involves validating contract policies to ensure mutual agreement.
 
 **Related Concepts**:
-- **Contract Definition**: The focus of the negotiation, determining how assets can be accessed by a contract policy set in the contract definiton/data offer.
-- **Data Transfer**: Once a contract is agreed upon, data transfer can be intiated.
+- **Contract Definition**: The focus of the negotiation, determining how assets can be accessed by a contract policy set in the contract definition/data offer.
+- **Data Transfer**: Once a contract is agreed upon, data transfer can be initiated.
 
 **Cardinality**:
 - A negotiation involves one contract definition/data offer at a time.
