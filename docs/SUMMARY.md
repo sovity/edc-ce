@@ -30,6 +30,8 @@
   * [Contract Definition: Multiple Assets](Backend/Management-API/contract-definition-multiple-assets.md)
   * [QuerySpec](Backend/Management-API/queryspec.md)
   * [Health Check APIs](Backend/health-check-api.md)
+  * [Policy: Business Partner Groups](Backend/Management-API/business-partner-groups.md)
+  * [Policy: Unrestricted](Backend/Management-API/unrestricted-policy.md)
 * [Data Transfer](Backend/data-transfer-types.md)
   * [HttpData-Pull (Parameterized)](Backend/Management-API/httpdata-pull-parameterized.md)
   * [AWS S3 Transfer](Backend/Management-API/aws-s3-transfer.md)
