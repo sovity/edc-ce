@@ -1,6 +1,6 @@
 # Additional Headers for Data-Source Requests
 
-Requests towards data-sources include additional headers for auditing of transfer requests by the provider’s backend service. 
+Requests towards data-sources include additional headers for the auditing of transfer requests by the provider’s backend service. 
 By that, the provider can manage consumer-specific access without the need to create separate assets for each consumer.
  
 ## Additional Headers
