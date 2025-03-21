@@ -60,7 +60,7 @@ After adding the asset, the asset only needs to be linked in a Contract Definiti
 
 To access the dataset, query the Provider's EDC catalog and identify the required asset. Extract the following details:
 - `dcat:dataset.{asset}.odrl:hasPolicy.@id` - The data offer ID, later to be used for `{{data-offer-id}}`
-- `dcat:dataset.{asset}.odrl:hasPolicy.odrl:permission` - The policies in this case permissions, needed to start the negotiation, later used for `{{permissions}}`
+- `dcat:dataset.{asset}.odrl:hasPolicy.odrl:permission` - The policies, in this case permissions, needed to start the negotiation, later used for `{{permissions}}`
 
 ##### Step 2: Negotiating the EDR
 
