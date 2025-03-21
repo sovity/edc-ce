@@ -1,6 +1,6 @@
 ## Overview
 
-The Connector also supports communication with protected data-sources and data-sinks. Following combinations are possible: 
+The Connector also supports communication with protected data-sources and data-sinks. The following combinations are possible: 
 - **Data-Source**: OAuth2 + API-Key protected APIs for HttpData.
 - **Data-Sink**: Only API-Keys can be used for HttpData.
 
