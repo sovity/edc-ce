@@ -152,6 +152,7 @@ Any additional path parameters appended to `{{endpoint}}` will be included in th
 
 ##### Parameterized Example
 
-If requesting dataset `1` from the Provider in the example at the top, the final request will be plus additional authorization headers (information obtained from the EDR):
+As the information is obtained from the contents of the EDR, if requesting dataset `1` from the Provider as in the example at the top, the final request would be:
 
 `GET https://example.com/dataset/1`
+-  plus additional authorization headers as specified in the EDR
