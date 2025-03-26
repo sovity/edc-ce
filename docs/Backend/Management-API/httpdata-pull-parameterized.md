@@ -1,6 +1,6 @@
 ## Data-Transfer using HttpData-Pull and EDR
 
-{% hint style="warning" %} In version 11, the in the following documentation required EDR-APIs are only available in the Catena configuration and not when using an IAM-mock or a DAPS. {% endhint %}
+{% hint style="warning" %} In version 11.0.0, the in the following documentation required EDR-APIs are only available in the Catena configuration and not when using an IAM-mock or a DAPS. {% endhint %}
 
 **Parameterization**: In certain scenarios, it is beneficial to expose multiple datasets via a single asset, reducing contract negotiations and catalog size, thus improving Connector scalability.
 
