@@ -103,7 +103,7 @@ Successfully reaching this stage confirms a successful negotiation.
 
 Use the EDR token ID to retrieve the `transferProcessId`:
 
-`POST {{control_url}}/v2/edrs/request`
+`POST {{MANAGEMENT-API}}/v2/edrs/request`
 
 {% code title="JSON" overflow="wrap" lineNumbers="true" %}
 ```json
