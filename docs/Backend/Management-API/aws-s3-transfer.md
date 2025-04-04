@@ -42,9 +42,9 @@ This guide holds for AWS `long-term credentials`.
 ### EDC Provider
 
 To configure an EDC instance as a data provider, follow these steps:
-1. Refer to the general EDC data provisioning guide [Providing Data](/frontend/providing).
+1. Refer to the general EDC data provisioning guide
 2. Define `Policies` and `ContractDefinitions` (same as for other data sources)
-3. Configure the `Asset` for AWS S3 with the  EDC [Management API](/backend/what-is-the-management-api) using the following JSON payload:
+3. Configure the `Asset` for AWS S3 with the EDC Management API using the following JSON payload:
 
 {% code title="JSON" overflow="wrap" lineNumbers="true" %}
 ```json
@@ -72,7 +72,7 @@ To configure an EDC instance as a data provider, follow these steps:
 ### EDC Consumer
 
 To consume an S3 bucket from another connector, a **Contract Agreement** must be successfully negotiated. This can be achieved using the EDC UI:
-- Follow the guide: [Finding Offers & Contracting](/frontend/consuming/finding-offers)
+- Follow the guide for Finding Offers & Contracting in this documentation.
 - The following variables are required for starting the `Transfer Process` later:
     - All of them can be seen by using the `Contracts` page of the EDC-Ui and viewing the details of the corresponding contract.
     - `COUNTER_PARTY_DSP` (Data Space Protocol endpoint of the provider)
@@ -82,7 +82,7 @@ To consume an S3 bucket from another connector, a **Contract Agreement** must be
 
 **Initiating a Data Transfer**
 
-Use the following JSON payload to start a data transfer request using the Transfer Process [Management API](/backend/what-is-the-management-api).
+Use the following JSON payload to start a data transfer request using the Transfer Process within the Management API.
 
 {% code title="JSON" overflow="wrap" lineNumbers="true" %}
 ```json
