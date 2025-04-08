@@ -1,9 +1,6 @@
 sovity EDC Connector and sovity EDC Connector UI
 Copyright 2024 sovity GmbH
 
-For files "*.component.html" and "*.component.scss" the license header of the accompanying *.component.ts decides
-the license in each case.
-
 The following files and directories are explicitly Apache 2.0:
   - connector/ce/libs/api
   - connector/ce/libs/api-clients/java-client
@@ -13,15 +10,10 @@ The following files and directories are explicitly Apache 2.0:
   - connector/ce/libs/runtime-os-lib
 
 This makes the following deliverables usable under Apache 2.0:
-  - Maven Package "de.sovity.edc:java-client"
+  - Maven Package "de.sovity.edc:client"
   - Maven Package "de.sovity.edc:mappers-lib"
   - Maven Package "de.sovity.edc:jsonld-lib"
   - NPM Package "@sovity.de/edc-client"
 
 All other deliverables unless otherwise noted are licensed under the Elastic License 2.0.
 
-The initial internationalization of the Connector UI and localization to German was done
-by the Fraunhofer Institute for Applied Information Technology FIT (https://www.fit.fraunhofer.de/).
-This project was part of the national flagship project "Datenraum Kultur" (dataspace culture) and
-was funded by the Federal Government Commissioner for Culture and the Media from 2023 to 2025.
-Copyright 2024 Fraunhofer Institute for Applied Information Technology FIT

@@ -7,9 +7,10 @@
  */
 package de.sovity.edc.ce.config
 
+import de.sovity.edc.ce.api.ui.model.UiConfigFeature
 import de.sovity.edc.runtime.modules.model.ConfigPropRef
 
-@Suppress("MaxLineLength")
+@Suppress("MaxLineLength", "LargeClass")
 object CeConfigProps {
     @JvmStatic
     val SOVITY_BUILD_DATE = ConfigPropRef(
@@ -398,8 +399,8 @@ object CeConfigProps {
     )
 
     @JvmStatic
-    val EDC_UI_MANAGEMENT_API_URL_SHOWN_IN_DASHBOARD = ConfigPropRef(
-        property = "edc.ui.management.api.url.shown.in.dashboard",
+    val SOVITY_EDC_UI_MANAGEMENT_API_URL_SHOWN_IN_DASHBOARD = ConfigPropRef(
+        property = "sovity.edc.ui.management.api.url.shown.in.dashboard",
         defaultDocumentation = "URL shown in the EDC UI for the management API. This might differ from the default " +
             "Management API URL if an auth proxy solution has been put between",
     )
@@ -694,5 +695,65 @@ object CeConfigProps {
     val EDC_SQL_FETCH_SIZE = ConfigPropRef(
         property = "edc.sql.fetch.size",
         defaultDocumentation = "Fetch size value used in SQL queries"
+    )
+
+    @JvmStatic
+    val SOVITY_EDC_UI_LOGOUT_URL = ConfigPropRef(
+        property = "sovity.edc.ui.logout.url",
+        defaultDocumentation = "Logout URL to log out from in the EDC UI"
+    )
+
+    @JvmStatic
+    val SOVITY_EDC_UI_DOCUMENTATION_URL = ConfigPropRef(
+        property = "sovity.edc.ui.documentation.url",
+        defaultDocumentation = "Documentation URL used in the EDC UI"
+    )
+
+    @JvmStatic
+    val SOVITY_EDC_UI_SUPPORT_URL = ConfigPropRef(
+        property = "sovity.edc.ui.support.url",
+        defaultDocumentation = "Service Desk URL used in the EDC UI"
+    )
+
+    @JvmStatic
+    val SOVITY_EDC_UI_PRIVACY_POLICY_URL = ConfigPropRef(
+        property = "sovity.edc.ui.privacy.policy.url",
+        defaultDocumentation = "Privacy Policy URL used in the EDC UI"
+    )
+
+    @JvmStatic
+    val SOVITY_EDC_UI_LEGAL_NOTICE_URL = ConfigPropRef(
+        property = "sovity.edc.ui.legal.notice.url",
+        defaultDocumentation = "Legal Notice URL used in the EDC UI"
+    )
+
+    @JvmStatic
+    val SOVITY_EDC_UI_FEATURES = ConfigPropRef(
+        property = "sovity.edc.ui.features",
+        defaultDocumentation = "Comma separated enabled EDC UI features. Note that most of these require a sovity EDC EE backend.\n\n" +
+            "Available values:\n" +
+            UiConfigFeature.entries.joinToString("\n") { " * `$it`" },
+    )
+
+    @JvmStatic
+    val SOVITY_EDC_UI_FEATURES_ADD = ConfigPropRef(
+        property = "sovity.edc.ui.features.add",
+        defaultDocumentation = "Comma separated EDC UI features to add on top of `${SOVITY_EDC_UI_FEATURES.property}`. Note that most of these require a sovity EDC EE backend.\n\n" +
+            "Available values:\n" +
+            UiConfigFeature.entries.joinToString("\n") { " * `$it`" }
+    )
+
+    @JvmStatic
+    val SOVITY_EDC_UI_FEATURES_EXCLUDE = ConfigPropRef(
+        property = "sovity.edc.ui.features.exclude",
+        defaultDocumentation = "Comma separated enabled EDC UI to exclude from `${SOVITY_EDC_UI_FEATURES.property}`. Note that most of these require a sovity EDC EE backend.\n\n" +
+            "Available values:\n" +
+            UiConfigFeature.entries.joinToString("\n") { " * `$it`" }
+    )
+
+    @JvmStatic
+    val SOVITY_EDC_UI_PRECONFIGURED_COUNTERPARTIES = ConfigPropRef(
+        property = "sovity.edc.ui.preconfigured.counterparties",
+        defaultDocumentation = "Comma separated list of enabled preconfigured counterparties. format is https://connector/api/dsp?participantId=abc"
     )
 }

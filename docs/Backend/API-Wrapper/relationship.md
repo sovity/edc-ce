@@ -37,6 +37,3 @@ While both the Management-API and the API-Wrapper allow interaction with the EDC
 - The **API-Wrapper** offers a simplified, user-friendly interface that abstracts the complexity, ideal for developers looking to integrate EDC capabilities with minimal effort.
 
 Both APIs are available in our Postman collection and can be used for our CaaS.
-{% hint style="info" %} 
-Link: <a href="https://github.com/sovity/edc-ce/blob/main/docs/api/postman_collection.json">sovity Postman collection</a>
-{% endhint %}

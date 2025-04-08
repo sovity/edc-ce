@@ -1,0 +1,79 @@
+name: "Build EDC Connector Image"
+description: "Build EDC Connector Image"
+inputs:
+  registry-url:
+    required: true
+    description: "Docker Registry"
+  registry-user:
+    required: true
+    description: "Docker Registry Login Username"
+  registry-password:
+    required: true
+    description: "Docker Registry Login Password"
+  image-base-name:
+    required: true
+    description: "Docker Image Base Name (Company)"
+  image-name:
+    required: true
+    description: "Docker Image Name (Artifact Name)"
+  image-title:
+    required: true
+    description: "Docker Image Title"
+  image-description:
+    required: true
+    description: "Docker Image Description"
+  connector-ui-dir:
+    required: true
+    description: "Connector Frontend directory with package.json, yarn.lock and Dockerfile"
+runs:
+  using: "composite"
+  steps:
+    - name: Install Dependencies
+      shell: bash
+      working-directory: ${{ inputs.connector-ui-dir }}
+      run: yarn -v && yarn install --immutable
+    - name: yarn build-prod
+      shell: bash
+      working-directory: ${{ inputs.connector-ui-dir }}
+      run: yarn build-prod
+    - name: "Docker: Log in to the Container registry"
+      uses: docker/login-action@v2
+      with:
+        registry: ${{ inputs.registry-url }}
+        username: ${{ inputs.registry-user }}
+        password: ${{ inputs.registry-password }}
+    - name: "Docker: Store last commit info and build date"
+      shell: bash
+      id: build_info
+      run: |
+        echo "NEXT_PUBLIC_BUILD_VERSION_ARG=$(git describe --tags ${CI_PR_SHA})" >> "$GITHUB_OUTPUT"
+        echo "NEXT_PUBLIC_BUILD_DATE_ARG=$(date --utc +%FT%TZ)" >> "$GITHUB_OUTPUT"
+    - name: "Docker: Extract metadata (tags, labels)"
+      id: meta
+      uses: docker/metadata-action@v4
+      with:
+        images: ${{ inputs.registry-url }}/${{ inputs.image-base-name }}/${{ inputs.image-name }}
+        labels: |
+          org.opencontainers.image.title=${{ inputs.image-title }}
+          org.opencontainers.image.description=${{ inputs.image-description }}
+        tags: |
+          type=schedule
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
+          type=semver,pattern={{major}}
+          type=ref,event=branch
+          type=ref,event=pr
+          type=sha
+          type=raw,value=latest,enable={{is_default_branch}}
+          type=raw,value=release,enable=${{ startsWith(github.ref, 'refs/tags/') }}
+    - name: "Docker: Build and Push"
+      uses: docker/build-push-action@v4
+      with:
+        file: ${{ inputs.connector-ui-dir }}/Dockerfile
+        context: ${{ inputs.connector-ui-dir }}
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        build-args: |
+          "NEXT_PUBLIC_BUILD_VERSION_ARG=${{ steps.build_info.outputs.NEXT_PUBLIC_BUILD_VERSION_ARG }}"
+          "NEXT_PUBLIC_BUILD_DATE_ARG=${{ steps.build_info.outputs.NEXT_PUBLIC_BUILD_DATE_ARG }}"

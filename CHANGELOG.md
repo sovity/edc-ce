@@ -2,6 +2,58 @@
 
 The versions of the sovity EDC CE are aligned with the sovity EDC EE.
 
+## [v12.0.0] - 2025-04-08
+
+### Overview
+
+EDC UI Rework in React + Next + ShadCN-UI + Tailwind with a new look-and-feel and more flexibility for future implementations.
+
+#### Major Changes
+
+- The EDC UI has been rewritten in React + NextJS + ShadCN-UI + Tailwind with a new look-and-feel
+  - Linkable detail / action pages for catalogs, catalog data offers, contracts and assets
+  - The catalog fetching multiple connector catalogs at once has been retired in favor of linkable pages and quick access to preconfigured counterparty catalog
+  - New style: Prefer Custom Tailwind Style to Angular Material Style
+  - New style: Prefer tables to cards
+  - New style: Prefer single-page forms with sections to wizards
+  - New style: Prefer linkable pages to dialogs and slide-overs
+- The EDC UI config system has been reworked. The system of `EDC_UI_`-prefixed environment variables has been replaced by the `UiConfig` API object. See deployment migration notes for detailed changes to the configuration of affected components
+
+### Patch Issues
+
+- Improved Catalog performance 4-fold by optimizing parts of the Eclipse EDC Java code in our fork. Unfortunately, due to the catalog request being `O(N²)` due to in-code filtering of contract definitions and application of policies, this only allows for twice the amount of contract definitions before hitting constraints. [Core-EDC Fork 0.7.2.2](https://github.com/sovity/core-edc/releases/tag/v0.7.2.2)
+
+### Known Issues
+
+- EDRs have issues on this version
+- Documentation is out-of-date and will be amended on subsequent releases
+- Some detail page requests are unoptimized right now:
+  - Missing findById implementations
+  - Frontend-side pagination
+
+### Deployment Migration Notes
+
+- **Connector Backend** config changes:
+  - **Removed** all config ~~`edc.ui.*`~~/~~`EDC_UI_*`~~
+  - **Added** `sovity.edc.ui.preconfigured.counterparties`: Pre-configured counterparties for the EDC UI catalog, format must be `https://connector/api/dsp?participantId=...`
+  - **Added** `sovity.edc.ui.logout.url`: Logout URL used in EDC UI (optional)
+  - **Added** `sovity.edc.ui.documentation.url`: Documentation URL used in EDC UI (optional)
+  - **Added** `sovity.edc.ui.support.url`: Support URL used in EDC UI (optional)
+  - **Added** `sovity.edc.ui.legal.notice.url`: Legal Notice URL used in EDC UI (optional)
+  - **Added** `sovity.edc.ui.privacy.policy.url`: Privacy Policy URL used in EDC UI (optional)
+- **EDC UI** config changes:
+  - **Removed** all config ~~`edc.ui.*`~~/~~`EDC_UI_*`~~
+  - **Added** config `NEXT_PUBLIC_MANAGEMENT_API_URL` and `NEXT_PUBLIC_MANAGEMENT_API_KEY` (optional)
+  - **Added** config `NEXT_PUBLIC_BUILD_DATE` and `NEXT_PUBLIC_BUILD_VERSION` (override only, set by default)
+
+#### Compatible Versions
+
+- EDC CE Backend: `ghcr.io/sovity/edc-ce:12.0.0`
+- EDC CE Frontend: `ghcr.io/sovity/edc-ce-ui:12.0.0`
+- PostgreSQL: `16`
+- Eclipse EDC Fork: [v0.7.2.2](https://github.com/sovity/core-edc/releases/tag/v0.7.2.2)
+- Tractus-X: `0.7.7`
+
 ## [v11.0.0] - 2025-03-10
 
 ### Overview

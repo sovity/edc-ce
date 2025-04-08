@@ -44,6 +44,7 @@ import de.sovity.edc.ce.api.ui.model.PolicyDefinitionCreateDto;
 import de.sovity.edc.ce.api.ui.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.ce.api.ui.model.PolicyDefinitionPage;
 import de.sovity.edc.ce.api.ui.model.TransferHistoryPage;
+import de.sovity.edc.ce.api.ui.model.UiConfig;
 import de.sovity.edc.ce.api.ui.model.UiContractNegotiation;
 import de.sovity.edc.ce.api.ui.model.UiDataOffer;
 import io.swagger.v3.oas.annotations.Operation;
@@ -253,4 +254,10 @@ interface UiResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Get the build version info")
     BuildInfo buildInfo();
+
+    @GET
+    @Path("/config")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Get the UI configuration")
+    UiConfig uiConfig();
 }

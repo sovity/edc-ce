@@ -34,7 +34,7 @@ jobs:
       - name: "Gradle: Validate Gradle Wrapper"
         uses: gradle/wrapper-validation-action@v3
       - name: "Gradle: Test & Build"
-        uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c
+        uses: gradle/gradle-build-action@v2.10.0
         with:
           build-root-directory: connector
           arguments: build -x test ${{ env.GRADLE_ARGS }}
@@ -62,78 +62,24 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-
-      - name: "Set up JDK 17"
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      - name: "Gradle: Validate Gradle Wrapper"
-        uses: gradle/wrapper-validation-action@v3
-
       - name: "Set up Node 20"
         uses: actions/setup-node@v3
         with:
-          node-version: 20
-          cache: 'npm'
-          cache-dependency-path: 'connector-ui/package-lock.json'
-
-      - name: "Install Dependencies"
-        working-directory: connector-ui
-        run: |
-          npm ci
-
-      - name: "Build Angular Project"
-        working-directory: connector-ui
-        run: |
-          npm run build-prod
-        env:
-          USERNAME: ${{ env.REGISTRY_USER }}
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Store the build date and version
-        id: build_info
-        run: |
-          echo "EDC_UI_BUILD_VERSION_ARG=$(git describe --tags ${CI_PR_SHA})" >> "$GITHUB_OUTPUT"
-          echo "EDC_UI_BUILD_DATE_ARG=$(date --utc +%FT%TZ)" >> "$GITHUB_OUTPUT"
-
-      - name: Log in to the Container registry (push-only)
-        uses: docker/login-action@v2
+          node-version: "20.x"
+          cache: "yarn"
+          cache-dependency-path: |
+            frontend/yarn.lock
+      - name: "Docker Image: edc-ce-ui"
+        uses: ./.github/actions/build-connector-ui-image
         with:
-          registry: ${{ env.REGISTRY_URL }}
-          username: ${{ env.REGISTRY_USER }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: ${{ env.REGISTRY_URL }}/${{ env.IMAGE_BASE_NAME }}/edc-ce-ui
-          labels: |
-            org.opencontainers.image.title=sovity EDC CE UI
-            org.opencontainers.image.description=UI for the sovity EDC CE Connector
-          tags: |
-            type=schedule
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-            type=ref,event=branch
-            type=ref,event=pr
-            type=sha
-            type=raw,value=latest,enable={{is_default_branch}}
-            type=raw,value=release,enable=${{ startsWith(github.ref, 'refs/tags/') }}
-      - name: Build EDC-UI image
-        uses: docker/build-push-action@v4
-        with:
-          file: connector-ui/docker/Dockerfile
-          context: connector-ui
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          build-args: |
-            "EDC_UI_BUILD_VERSION_ARG=${{ steps.build_info.outputs.EDC_UI_BUILD_VERSION_ARG }}"
-            "EDC_UI_BUILD_DATE_ARG=${{ steps.build_info.outputs.EDC_UI_BUILD_DATE_ARG }}"
+          registry-url: ${{ env.REGISTRY_URL }}
+          registry-user: ${{ env.REGISTRY_USER }}
+          registry-password: ${{ secrets.GITHUB_TOKEN }}
+          image-base-name: ${{ env.IMAGE_BASE_NAME }}
+          image-name: "edc-ce-ui"
+          image-title: "sovity EDC CE UI"
+          image-description: "UI for the sovity EDC CE Connector"
+          connector-ui-dir: "frontend"
   run-connector-tests-ce:
     name: Run CE Gradle Tests
     runs-on: ubuntu-latest
@@ -151,45 +97,10 @@ jobs:
       - name: "Gradle: Validate Gradle Wrapper"
         uses: gradle/wrapper-validation-action@v3
       - name: "Gradle: Test"
-        uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c
+        uses: gradle/gradle-build-action@v2.10.0
         with:
           build-root-directory: connector
           arguments: test -x :ce:docker-image-ce:assemble
-        env:
-          USERNAME: ${{ env.REGISTRY_USER }}
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  run-ui-karma-tests:
-    name: Run UI Karma Tests
-    timeout-minutes: 10
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: "Set up JDK 17"
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      - name: "Gradle: Validate Gradle Wrapper"
-        uses: gradle/wrapper-validation-action@v3
-
-      - name: "Set up Node 20"
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-          cache: 'npm'
-          cache-dependency-path: 'connector-ui/package-lock.json'
-
-      - name: "Install Dependencies"
-        working-directory: connector-ui
-        run: |
-          npm ci
-
-      - name: "Run Karma Tests"
-        working-directory: connector-ui
-        run: |
-          npm run test-ci
         env:
           USERNAME: ${{ env.REGISTRY_USER }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -205,19 +116,19 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: "Set up Node 16"
+      - name: "Set up Node 20"
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: '20'
           cache: 'npm'
           cache-dependency-path: connector/ce/libs/api-clients/typescript-client/package.json
       - name: "Gradle: Validate Gradle Wrapper"
-        uses: gradle/wrapper-validation-action@ccb4328a959376b642e027874838f60f8e596de3
+        uses: gradle/wrapper-validation-action@v3
       - name: "Gradle: Generate TS Code"
         uses: gradle/gradle-build-action@v2.10.0
         with:
           build-root-directory: connector
-          arguments: :ce:libs:api-clients:typescript-client:build -x test
+          arguments: :ce:libs:api-clients:typescript-client:openApiGenerate -x test
         env:
           USERNAME: ${{ github.actor }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -301,7 +212,6 @@ jobs:
       - build-connector-image-ce
       - build-connector-ui-image-ce
       - run-connector-tests-ce
-      - run-ui-karma-tests
       - build-client-library-typescript
       - check-migration-script-names
 

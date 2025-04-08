@@ -33,4 +33,16 @@ object RuntimeConfigProps {
             During tests it can be set to 'auto' for the test framework to auto find a free port-range.
         """.trimIndent(),
     )
+
+    @JvmStatic
+    val SOVITY_TESTCONTAINER_POSTGRES_INITDB_ARGS = ConfigPropRef(
+        property = "sovity.testcontainer.postgres.initdb.args",
+        defaultDocumentation = "The arguments to pass to the Testcontainers' PostgreSQL's POSTGRES_INITDB_ARGS environment variable. e.g.\n-c shared_preload_libraries='pg_stat_statements'",
+    )
+
+    @JvmStatic
+    val SOVITY_TESTCONTAINER_POSTGRES_INIT_SCRIPT = ConfigPropRef(
+        property = "sovity.testcontainer.postgres.init.script",
+        defaultDocumentation = "The name of the init script to execute at the creation of the container.",
+    )
 }

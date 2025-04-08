@@ -88,23 +88,26 @@ tasks.getByName<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("op
         project.delete(outputDirectory.resolve(".openapi-generator"))
 
         // Fixes TS7053: Element implicitly has an 'any' type because expression of type '"..."' can't be used to index type '{}'.
-        fileTree("src/generated/models")
+        fileTree("src/generated")
             .apply { include("**/*.ts") }
             .forEach { file ->
                 val content = file.readText()
-                val newContent = content.replace(": object", ": any")
+                val newContent = content
+                    .replace(": object", ": any")
+                    .replace("/* tslint:disable */\n", "")
                 file.writeText(newContent)
             }
     }
 }
 
-val uiLibDirectory = project.rootProject.projectDir.resolve("../connector-ui/src/app/core/services/api/client")
+val uiLibDirectory = project.rootProject.projectDir.resolve("../frontend/src/lib/api/client")
 tasks.create("copyUiLib") {
     dependsOn("openApiGenerate")
     doLast {
         project.delete(fileTree(uiLibDirectory).exclude("**/.gitkeep", "**/.gitignore"))
         project.copy {
             from("src")
+            exclude("vite-env.d.ts")
             into(uiLibDirectory)
         }
     }
@@ -112,14 +115,4 @@ tasks.create("copyUiLib") {
 
 tasks.clean {
     dependsOn(tsClientClean)
-}
-
-tasks.build {
-    dependsOn("openApiGenerate")
-    dependsOn("copyUiLib")
-}
-
-tasks.jar {
-    dependsOn("openApiGenerate")
-    onlyIf { false }
 }

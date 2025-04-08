@@ -113,11 +113,11 @@ The backend can be developed fully using tests.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-### Local Development: Frontend
+#### Local Development: Frontend
 
 As soon as the API model is ready the
-[Fake Backend](connector-ui/src/app/core/services/api/fake-backend/edc-fake-backend.ts)
-can be adjusted. The fake backend is mostly type-safe by using the generated API model classes and mappers.
+[Fake Backend](frontend/src/lib/api/fake-backend/edc-fake-backend.ts)
+can be developed. The fake backend is mostly type-safe by using the generated API model classes and mappers.
 
 To launch the frontend dev server with the Fake Backend, run:
 
@@ -125,16 +125,24 @@ To launch the frontend dev server with the Fake Backend, run:
 # Bash, Git Bash or WSL
 
 # Install dependencies (only required once)
-(cd connector-ui && npm i)
+(cd frontend && yarn)
 
 # Run the dev server with Fake Backend (Local Development)
 # Also regenerates the API Client Library
-(cd connector-ui && npm run cold-start)
+(cd frontend && yarn cold-start)
+
+# Run the dev server with Fake Backend (Local Development)
+# Does not regenerate the API Client Library
+(cd frontend && yarn start)
+
+
+# Run a fully-compiled demo version with Fake Backend (Local Development)
+(cd frontend && yarn start-demo)
 ```
 
 This starts the frontend at http://localhost:3000
 
-The configuration can be found in [connector-ui/.env.local-dev](connector-ui/.env.local-dev).
+The configuration can be found in [frontend/.env.local-dev](frontend/.env.local-dev).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

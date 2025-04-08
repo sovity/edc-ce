@@ -1,0 +1,6 @@
+.yarn/releases
+src/lib/api/client/**
+
+.eslintignore
+.env
+.env.*

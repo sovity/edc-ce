@@ -1,8 +1,0 @@
-# This file will be generated
-# - in local dev before running ng serve
-# - in docker container before starting nginx
-app-config.json
-app-configuration.json
-
-# Any backup files / old files
-app.config*.json

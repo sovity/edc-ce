@@ -103,6 +103,11 @@ subprojects {
     }
 
     repositories {
+        maven {
+            url =
+                uri("https://pkgs.dev.azure.com/sovity/41799556-91c8-4df6-8ddb-4471d6f15953/_packaging/core-edc/maven/v1")
+            name = "AzureRepo"
+        }
         mavenCentral()
         mavenLocal()
         maven {
@@ -112,11 +117,6 @@ subprojects {
             name = "GitHub-TractusX-EDC"
             url = uri("https://maven.pkg.github.com/eclipse-tractusx/tractusx-edc")
             withGitHubCredentials()
-        }
-        maven {
-            url =
-                uri("https://pkgs.dev.azure.com/sovity/41799556-91c8-4df6-8ddb-4471d6f15953/_packaging/core-edc/maven/v1")
-            name = "AzureRepo"
         }
     }
 }
@@ -128,6 +128,7 @@ fun MavenArtifactRepository.withGitHubCredentials() {
         ?: project.findProperty("gpr.key") as String?
 
     if (gitHubUser.isNullOrBlank() || gitHubToken.isNullOrBlank()) {
+        @Suppress("MaxLineLength")
         error("Need Gradle Properties 'gpr.user' and 'gpr.key' or environment variables 'USERNAME' and 'TOKEN' with a GitHub PAT with 'Repository read access' to access the GitHub Maven Repository.")
     }
 

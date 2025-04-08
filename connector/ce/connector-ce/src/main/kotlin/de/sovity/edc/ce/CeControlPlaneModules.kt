@@ -8,7 +8,7 @@
 package de.sovity.edc.ce
 
 import de.sovity.edc.ce.api.CeApiModule
-import de.sovity.edc.ce.api.ui.pages.edc_ui_config.EdcUiConfigModule
+import de.sovity.edc.ce.api.ui.model.UiConfigFeature
 import de.sovity.edc.ce.config.CeConfigProps
 import de.sovity.edc.ce.config.CeDataspace
 import de.sovity.edc.ce.config.moduleIfCeDataspace
@@ -61,6 +61,13 @@ object CeControlPlaneModules {
             // CE base
             base(),
 
+            // CE UI
+            EdcUiModule.withActivatedFeatures(
+                category = ConfigPropCategory.OPTIONAL,
+                uiFeaturesTitle = "Default CE Features",
+                uiFeatures = listOf(UiConfigFeature.OPEN_SOURCE_MARKETING)
+            ),
+
             // CE-specific features
             DbModule.forMigrationScripts("classpath:db/migration-ce")
         )
@@ -99,7 +106,6 @@ object CeControlPlaneModules {
             CeApiModule.instance(),
             ConfigUtilsModule.instance(),
             ContractTerminationModule.instance(),
-            EdcUiConfigModule.instance(),
             SimplePolicyCreatorModule.instance(),
             SovityMessengerModule.instance()
         )
@@ -167,7 +173,7 @@ object CeControlPlaneModules {
         }
         property(
             ConfigPropCategory.OVERRIDES,
-            CeConfigProps.EDC_UI_MANAGEMENT_API_URL_SHOWN_IN_DASHBOARD
+            CeConfigProps.SOVITY_EDC_UI_MANAGEMENT_API_URL_SHOWN_IN_DASHBOARD
         ) {
             defaultValueFn = DocumentedFn("Defaults to Management API URL") {
                 ConfigUtilsImpl.getManagementApiUrl(it)

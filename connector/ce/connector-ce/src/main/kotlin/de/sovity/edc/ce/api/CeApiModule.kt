@@ -7,6 +7,10 @@
  */
 package de.sovity.edc.ce.api
 
+import de.sovity.edc.ce.config.CeConfigProps
+import de.sovity.edc.ce.modules.config_utils.ConfigUtilsImpl
+import de.sovity.edc.runtime.modules.model.ConfigPropCategory
+import de.sovity.edc.runtime.modules.model.DocumentedFn
 import de.sovity.edc.runtime.modules.model.EdcModule
 
 object CeApiModule {
@@ -17,5 +21,14 @@ object CeApiModule {
         serviceExtensions(
             CeApiExtension::class.java
         )
+
+        property(
+            ConfigPropCategory.OPTIONAL,
+            CeConfigProps.SOVITY_EDC_UI_MANAGEMENT_API_URL_SHOWN_IN_DASHBOARD
+        ) {
+            defaultValueFn = DocumentedFn("Management API URL") {
+                ConfigUtilsImpl.getManagementApiUrl(it)
+            }
+        }
     }
 }

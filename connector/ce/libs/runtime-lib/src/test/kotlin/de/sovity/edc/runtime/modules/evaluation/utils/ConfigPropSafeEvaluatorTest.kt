@@ -7,6 +7,7 @@
  */
 package de.sovity.edc.runtime.modules.evaluation.utils
 
+import de.sovity.edc.runtime.modules.model.ConfigPropCategory.IMPORTANT
 import de.sovity.edc.runtime.modules.model.ConfigPropCategory.UNKNOWN
 import de.sovity.edc.runtime.modules.model.ConfigPropRef
 import org.assertj.core.api.Assertions.assertThat
@@ -224,6 +225,19 @@ class ConfigPropSafeEvaluatorTest {
         assertThat(result).isEqualTo("override")
         verify(configPropErrorList).addWarning(prop, "Property set to 'warn if overriden' value=override")
         verifyNoMoreInteractions(configPropErrorList)
+    }
+
+    @Test
+    fun `test not required unset`() {
+        // arrange
+        val prop = ConfigPropRef("prop", "docs").toConfigProp(IMPORTANT)
+
+        // act
+        val result = configPropSafeEvaluator.evaluateConfigPropSafe(config, "prop", listOf(prop))
+
+        // assert
+        assertThat(result).isNull()
+        verifyNoInteractions(configPropErrorList)
     }
 
     private fun prop(propertyName: String) = ConfigPropRef(propertyName, "docs").toConfigProp(UNKNOWN)
