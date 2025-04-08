@@ -46,5 +46,5 @@
 
 ## Customer Links
 * [Glossary](https://docs.sovity.de/glossary/glossary)
-* [sovity Hub](https://portal-main.prod-sovity.azure.sovity.io/)
+* [sovity Hub](https://hub.prod-sovity.azure.sovity.io)
 * [Service Desk](https://support.sovity.de/)
