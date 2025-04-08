@@ -27,6 +27,9 @@ interface ConfigUtils {
     val participantId: String
     val managementApiUrl: String
     val managementApiKey: String?
+    /**
+     * Not suited when using the Keycloak extension.
+     */
     fun getManagementApiAuthHeader(): AuthHeader?
     val protocolApiUrl: String
     val defaultApiUrl: String

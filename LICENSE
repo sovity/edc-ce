@@ -1,4 +1,4 @@
 Source code in this repository is either licensed under (i) the "Elastic License 2.0" or (ii) an "Apache License 2.0"
-in each case, as noted by the applicable header for files *.java, *.kt, *.kts and *.ts and by the NOTICE file
+in each case, as noted by the applicable header for files *.java, *.kt, *.kts, *.ts and *.tsx and by the NOTICE file
 otherwise. The default throughout the repository is the "Elastic License 2.0", unless the header
 or NOTICE file specifies another license. The exact license texts can be found in the "licenses" directory.

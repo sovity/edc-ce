@@ -572,6 +572,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IdResponseDto'
+  /wrapper/ui/config:
+    get:
+      tags:
+      - UI
+      description: Get the UI configuration
+      operationId: uiConfig
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UiConfig'
   /wrapper/use-case-api/kpis:
     get:
       tags:
@@ -1789,6 +1802,9 @@ components:
         transferProcessesProviding:
           $ref: '#/components/schemas/DashboardTransferAmounts'
           description: Providing Transfer Process Amounts
+        managementApiUrlShownInDashboard:
+          type: string
+          description: Your Connector's Management API URL for API Users
         connectorEndpoint:
           type: string
           description: Your Connector's Connector Endpoint
@@ -1828,6 +1844,7 @@ components:
       - connectorMaintainerUrl
       - connectorParticipantId
       - connectorTitle
+      - managementApiUrlShownInDashboard
       - numAssets
       - numContractAgreementsConsuming
       - numContractAgreementsProviding
@@ -2044,6 +2061,58 @@ components:
       required:
       - detail
       - reason
+    UiConfig:
+      type: object
+      description: UI Config
+      properties:
+        features:
+          type: array
+          description: Enabled features
+          items:
+            $ref: '#/components/schemas/UiConfigFeature'
+        preconfiguredCounterparties:
+          type: array
+          description: Pre-configured Counterparty Connectors
+          items:
+            $ref: '#/components/schemas/UiConfigPreconfiguredCounterparty'
+        logoutUrl:
+          type: string
+          description: Logout URL
+        documentationUrl:
+          type: string
+          description: Documentation URL
+        supportUrl:
+          type: string
+          description: Support URL
+        privacyPolicyUrl:
+          type: string
+          description: Privacy Policy URL
+        legalNoticeUrl:
+          type: string
+          description: Legal Notice URL
+      required:
+      - features
+      - preconfiguredCounterparties
+    UiConfigFeature:
+      type: string
+      description: Enabled UI Features
+      enum:
+      - CONNECTOR_LIMITS
+      - OPEN_SOURCE_MARKETING
+      - EE_BASIC_MARKETING
+    UiConfigPreconfiguredCounterparty:
+      type: object
+      description: Pre-configured counterparty for the Catalog
+      properties:
+        participantId:
+          type: string
+          description: Participant ID
+        connectorEndpoint:
+          type: string
+          description: Connector Endpoint
+      required:
+      - connectorEndpoint
+      - participantId
     KpiResult:
       type: object
       description: EDC-status-defining KPIs

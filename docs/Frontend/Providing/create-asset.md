@@ -21,12 +21,6 @@ A pop-up window will appear, allowing you to define general metadata for the ass
 | Publisher           | URL        | https://coincap.io/                              | URL of the original publisher of the data. |
 | Standard License    | URL        | https://creativecommons.org/licenses/by/4.0/deed.en | Link to the license under which the data are offered |
 
-**Connectors in Mobility Data Space**
-Proceed by clicking on ```Advanced Information```.
-The MDS has specific additional properties relevant to it. For example, a data category can be selected.
-This area is not visible for other connector variants.
-
-**All Connectors**
 Proceed by clicking on ```Datasource Information```. In the next step, you will connect your data-source to the asset and optionally add additional headers as well as links to important files, such as documentation and license.
 
 ### Use a REST-API Endpoint as Datasource

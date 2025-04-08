@@ -27,6 +27,14 @@ object RuntimeModule {
             ConfigPropCategory.OVERRIDES,
             RuntimeConfigProps.SOVITY_FIRST_PORT
         )
+        property(
+            ConfigPropCategory.OPTIONAL,
+            RuntimeConfigProps.SOVITY_TESTCONTAINER_POSTGRES_INITDB_ARGS,
+        )
+        property(
+            ConfigPropCategory.OPTIONAL,
+            RuntimeConfigProps.SOVITY_TESTCONTAINER_POSTGRES_INIT_SCRIPT,
+        )
 
         documentDockerImageEnvVar(
             envVarName = "REMOTE_DEBUG",

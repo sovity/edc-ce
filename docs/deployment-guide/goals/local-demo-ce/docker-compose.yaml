@@ -10,15 +10,13 @@ services:
       CONNECTOR_UPSTREAM_HOST: 'consumer-connector'
       FRONTEND_UPSTREAM_HOST: 'consumer-ui'
   consumer-ui:
-    image: 'ghcr.io/sovity/edc-ce-ui:11.0.0'
+    image: 'ghcr.io/sovity/edc-ce-ui:12.0.0'
     restart: 'always'
     environment:
-      EDC_UI_MANAGEMENT_API_URL: '/api/management'
-      EDC_UI_MANAGEMENT_API_KEY: 'SomeOtherApiKey'
-      EDC_UI_CONFIG_URL: 'edc-ui-config'
-      NGINX_ACCESS_LOG: 'off'
+      NEXT_PUBLIC_MANAGEMENT_API_URL: '/api/management'
+      NEXT_PUBLIC_MANAGEMENT_API_KEY: 'SomeOtherApiKey'
   consumer-connector:
-    image: 'ghcr.io/sovity/edc-ce:11.0.0'
+    image: 'ghcr.io/sovity/edc-ce:12.0.0'
     restart: 'always'
     depends_on:
       consumer-connector-db:
@@ -30,9 +28,6 @@ services:
       sovity.jdbc.url: 'jdbc:postgresql://consumer-connector-db:5432/db-name'
       sovity.jdbc.user: 'db-user'
       sovity.jdbc.password: 'db-pass'
-      edc.ui.active.profile: 'sovity-open-source'
-      edc.ui.logout.url: 'https://example.com'
-      edc.ui.catalog.urls: 'http://provider/api/dsp'
       sovity.management.api.iam.kind: 'management-iam-api-key'
       edc.api.auth.key: 'SomeOtherApiKey'
       sovity.edc.title: 'consumer Title'
@@ -41,13 +36,13 @@ services:
       sovity.edc.maintainer.url: 'https://consumer/maintainer'
       sovity.edc.curator.name: 'consumer Curator'
       sovity.edc.curator.url: 'https://consumer/curator'
+      sovity.edc.ui.preconfigured.counterparties: 'http://provider/api/dsp?participantId=provider'
       sovity.dataspace.kind: 'sovity-mock-iam'
       edc.participant.id: 'consumer'
       sovity.http.protocol: 'http://'
       sovity.print.config: 'true'
       sovity.logging.level: 'DEBUG'
       sovity.logging.kind: 'console'
-      sovity.micrometer.enabled: 'true'
   consumer-connector-db:
     image: 'docker.io/postgres:16-alpine'
     restart: 'always'
@@ -75,15 +70,13 @@ services:
       CONNECTOR_UPSTREAM_HOST: 'provider-connector'
       FRONTEND_UPSTREAM_HOST: 'provider-ui'
   provider-ui:
-    image: 'ghcr.io/sovity/edc-ce-ui:11.0.0'
+    image: 'ghcr.io/sovity/edc-ce-ui:12.0.0'
     restart: 'always'
     environment:
-      EDC_UI_MANAGEMENT_API_URL: '/api/management'
-      EDC_UI_MANAGEMENT_API_KEY: 'SomeOtherApiKey'
-      EDC_UI_CONFIG_URL: 'edc-ui-config'
-      NGINX_ACCESS_LOG: 'off'
+      NEXT_PUBLIC_MANAGEMENT_API_URL: '/api/management'
+      NEXT_PUBLIC_MANAGEMENT_API_KEY: 'SomeOtherApiKey'
   provider-connector:
-    image: 'ghcr.io/sovity/edc-ce:11.0.0'
+    image: 'ghcr.io/sovity/edc-ce:12.0.0'
     restart: 'always'
     depends_on:
       provider-connector-db:
@@ -95,9 +88,6 @@ services:
       sovity.jdbc.url: 'jdbc:postgresql://provider-connector-db:5432/db-name'
       sovity.jdbc.user: 'db-user'
       sovity.jdbc.password: 'db-pass'
-      edc.ui.active.profile: 'sovity-open-source'
-      edc.ui.logout.url: 'https://example.com'
-      edc.ui.catalog.urls: 'http://consumer/api/dsp'
       sovity.management.api.iam.kind: 'management-iam-api-key'
       edc.api.auth.key: 'SomeOtherApiKey'
       sovity.edc.title: 'provider Title'
@@ -106,13 +96,13 @@ services:
       sovity.edc.maintainer.url: 'https://provider/maintainer'
       sovity.edc.curator.name: 'provider Curator'
       sovity.edc.curator.url: 'https://provider/curator'
+      sovity.edc.ui.preconfigured.counterparties: 'http://consumer/api/dsp?participantId=consumer'
       sovity.dataspace.kind: 'sovity-mock-iam'
       edc.participant.id: 'provider'
       sovity.http.protocol: 'http://'
       sovity.print.config: 'true'
       sovity.logging.level: 'DEBUG'
       sovity.logging.kind: 'console'
-      sovity.micrometer.enabled: 'true'
   provider-connector-db:
     image: 'docker.io/postgres:16-alpine'
     restart: 'always'

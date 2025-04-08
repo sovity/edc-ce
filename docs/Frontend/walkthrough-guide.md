@@ -24,7 +24,7 @@ Optionally, a new policy can be created in the Policies area. The default polici
 
 ## Provider: Create Contract Definition
 
-The last step on the part of the data provider should be to create a contract definition. A unique ID must be assigned here. An existing policy, for example one created in the previous step, can be set as an access policy and contract policy. In addition, at least one asset must be selected that should be offered in the ecosystem. Difference between Access Policy and Crontract Policy: The Access Policy determines which other participants in the ecosystem can see the offer or at what point in time. The Contract Policy determines the conditions under which a contract for the data offering may be concluded.
+The last step on the part of the data provider should be to create a contract definition. A unique ID must be assigned here. An existing policy, for example one created in the previous step, can be set as an access policy and contract policy. In addition, at least one asset must be selected that should be offered in the ecosystem. Difference between Access Policy and Contract Policy: The Access Policy determines which other participants in the ecosystem can see the offer or at what point in time. The Contract Policy determines the conditions under which a contract for the data offering may be concluded.
 
 **Difference between Access Policy and Contract Policy**:
 - **Access Policy**: Determines which participants in the ecosystem can see the offer and when.

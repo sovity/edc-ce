@@ -26,7 +26,7 @@ Once Postman is installed and running, set up the API environment as follows:
 - Follow the prompts to complete the import process
 
 {% hint style="info" %} 
-Direct Link to Postman collection: <a href="https://raw.githubusercontent.com/sovity/edc-ce/main/docs/api/postman_collection.json">https://raw.githubusercontent.com/sovity/edc-ce/main/docs/api/postman_collection.json</a>
+Direct Link to Postman collection: <a href="https://raw.githubusercontent.com/sovity/edc-ce/release/v11.0.0/docs/api/postman_collection.json">https://raw.githubusercontent.com/sovity/edc-ce/release/v11.0.0/docs/api/postman_collection.json</a>
 {% endhint %}
 
 

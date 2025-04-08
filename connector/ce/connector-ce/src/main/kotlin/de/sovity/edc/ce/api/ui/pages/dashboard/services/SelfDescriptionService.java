@@ -8,6 +8,7 @@
 package de.sovity.edc.ce.api.ui.pages.dashboard.services;
 
 import de.sovity.edc.ce.config.CeConfigProps;
+import de.sovity.edc.ce.modules.config_utils.ConfigUtilsImpl;
 import de.sovity.edc.runtime.simple_di.Service;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.spi.system.configuration.Config;
@@ -47,5 +48,9 @@ public class SelfDescriptionService {
 
     public String getMaintainerName() {
         return CeConfigProps.getSOVITY_EDC_MAINTAINER_NAME().getStringOrThrow(config);
+    }
+
+    public String getManagementApiUrlShownInUiDashboard() {
+        return CeConfigProps.getSOVITY_EDC_UI_MANAGEMENT_API_URL_SHOWN_IN_DASHBOARD().getStringOrThrow(config);
     }
 }

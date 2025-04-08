@@ -57,6 +57,9 @@ public class DashboardPage {
     @Schema(description = "Providing Transfer Process Amounts", requiredMode = Schema.RequiredMode.REQUIRED)
     private DashboardTransferAmounts transferProcessesProviding;
 
+    @Schema(description = "Your Connector's Management API URL for API Users", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String managementApiUrlShownInDashboard;
+
     @Schema(description = "Your Connector's Connector Endpoint", requiredMode = Schema.RequiredMode.REQUIRED)
     private String connectorEndpoint;
 

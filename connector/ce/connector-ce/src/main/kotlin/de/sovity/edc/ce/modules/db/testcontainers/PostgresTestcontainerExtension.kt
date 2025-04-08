@@ -8,6 +8,7 @@
 package de.sovity.edc.ce.modules.db.testcontainers
 
 import de.sovity.edc.ce.versions.GradleVersionsCe
+import de.sovity.edc.runtime.modules.RuntimeConfigProps
 import org.eclipse.edc.runtime.metamodel.annotation.Provides
 import org.eclipse.edc.spi.system.ServiceExtension
 import org.eclipse.edc.spi.system.ServiceExtensionContext
@@ -15,7 +16,6 @@ import org.testcontainers.containers.PostgreSQLContainer
 
 @Provides(PostgresTestcontainer::class)
 class PostgresTestcontainerExtension : ServiceExtension {
-
     private lateinit var container: PostgreSQLContainer<*>
 
     override fun initialize(context: ServiceExtensionContext) {
@@ -26,6 +26,15 @@ class PostgresTestcontainerExtension : ServiceExtension {
             .withUsername("edc")
             .withPassword("edc")
             .withDatabaseName("edc")
+            .also { container ->
+                RuntimeConfigProps.SOVITY_TESTCONTAINER_POSTGRES_INITDB_ARGS.getStringOrNull(context.config)?.let { args ->
+                    container.withEnv("POSTGRES_INITDB_ARGS", args)
+                }
+                RuntimeConfigProps.SOVITY_TESTCONTAINER_POSTGRES_INIT_SCRIPT.getStringOrNull(context.config)?.let { args ->
+                    container.withInitScript(args)
+                }
+            }
+
         container.start()
         monitor.info("PostgreSQL Testcontainer started!")
 

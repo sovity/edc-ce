@@ -70,6 +70,7 @@ public class DashboardPageApiService {
 
         dashboardPage.setConnectorTitle(selfDescriptionService.getConnectorTitle());
         dashboardPage.setConnectorDescription(selfDescriptionService.getConnectorDescription());
+        dashboardPage.setManagementApiUrlShownInDashboard(selfDescriptionService.getManagementApiUrlShownInUiDashboard());
         dashboardPage.setConnectorEndpoint(selfDescriptionService.getConnectorEndpoint());
         dashboardPage.setConnectorParticipantId(selfDescriptionService.getParticipantId());
 
