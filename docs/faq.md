@@ -49,7 +49,7 @@ Assets cannot be deleted once a contract has already been negotiated with anothe
 Policies cannot be deleted if they are referenced in a ContractDefinition.
 
 **Delete Conditions for ContractDefinitions**
-ContractDefinitions can always be deleted. As a result, the offering will no longer appear in the catalog of other connectors. Additionally, other connectors will no longer be able to transfer data based on contracts that have been negotiated using this ContractDefinition.
+ContractDefinitions can always be deleted. As a result, the offering will no longer appear in the catalog of other connectors.
 
 ### Is it possible to delete an existing contract?
 
