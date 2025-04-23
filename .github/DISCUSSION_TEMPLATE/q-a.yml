@@ -1,0 +1,70 @@
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for contributing to the discussion! Please fill out this form as completely as possible to help us support you better.
+
+  - type: input
+    id: description
+    attributes:
+      label: What happened?
+      description: Clearly describe the problem or question you have.
+      placeholder: e.g., "When I try to launch the tool, I receive an error..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected_behavior
+    attributes:
+      label: Expected Behavior (optional)
+      description: What did you expect to happen?
+      placeholder: e.g., "The application should start and show a dashboard..."
+
+  - type: textarea
+    id: steps_to_reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: Describe the exact steps to reproduce the issue.
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. Start the application
+        4. Observe the issue
+    validations:
+      required: true
+
+  - type: textarea
+    id: context_info
+    attributes:
+      label: Context Information
+      description: Provide any relevant context like configuration files (remove sensitive information).
+      placeholder: |
+        {
+          "setting1": "value",
+          "setting2": "value"
+        }
+
+  - type: textarea
+    id: log_output
+    attributes:
+      label: Relevant log output
+      description: Share relevant logs or error messages.
+      placeholder: |
+        [Error] Failed to start the application: Connection refused
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: Add screenshots if available. Use drag & drop or Markdown image syntax.
+      placeholder: Paste image link here or drag a file into the comment editor
+
+  - type: textarea
+    id: background_info
+    attributes:
+      label: Background of your usage
+      description: Who are you? What is your affiliation? Why are you using the component (project/phase)? What are your goals?
+      placeholder: |
+        I'm a developer at Project XYZ using the component as part of an internal tool to achieve...
+    validations:
+      required: true
