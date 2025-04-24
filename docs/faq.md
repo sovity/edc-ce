@@ -124,7 +124,7 @@ For example, if a downstream service returns a `403 Forbidden` or `409 Conflict`
 
 #### 2. Why am I getting a 500 error when accessing the /public endpoint of the Data-Plane?
 
-This issue can be caused by the connected customer-backend. The core-edc may convert error codes, leading to this issue. For example, a customer-backend returning a 400 code could be translated to a 500 by the core-edc.
+This issue can be caused by the connected downstream service. The EDC converts original error codes from downstream services, leading to this issue. For example, a service returning a 400 code could be translated to a 500 by the EDC.
 
 #### 3. Why might a HTTPData-Pull transfer using an EDR fail with a 500 error when retrieving the data address?
 
