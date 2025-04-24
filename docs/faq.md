@@ -97,6 +97,21 @@ If two connectors, regardless of their organization, are in the same data space,
 Yes, a user can publish data assets, including REST API endpoints from third parties. For example, you can use sources like https://www.google.com as a data source, which would transfer the HTML-source code of google.com. However, it is crucial to ensure the protection of your own APIs for this reason, so that no one can pass it off as their own. We recommend securing your APIs using methods such as API-Keys or OAuth2 to control access and protect your data.  
 
 
+### Configuration & Technical Behavior
+
+#### 1. Is there a default limit on the number of records returned for query requests if no limit is set in the QuerySpec?
+
+Yes, if no limit has been specified in the QuerySpec, the connector outputs a maximum of 50 records. To exceed this limit, you must specify the desired limit in the QuerySpec, which can be an extremely high value, such as 9999.
+
+#### 2. Do productive Connectors need to be public reachable?
+
+Yes, Connectors need to have public-facing endpoints when deployed for productive usage in a dataspace, specifically the Dataspace Protocol (DSP) endpoint, to enable communication between Connectors. This is necessary because during processes such as contract negotiation, the Connectors must be able to exchange DSP-messages to perform the negotiations. Having a public DSP-endpoint allows these interactions to occur in a productive deployment environment. Contract negotiations and other communications happen between the connectors in a peer-to-peer manner.
+
+#### 3. Do data sinks need to be public reachable in productive environments?
+
+Yes, the architecture relies on the data provider directly connecting to the data sink of the consumer, which is designed for scaling and technical efficiency. This setup reduces the need for data to pass through the consuming EDC, optimizing bandwidth, reducing latency and avoiding technical bottlenecks, this is thus a technical design decision. To secure the data sink, measures such as IP-whitelisting of data-providers or API-Keys for the data sink should be used to ensure that only authorized parties can access and write to the data sink. 
+
+
 ### Troubleshooting & Errors
 
 #### 1. Can the EDC forward the response content of an error message from the data sink/source or other connected services?
@@ -122,18 +137,3 @@ While this issue is caused by the provider EDC, as he determines the content of 
 To resolve this, it is recommended to renegotiate the offer for a new contract with the provider EDC to obtain a fresh EDR, as the auto-refresh does not work in this case. This ensures that a new non-expired EDR is issued. If similar issues occur again after the new EDR expires, another contract negotiation may be required.
 
 You can always check the content of the latest known EDR of a transfer via the API: `/control/data/v2/edrs/{{TRANSFER-ID}}/dataaddress?auto_refresh=false` as this will not use the EDR auto-refresh.
-
-
-### Configuration & Technical Behavior
-
-#### 1. Is there a default limit on the number of records returned for query requests if no limit is set in the QuerySpec?
-
-Yes, if no limit has been specified in the QuerySpec, the connector outputs a maximum of 50 records. To exceed this limit, you must specify the desired limit in the QuerySpec, which can be an extremely high value, such as 9999.
-
-#### 2. Do productive Connectors need to be public reachable?
-
-Yes, Connectors need to have public-facing endpoints when deployed for productive usage in a dataspace, specifically the Dataspace Protocol (DSP) endpoint, to enable communication between Connectors. This is necessary because during processes such as contract negotiation, the Connectors must be able to exchange DSP-messages to perform the negotiations. Having a public DSP-endpoint allows these interactions to occur in a productive deployment environment. Contract negotiations and other communications happen between the connectors in a peer-to-peer manner.
-
-#### 3. Do data sinks need to be public reachable in productive environments?
-
-Yes, the architecture relies on the data provider directly connecting to the data sink of the consumer, which is designed for scaling and technical efficiency. This setup reduces the need for data to pass through the consuming EDC, optimizing bandwidth, reducing latency and avoiding technical bottlenecks, this is thus a technical design decision. To secure the data sink, measures such as IP-whitelisting of data-providers or API-Keys for the data sink should be used to ensure that only authorized parties can access and write to the data sink. 
