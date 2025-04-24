@@ -111,7 +111,7 @@ The EDC does not always pass through error codes as they are received from other
 
 For example: When the EDC receives an error code like 403 Forbidden from another system, it might map and return this as a 400 Bad Request instead. This behavior can obscure the original issue, as the returned error code does not reflect the root cause accurately. This mapping behavior can make debugging and understanding the actual problem more complex. As a result, users need to be aware of this behavior when troubleshooting issues with the EDC.
 
-### Why might a Pull Transfer using an EDR fail with a 500 error when retrieving the data address?
+### Why might a HTTPData-Pull transfer using an EDR fail with a 500 error when retrieving the data address?
 
 A `500 Internal Server Error` when retrieving the data address of an EDR (Endpoint Data Reference) can occur if the EDR contains an invalid or non-parsable `refreshEndpoint` value. This typically happens when an EDR has expired and the EDC attempts to auto-refresh it using the malformed refresh URL. For instance, all entires like "did:web:portal-backend..." are not a valid HTTP URL, which results in the failure of the refresh attempt.
 
