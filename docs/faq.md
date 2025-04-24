@@ -115,7 +115,7 @@ For example: When the EDC receives an error code like 403 Forbidden from another
 
 A `500 Internal Server Error` when retrieving the data address of an EDR (Endpoint Data Reference) can occur if the EDR contains an invalid or non-parsable `refreshEndpoint` value. This typically happens when an EDR has expired and the EDC attempts to auto-refresh it using the malformed refresh URL. For instance, all entires like "did:web:portal-backend..." are not a valid HTTP URL, which results in the failure of the refresh attempt.
 
-This can occur for exmaple when using the API: `/control/data/v2/edrs/{{TRANSFER-ID}}/dataaddress`
+This can occur for example when using the API: `/control/data/v2/edrs/{{TRANSFER-ID}}/dataaddress`
 
 While this issue is caused by the provider EDC, as he determines the content of the EDR, the error occurs at the consumer EDC when he tries to refresh the expired EDR. 
 
