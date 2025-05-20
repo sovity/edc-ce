@@ -37,8 +37,6 @@ public class QueryUtils {
             position += BATCH_SIZE;
         } while (!batch.isEmpty());
 
-        System.out.println("ALL   " + all.size());
-
         return all;
     }
 }
