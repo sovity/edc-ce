@@ -32,36 +32,40 @@ public class DspDataOfferBuilder {
     private final JsonLd jsonLd;
 
     public DspCatalog buildDataOffers(String endpoint, JsonObject json) {
-        json = jsonLd.expand(json).orElseThrow(DspCatalogServiceException::ofFailure);
-        var participantId = JsonLdUtils.string(json, Prop.Edc.PARTICIPANT_ID);
-        var dataOffers = JsonLdUtils.listOfObjects(json, Prop.Dcat.DATASET);
+        final var expanded = jsonLd.expand(json).orElseThrow(DspCatalogServiceException::ofFailure);
+        var participantId = JsonLdUtils.string(expanded, Prop.Edc.PARTICIPANT_ID);
+        if (participantId == null) {
+            // new coordinates for Tractus 0.9.0 responses
+            participantId = JsonLdUtils.string(expanded, "https://w3id.org/dspace/v0.8/participantId");
+        }
+        var dataOffers = JsonLdUtils.listOfObjects(expanded, Prop.Dcat.DATASET);
 
         return new DspCatalog(
-                endpoint,
-                participantId,
-                dataOffers.stream()
-                        .map(this::buildDataOffer)
-                        .toList()
+            endpoint,
+            participantId,
+            dataOffers.stream()
+                .map(this::buildDataOffer)
+                .toList()
         );
     }
 
     private DspDataOffer buildDataOffer(JsonObject dataset) {
         var contractOffers = JsonLdUtils.listOfObjects(dataset, Prop.Odrl.HAS_POLICY).stream()
-                .map(this::buildContractOffer)
-                .toList();
+            .map(this::buildContractOffer)
+            .toList();
 
         var distributions = JsonLdUtils.listOfObjects(dataset, Prop.Dcat.DISTRIBUTION_WILL_BE_OVERWRITTEN_BY_CATALOG);
 
         var assetProperties = Json.createObjectBuilder(dataset)
-                .remove(Prop.TYPE)
-                .remove(Prop.Odrl.HAS_POLICY)
-                .remove(Prop.Dcat.DISTRIBUTION_WILL_BE_OVERWRITTEN_BY_CATALOG)
-                .build();
+            .remove(Prop.TYPE)
+            .remove(Prop.Odrl.HAS_POLICY)
+            .remove(Prop.Dcat.DISTRIBUTION_WILL_BE_OVERWRITTEN_BY_CATALOG)
+            .build();
 
         return new DspDataOffer(
-                assetProperties,
-                contractOffers,
-                distributions
+            assetProperties,
+            contractOffers,
+            distributions
         );
     }
 
