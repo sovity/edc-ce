@@ -22,7 +22,8 @@ package de.sovity.edc.ce.api.usecase.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "Operator for filter expressions", enumAsRef = true)
+@Schema(description = "Operator for filter expressions", enumAsRef = true, deprecated = true)
+@Deprecated
 public enum CatalogFilterExpressionOperator {
     LIKE, EQ, IN
 }

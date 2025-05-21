@@ -111,5 +111,19 @@ object DapsModules {
         ) {
             vaultKeyNameFor(CeVaultEntries.DAPS_PRIV)
         }
+
+        property(
+            ConfigPropCategory.OVERRIDES,
+            CeConfigProps.EDC_OAUTH_VALIDATION_NBF_LEEWAY
+        ) {
+            defaultValue("10")
+        }
+
+        property(
+            ConfigPropCategory.OVERRIDES,
+            CeConfigProps.EDC_OAUTH_VALIDATION_ISSUED_AT_LEEWAY
+        ) {
+            defaultValue("10")
+        }
     }
 }

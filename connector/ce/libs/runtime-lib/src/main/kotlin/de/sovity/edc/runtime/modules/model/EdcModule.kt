@@ -191,7 +191,12 @@ open class EdcModule(val name: String, val documentation: String) {
     }
 
     /**
-     * Excludes the given service class implementation
+     * Excludes the given service class implementation.
+     *
+     * Both parameters are mandatory, as an implementation may inherit from several service classes.
+     *
+     * @param serviceClass The type of service class to exclude.
+     * @param implementationClass The specific class implementing `serviceClass` to exclude.
      */
     fun <T : Any> excludeServiceClass(serviceClass: Class<T>, implementationClass: Class<out T>): EdcModule = apply {
         services.excludeServiceClass(serviceClass, implementationClass)

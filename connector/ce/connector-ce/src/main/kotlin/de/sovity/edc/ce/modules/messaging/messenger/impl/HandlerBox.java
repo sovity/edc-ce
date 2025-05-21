@@ -7,7 +7,7 @@
  */
 package de.sovity.edc.ce.modules.messaging.messenger.impl;
 
-import org.eclipse.edc.spi.agent.ParticipantAgent;
+import org.eclipse.edc.participant.spi.ParticipantAgent;
 
 import java.util.function.BiFunction;
 

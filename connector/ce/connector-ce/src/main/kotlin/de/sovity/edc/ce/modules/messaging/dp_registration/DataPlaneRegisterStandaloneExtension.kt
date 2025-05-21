@@ -22,18 +22,16 @@ class DataPlaneRegisterStandaloneExtension : ServiceExtension {
     @Inject
     private lateinit var configUtils: ConfigUtils
 
-    override fun name() = "Data-Plane Registration (Standalone)"
-
     override fun initialize(context: ServiceExtensionContext) {
         val config = context.config
         val monitor = context.monitor
 
-        val cpManagementApi = ExternalCpManagementApi(config, monitor, httpClient)
+        val cpControlApi = ExternalCpControlApi(config, monitor, httpClient)
 
         val instanceDto = DataPlaneInstanceDto.describeSelf(config, configUtils)
 
         SimpleRetry.retry(30, Duration.ofSeconds(1)) {
-            cpManagementApi.callPost("v2/dataplanes", instanceDto.toCreateRequestJsonLd())
+            cpControlApi.callPost("v1/dataplanes", instanceDto.toCreateRequestJsonLd())
         }
 
         monitor.info("Successfully registered Data Plane.")

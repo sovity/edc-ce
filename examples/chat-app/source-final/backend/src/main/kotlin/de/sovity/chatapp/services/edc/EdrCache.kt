@@ -1,0 +1,63 @@
+/*
+ * Copyright 2025 sovity GmbH
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Contributors:
+ *     sovity - init and continued development
+ */
+package de.sovity.chatapp.services.edc
+
+import de.sovity.chatapp.services.persistence.CounterpartyStore
+import de.sovity.edc.client.EdcClient
+import de.sovity.edc.client.gen.model.EdrDto
+import io.quarkus.logging.Log
+import jakarta.enterprise.context.ApplicationScoped
+import java.time.OffsetDateTime
+
+@ApplicationScoped
+class EdrCache(
+    val counterpartyStore: CounterpartyStore,
+    val edcClient: EdcClient
+) {
+    fun getEdr(participantId: String): EdrDto {
+        val counterparty = counterpartyStore.findByIdOrThrow(participantId)
+        val transferProcessId = counterparty.transferProcessId
+        require(transferProcessId != null) {
+            "Participant is not online. No running transfer process for participant $participantId"
+        }
+
+        val oldEdr = counterparty.edr
+        if (oldEdr != null) {
+            val isExpired = oldEdr.expiresAt?.isAfter(
+                OffsetDateTime.now().minusSeconds(5)
+            ) ?: false
+            if (!isExpired) {
+                return oldEdr
+            }
+        }
+
+        // Re-fetch EDR
+        Log.info("Requesting new EDR for $participantId")
+        val newEdr = edcClient.useCaseApi().getTransferProcessEdr(transferProcessId)
+
+        // Save EDR for re-use
+        Log.info("Got EDR for $participantId: ${newEdr.baseUrl} ${newEdr.authorizationHeaderValue}")
+        counterpartyStore.update(participantId) {
+            it.copy(edr = newEdr)
+        }
+        return newEdr
+    }
+}

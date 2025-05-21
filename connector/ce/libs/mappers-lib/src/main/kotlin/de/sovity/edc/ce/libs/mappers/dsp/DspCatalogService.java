@@ -20,7 +20,7 @@
  */
 package de.sovity.edc.ce.libs.mappers.dsp;
 
-import de.sovity.edc.ce.libs.mappers.dsp.mapper.DspDataOfferBuilder;
+import de.sovity.edc.ce.libs.mappers.dsp.mapper.DspDataOfferParser;
 import de.sovity.edc.ce.libs.mappers.dsp.model.DspCatalog;
 import de.sovity.edc.runtime.simple_di.Service;
 import de.sovity.edc.utils.JsonUtils;
@@ -36,16 +36,16 @@ import java.nio.charset.StandardCharsets;
 @Service
 public class DspCatalogService {
     private final CatalogService catalogService;
-    private final DspDataOfferBuilder dspDataOfferBuilder;
+    private final DspDataOfferParser dspDataOfferParser;
 
     public DspCatalog fetchDataOffers(String participantId, String endpoint) throws DspCatalogServiceException {
         var catalogJson = fetchDcatResponse(participantId, endpoint, QuerySpec.max());
-        return dspDataOfferBuilder.buildDataOffers(endpoint, catalogJson);
+        return dspDataOfferParser.parseDataOffers(endpoint, catalogJson);
     }
 
     public DspCatalog fetchDataOffersWithFilters(String participantId, String endpoint, QuerySpec querySpec) {
         var catalogJson = fetchDcatResponse(participantId, endpoint, querySpec);
-        return dspDataOfferBuilder.buildDataOffers(endpoint, catalogJson);
+        return dspDataOfferParser.parseDataOffers(endpoint, catalogJson);
     }
 
     private JsonObject fetchDcatResponse(String participantId, String connectorEndpoint, QuerySpec querySpec) {

@@ -21,7 +21,7 @@ public class SovityMessageRequestBodyExtractor implements DspHttpResponseBodyExt
     private final ObjectMapper mapper;
 
     @Override
-    public SovityMessageRequest extractBody(ResponseBody responseBody) {
+    public SovityMessageRequest extractBody(ResponseBody responseBody, String protocol) {
         try {
             if (responseBody == null) {
                 return null;

@@ -21,13 +21,13 @@ import de.sovity.edc.runtime.modules.getEnvironment
 import de.sovity.edc.runtime.modules.model.ConfigPropCategory
 import de.sovity.edc.runtime.modules.model.DocumentedFn
 import de.sovity.edc.runtime.modules.model.EdcModule
-import org.eclipse.edc.sql.SqlCoreExtension
+import org.eclipse.edc.sql.SqlQueryExecutorConfiguration
 
 @Suppress("MaxLineLength")
 object CeRootModule {
 
     @JvmStatic
-    fun root() = EdcModule(
+    fun ceRoot() = EdcModule(
         name = "root-ce",
         documentation = "sovity EDC CE Root module, contains super-global Extensions, kick-starts our module system."
     ).apply {
@@ -58,9 +58,7 @@ object CeRootModule {
         name = "root-base-config",
         documentation = "Base configuration and overrides for both control planes and data planes"
     ).apply {
-        modules(
-            RuntimeModule.instance(),
-        )
+        modules(RuntimeModule.instance())
         property(
             ConfigPropCategory.OVERRIDES,
             RuntimeConfigProps.SOVITY_ENVIRONMENT
@@ -103,7 +101,7 @@ object CeRootModule {
             ConfigPropCategory.OVERRIDES,
             CeConfigProps.EDC_SQL_FETCH_SIZE
         ) {
-            defaultValue(SqlCoreExtension.DEFAULT_EDC_SQL_FETCH_SIZE)
+            defaultValue(SqlQueryExecutorConfiguration.DEFAULT_EDC_SQL_FETCH_SIZE)
         }
         configureWebApi()
         configureControlApi()
@@ -122,7 +120,7 @@ object CeRootModule {
     private fun EdcModule.configureWebApi() {
         property(
             ConfigPropCategory.OVERRIDES,
-            CeConfigProps.WEB_HTTP_PATH
+            CeConfigProps.WEB_HTTP_DEFAULT_PATH
         ) {
             defaultValueFn = DocumentedFn("Defaults to `[basePath/]api`") { config ->
                 val basePath = CeConfigProps.SOVITY_BASE_PATH.getStringOrThrow(config)
@@ -132,7 +130,7 @@ object CeRootModule {
         }
         property(
             ConfigPropCategory.OVERRIDES,
-            CeConfigProps.WEB_HTTP_PORT
+            CeConfigProps.WEB_HTTP_DEFAULT_PORT
         ) {
             defaultFromPropPlus(RuntimeConfigProps.SOVITY_FIRST_PORT, 1)
             warnIfOverridden = true

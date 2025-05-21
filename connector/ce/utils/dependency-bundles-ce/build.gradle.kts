@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets
 
 plugins {
     `java-library`
+    `maven-publish`
 }
 
 buildscript {
@@ -56,9 +57,11 @@ dependencyBundles.bundle(
     api(libs.edc.contractDefinitionApi)
     api(libs.edc.controlApiConfiguration)
     api(libs.edc.controlPlaneApi)
+    api(libs.edc.controlPlaneApiClient)
     api(libs.edc.controlPlaneContract)
     api(libs.edc.controlPlaneCore)
     api(libs.edc.dataPlaneSelectorCore)
+    api(libs.edc.dataPlaneSelectorControlApi)
     api(libs.edc.dsp)
     api(libs.edc.dspApiConfiguration)
     api(libs.edc.dspHttpCore)
@@ -91,13 +94,16 @@ dependencyBundles.bundle(
     api(libs.edc.dataPlaneSelectorApi)
 
     // Data Transfer
+    api(libs.edc.accesstokendataStoreSql)
     api(libs.edc.transferPullHttpDynamicReceiver)
     api(libs.edc.edrStoreCore)
     api(libs.edc.edrStoreReceiver)
-    api(libs.tractus.transferDataplaneSignaling)
-    api(libs.tractus.azblobProvisioner)
-    // fix CVE in Catalog, see: https://github.com/eclipse-tractusx/tractusx-edc/pull/1584
-    api(libs.tractus.datasetBugfix)
+    api(libs.edc.transferDataPlaneSignaling)
+    api(libs.edc.azure.provisionBlob)
+
+    // Adds headers Edc-Bpn and Edc-Contract-Agreement-Id to proxied calls via EDRs
+    // A Tractus-X dependency, yet compatible with vanilla EDCs for now
+    api(libs.tractus.provisionAdditionalHeaders)
 }
 
 dependencyBundles.bundle(
@@ -106,8 +112,10 @@ dependencyBundles.bundle(
 ) {
     // Standalone DP
     api(libs.edc.connectorCore)
+    api(libs.edc.dataPlaneIam)
     api(libs.edc.http)
     api(libs.edc.jsonLd)
+    api(libs.edc.tokenCore)
 }
 
 dependencyBundles.bundle(
@@ -115,15 +123,10 @@ dependencyBundles.bundle(
     bundleDocumentation = "Common Data Plane extensions for standalone and integrated Data Planes"
 ) {
     api(libs.edc.controlApiConfiguration)
+    api(libs.edc.controlPlaneApiClient)
     api(libs.edc.dataPlaneCore)
     api(libs.edc.dataPlanePublicApiV2)
-    api(libs.edc.controlPlaneApiClient)
     api(libs.edc.dataPlaneSignalingApi)
-
-    // normally the pipeline service is provided by the data-plane-core dependency
-    // however there is a TX version, which contains some fixes
-    // see: https://github.com/eclipse-tractusx/tractusx-edc/pull/1520
-    api(libs.tractus.pipelineService)
 
     // transfer-types
     api(libs.edc.dataPlaneHttp)
@@ -133,6 +136,9 @@ dependencyBundles.bundle(
     // SQL
     api(libs.edc.dataPlaneStoreSql)
     api(libs.edc.accesstokendataStoreSql)
+
+    // OAuth
+    api(libs.edc.dataPlaneHttpOauth2)
 }
 
 dependencyBundles.bundle(
@@ -205,11 +211,19 @@ dependencyBundles.bundle(
 }
 
 dependencyBundles.bundle(
+    bundleName = "sovityControlPlane",
+    bundleDocumentation = "Sovity Control Plane"
+) {
+    // Vanilla EDRs
+    api(libs.edc.edrCacheApi)
+}
+
+dependencyBundles.bundle(
     bundleName = "tractusControlPlane",
     bundleDocumentation = "Tractus Control Plane"
 ) {
-    api(libs.tractus.transferDataplaneSignaling)
-    api(libs.tractus.azblobProvisioner)
+    api(libs.edc.transferDataPlaneSignaling)
+    api(libs.edc.azure.provisionBlob)
     api(libs.tractus.jsonLdCore)
 
     // iatp
@@ -221,8 +235,8 @@ dependencyBundles.bundle(
 
     // iatp tx
     api(libs.tractus.tokenrefreshHandler)
-    api(libs.tractus.txIatp)
-    api(libs.tractus.txIatpStsDim)
+    api(libs.tractus.txDcp)
+    api(libs.tractus.txDcpStsDim)
 
     // edr tx
     api(libs.tractus.edrCore)
@@ -232,7 +246,7 @@ dependencyBundles.bundle(
     api(libs.tractus.dataFlowPropertiesProvider)
     api(libs.tractus.bdrsClient)
 
-    // Adds a header Edc-Contract-Agreement-Id to the http-push-transfer when invoking the target backend
+    // Adds headers Edc-Bpn and Edc-Contract-Agreement-Id to the http-push-transfer when invoking the target backend
     api(libs.tractus.provisionAdditionalHeaders)
 
     // Adds a policy, checking the referringConnector claim of the dat if it contains the correct business-partner-number
@@ -259,7 +273,7 @@ dependencyBundles.bundle(
     api(libs.tractus.tokenRefreshApi)
     api(libs.tractus.tokenRefreshCore)
     api(libs.tractus.tokenrefreshHandler)
-    api(libs.tractus.txIatpStsDim)
+    api(libs.tractus.txDcpStsDim)
 
     // sql
     api(libs.edc.edrIndexSql)
@@ -289,7 +303,6 @@ dependencyBundles.bundle(
     api(libs.edc.jsonLd)
     api(libs.edc.connectorCore)
 }
-
 
 dependencies {
     // lombok
@@ -368,6 +381,7 @@ val generateDependencyBundlesSources: Task by tasks.creating {
         fileSpec.writeTo(file(generatedSourcesTarget))
     }
 }
+
 val generateDependencyBundlesResources: Task by tasks.creating {
     outputs.cacheIf { true }
     outputs.dir(generatedResourcesTarget)
@@ -498,3 +512,14 @@ class DependencyBundle(val bundleName: String, val documentation: String) {
         dependencyNotations.add(dependencyNotation)
     }
 }
+
+group = libs.versions.sovityCeGroupName.get()
+
+publishing {
+    publications {
+        create<MavenPublication>(project.name) {
+            from(components["java"])
+        }
+    }
+}
+

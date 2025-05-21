@@ -36,14 +36,14 @@ import lombok.RequiredArgsConstructor;
 @Schema(description = "Number of Transfer Processes for given direction.")
 public class DashboardTransferAmounts {
     @Schema(description = "Number of Transfer Processes", requiredMode = Schema.RequiredMode.REQUIRED)
-    private long numTotal;
+    private int numTotal;
 
     @Schema(description = "Number of running Transfer Processes", requiredMode = Schema.RequiredMode.REQUIRED)
-    private long numRunning;
+    private int numRunning;
 
     @Schema(description = "Number of successful Transfer Processes", requiredMode = Schema.RequiredMode.REQUIRED)
-    private long numOk;
+    private int numOk;
 
     @Schema(description = "Number of failed Transfer Processes", requiredMode = Schema.RequiredMode.REQUIRED)
-    private long numError;
+    private int numError;
 }

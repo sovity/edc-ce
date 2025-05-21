@@ -18,6 +18,7 @@ import de.sovity.edc.ce.modules.messaging.messenger.impl.SovityMessageRequestBod
 import de.sovity.edc.ce.modules.messaging.messenger.impl.SovityMessageRequestFactory;
 import lombok.val;
 import org.eclipse.edc.connector.controlplane.services.spi.protocol.ProtocolTokenValidator;
+import org.eclipse.edc.policy.engine.spi.PolicyEngine;
 import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.protocol.dsp.http.spi.dispatcher.DspHttpRemoteMessageDispatcher;
 import org.eclipse.edc.protocol.dsp.http.spi.serialization.JsonLdRemoteMessageSerializer;
@@ -27,9 +28,16 @@ import org.eclipse.edc.spi.message.RemoteMessageDispatcherRegistry;
 import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
+import org.eclipse.edc.spi.system.configuration.Config;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import org.eclipse.edc.web.spi.WebService;
 import org.eclipse.edc.web.spi.configuration.ApiContext;
+import org.eclipse.tractusx.edc.iam.iatp.scope.DefaultScopeExtractor;
+
+import java.util.stream.Collectors;
+
+import static java.lang.String.format;
+import static org.eclipse.tractusx.edc.iam.iatp.IatpDefaultScopeExtension.TX_IATP_DEFAULT_SCOPE_PREFIX;
 
 
 /**
@@ -51,6 +59,9 @@ public class SovityMessengerExtension implements ServiceExtension {
 
     @Inject
     private Monitor monitor;
+
+    @Inject
+    private PolicyEngine policyEngine;
 
     @Inject
     private RemoteMessageDispatcherRegistry registry;
@@ -79,14 +90,15 @@ public class SovityMessengerExtension implements ServiceExtension {
         val factory = new SovityMessageRequestFactory(jsonLdRemoteMessageSerializer);
         val bodyExtractor = new SovityMessageRequestBodyExtractor(objectMapper);
 
-        dspHttpRemoteMessageDispatcher.registerMessage(SovityMessageRequest.class, factory, bodyExtractor);
+        var config = context.getConfig(TX_IATP_DEFAULT_SCOPE_PREFIX);
+        var scopes = config.partition().map(this::createScope).collect(Collectors.toSet());
 
         dspHttpRemoteMessageDispatcher.registerPolicyScope(
-            SovityMessageRequest.class,
-            "request.catalog",
-            unused -> Policy.Builder.newInstance().build()
+            SovityMessageRequest.class, (message) -> Policy.Builder.newInstance().build(),
+            new SovityMessagePolicyProvider()
         );
-
+        dspHttpRemoteMessageDispatcher.registerMessage(SovityMessageRequest.class, factory, bodyExtractor);
+        policyEngine.registerPostValidator(SovityMessagePolicyContext.class, new DefaultScopeExtractor<>(scopes));
         typeTransformerRegistry.register(new JsonObjectFromSovityMessageRequest());
 
         val sovityMessenger = new SovityMessenger(registry, objectMapper, monitor);
@@ -111,5 +123,13 @@ public class SovityMessengerExtension implements ServiceExtension {
         context.registerService(SovityMessengerRegistry.class, handlers);
 
         typeTransformerRegistry.register(new JsonObjectFromSovityMessageResponse());
+    }
+
+    private String createScope(Config config) {
+        val alias = config.getString("alias");
+        val type = config.getString("type");
+        val operation = config.getString("operation");
+
+        return format("%s:%s:%s", alias, type, operation);
     }
 }

@@ -33,7 +33,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Schema(description = "Contract Definition Criterion as supported by the UI")
+@Schema(description = "Contract Definition Criterion as supported by the UI. " +
+    "Will be replaced by [AssetFilterConstraint] over time for better typing of asset property paths.",
+    deprecated = true)
+@Deprecated
 public class UiCriterion {
     @Schema(description = "Left Operand", requiredMode = Schema.RequiredMode.REQUIRED)
     private String operandLeft;

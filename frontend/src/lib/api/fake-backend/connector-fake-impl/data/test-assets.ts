@@ -161,14 +161,8 @@ This is a short description text that should be fully rendered without being **c
       'https://teamabc.departmentxyz.my-german-oem.de/offers/ckd-skd-demands#license',
     landingPageUrl:
       'https://teamabc.departmentxyz.my-german-oem.de/offers/ckd-skd-demands#documentation',
-    dataCategory: 'Infrastructure and Logistics',
-    dataSubcategory: 'General Information About Planning Of Routes',
     dataModel: 'unspecified',
-    geoReferenceMethod: 'Lat/Lon',
-    transportMode: 'Rail',
     sovereignLegalName: 'Data Owning Company GmbH',
-    geoLocation: '40.741895,-73.989308',
-    nutsLocations: ['DE', 'DE9', 'DE92', 'DE929'],
     dataSampleUrls: [
       'https://teamabc.departmentxyz.sample/a',
       'https://teamabc.departmentxyz.sample/b',

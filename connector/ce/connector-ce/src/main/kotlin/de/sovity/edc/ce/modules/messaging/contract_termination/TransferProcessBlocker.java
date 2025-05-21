@@ -7,7 +7,7 @@
  */
 package de.sovity.edc.ce.modules.messaging.contract_termination;
 
-import de.sovity.edc.ce.modules.db.DslContextFactory;
+import de.sovity.edc.ce.modules.db.jooq.DslContextFactory;
 import de.sovity.edc.ce.modules.messaging.contract_termination.query.ContractAgreementIsTerminatedQuery;
 import lombok.RequiredArgsConstructor;
 import lombok.val;

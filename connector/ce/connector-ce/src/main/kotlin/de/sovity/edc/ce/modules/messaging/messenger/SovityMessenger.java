@@ -54,7 +54,11 @@ public class SovityMessenger {
      * @throws SovityMessengerException If a problem related to the message processing happened.
      */
     public <T extends SovityMessage, R extends SovityMessage> CompletableFuture<StatusResult<R>> send(
-        Class<R> resultType, String counterPartyAddress, String counterPartyId, T payload) {
+        Class<R> resultType,
+        String counterPartyAddress,
+        String counterPartyId,
+        T payload
+    ) {
         try {
             val message = buildMessage(counterPartyAddress, counterPartyId, payload);
             val future = registry.dispatch(SovityMessageRequest.class, message);
@@ -80,7 +84,8 @@ public class SovityMessenger {
 
     @NotNull
     private <R extends SovityMessage, T> Function<StatusResult<SovityMessageRequest>, StatusResult<R>> processResponse(
-        Class<R> resultType, T payload) {
+        Class<R> resultType, T payload
+    ) {
         return statusResult -> statusResult.map(content -> {
             try {
                 val headerStr = content.header();
@@ -92,7 +97,8 @@ public class SovityMessenger {
                     throw new SovityMessengerException(
                         header.getString("message"),
                         header.getString(SovityMessengerStatus.HANDLER_EXCEPTION.getCode(), "No outgoing body."),
-                        payload);
+                        payload
+                    );
                 } else {
                     monitor.info(header.getString("message", "No message in the response header."));
                     throw new SovityMessengerException(header.getString("message"));

@@ -7,7 +7,6 @@
  */
 package de.sovity.edc.runtime.modules.dependency_bundles
 
-import lombok.RequiredArgsConstructor
 import lombok.SneakyThrows
 import java.nio.charset.StandardCharsets
 
@@ -22,7 +21,6 @@ import java.nio.charset.StandardCharsets
  * But since we also don't want to have to guess all classes of a dependency tree, we collect all services of a
  * dependency bundle at build time and make them available through instances of this class.
  */
-@RequiredArgsConstructor
 class DependencyBundle(
     val name: String,
     val documentation: String,

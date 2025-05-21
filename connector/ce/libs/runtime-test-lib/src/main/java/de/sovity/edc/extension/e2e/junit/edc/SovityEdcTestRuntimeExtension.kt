@@ -7,14 +7,15 @@
  */
 package de.sovity.edc.extension.e2e.junit.edc
 
+import de.sovity.edc.extension.e2e.junit.utils.InstanceResolver
+import de.sovity.edc.extension.e2e.junit.utils.InstancesForJUnitTest
 import de.sovity.edc.extension.e2e.utils.DebugUtils
 import de.sovity.edc.runtime.modules.model.ConfigPropRef
 import de.sovity.edc.runtime.modules.model.EdcModule
-import org.eclipse.edc.spi.system.configuration.ConfigFactory
+import de.sovity.edc.runtime.modules.runtime.InitialConfigFactory
 import org.junit.jupiter.api.extension.AfterAllCallback
 import org.junit.jupiter.api.extension.BeforeAllCallback
 import org.junit.jupiter.api.extension.ExtensionContext
-import org.junit.jupiter.api.extension.ParameterContext
 import org.junit.jupiter.api.extension.ParameterResolver
 import java.time.Duration
 import java.util.concurrent.Executors
@@ -26,17 +27,37 @@ import java.util.function.Consumer
 class SovityEdcTestRuntimeExtension(
     val rootModule: EdcModule,
     val config: Map<ConfigPropRef, String>,
-    val installEdcMocks: Consumer<SovityEdcTestRuntime> = Consumer {},
+    val preBootHook: Consumer<SovityEdcTestRuntime> = Consumer {},
     val runtimeNameForLogging: String = "edc",
-) : BeforeAllCallback, AfterAllCallback, ParameterResolver {
+
+    // This unfortunately needs to be here for Kotlin's delegation pattern to work
+    val instances: InstancesForJUnitTest = InstancesForJUnitTest(),
+) : BeforeAllCallback, AfterAllCallback, ParameterResolver by instances {
     private val executorService = Executors.newSingleThreadExecutor()
     private lateinit var runtime: SovityEdcTestRuntime
 
     override fun beforeAll(extensionContext: ExtensionContext) {
-        val initialConfig = ConfigFactory.fromMap(config.mapKeys { it.key.property })
+        instances.addInstance(this)
+        val initialConfig = InitialConfigFactory.initialConfigFromEnv(config.mapKeys { it.key.property })
         runtime = SovityEdcTestRuntime(runtimeNameForLogging, rootModule, initialConfig)
-        installEdcMocks.accept(runtime)
-        val timeout = if (DebugUtils.isDebug) Duration.ofHours(10) else Duration.ofSeconds(20)
+        instances.addInstanceResolver(
+            InstanceResolver(
+                has = { clazz, _ -> runtime.hasService(clazz) },
+                get = { clazz, _ -> listOfNotNull(runtime.getService(clazz)) },
+                getAllForCleanup = { clazz ->
+                    if (runtime.hasService(clazz)) {
+                        listOfNotNull(runtime.getService(clazz))
+                    } else {
+                        emptyList()
+                    }
+                },
+                annotations = listOf()
+            )
+        )
+
+        preBootHook.accept(runtime)
+
+        val timeout = if (DebugUtils.isDebug) Duration.ofHours(10) else Duration.ofSeconds(40)
         TimeoutUtils.runDeferred(timeout) {
             runtime.boot()
         }
@@ -45,16 +66,5 @@ class SovityEdcTestRuntimeExtension(
     override fun afterAll(extensionContext: ExtensionContext?) {
         runtime.shutdown()
         executorService.shutdown()
-    }
-
-    override fun supportsParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext?): Boolean {
-        var type = parameterContext.parameter.parameterizedType
-        return type is Class<*> && runtime.hasService(type)
-    }
-
-    override fun resolveParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext?): Any? {
-        var type = parameterContext.parameter.parameterizedType
-        require(type is Class<*>)
-        return runtime.getService(type)
     }
 }

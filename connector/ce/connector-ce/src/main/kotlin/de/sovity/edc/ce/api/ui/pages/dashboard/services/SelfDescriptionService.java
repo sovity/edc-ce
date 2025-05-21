@@ -8,7 +8,6 @@
 package de.sovity.edc.ce.api.ui.pages.dashboard.services;
 
 import de.sovity.edc.ce.config.CeConfigProps;
-import de.sovity.edc.ce.modules.config_utils.ConfigUtilsImpl;
 import de.sovity.edc.runtime.simple_di.Service;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.spi.system.configuration.Config;

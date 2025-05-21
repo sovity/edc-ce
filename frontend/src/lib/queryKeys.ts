@@ -19,6 +19,7 @@ export const queryKeys = {
     key: () => ['dataOffers'],
     all: () => [...queryKeys.dataOffers.key(), 'all'],
     id: (dataOfferId: string) => [...queryKeys.dataOffers.key(), dataOfferId],
+    publish: () => [...queryKeys.dataOffers.key(), 'publish'],
 
     listPage: () => [...queryKeys.dataOffers.all(), 'listPage'],
 

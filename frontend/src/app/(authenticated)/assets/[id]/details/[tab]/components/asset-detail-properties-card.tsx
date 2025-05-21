@@ -75,12 +75,7 @@ export const AssetDetailPropertiesCard = ({data}: UiAssetProps) => {
   const privateCustomLdProperties = recordToList(privateCustomLdPropertiesObj);
 
   const showAdditionalProperties =
-    data.dataCategory ||
-    data.dataSubcategory ||
     data.dataModel ||
-    data.geoReferenceMethod ||
-    data.geoLocation ||
-    data.nutsLocations ||
     data.sovereignLegalName ||
     data.dataSampleUrls ||
     data.referenceFileUrls ||
@@ -207,39 +202,9 @@ export const AssetDetailPropertiesCard = ({data}: UiAssetProps) => {
       {showAdditionalProperties ? (
         <AssetPropertyCard title={t('General.additionalProperties')}>
           <AssetProperty
-            Icon={BoxIcon}
-            label={t('General.dataCategory')}
-            value={data.dataCategory}
-          />
-
-          <AssetProperty
-            Icon={FileBoxIcon}
-            label={t('General.dataSubcategory')}
-            value={data.dataSubcategory}
-          />
-
-          <AssetProperty
             Icon={EclipseIcon}
             label={t('General.dataModel')}
             value={data.dataModel}
-          />
-
-          <AssetProperty
-            Icon={LocateFixed}
-            label={t('General.geoReferenceMethod')}
-            value={data.geoReferenceMethod}
-          />
-
-          <AssetProperty
-            Icon={MapPin}
-            label={t('General.geoLocation')}
-            value={data.geoLocation}
-          />
-
-          <AssetProperty
-            Icon={LocateIcon}
-            label={t('General.nutsLocations')}
-            value={data.nutsLocations?.join(', ')}
           />
 
           <AssetProperty

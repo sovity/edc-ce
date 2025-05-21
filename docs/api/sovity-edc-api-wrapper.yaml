@@ -116,7 +116,7 @@ paths:
     post:
       tags:
       - UI
-      description: Create a new Contract Definition
+      description: "Create a new Contract Definition. Use [publishDataOffer] instead."
       operationId: createContractDefinition
       requestBody:
         content:
@@ -130,6 +130,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IdResponseDto'
+      deprecated: true
   /wrapper/ui/pages/create-data-offer:
     post:
       tags:
@@ -282,6 +283,35 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AssetPage'
+  /wrapper/ui/pages/catalog-page/{connectorEndpoint}/{participantId}/data-offers/{dataOfferId}:
+    get:
+      tags:
+      - UI
+      description: Fetch a specific data offer from a connector
+      operationId: getCatalogPageDataOffer
+      parameters:
+      - name: participantId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: connectorEndpoint
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: dataOfferId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UiDataOffer'
   /wrapper/ui/pages/catalog-page/data-offers:
     get:
       tags:
@@ -357,6 +387,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ContractDefinitionPage'
+      deprecated: true
   /wrapper/ui/pages/catalog-page/contract-negotiations/{contractNegotiationId}:
     get:
       tags:
@@ -476,13 +507,34 @@ paths:
     post:
       tags:
       - UI
-      description: Initiate a Transfer Process
+      description: Initiate a Transfer Process. Deprecated. Use initiateTransferV2
+        instead
       operationId: initiateTransfer
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/InitiateTransferRequest'
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponseDto'
+      deprecated: true
+  /wrapper/ui/pages/contract-agreement-page/initiate-transfer-v2:
+    post:
+      tags:
+      - UI
+      description: Initiate a Transfer Process. V2 Endpoint with support for Callback
+        Addresses and well-typed data sinks
+      operationId: initiateTransferV2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UiInitiateTransferRequest'
       responses:
         default:
           description: default response
@@ -585,6 +637,29 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UiConfig'
+  /wrapper/use-case-api/contract-negotiations/states:
+    post:
+      tags:
+      - Use Case
+      description: Fetch contract negotiation states as batch
+      operationId: getContractNegotiationStates
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+        required: true
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ContractNegotiationStateResult'
   /wrapper/use-case-api/kpis:
     get:
       tags:
@@ -613,6 +688,72 @@ paths:
                 type: array
                 items:
                   type: string
+  /wrapper/use-case-api/transfers/{transferId}/edr:
+    post:
+      tags:
+      - Use Case
+      description: Fetch the EDR for a given transfer process. Refreshes EDR if expired.
+        The transfer must have been started as HttpData-PROXY.
+      operationId: getTransferProcessEdr
+      parameters:
+      - name: transferId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EdrDto'
+  /wrapper/use-case-api/transfers/states:
+    post:
+      tags:
+      - Use Case
+      description: Fetch transfer process states as batch
+      operationId: getTransferProcessStates
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+        required: true
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransferProcessStateResult'
+  /wrapper/use-case-api/negotiations/quick-initiate:
+    post:
+      tags:
+      - Use Case
+      description: Negotiate all assets with the given nested asset property filter.
+        Only negotiates assets without active agreements. Returns existing agreements
+        if found.
+      operationId: negotiateAll
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NegotiateAllQuery'
+        required: true
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NegotiateAllResult'
   /wrapper/use-case-api/catalog:
     post:
       tags:
@@ -634,6 +775,48 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/UiDataOffer'
+      deprecated: true
+  /wrapper/use-case-api/catalog-v2:
+    post:
+      tags:
+      - Use Case
+      description: Fetch a connector's data offers filtering the catalog by nested
+        asset properties
+      operationId: queryCatalogV2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CatalogQueryV2'
+        required: true
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UiDataOffer'
+  /wrapper/use-case-api/transfers/{transferId}/terminate:
+    post:
+      tags:
+      - Use Case
+      description: Delete the EDR and terminate the given transfer process.
+      operationId: terminateTransferProcess
+      parameters:
+      - name: transferId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponseDto'
 components:
   schemas:
     ConnectorLimits:
@@ -712,34 +895,13 @@ components:
         landingPageUrl:
           type: string
           description: Landing Page URL
-        dataCategory:
-          type: string
-          description: Data Category
-        dataSubcategory:
-          type: string
-          description: Data Subcategory
         dataModel:
           type: string
           description: Data Model
-        geoReferenceMethod:
-          type: string
-          description: Geo-Reference Method
-        transportMode:
-          type: string
-          description: Transport Mode
         sovereignLegalName:
           type: string
           description: The sovereign is distinct from the publisher by being the legal
             owner of the data.
-        geoLocation:
-          type: string
-          description: Geo location
-        nutsLocations:
-          type: array
-          description: Locations by NUTS standard which divides countries into administrative
-            divisions
-          items:
-            type: string
         dataSampleUrls:
           type: array
           description: Data sample URLs
@@ -919,6 +1081,7 @@ components:
       - lastUpdatedDate
     ContractDefinitionRequest:
       type: object
+      deprecated: true
       description: Data for creating a Contract Definition
       properties:
         contractDefinitionId:
@@ -942,7 +1105,10 @@ components:
       - contractPolicyId
     UiCriterion:
       type: object
-      description: Contract Definition Criterion as supported by the UI
+      deprecated: true
+      description: "Contract Definition Criterion as supported by the UI. Will be\
+        \ replaced by [AssetFilterConstraint] over time for better typing of asset\
+        \ property paths."
       properties:
         operandLeft:
           type: string
@@ -959,6 +1125,7 @@ components:
       - operator
     UiCriterionLiteral:
       type: object
+      deprecated: true
       description: Criterion Literal
       properties:
         type:
@@ -973,12 +1140,14 @@ components:
             type: string
     UiCriterionLiteralType:
       type: string
+      deprecated: true
       description: Value type of an asset selector criterion right expression value
       enum:
       - VALUE
       - VALUE_LIST
     UiCriterionOperator:
       type: string
+      deprecated: true
       description: Operator for constraints
       enum:
       - EQ
@@ -1177,34 +1346,13 @@ components:
         landingPageUrl:
           type: string
           description: Landing Page URL
-        dataCategory:
-          type: string
-          description: Data Category
-        dataSubcategory:
-          type: string
-          description: Data Subcategory
         dataModel:
           type: string
           description: Data Model
-        geoReferenceMethod:
-          type: string
-          description: Geo-Reference Method
-        transportMode:
-          type: string
-          description: Transport Mode
         sovereignLegalName:
           type: string
           description: The sovereign is distinct from the publisher by being the legal
             owner of the data.
-        geoLocation:
-          type: string
-          description: Geo location
-        nutsLocations:
-          type: array
-          description: Locations by NUTS standard which divides countries into administrative
-            divisions
-          items:
-            type: string
         dataSampleUrls:
           type: array
           description: Data sample URLs
@@ -1350,34 +1498,13 @@ components:
           type: boolean
           description: "HTTP Datasource Hint: Proxy Body. Only for dataSourceAvailability\
             \ LIVE with an underlying HTTP_DATA Data Source."
-        dataCategory:
-          type: string
-          description: Data Category
-        dataSubcategory:
-          type: string
-          description: Data Subcategory
         dataModel:
           type: string
           description: Data Model
-        geoReferenceMethod:
-          type: string
-          description: Geo-Reference Method
-        transportMode:
-          type: string
-          description: Transport Mode
         sovereignLegalName:
           type: string
           description: The sovereign is distinct from the publisher by being the legal
             owner of the data.
-        geoLocation:
-          type: string
-          description: Geo location
-        nutsLocations:
-          type: array
-          description: Locations by NUTS standard which divides countries into administrative
-            divisions
-          items:
-            type: string
         dataSampleUrls:
           type: array
           description: Data sample URLs
@@ -1656,6 +1783,7 @@ components:
             termination status.
     ContractDefinitionEntry:
       type: object
+      deprecated: true
       description: Contract Definition List Entry for Contract Definition Page
       properties:
         contractDefinitionId:
@@ -1679,6 +1807,10 @@ components:
       - contractPolicyId
     ContractDefinitionPage:
       type: object
+      deprecated: true
+      description: Data as required by the UI's Contract Definition Page. Will be
+        replaced with a Catalog Definition Page that shall support asset property
+        paths properly
       properties:
         contractDefinitions:
           type: array
@@ -1790,11 +1922,11 @@ components:
           description: Number of Contract Definitions
         numContractAgreementsConsuming:
           type: integer
-          format: int64
+          format: int32
           description: Number of consuming Contract Agreements
         numContractAgreementsProviding:
           type: integer
-          format: int64
+          format: int32
           description: Number of providing Contract Agreements
         transferProcessesConsuming:
           $ref: '#/components/schemas/DashboardTransferAmounts'
@@ -1858,19 +1990,19 @@ components:
       properties:
         numTotal:
           type: integer
-          format: int64
+          format: int32
           description: Number of Transfer Processes
         numRunning:
           type: integer
-          format: int64
+          format: int32
           description: Number of running Transfer Processes
         numOk:
           type: integer
-          format: int64
+          format: int32
           description: Number of successful Transfer Processes
         numError:
           type: integer
-          format: int64
+          format: int32
           description: Number of failed Transfer Processes
       required:
       - numError
@@ -1916,6 +2048,9 @@ components:
           type: string
           format: date-time
           description: Last Change Date
+        transferType:
+          type: string
+          description: Transfer Type
         state:
           $ref: '#/components/schemas/TransferProcessState'
           description: Transfer History State
@@ -1940,6 +2075,9 @@ components:
         errorMessage:
           type: string
           description: Error Message
+        isEdrConsumable:
+          type: boolean
+          description: Whether this transfer is available for consumption via an EDR.
       required:
       - assetId
       - assetName
@@ -1948,9 +2086,11 @@ components:
       - counterPartyParticipantId
       - createdDate
       - direction
+      - isEdrConsumable
       - lastUpdatedDate
       - state
       - transferProcessId
+      - transferType
     TransferHistoryPage:
       type: object
       description: Data as required by the UI's Transfer History Page
@@ -1962,6 +2102,37 @@ components:
             $ref: '#/components/schemas/TransferHistoryEntry'
       required:
       - transferEntries
+    CallbackAddressDto:
+      type: object
+      description: Callback address to be called after a transfer or negotiation success/failure
+      properties:
+        url:
+          type: string
+          description: URL to be called when the event is fired
+        events:
+          type: array
+          default: TRANSFER_PROCESS_COMPLETED
+          description: 'Event Types to subscribe to. '
+          items:
+            $ref: '#/components/schemas/CallbackAddressEventType'
+        authHeaderName:
+          type: string
+          description: "Authentication: Header Name"
+        authHeaderVaultSecretName:
+          type: string
+          description: "Authentication: Header Value (Vault Secret Name)"
+      required:
+      - events
+      - url
+    CallbackAddressEventType:
+      type: string
+      description: Currently Supported Event Types
+      enum:
+      - CONTRACT_NEGOTIATION_FINALIZED
+      - CONTRACT_NEGOTIATION_TERMINATED
+      - TRANSFER_PROCESS_STARTED
+      - TRANSFER_PROCESS_TERMINATED
+      - TRANSFER_PROCESS_COMPLETED
     ContractNegotiationRequest:
       type: object
       description: Data for initiating a Contract Negotiation
@@ -1981,6 +2152,11 @@ components:
         assetId:
           type: string
           description: Asset ID
+        callbackAddresses:
+          type: array
+          description: List of endpoints to call upon given transfer events
+          items:
+            $ref: '#/components/schemas/CallbackAddressDto'
       required:
       - assetId
       - contractOfferId
@@ -2004,6 +2180,7 @@ components:
       - transferProcessRequestJsonLd
     InitiateTransferRequest:
       type: object
+      deprecated: true
       description: "For type PARAMS_ONLY: Required data for starting a Transfer Process"
       properties:
         contractAgreementId:
@@ -2030,6 +2207,97 @@ components:
       - dataSinkProperties
       - transferProcessProperties
       - transferType
+    UiDataSinkHttpDataPush:
+      type: object
+      description: HTTP_DATA type Data Source. This is an HttpData-PUSH data sink.
+        Note that consumption of parameterized data sources is not supported via HttpData-PUSH
+      properties:
+        method:
+          $ref: '#/components/schemas/UiDataSinkHttpDataPushMethod'
+          default: GET
+          description: HTTP Request Method
+        baseUrl:
+          type: string
+          description: HTTP Request URL.
+          example: https://my-app.my-org.com/api/edc-data-offer/v1
+        queryString:
+          type: string
+          description: HTTP Request Query Params / Query String.
+          example: search=example&limit=10
+        authHeaderName:
+          type: string
+          description: Auth Header name. The auth header is handled specially by the
+            EDC as its value can be read from a vault.
+          example: Authorization
+        authHeaderValue:
+          $ref: '#/components/schemas/SecretValue'
+          description: Auth Header value.
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+          description: HTTP Request Headers.
+      required:
+      - baseUrl
+    UiDataSinkHttpDataPushMethod:
+      type: string
+      description: Supported HTTP Methods by UiDataSink
+      enum:
+      - POST
+      - PUT
+      - PATCH
+      - DELETE
+      - OPTIONS
+    UiInitiateTransferRequest:
+      type: object
+      description: Type-safe data sink as supported by the sovity product landscape.
+        Contains extension points for using custom data address properties.
+      properties:
+        contractAgreementId:
+          type: string
+          description: Contract Agreement ID
+        type:
+          $ref: '#/components/schemas/UiInitiateTransferType'
+          default: CUSTOM
+          description: Type of a transfer to initiate
+        httpDataPush:
+          $ref: '#/components/schemas/UiDataSinkHttpDataPush'
+          description: Only for type HTTP_DATA_PUSH
+        callbackAddresses:
+          type: array
+          description: List of endpoints to call upon given transfer events
+          items:
+            $ref: '#/components/schemas/CallbackAddressDto'
+        customDataSinkProperties:
+          type: object
+          additionalProperties:
+            type: string
+          description: For all types. Custom Data Address Properties.
+        customTransferPrivateProperties:
+          type: object
+          additionalProperties:
+            type: string
+          description: For all types. Custom Transfer Process Properties.
+        customTransferType:
+          type: string
+          description: For all types. Override the Transfer Type.
+      required:
+      - contractAgreementId
+      - type
+    UiInitiateTransferType:
+      type: string
+      description: |2
+            Supported Data Sink Types by UiDataSink:
+             - `HTTP_DATA_PUSH`: This EDC's data plane pushes the data into the given data sink, putting the payload as request body.
+             - `HTTP_DATA_PROXY`: Once the transfer is in the status STARTED, you can call a 2nd endpoint to receive the EDR.
+                The EDR will contain an URL you can call as a proxy to the data source. Which parts of the HTTP call are passed
+                on is decided by the configuration of parameterization on the data source, e.g. an added path, method, body or query params.
+             - `CUSTOM`: Provide custom transfer type, data sink properties and transfer properties to use a
+               transfer type that is not fully integrated into the API Wrapper yet.
+      enum:
+      - HTTP_DATA_PUSH
+      - HTTP_DATA_PROXY
+      - CUSTOM
     IdAvailabilityResponse:
       type: object
       description: Object indicates whether an ID for the given object type is already
@@ -2113,6 +2381,30 @@ components:
       required:
       - connectorEndpoint
       - participantId
+    ContractNegotiationStateResult:
+      type: object
+      description: Contract Negotiation state
+      properties:
+        contractNegotiationId:
+          type: string
+          description: Contract Negotiation ID
+        state:
+          $ref: '#/components/schemas/ContractNegotiationState'
+          description: Contract Negotiation State
+        contractAgreementId:
+          type: string
+          description: Contract Agreement ID
+        contractAgreementTerminationInfo:
+          $ref: '#/components/schemas/ContractAgreementTerminationInfo'
+          description: Contract Agreement Termination State
+        stateChangedAt:
+          type: string
+          format: date-time
+          description: Contract Negotiation State Last Change
+      required:
+      - contractNegotiationId
+      - state
+      - stateChangedAt
     KpiResult:
       type: object
       description: EDC-status-defining KPIs
@@ -2149,19 +2441,158 @@ components:
           type: object
           additionalProperties:
             type: integer
-            format: int64
+            format: int32
           description: States and count of incoming transferprocess counts
         outgoingTransferProcessCounts:
           type: object
           additionalProperties:
             type: integer
-            format: int64
+            format: int32
           description: States and counts of outgoing transferprocess counts
       required:
       - incomingTransferProcessCounts
       - outgoingTransferProcessCounts
+    EdrDto:
+      type: object
+      description: "Issued for a single transfer, calling the given endpoint allows\
+        \ you to directly interact with the data source. Depending on the asset you\
+        \ can pass data to the data source, provide query params or append a custom\
+        \ sub-path."
+      properties:
+        baseUrl:
+          type: string
+          description: Base URL
+        authorizationHeaderValue:
+          type: string
+          description: Value for the 'Authorization' header.
+        expiresAt:
+          type: string
+          format: date-time
+          description: "Expiration date of the EDR token or null, if EDR never expires.\
+            \ After expiration you must re-fetch the EDR."
+      required:
+      - authorizationHeaderValue
+      - baseUrl
+    TransferProcessStateResult:
+      type: object
+      description: Transfer process state
+      properties:
+        transferId:
+          type: string
+          description: Transfer Process ID
+        state:
+          $ref: '#/components/schemas/TransferProcessState'
+          description: Transfer Process State
+        stateChangedAt:
+          type: string
+          format: date-time
+          description: Transfer Process State Last Change
+        isEdrConsumable:
+          type: boolean
+          description: Whether this transfer is available for consumption via an EDR.
+      required:
+      - isEdrConsumable
+      - state
+      - stateChangedAt
+      - transferId
+    NegotiateAllResult:
+      type: object
+      description: Negotiations that either already exist or were started
+      properties:
+        contractNegotiationId:
+          type: string
+          description: Negotiation ID (either existing or new if no active contract
+            was found)
+        contractAgreementId:
+          type: string
+          description: Contract Agreement ID (will only be ever present if an active
+            old negotiation was found)
+        state:
+          $ref: '#/components/schemas/ContractNegotiationState'
+          description: Contract Negotiation State
+        stateChangedAt:
+          type: string
+          format: date-time
+          description: Contract Negotiation State Last Change
+        asset:
+          $ref: '#/components/schemas/UiAsset'
+          description: Asset that was negotiated. Will not contain asset metadata
+            for already negotiated offers
+        policy:
+          $ref: '#/components/schemas/UiPolicy'
+          description: Contract Offer that was negotiated. Will not contain asset
+            metadata for already negotiated offers
+      required:
+      - asset
+      - contractNegotiationId
+      - policy
+      - state
+      - stateChangedAt
+    AssetFilterConstraint:
+      type: object
+      description: Generic expression for filtering the data offers in the catalog
+      properties:
+        assetPropertyPath:
+          type: array
+          description: Asset property path
+          example:
+          - https://w3id.org/edc/v0.0.1/ns/assetId
+          items:
+            type: string
+        operator:
+          $ref: '#/components/schemas/AssetFilterConstraintOperator'
+          description: Operator
+        value:
+          type: string
+          description: For operators EQ and LIKE. Can contain '%' for operator LIKE.
+        valueList:
+          type: array
+          description: For operator IN.
+          items:
+            type: string
+      required:
+      - assetPropertyPath
+      - operator
+    AssetFilterConstraintOperator:
+      type: string
+      description: Operator for filter expressions
+      enum:
+      - LIKE
+      - EQ
+      - IN
+    NegotiateAllQuery:
+      type: object
+      description: Negotiates all given assets by the given filter
+      properties:
+        connectorEndpoint:
+          type: string
+          description: Target EDC DSP endpoint URL
+        participantId:
+          type: string
+          description: Target EDC Participant ID
+        filter:
+          type: array
+          description: "Data offers to negotiate. Filter expressions, joined by AND.\
+            \ If left empty, all data offers are negotiated"
+          items:
+            $ref: '#/components/schemas/AssetFilterConstraint'
+        limit:
+          type: integer
+          format: int32
+          description: Optional limit to limit the number of assets negotiated to
+        callbackAddresses:
+          type: array
+          description: Optionally listen to negotiation success / failure for new
+            negotiations
+          items:
+            $ref: '#/components/schemas/CallbackAddressDto'
+      required:
+      - connectorEndpoint
+      - filter
+      - participantId
     CatalogFilterExpression:
       type: object
+      deprecated: true
       description: Generic expression for filtering the data offers in the catalog
       properties:
         operandLeft:
@@ -2180,6 +2611,7 @@ components:
       - operator
     CatalogFilterExpressionLiteral:
       type: object
+      deprecated: true
       description: FilterExpression Criterion Literal
       properties:
         type:
@@ -2194,12 +2626,14 @@ components:
             type: string
     CatalogFilterExpressionLiteralType:
       type: string
+      deprecated: true
       description: Value type of a filter expression criterion
       enum:
       - VALUE
       - VALUE_LIST
     CatalogFilterExpressionOperator:
       type: string
+      deprecated: true
       description: Operator for filter expressions
       enum:
       - LIKE
@@ -2207,6 +2641,7 @@ components:
       - IN
     CatalogQuery:
       type: object
+      deprecated: true
       description: Catalog query parameters
       properties:
         connectorEndpoint:
@@ -2232,3 +2667,56 @@ components:
             $ref: '#/components/schemas/CatalogFilterExpression'
       required:
       - connectorEndpoint
+    CatalogQueryV2:
+      type: object
+      description: Catalog query parameters
+      properties:
+        connectorEndpoint:
+          type: string
+          description: Target EDC DSP endpoint URL
+        participantId:
+          type: string
+          description: Target EDC Participant ID
+        filter:
+          type: array
+          description: Conjunction of filter expressions for data offer filtering
+          items:
+            $ref: '#/components/schemas/AssetFilterConstraint'
+        limit:
+          type: integer
+          format: int32
+          description: Limit the number of results
+        offset:
+          type: integer
+          format: int32
+          description: "Offset for returned results, e.g. start at result 2"
+        sortBy:
+          $ref: '#/components/schemas/CatalogSortBy'
+          description: Field to sort by
+      required:
+      - connectorEndpoint
+      - participantId
+    CatalogSortBy:
+      type: object
+      deprecated: true
+      description: One field to sort by
+      properties:
+        assetPropertyPath:
+          type: array
+          description: Asset property path
+          example:
+          - https://w3id.org/edc/v0.0.1/ns/assetId
+          items:
+            type: string
+        direction:
+          $ref: '#/components/schemas/CatalogSortByDirection'
+          default: ASC
+          description: Direction to sort by
+      required:
+      - assetPropertyPath
+    CatalogSortByDirection:
+      type: string
+      description: Sort Direction
+      enum:
+      - ASC
+      - DESC

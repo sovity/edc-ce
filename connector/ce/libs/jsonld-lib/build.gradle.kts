@@ -18,6 +18,9 @@
  * Contributors:
  *     sovity - init and continued development
  */
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     `java-library`
     `maven-publish`
@@ -50,5 +53,17 @@ publishing {
         create<MavenPublication>(project.name) {
             from(components["java"])
         }
+    }
+}
+
+tasks.withType<JavaCompile> {
+    sourceCompatibility = libs.versions.javaForClients.get()
+    targetCompatibility = libs.versions.javaForClients.get()
+}
+
+tasks.withType<KotlinCompile> {
+    compilerOptions {
+        jvmTarget = JvmTarget.fromTarget(libs.versions.javaForClients.get())
+        compilerOptions.javaParameters = true
     }
 }

@@ -1,3 +1,23 @@
+/*
+ * Copyright 2025 sovity GmbH
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Contributors:
+ *     sovity - init and continued development
+ */
 /* eslint-disable */
 /**
  * sovity EDC API Wrapper
@@ -39,6 +59,7 @@ import type {
   UiConfig,
   UiContractNegotiation,
   UiDataOffer,
+  UiInitiateTransferRequest,
 } from '../models/index';
 import {
     AssetPageFromJSON,
@@ -91,6 +112,8 @@ import {
     UiContractNegotiationToJSON,
     UiDataOfferFromJSON,
     UiDataOfferToJSON,
+    UiInitiateTransferRequestFromJSON,
+    UiInitiateTransferRequestToJSON,
 } from '../models/index';
 
 export interface CreateAssetRequest {
@@ -130,6 +153,12 @@ export interface EditAssetRequest {
     uiAssetEditRequest?: UiAssetEditRequest;
 }
 
+export interface GetCatalogPageDataOfferRequest {
+    participantId: string;
+    connectorEndpoint: string;
+    dataOfferId: string;
+}
+
 export interface GetCatalogPageDataOffersRequest {
     participantId?: string;
     connectorEndpoint?: string;
@@ -161,6 +190,10 @@ export interface InitiateCustomTransferOperationRequest {
 
 export interface InitiateTransferOperationRequest {
     initiateTransferRequest?: InitiateTransferRequest;
+}
+
+export interface InitiateTransferV2Request {
+    uiInitiateTransferRequest?: UiInitiateTransferRequest;
 }
 
 export interface IsAssetIdAvailableRequest {
@@ -241,7 +274,8 @@ export class UIApi extends runtime.BaseAPI {
     }
 
     /**
-     * Create a new Contract Definition
+     * Create a new Contract Definition. Use [publishDataOffer] instead.
+     * @deprecated
      */
     async createContractDefinitionRaw(requestParameters: CreateContractDefinitionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<IdResponseDto>> {
         const queryParameters: any = {};
@@ -262,7 +296,8 @@ export class UIApi extends runtime.BaseAPI {
     }
 
     /**
-     * Create a new Contract Definition
+     * Create a new Contract Definition. Use [publishDataOffer] instead.
+     * @deprecated
      */
     async createContractDefinition(requestParameters: CreateContractDefinitionRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<IdResponseDto> {
         const response = await this.createContractDefinitionRaw(requestParameters, initOverrides);
@@ -520,6 +555,53 @@ export class UIApi extends runtime.BaseAPI {
     }
 
     /**
+     * Fetch a specific data offer from a connector
+     */
+    async getCatalogPageDataOfferRaw(requestParameters: GetCatalogPageDataOfferRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UiDataOffer>> {
+        if (requestParameters['participantId'] == null) {
+            throw new runtime.RequiredError(
+                'participantId',
+                'Required parameter "participantId" was null or undefined when calling getCatalogPageDataOffer().'
+            );
+        }
+
+        if (requestParameters['connectorEndpoint'] == null) {
+            throw new runtime.RequiredError(
+                'connectorEndpoint',
+                'Required parameter "connectorEndpoint" was null or undefined when calling getCatalogPageDataOffer().'
+            );
+        }
+
+        if (requestParameters['dataOfferId'] == null) {
+            throw new runtime.RequiredError(
+                'dataOfferId',
+                'Required parameter "dataOfferId" was null or undefined when calling getCatalogPageDataOffer().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/wrapper/ui/pages/catalog-page/{connectorEndpoint}/{participantId}/data-offers/{dataOfferId}`.replace(`{${"participantId"}}`, encodeURIComponent(String(requestParameters['participantId']))).replace(`{${"connectorEndpoint"}}`, encodeURIComponent(String(requestParameters['connectorEndpoint']))).replace(`{${"dataOfferId"}}`, encodeURIComponent(String(requestParameters['dataOfferId']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => UiDataOfferFromJSON(jsonValue));
+    }
+
+    /**
+     * Fetch a specific data offer from a connector
+     */
+    async getCatalogPageDataOffer(requestParameters: GetCatalogPageDataOfferRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UiDataOffer> {
+        const response = await this.getCatalogPageDataOfferRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Fetch a connector\'s data offers
      */
     async getCatalogPageDataOffersRaw(requestParameters: GetCatalogPageDataOffersRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<UiDataOffer>>> {
@@ -617,6 +699,7 @@ export class UIApi extends runtime.BaseAPI {
 
     /**
      * Collect all data for Contract Definition Page
+     * @deprecated
      */
     async getContractDefinitionPageRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ContractDefinitionPage>> {
         const queryParameters: any = {};
@@ -635,6 +718,7 @@ export class UIApi extends runtime.BaseAPI {
 
     /**
      * Collect all data for Contract Definition Page
+     * @deprecated
      */
     async getContractDefinitionPage(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ContractDefinitionPage> {
         const response = await this.getContractDefinitionPageRaw(initOverrides);
@@ -844,7 +928,8 @@ export class UIApi extends runtime.BaseAPI {
     }
 
     /**
-     * Initiate a Transfer Process
+     * Initiate a Transfer Process. Deprecated. Use initiateTransferV2 instead
+     * @deprecated
      */
     async initiateTransferRaw(requestParameters: InitiateTransferOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<IdResponseDto>> {
         const queryParameters: any = {};
@@ -865,10 +950,40 @@ export class UIApi extends runtime.BaseAPI {
     }
 
     /**
-     * Initiate a Transfer Process
+     * Initiate a Transfer Process. Deprecated. Use initiateTransferV2 instead
+     * @deprecated
      */
     async initiateTransfer(requestParameters: InitiateTransferOperationRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<IdResponseDto> {
         const response = await this.initiateTransferRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Initiate a Transfer Process. V2 Endpoint with support for Callback Addresses and well-typed data sinks
+     */
+    async initiateTransferV2Raw(requestParameters: InitiateTransferV2Request, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<IdResponseDto>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/wrapper/ui/pages/contract-agreement-page/initiate-transfer-v2`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: UiInitiateTransferRequestToJSON(requestParameters['uiInitiateTransferRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => IdResponseDtoFromJSON(jsonValue));
+    }
+
+    /**
+     * Initiate a Transfer Process. V2 Endpoint with support for Callback Addresses and well-typed data sinks
+     */
+    async initiateTransferV2(requestParameters: InitiateTransferV2Request = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<IdResponseDto> {
+        const response = await this.initiateTransferV2Raw(requestParameters, initOverrides);
         return await response.value();
     }
 

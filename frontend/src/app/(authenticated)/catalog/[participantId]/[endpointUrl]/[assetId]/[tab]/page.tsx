@@ -16,7 +16,6 @@ import {useTitle} from '@/lib/hooks/use-title';
 import {matchQueryState} from '@/lib/utils/match-query-state';
 import {queryKeys} from '@/lib/queryKeys';
 import {decodeParams} from '@/lib/utils/http-utils';
-import {throwIfNull} from '@/lib/utils/throw-utils';
 import {useTranslations} from 'next-intl';
 import CatalogDataOfferDetailPageContent from './catalog-data-offer-detail-page';
 import PageContainer from '@/components/page-container';
@@ -38,22 +37,11 @@ export default function CatalogDataOfferDetailPage({
   const pageQuery = useQueryWrapper(
     queryKeys.catalog.dataOfferDetails(participantId, endpointUrl, assetId),
     () =>
-      api.uiApi
-        .getCatalogPageDataOffers({
-          connectorEndpoint: endpointUrl,
-          participantId: participantId,
-        })
-        .then((data) =>
-          data?.find(
-            (data) =>
-              data.endpoint === endpointUrl &&
-              data.participantId === participantId &&
-              data.asset.assetId === assetId,
-          ),
-        )
-        .then((asset) =>
-          throwIfNull(asset, t('Pages.CatalogDataOfferDetails.notFound')),
-        ),
+      api.uiApi.getCatalogPageDataOffer({
+        connectorEndpoint: endpointUrl,
+        participantId: participantId,
+        dataOfferId: assetId,
+      }),
   );
 
   useTitle(`${pageQuery.data?.asset.title ?? assetId} | Catalog Data Offer`);

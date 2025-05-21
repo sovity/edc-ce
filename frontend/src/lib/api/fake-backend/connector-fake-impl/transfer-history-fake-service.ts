@@ -23,6 +23,8 @@ const transferHistoryEntries: TransferHistoryEntry[] = [
       name: 'COMPLETED',
       simplifiedState: 'OK',
     },
+    isEdrConsumable: false,
+    transferType: 'HttpData-PUSH',
     contractAgreementId: 'my-own-asset-cd:f52a5d30-6356-4a55-a75a-3c45d7a88c3a',
     direction: 'CONSUMING',
     counterPartyConnectorEndpoint: 'https://sovity-demo4-mds/api/v1/ids/data',
@@ -39,6 +41,8 @@ const transferHistoryEntries: TransferHistoryEntry[] = [
       name: 'ERROR',
       simplifiedState: 'ERROR',
     },
+    isEdrConsumable: false,
+    transferType: 'HttpData-PUSH',
     contractAgreementId:
       'my-test-asset-cd:6ebbc301-9b1e-4cd7-9f17-97b5b786753b',
     counterPartyParticipantId: 'BPNL1234XX.C1234XX',
@@ -58,6 +62,8 @@ const transferHistoryEntries: TransferHistoryEntry[] = [
       name: 'COMPLETED',
       simplifiedState: 'OK',
     },
+    isEdrConsumable: false,
+    transferType: 'HttpData-PUSH',
     contractAgreementId:
       'my-test-asset-cd:6ebbc301-9b1e-4cd7-9f17-97b5b786753b',
     direction: 'CONSUMING',
@@ -75,6 +81,8 @@ const transferHistoryEntries: TransferHistoryEntry[] = [
       name: 'IN_PROGRESS',
       simplifiedState: 'RUNNING',
     },
+    isEdrConsumable: false,
+    transferType: 'HttpData-PUSH',
     contractAgreementId:
       'my-test-asset-cd:6ebbc301-9b1e-4cd7-9f17-97b5b786753b',
     direction: 'PROVIDING',

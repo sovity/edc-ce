@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "6c5d9ba3-b67e-452a-9342-73cabfc6691e",
-		"name": "sovity EDC (core 0.7.2)",
-		"description": "This is the postman collection for the sovity EDC.\n\nThe Management-API is based on core-edc v0.7.2.",
+		"_postman_id": "801ed6cb-f71e-4840-a3a0-a3dcec950c35",
+		"name": "sovity EDC (core 0.11.1)",
+		"description": "This is the postman collection for the sovity EDC.\n\nThe Management-API is based on core-edc v0.11.1",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "31514741"
+		"_exporter_id": "32949497"
 	},
 	"item": [
 		{
@@ -20,12 +20,20 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Status code is 204 No Content (if new asset) or 409 Conflict (if asset already exists)\", function () {",
-											"    pm.expect(pm.response.code).to.be.oneOf([204, 409])",
+											"pm.test(\"Status is 200\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([200])",
 											"});"
 										],
-										"type": "text/javascript",
-										"packages": {}
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
 									}
 								}
 							],
@@ -48,11 +56,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{EDC_MANAGEMENT_URL}}/assets",
+									"raw": "{{EDC_MANAGEMENT_URL}}/v3/assets",
 									"host": [
 										"{{EDC_MANAGEMENT_URL}}"
 									],
 									"path": [
+										"v3",
 										"assets"
 									]
 								}
@@ -70,8 +79,7 @@
 											"    pm.expect(pm.response.code).to.be.oneOf([204, 409])",
 											"});"
 										],
-										"type": "text/javascript",
-										"packages": {}
+										"type": "text/javascript"
 									}
 								}
 							],
@@ -94,11 +102,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{EDC_MANAGEMENT_URL}}/assets",
+									"raw": "{{EDC_MANAGEMENT_URL}}/v3/assets",
 									"host": [
 										"{{EDC_MANAGEMENT_URL}}"
 									],
 									"path": [
+										"v3",
 										"assets"
 									]
 								}
@@ -107,6 +116,31 @@
 						},
 						{
 							"name": "Filter Assets",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let savedAssetId = pm.collectionVariables.replaceIn(pm.variables.get(\"ASSET_ID\"));",
+											"pm.test(`Validate that the asset ${savedAssetId} exists`, function() {",
+											"    var responseBody = pm.response.json();",
+											"    pm.expect(responseBody.some(asset => asset[\"@id\"] === savedAssetId)).to.be.true;",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [],
@@ -120,11 +154,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{EDC_MANAGEMENT_URL}}/assets/request",
+									"raw": "{{EDC_MANAGEMENT_URL}}/v3/assets/request",
 									"host": [
 										"{{EDC_MANAGEMENT_URL}}"
 									],
 									"path": [
+										"v3",
 										"assets",
 										"request"
 									]
@@ -134,15 +169,31 @@
 						},
 						{
 							"name": "Asset By Id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let savedAssetId = pm.collectionVariables.replaceIn(pm.variables.get(\"ASSET_ID\"));",
+											"pm.test(`Validate that the asset ${savedAssetId} is found`, function() {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{EDC_MANAGEMENT_URL}}/assets/{{ASSET_ID}}",
+									"raw": "{{EDC_MANAGEMENT_URL}}/v3/assets/{{ASSET_ID}}",
 									"host": [
 										"{{EDC_MANAGEMENT_URL}}"
 									],
 									"path": [
+										"v3",
 										"assets",
 										"{{ASSET_ID}}"
 									]
@@ -161,8 +212,7 @@
 											"    pm.expect(pm.response.code).to.be.oneOf([204, 409])",
 											"});"
 										],
-										"type": "text/javascript",
-										"packages": {}
+										"type": "text/javascript"
 									}
 								}
 							],
@@ -177,7 +227,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"asset\": {\n        \"properties\": {\n            \"asset:prop:name\": \"text-document\",\n            \"asset:prop:contenttype\": \"text/plain\",\n            \"asset:prop:version\": \"1.0\",\n            \"asset:prop:id\": \"text-document\",\n            \"type\": \"AzureStorage\"\n        }\n    },\n    \"dataAddress\": {\n        \"properties\": {\n            \"type\": \"AzureStorage\",\n            \"account\": \"{{storage_account}}\",\n            \"container\": \"src-container\",\n            \"blobname\": \"text-document.txt\",\n            \"keyName\": \"{{storage_account}}-key1\"\n        }\n    }\n}",
+									"raw": "",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -185,17 +235,38 @@
 									}
 								},
 								"url": {
-									"raw": "{{EDC_MANAGEMENT_URL}}/assets/{{ASSET_ID}}",
+									"raw": "{{EDC_MANAGEMENT_URL}}/v3/assets/{{ASSET_ID}}",
 									"host": [
 										"{{EDC_MANAGEMENT_URL}}"
 									],
 									"path": [
+										"v3",
 										"assets",
 										"{{ASSET_ID}}"
 									]
 								}
 							},
 							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
 						}
 					]
 				},
@@ -342,200 +413,239 @@
 							]
 						},
 						{
-							"name": "Create Empty Policy",
-							"event": [
+							"name": "EDC Policies",
+							"item": [
 								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 204 No Content (if new asset) or 409 Conflict (if asset already exists)\", function () {",
-											"    pm.expect(pm.response.code).to.be.oneOf([204, 409])",
-											"});"
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "X-Api-Key",
-										"value": "ApiKeyDefaultValue",
-										"type": "default"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"@context\": {\n        \"edc\": \"https://w3id.org/edc/v0.0.1/ns/\",\n        \"odrl\": \"http://www.w3.org/ns/odrl/2/\"\n    },\n    \"@type\": \"edc:PolicyDefinition\",\n    \"@id\": \"{{POLICY_ID}}\",\n    \"edc:policy\": {\n        \"@context\": \"http://www.w3.org/ns/odrl.jsonld\",\n        \"@type\": \"odrl:Set\"\n    }\n}",
-									"options": {
-										"raw": {
-											"language": "json"
+									"name": "Create Empty Policy",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.expect(pm.response.code).to.be.oneOf([200])",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
 										}
-									}
-								},
-								"url": {
-									"raw": "{{EDC_MANAGEMENT_URL}}/policydefinitions",
-									"host": [
-										"{{EDC_MANAGEMENT_URL}}"
 									],
-									"path": [
-										"policydefinitions"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Update Policy",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 204 No Content (if new asset) or 409 Conflict (if asset already exists)\", function () {",
-											"    pm.expect(pm.response.code).to.be.oneOf([204, 409])",
-											"});"
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "X-Api-Key",
+												"value": "ApiKeyDefaultValue",
+												"type": "default"
+											}
 										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
-							"request": {
-								"method": "PUT",
-								"header": [
-									{
-										"key": "X-Api-Key",
-										"value": "ApiKeyDefaultValue",
-										"type": "default"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"@context\": {\n        \"edc\": \"https://w3id.org/edc/v0.0.1/ns/\",\n        \"odrl\": \"http://www.w3.org/ns/odrl/2/\"\n    },\n    \"@type\": \"edc:PolicyDefinition\",\n    \"@id\": \"{{POLICY_ID}}\",\n    \"edc:policy\": {\n        \"@context\": \"http://www.w3.org/ns/odrl.jsonld\",\n        \"@type\": \"odrl:Set\"\n    }\n}",
-									"options": {
-										"raw": {
-											"language": "json"
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"@context\": {\n        \"edc\": \"https://w3id.org/edc/v0.0.1/ns/\",\n        \"odrl\": \"http://www.w3.org/ns/odrl/2/\"\n    },\n    \"@type\": \"edc:PolicyDefinition\",\n    \"@id\": \"{{POLICY_ID}}\",\n    \"edc:policy\": {\n        \"@context\": \"http://www.w3.org/ns/odrl.jsonld\",\n        \"@type\": \"odrl:Set\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{EDC_MANAGEMENT_URL}}/v3/policydefinitions",
+											"host": [
+												"{{EDC_MANAGEMENT_URL}}"
+											],
+											"path": [
+												"v3",
+												"policydefinitions"
+											]
 										}
-									}
+									},
+									"response": []
 								},
-								"url": {
-									"raw": "{{EDC_MANAGEMENT_URL}}/policydefinitions/{{POLICY_ID}}",
-									"host": [
-										"{{EDC_MANAGEMENT_URL}}"
-									],
-									"path": [
-										"policydefinitions",
-										"{{POLICY_ID}}"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Filter Policies",
-							"event": [
 								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 204 No Content (if new asset) or 409 Conflict (if asset already exists)\", function () {",
-											"    pm.expect(pm.response.code).to.be.oneOf([204, 409])",
-											"});"
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "X-Api-Key",
-										"value": "pass",
-										"type": "default"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"@context\": {\n        \"edc\": \"https://w3id.org/edc/v0.0.1/ns/\"\n    },\n    \"@type\": \"QuerySpecDto\",\n    \"offset\": 0,\n    \"limit\": 100\n}",
-									"options": {
-										"raw": {
-											"language": "json"
+									"name": "Update Policy",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 204\", function () {",
+													"    pm.expect(pm.response.code).to.be.oneOf([204])",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
 										}
-									}
-								},
-								"url": {
-									"raw": "{{EDC_MANAGEMENT_URL}}/policydefinitions/request",
-									"host": [
-										"{{EDC_MANAGEMENT_URL}}"
 									],
-									"path": [
-										"policydefinitions",
-										"request"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Policy By Id",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{EDC_MANAGEMENT_URL}}/policydefinitions/{{POLICY_ID}}",
-									"host": [
-										"{{EDC_MANAGEMENT_URL}}"
-									],
-									"path": [
-										"policydefinitions",
-										"{{POLICY_ID}}"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Delete Policy",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 204 No Content (if new asset) or 409 Conflict (if asset already exists)\", function () {",
-											"    pm.expect(pm.response.code).to.be.oneOf([204, 409])",
-											"});"
+									"request": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "X-Api-Key",
+												"value": "ApiKeyDefaultValue",
+												"type": "default"
+											}
 										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
-							"request": {
-								"method": "DELETE",
-								"header": [
-									{
-										"key": "X-Api-Key",
-										"value": "ApiKeyDefaultValue",
-										"type": "default"
-									}
-								],
-								"url": {
-									"raw": "{{EDC_MANAGEMENT_URL}}/policydefinitions/{{POLICY_ID}}",
-									"host": [
-										"{{EDC_MANAGEMENT_URL}}"
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"@context\": {\n        \"edc\": \"https://w3id.org/edc/v0.0.1/ns/\",\n        \"odrl\": \"http://www.w3.org/ns/odrl/2/\"\n    },\n    \"@type\": \"edc:PolicyDefinition\",\n    \"@id\": \"{{POLICY_ID}}\",\n    \"edc:policy\": {\n        \"@context\": \"http://www.w3.org/ns/odrl.jsonld\",\n        \"@type\": \"odrl:Set\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{EDC_MANAGEMENT_URL}}/v3/policydefinitions/{{POLICY_ID}}",
+											"host": [
+												"{{EDC_MANAGEMENT_URL}}"
+											],
+											"path": [
+												"v3",
+												"policydefinitions",
+												"{{POLICY_ID}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Filter Policies",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.expect(pm.response.code).to.be.oneOf([200])",
+													"});",
+													"",
+													"let savedPolicyId = pm.collectionVariables.replaceIn(pm.variables.get(\"POLICY_ID\"));",
+													"pm.test(`Validate that the policy ${savedPolicyId} exists`, function() {",
+													"    var responseBody = pm.response.json();",
+													"    ",
+													"    // Check if the saved assetId exists in the response",
+													"    pm.expect(responseBody.some(policy => policy[\"@id\"] === savedPolicyId)).to.be.true;",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
 									],
-									"path": [
-										"policydefinitions",
-										"{{POLICY_ID}}"
-									]
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "X-Api-Key",
+												"value": "pass",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"@context\": {\n        \"edc\": \"https://w3id.org/edc/v0.0.1/ns/\"\n    },\n    \"@type\": \"QuerySpecDto\",\n    \"offset\": 0,\n    \"limit\": 100\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{EDC_MANAGEMENT_URL}}/v3/policydefinitions/request",
+											"host": [
+												"{{EDC_MANAGEMENT_URL}}"
+											],
+											"path": [
+												"v3",
+												"policydefinitions",
+												"request"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Policy By Id",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.expect(pm.response.code).to.be.oneOf([200])",
+													"});",
+													"",
+													"let savedPolicyId = pm.collectionVariables.replaceIn(pm.variables.get(\"POLICY_ID\"));",
+													"pm.test(`Validate that the policy ${savedPolicyId} exists`, function() {",
+													"    var policy = pm.response.json();",
+													"    ",
+													"    // Check if the saved assetId exists in the response",
+													"    pm.expect(policy[\"@id\"]).to.be.equal(savedPolicyId);",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{EDC_MANAGEMENT_URL}}/v3/policydefinitions/{{POLICY_ID}}",
+											"host": [
+												"{{EDC_MANAGEMENT_URL}}"
+											],
+											"path": [
+												"v3",
+												"policydefinitions",
+												"{{POLICY_ID}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete Policy",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 204\", function () {",
+													"    pm.expect(pm.response.code).to.be.oneOf([204])",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "X-Api-Key",
+												"value": "ApiKeyDefaultValue",
+												"type": "default"
+											}
+										],
+										"url": {
+											"raw": "{{EDC_MANAGEMENT_URL}}/v3/policydefinitions/{{POLICY_ID}}",
+											"host": [
+												"{{EDC_MANAGEMENT_URL}}"
+											],
+											"path": [
+												"v3",
+												"policydefinitions",
+												"{{POLICY_ID}}"
+											]
+										}
+									},
+									"response": []
 								}
-							},
-							"response": []
+							]
 						}
 					]
 				},
@@ -549,12 +659,12 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Status code is 204 No Content (if new asset) or 409 Conflict (if asset already exists)\", function () {",
-											"    pm.expect(pm.response.code).to.be.oneOf([204, 409])",
-											"});"
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([200])",
+											"});",
+											""
 										],
-										"type": "text/javascript",
-										"packages": {}
+										"type": "text/javascript"
 									}
 								}
 							],
@@ -569,7 +679,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"@context\": {\n        \"@vocab\": \"https://w3id.org/edc/v0.0.1/ns/\"\n    },\n    \"@id\": \"{{CONTRACT_DEFINITION_ID}}\",\n    \"@type\": \"edc:ContractDefinition\",\n    \"accessPolicyId\": \"{{POLICY_ID}}\",\n    \"contractPolicyId\": \"{{POLICY_ID}}\",\n    \"assetsSelector\": [\n        {\n            \"@type\": \"CriterionDto\",\n            \"operandLeft\": \"id\",\n            \"operator\": \"=\",\n            \"operandRight\": \"{{ASSET_ID}}\"\n        }\n    ]\n}",
+									"raw": "{\n    \"@context\": {\n        \"@vocab\": \"https://w3id.org/edc/v0.0.1/ns/\"\n    },\n    \"@id\": \"{{CONTRACT_DEFINITION_ID}}\",\n    \"@type\": \"ContractDefinition\",\n    \"accessPolicyId\": \"{{POLICY_ID}}\",\n    \"contractPolicyId\": \"{{POLICY_ID}}\",\n    \"assetsSelector\": [\n        {\n            \"@type\": \"CriterionDto\",\n            \"operandLeft\": \"id\",\n            \"operator\": \"=\",\n            \"operandRight\": \"{{ASSET_ID}}\"\n        }\n    ]\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -577,11 +687,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{EDC_MANAGEMENT_URL}}/contractdefinitions",
+									"raw": "{{EDC_MANAGEMENT_URL}}/v3/contractdefinitions",
 									"host": [
 										"{{EDC_MANAGEMENT_URL}}"
 									],
 									"path": [
+										"v3",
 										"contractdefinitions"
 									]
 								}
@@ -595,12 +706,11 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Status code is 204 No Content (if new asset) or 409 Conflict (if asset already exists)\", function () {",
-											"    pm.expect(pm.response.code).to.be.oneOf([204, 409])",
+											"pm.test(\"Status code is 204\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([204])",
 											"});"
 										],
-										"type": "text/javascript",
-										"packages": {}
+										"type": "text/javascript"
 									}
 								}
 							],
@@ -623,11 +733,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{EDC_MANAGEMENT_URL}}/contractdefinitions",
+									"raw": "{{EDC_MANAGEMENT_URL}}/v3/contractdefinitions",
 									"host": [
 										"{{EDC_MANAGEMENT_URL}}"
 									],
 									"path": [
+										"v3",
 										"contractdefinitions"
 									]
 								}
@@ -636,6 +747,28 @@
 						},
 						{
 							"name": "Filter ContractDefinitions",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([200])",
+											"});",
+											"",
+											"let savedContractDefinitionId = pm.collectionVariables.replaceIn(pm.variables.get(\"CONTRACT_DEFINITION_ID\"));",
+											"pm.test(`Validate that the contract definition ${savedContractDefinitionId} exists`, function() {",
+											"    var responseBody = pm.response.json();",
+											"    ",
+											"    // Check if the saved assetId exists in the response",
+											"    pm.expect(responseBody.some(contractDefinition => contractDefinition[\"@id\"] === savedContractDefinitionId)).to.be.true;",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [
@@ -655,11 +788,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{EDC_MANAGEMENT_URL}}/contractdefinitions/request",
+									"raw": "{{EDC_MANAGEMENT_URL}}/v3/contractdefinitions/request",
 									"host": [
 										"{{EDC_MANAGEMENT_URL}}"
 									],
 									"path": [
+										"v3",
 										"contractdefinitions",
 										"request"
 									]
@@ -674,12 +808,20 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Status code is 204 No Content (if new asset) or 409 Conflict (if asset already exists)\", function () {",
-											"    pm.expect(pm.response.code).to.be.oneOf([204, 409])",
-											"});"
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([200])",
+											"});",
+											"",
+											"let savedContractDefinitionId = pm.collectionVariables.replaceIn(pm.variables.get(\"CONTRACT_DEFINITION_ID\"));",
+											"pm.test(`Validate that the contract definition ${savedContractDefinitionId} exists`, function() {",
+											"    var definition = pm.response.json();",
+											"    ",
+											"    // Check if the saved assetId exists in the response",
+											"    pm.expect(definition[\"@id\"]).to.be.equal(savedContractDefinitionId);",
+											"});",
+											""
 										],
-										"type": "text/javascript",
-										"packages": {}
+										"type": "text/javascript"
 									}
 								}
 							],
@@ -705,11 +847,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{EDC_MANAGEMENT_URL}}/contractdefinitions/{{CONTRACT_DEFINITION_ID}}",
+									"raw": "{{EDC_MANAGEMENT_URL}}/v3/contractdefinitions/{{CONTRACT_DEFINITION_ID}}",
 									"host": [
 										"{{EDC_MANAGEMENT_URL}}"
 									],
 									"path": [
+										"v3",
 										"contractdefinitions",
 										"{{CONTRACT_DEFINITION_ID}}"
 									]
@@ -724,8 +867,8 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Status code is 204 No Content (if new asset) or 409 Conflict (if asset already exists)\", function () {",
-											"    pm.expect(pm.response.code).to.be.oneOf([204, 409])",
+											"pm.test(\"Status code is 204\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([204])",
 											"});"
 										],
 										"type": "text/javascript"
@@ -736,11 +879,12 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{EDC_MANAGEMENT_URL}}/contractdefinitions/{{CONTRACT_DEFINITION_ID}}",
+									"raw": "{{EDC_MANAGEMENT_URL}}/v3/contractdefinitions/{{CONTRACT_DEFINITION_ID}}",
 									"host": [
 										"{{EDC_MANAGEMENT_URL}}"
 									],
 									"path": [
+										"v3",
 										"contractdefinitions",
 										"{{CONTRACT_DEFINITION_ID}}"
 									]
@@ -755,12 +899,44 @@
 					"item": [
 						{
 							"name": "Request Catalog",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([200])",
+											"});",
+											"",
+											"let catalog = pm.response.json();",
+											"console.log(catalog);",
+											"let savedAssetId = pm.collectionVariables.replaceIn(pm.variables.get(\"ASSET_ID\"));",
+											"",
+											"let dataset = catalog[\"dcat:dataset\"];",
+											"",
+											"var data;",
+											"if (dataset.constructor === Array) {",
+											"    data = dataset.find(data => data[\"@id\"] === savedAssetId);",
+											"} else {",
+											"    data = dataset;",
+											"}",
+											"if(data === undefined) {",
+											"    console.log(\"Did you create a contract definition?\")",
+											"}",
+											"console.log(data[\"odrl:hasPolicy\"][\"@id\"]);",
+											"pm.collectionVariables.set(\"OFFER_ID\", data[\"odrl:hasPolicy\"][\"@id\"]);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"@context\": {\r\n        \"edc\": \"https://w3id.org/edc/v0.0.1/ns/\"\r\n    },\r\n    \"@type\": \"edc:CatalogRequest\",\r\n    \"protocol\": \"dataspace-protocol-http\",\r\n    \"edc:counterPartyAddress\": \"{{COUNTER_PARTY_DSP}}\",\r\n    \"edc:counterPartyId\": \"{{COUNTER_PARTY_BPN}}\",\r\n    \"querySpec\": {\r\n        \"@type\": \"QuerySpecDto\",\r\n        \"offset\": 0,\r\n        \"limit\": 100\r\n    }\r\n}",
+									"raw": "{\r\n    \"@context\": {\r\n        \"edc\": \"https://w3id.org/edc/v0.0.1/ns/\"\r\n    },\r\n    \"@type\": \"edc:CatalogRequest\",\r\n    \"protocol\": \"dataspace-protocol-http\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/counterPartyAddress\": \"{{COUNTER_PARTY_DSP}}\",\r\n    \"querySpec\": {\r\n        \"@type\": \"QuerySpecDto\",\r\n        \"offset\": 0,\r\n        \"limit\": 100\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -768,13 +944,15 @@
 									}
 								},
 								"url": {
-									"raw": "{{EDC_MANAGEMENT_URL}}/catalog/request",
+									"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v3/catalog/request/",
 									"host": [
-										"{{EDC_MANAGEMENT_URL}}"
+										"{{CONSUMER_EDC_MANAGEMENT_URL}}"
 									],
 									"path": [
+										"v3",
 										"catalog",
-										"request"
+										"request",
+										""
 									]
 								}
 							},
@@ -786,134 +964,402 @@
 					"name": "Contract Negotiations",
 					"item": [
 						{
-							"name": "Start Negotiation",
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "X-Api-Key",
-										"value": "ApiKeyDefaultValue",
-										"type": "default"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"@context\": {\r\n        \"@vocab\": \"https://w3id.org/edc/v0.0.1/ns/\"\r\n    },\r\n    \"@type\": \"ContractRequest\",\r\n    \"counterPartyAddress\": \"{{COUNTER_PARTY_DSP}}\",\r\n    \"protocol\": \"dataspace-protocol-http\",\r\n    \"policy\": {\r\n        \"@context\": \"http://www.w3.org/ns/odrl.jsonld\",\r\n        \"@type\": \"odrl:Offer\",\r\n        \"@id\": \"{{OFFER_ID}}\",\r\n        \"assigner\": \"{{COUNTER_PARTY_BPN}}\",\r\n        \"target\": \"{{ASSET_ID}}\"\r\n    }\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{EDC_MANAGEMENT_URL}}/contractnegotiations",
-									"host": [
-										"{{EDC_MANAGEMENT_URL}}"
-									],
-									"path": [
-										"contractnegotiations"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Filter Negotiations",
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "X-Api-Key",
-										"value": "ApiKeyDefaultValue",
-										"type": "default"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"@context\": {\r\n        \"edc\": \"https://w3id.org/edc/v0.0.1/ns/\"\r\n    },\r\n    \"@type\": \"QuerySpecDto\",\r\n    \"offset\": 0,\r\n    \"limit\": 100\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{EDC_MANAGEMENT_URL}}/contractnegotiations/request",
-									"host": [
-										"{{EDC_MANAGEMENT_URL}}"
-									],
-									"path": [
-										"contractnegotiations",
-										"request"
-									],
-									"query": [
+							"name": "Contract Negotiations - Success",
+							"item": [
+								{
+									"name": "Create Asset",
+									"event": [
 										{
-											"key": "",
-											"value": "",
-											"disabled": true
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status is 200\", function () {",
+													"    pm.expect(pm.response.code).to.be.oneOf([200])",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
 										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Terminate ongoing Negotiation",
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "X-Api-Key",
-										"value": "pass",
-										"type": "default"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"@context\": {\r\n        \"edc\": \"https://w3id.org/edc/v0.0.1/ns/\"\r\n    },\r\n    \"@type\": \"TerminateNegotiation\",\r\n    \"@id\": \"{{CONTRACT_NEGOTIATION_ID}}\",\r\n    \"reason\": \"{{TERMATION_REASON}}\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "X-Api-Key",
+												"value": "ApiKeyDefaultValue",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"@context\": {\n        \"edc\": \"https://w3id.org/edc/v0.0.1/ns/\"\n    },\n    \"properties\": {\n        \"id\": \"{{ASSET_ID}}\",\n        \"description\": \"{{ASSET_DESCRIPTION}}\"\n    },\n    \"dataAddress\": {\n        \"@type\": \"DataAddress\",\n        \"type\": \"HttpData\",\n        \"baseUrl\": \"{{DATA_SOURCE_URL}}\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{EDC_MANAGEMENT_URL}}/v3/assets",
+											"host": [
+												"{{EDC_MANAGEMENT_URL}}"
+											],
+											"path": [
+												"v3",
+												"assets"
+											]
 										}
-									}
+									},
+									"response": []
 								},
-								"url": {
-									"raw": "{{EDC_MANAGEMENT_URL}}/contractnegotiations/{{CONTRACT_NEGOTIATION_ID}}/terminate",
-									"host": [
-										"{{EDC_MANAGEMENT_URL}}"
+								{
+									"name": "Create Empty Policy",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.expect(pm.response.code).to.be.oneOf([200])",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
 									],
-									"path": [
-										"contractnegotiations",
-										"{{CONTRACT_NEGOTIATION_ID}}",
-										"terminate"
-									]
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "X-Api-Key",
+												"value": "ApiKeyDefaultValue",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"@context\": {\n        \"edc\": \"https://w3id.org/edc/v0.0.1/ns/\",\n        \"odrl\": \"http://www.w3.org/ns/odrl/2/\"\n    },\n    \"@type\": \"edc:PolicyDefinition\",\n    \"@id\": \"{{POLICY_ID}}\",\n    \"edc:policy\": {\n        \"@context\": \"http://www.w3.org/ns/odrl.jsonld\",\n        \"@type\": \"odrl:Set\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{EDC_MANAGEMENT_URL}}/v3/policydefinitions",
+											"host": [
+												"{{EDC_MANAGEMENT_URL}}"
+											],
+											"path": [
+												"v3",
+												"policydefinitions"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create ContractDefinition",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.expect(pm.response.code).to.be.oneOf([200])",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "X-Api-Key",
+												"value": "ApiKeyDefaultValue",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"@context\": {\n        \"@vocab\": \"https://w3id.org/edc/v0.0.1/ns/\"\n    },\n    \"@id\": \"{{CONTRACT_DEFINITION_ID}}\",\n    \"@type\": \"ContractDefinition\",\n    \"accessPolicyId\": \"{{POLICY_ID}}\",\n    \"contractPolicyId\": \"{{POLICY_ID}}\",\n    \"assetsSelector\": [\n        {\n            \"@type\": \"CriterionDto\",\n            \"operandLeft\": \"id\",\n            \"operator\": \"=\",\n            \"operandRight\": \"{{ASSET_ID}}\"\n        }\n    ]\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{EDC_MANAGEMENT_URL}}/v3/contractdefinitions",
+											"host": [
+												"{{EDC_MANAGEMENT_URL}}"
+											],
+											"path": [
+												"v3",
+												"contractdefinitions"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Request Catalog",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.expect(pm.response.code).to.be.oneOf([200])",
+													"});",
+													"",
+													"let catalog = pm.response.json();",
+													"",
+													"let savedAssetId = pm.collectionVariables.replaceIn(pm.variables.get(\"ASSET_ID\"));",
+													"",
+													"let dataset = catalog[\"dcat:dataset\"];",
+													"",
+													"var data;",
+													"if (dataset.constructor === Array) {",
+													"    data = dataset.find(data => data[\"@id\"] === savedAssetId);",
+													"} else {",
+													"    data = dataset;",
+													"}",
+													"",
+													"console.log(data[\"odrl:hasPolicy\"][\"@id\"]);",
+													"pm.collectionVariables.set(\"OFFER_ID\", data[\"odrl:hasPolicy\"][\"@id\"]);",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"@context\": {\r\n        \"edc\": \"https://w3id.org/edc/v0.0.1/ns/\"\r\n    },\r\n    \"@type\": \"edc:CatalogRequest\",\r\n    \"protocol\": \"dataspace-protocol-http\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/counterPartyAddress\": \"{{COUNTER_PARTY_DSP}}\",\r\n    \"querySpec\": {\r\n        \"@type\": \"QuerySpecDto\",\r\n        \"offset\": 0,\r\n        \"limit\": 100\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v3/catalog/request/",
+											"host": [
+												"{{CONSUMER_EDC_MANAGEMENT_URL}}"
+											],
+											"path": [
+												"v3",
+												"catalog",
+												"request",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Start Negotiation",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.expect(pm.response.code).to.be.oneOf([200])",
+													"});",
+													"",
+													"let contractNegotiation = pm.response.json();",
+													"",
+													"pm.collectionVariables.set(\"CONTRACT_NEGOTIATION_ID\", contractNegotiation[\"@id\"]);",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "X-Api-Key",
+												"value": "ApiKeyDefaultValue",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"@context\": {\r\n        \"@vocab\": \"https://w3id.org/edc/v0.0.1/ns/\"\r\n    },\r\n    \"@type\": \"ContractRequest\",\r\n    \"counterPartyAddress\": \"{{COUNTER_PARTY_DSP}}\",\r\n    \"counterPartyId\": \"{{COUNTER_PARTY_CONNECTOR_NAME}}\",\r\n    \"protocol\": \"dataspace-protocol-http\",\r\n    \"policy\": {\r\n        \"@context\": \"http://www.w3.org/ns/odrl.jsonld\",\r\n        \"@type\": \"odrl:Offer\",\r\n        \"@id\": \"{{OFFER_ID}}\",\r\n        \"assigner\": \"{{COUNTER_PARTY_CONNECTOR_NAME}}\",\r\n        \"target\": \"{{ASSET_ID}}\"\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v3/contractnegotiations",
+											"host": [
+												"{{CONSUMER_EDC_MANAGEMENT_URL}}"
+											],
+											"path": [
+												"v3",
+												"contractnegotiations"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Negotiation by Id",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "X-Api-Key",
+												"value": "ApiKeyDefaultValue",
+												"type": "default"
+											}
+										],
+										"url": {
+											"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v3/contractnegotiations/{{CONTRACT_NEGOTIATION_ID}}",
+											"host": [
+												"{{CONSUMER_EDC_MANAGEMENT_URL}}"
+											],
+											"path": [
+												"v3",
+												"contractnegotiations",
+												"{{CONTRACT_NEGOTIATION_ID}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Filter Negotiations",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.expect(pm.response.code).to.be.oneOf([200])",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "X-Api-Key",
+												"value": "ApiKeyDefaultValue",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"@context\": {\r\n        \"edc\": \"https://w3id.org/edc/v0.0.1/ns/\"\r\n    },\r\n    \"@type\": \"QuerySpecDto\",\r\n    \"offset\": 0,\r\n    \"limit\": 100\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{EDC_MANAGEMENT_URL}}/v3/contractnegotiations/request",
+											"host": [
+												"{{EDC_MANAGEMENT_URL}}"
+											],
+											"path": [
+												"v3",
+												"contractnegotiations",
+												"request"
+											],
+											"query": [
+												{
+													"key": "",
+													"value": "",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
 								}
-							},
-							"response": []
+							]
 						},
 						{
-							"name": "Negotiation by Id",
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "X-Api-Key",
-										"value": "ApiKeyDefaultValue",
-										"type": "default"
-									}
-								],
-								"url": {
-									"raw": "{{EDC_MANAGEMENT_URL}}/contractnegotiations/{{CONTRACT_NEGOTIATION_ID}}",
-									"host": [
-										"{{EDC_MANAGEMENT_URL}}"
+							"name": "Contract Negotiations - Termination",
+							"item": [
+								{
+									"name": "Terminate ongoing Negotiation",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 204\", function () {",
+													"    pm.expect(pm.response.code).to.be.oneOf([204])",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
 									],
-									"path": [
-										"contractnegotiations",
-										"{{CONTRACT_NEGOTIATION_ID}}"
-									]
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "X-Api-Key",
+												"value": "pass",
+												"type": "default"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"@context\": {\r\n        \"edc\": \"https://w3id.org/edc/v0.0.1/ns/\"\r\n    },\r\n    \"@type\": \"TerminateNegotiation\",\r\n    \"@id\": \"{{CONTRACT_NEGOTIATION_ID}}\",\r\n    \"reason\": \"{{TERMATION_REASON}}\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{EDC_MANAGEMENT_URL}}/v3/contractnegotiations/{{CONTRACT_NEGOTIATION_ID}}/terminate",
+											"host": [
+												"{{EDC_MANAGEMENT_URL}}"
+											],
+											"path": [
+												"v3",
+												"contractnegotiations",
+												"{{CONTRACT_NEGOTIATION_ID}}",
+												"terminate"
+											]
+										}
+									},
+									"response": []
 								}
-							},
-							"response": []
+							]
 						}
 					]
 				},
@@ -922,6 +1368,27 @@
 					"item": [
 						{
 							"name": "Filter Agreements",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let assetId = pm.collectionVariables.replaceIn(pm.variables.get(\"ASSET_ID\"));",
+											"",
+											"let filterAgreement = pm.response.json();",
+											"pm.test(`Get the negotiation that contains asset ${assetId}`, function() {",
+											"    pm.expect(filterAgreement.some(asset => asset[\"assetId\"] === assetId)).to.be.true;",
+											"});",
+											"",
+											"let negotiationId = filterAgreement.find(asset => asset[\"assetId\"] === assetId)[\"@id\"];",
+											"",
+											"pm.collectionVariables.set(\"CONTRACT_AGREEMENT_ID\", negotiationId);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [],
@@ -935,11 +1402,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{EDC_MANAGEMENT_URL}}/contractagreements/request",
+									"raw": "{{EDC_MANAGEMENT_URL}}/v3/contractagreements/request",
 									"host": [
 										"{{EDC_MANAGEMENT_URL}}"
 									],
 									"path": [
+										"v3",
 										"contractagreements",
 										"request"
 									]
@@ -953,11 +1421,12 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{EDC_MANAGEMENT_URL}}/contractagreements/{{CONTRACT_AGREEMENT_ID}}",
+									"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v3/contractagreements/{{CONTRACT_AGREEMENT_ID}}",
 									"host": [
-										"{{EDC_MANAGEMENT_URL}}"
+										"{{CONSUMER_EDC_MANAGEMENT_URL}}"
 									],
 									"path": [
+										"v3",
 										"contractagreements",
 										"{{CONTRACT_AGREEMENT_ID}}"
 									]
@@ -977,11 +1446,12 @@
 									}
 								],
 								"url": {
-									"raw": "{{EDC_MANAGEMENT_URL}}/contractnegotiations/{{CONTRACT_NEGOTIATION_ID}}/agreement",
+									"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v3/contractnegotiations/{{CONTRACT_NEGOTIATION_ID}}/agreement",
 									"host": [
-										"{{EDC_MANAGEMENT_URL}}"
+										"{{CONSUMER_EDC_MANAGEMENT_URL}}"
 									],
 									"path": [
+										"v3",
 										"contractnegotiations",
 										"{{CONTRACT_NEGOTIATION_ID}}",
 										"agreement"
@@ -996,11 +1466,12 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{EDC_MANAGEMENT_URL}}/contractagreements/{{CONTRACT_AGREEMENT_ID}}/negotiation",
+									"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v3/contractagreements/{{CONTRACT_AGREEMENT_ID}}/negotiation",
 									"host": [
-										"{{EDC_MANAGEMENT_URL}}"
+										"{{CONSUMER_EDC_MANAGEMENT_URL}}"
 									],
 									"path": [
+										"v3",
 										"contractagreements",
 										"{{CONTRACT_AGREEMENT_ID}}",
 										"negotiation"
@@ -1038,11 +1509,12 @@
 											}
 										},
 										"url": {
-											"raw": "{{EDC_MANAGEMENT_URL}}/transferprocesses",
+											"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v3/transferprocesses",
 											"host": [
-												"{{EDC_MANAGEMENT_URL}}"
+												"{{CONSUMER_EDC_MANAGEMENT_URL}}"
 											],
 											"path": [
+												"v3",
 												"transferprocesses"
 											]
 										}
@@ -1136,6 +1608,27 @@
 							"item": [
 								{
 									"name": "Filter Transfer Processes",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"let assetId = pm.collectionVariables.replaceIn(pm.variables.get(\"ASSET_ID\"));",
+													"",
+													"let transfers = pm.response.json();",
+													"pm.test(`Validate that the asset ${assetId} exists`, function() {",
+													"    pm.expect(transfers.some(transfer => transfer[\"assetId\"] === assetId)).to.be.true;",
+													"});",
+													"",
+													"let transfer = transfers.find(transfer => transfer[\"assetId\"] === assetId);",
+													"",
+													"pm.collectionVariables.set(\"TRANSFER_PROCESS_ID\", transfer[\"@id\"]);",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
 									"request": {
 										"method": "POST",
 										"header": [
@@ -1155,11 +1648,12 @@
 											}
 										},
 										"url": {
-											"raw": "{{EDC_MANAGEMENT_URL}}/transferprocesses/request",
+											"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v3/transferprocesses/request",
 											"host": [
-												"{{EDC_MANAGEMENT_URL}}"
+												"{{CONSUMER_EDC_MANAGEMENT_URL}}"
 											],
 											"path": [
+												"v3",
 												"transferprocesses",
 												"request"
 											]
@@ -1179,11 +1673,12 @@
 											}
 										],
 										"url": {
-											"raw": "{{EDC_MANAGEMENT_URL}}/transferprocesses/{{TRANSFER_PROCESS_ID}}",
+											"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v3/transferprocesses/{{TRANSFER_PROCESS_ID}}",
 											"host": [
-												"{{EDC_MANAGEMENT_URL}}"
+												"{{CONSUMER_EDC_MANAGEMENT_URL}}"
 											],
 											"path": [
+												"v3",
 												"transferprocesses",
 												"{{TRANSFER_PROCESS_ID}}"
 											]
@@ -1203,11 +1698,12 @@
 											}
 										],
 										"url": {
-											"raw": "{{EDC_MANAGEMENT_URL}}/transferprocesses/{{TRANSFER_PROCESS_ID}}/state",
+											"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v3/transferprocesses/{{TRANSFER_PROCESS_ID}}/state",
 											"host": [
-												"{{EDC_MANAGEMENT_URL}}"
+												"{{CONSUMER_EDC_MANAGEMENT_URL}}"
 											],
 											"path": [
+												"v3",
 												"transferprocesses",
 												"{{TRANSFER_PROCESS_ID}}",
 												"state"
@@ -1237,11 +1733,12 @@
 											}
 										},
 										"url": {
-											"raw": "{{EDC_MANAGEMENT_URL}}/transferprocesses/{{TRANSFER_PROCESS_ID}}/terminate",
+											"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v3/transferprocesses/{{TRANSFER_PROCESS_ID}}/terminate",
 											"host": [
-												"{{EDC_MANAGEMENT_URL}}"
+												"{{CONSUMER_EDC_MANAGEMENT_URL}}"
 											],
 											"path": [
+												"v3",
 												"transferprocesses",
 												"{{TRANSFER_PROCESS_ID}}",
 												"terminate"
@@ -1271,11 +1768,12 @@
 											}
 										},
 										"url": {
-											"raw": "{{EDC_MANAGEMENT_URL}}/transferprocesses/{{TRANSFER_PROCESS_ID}}/deprovision",
+											"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v3/transferprocesses/{{TRANSFER_PROCESS_ID}}/deprovision",
 											"host": [
-												"{{EDC_MANAGEMENT_URL}}"
+												"{{CONSUMER_EDC_MANAGEMENT_URL}}"
 											],
 											"path": [
+												"v3",
 												"transferprocesses",
 												"{{TRANSFER_PROCESS_ID}}",
 												"deprovision"
@@ -1393,60 +1891,40 @@
 						}
 					]
 				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
 			]
 		}
 	],
 	"auth": {
-		"type": "oauth2",
-		"oauth2": [
+		"type": "apikey",
+		"apikey": [
 			{
-				"key": "clientId",
-				"value": "client-{{CONNECTOR_NAME}}-app",
+				"key": "value",
+				"value": "SomeOtherApiKey",
 				"type": "string"
 			},
 			{
-				"key": "grant_type",
-				"value": "client_credentials",
-				"type": "string"
-			},
-			{
-				"key": "scope",
-				"value": "",
-				"type": "string"
-			},
-			{
-				"key": "clientSecret",
-				"value": "{{CONNECTOR_SECRET}}",
-				"type": "string"
-			},
-			{
-				"key": "useBrowser",
-				"value": true,
-				"type": "boolean"
-			},
-			{
-				"key": "authUrl",
-				"value": "{{AUTH_URL}}",
-				"type": "string"
-			},
-			{
-				"key": "accessTokenUrl",
-				"value": "{{TOKEN_URL}}",
-				"type": "string"
-			},
-			{
-				"key": "challengeAlgorithm",
-				"value": "S256",
-				"type": "string"
-			},
-			{
-				"key": "addTokenTo",
-				"value": "header",
-				"type": "string"
-			},
-			{
-				"key": "client_authentication",
-				"value": "header",
+				"key": "key",
+				"value": "x-api-key",
 				"type": "string"
 			}
 		]
@@ -1457,10 +1935,7 @@
 			"script": {
 				"type": "text/javascript",
 				"exec": [
-					"pm.sendRequest(\"https://postman-echo.com/get\", function (err, response) {",
-					"    console.log(response.json());",
-					"});",
-					"pm.environment.set(\"variable_key\", \"variable_value\");"
+					""
 				]
 			}
 		},
@@ -1553,6 +2028,25 @@
 		},
 		{
 			"key": "COUNTER_PARTY_BPN",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "BPN",
+			"value": "BPNL000000000001",
+			"type": "string"
+		},
+		{
+			"key": "CONSUMER_EDC_MANAGEMENT_URL",
+			"value": "{{EDC_MANAGEMENT_URL}}"
+		},
+		{
+			"key": "OFFER_ID",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "TARGET_URL",
 			"value": "",
 			"type": "string"
 		}

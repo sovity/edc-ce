@@ -22,7 +22,8 @@ package de.sovity.edc.ce.api.usecase.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "Value type of a filter expression criterion", enumAsRef = true)
+@Schema(description = "Value type of a filter expression criterion", enumAsRef = true, deprecated = true)
+@Deprecated
 public enum CatalogFilterExpressionLiteralType {
     VALUE, VALUE_LIST
 }

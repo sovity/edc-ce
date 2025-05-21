@@ -33,9 +33,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Schema(description = "Generic expression for filtering the data offers in the catalog", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+@Schema(description = "Generic expression for filtering the data offers in the catalog", requiredMode = Schema.RequiredMode.NOT_REQUIRED, deprecated = true)
+@Deprecated
 public class CatalogFilterExpression {
-    @Schema(description = "Asset property name", requiredMode = Schema.RequiredMode.REQUIRED, example = Prop.Edc.ASSET_ID)
+    @Schema(
+        description = "Asset property name",
+        requiredMode = Schema.RequiredMode.REQUIRED,
+        example = Prop.Edc.ASSET_ID
+    )
     private String operandLeft;
 
     @Schema(description = "Operator", requiredMode = Schema.RequiredMode.REQUIRED)

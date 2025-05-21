@@ -24,6 +24,14 @@ The following choices are available. Some might be optional, some might be force
 | `sovity.management.api.iam.kind`=`management-iam-api-key` | [View Config](./sovity.management.api.iam.kind=management-iam-api-key/README.md) | Legacy API Key Auth for the Management API                                                                                                                            |
 
 
+## Vault Entries
+
+| Key                      | Example Value                                   | Description                                |
+|--------------------------|-------------------------------------------------|--------------------------------------------|
+| `transfer-proxy-private` | PKCS 8 in PEM/Base64 format                     | EDR Token Generation Keypair (Private Key) |
+| `transfer-proxy-public`  | PEM/Base64 format `-----BEGIN CERTIFICATE-----` | EDR Token Generation Keypair (Certificate) |
+
+
 ## Config
 
 ### Important Config
@@ -71,13 +79,22 @@ The following choices are available. Some might be optional, some might be force
 
 ### Overrides / Ignore
 
-<details><summary>Show / Hide (13)</summary>
+> [!WARNING]
+> The properties in this section are mentioned for completeness and are not supported.
+> They are present here because we use them internally.
+> Expect them to change without notice.
+
+<details><summary>Show / Hide (17)</summary>
 
 | Name                                                  | Required                                            | Description                                                                                                                                                                                                                                           |
 |-------------------------------------------------------|-----------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `edc.component.id`                                    | Defaults to value from `edc.participant.id`         | Connector Name for logging purposes                                                                                                                                                                                                                   |
 | `edc.datasource.default.name`                         | Defaults to `default`                               | Ensures the EDC initializes the DataSource 'default' because it initializes all edc.datasource.* data sources.                                                                                                                                        |
+| `edc.datasource.edr.name`                             | Defaults to `default`                               | EDR Datasource name must be explicitly set because it wrongly defaults to 'edr' rather than 'default'                                                                                                                                                 |
 | `edc.dsp.callback.address`                            | Defaults to Protocol API URL                        | Full URL for the DSP callback address                                                                                                                                                                                                                 |
-| `edc.runtime.id`                                      | Defaults to value from `edc.participant.id`         | Connector Name for logging purposes                                                                                                                                                                                                                   |
+| `edc.transfer.proxy.token.signer.privatekey.alias`    | Defaults to `transfer-proxy-private`                | Vault Entry: EDR Token Generation Keypair (Private Key)                                                                                                                                                                                               |
+| `edc.transfer.proxy.token.verifier.publickey.alias`   | Defaults to `transfer-proxy-public`                 | Vault Entry: EDR Token Generation Keypair (Certificate)                                                                                                                                                                                               |
+| `sovity.contract.termination.thread.pool_size`        | Defaults to `10`                                    | The number of contracts messages that can be simultaneously processed                                                                                                                                                                                 |
 | `sovity.edc.ui.management.api.url.shown.in.dashboard` | Defaults to Management API URL                      | URL shown in the EDC UI for the management API. This might differ from the default Management API URL if an auth proxy solution has been put between                                                                                                  |
 | `sovity.first.port`                                   | Defaults to `11000`                                 | The first port of several ports to be used for the several API endpoints.<br>If set to 11000, the Management API will be on 11002, etc.<br><br>During tests it can be set to 'auto' for the test framework to auto find a free port-range.            |
 | `sovity.flyway.additional.migration.locations`        | Optional                                            | Coma-separated list of additional flyway migration scripts locations. Useful for DB Migration Tests in Unit Tests. Need to be correct Flyway Migration Script Locations. See https://flywaydb.org/documentation/configuration/parameters/locations    |

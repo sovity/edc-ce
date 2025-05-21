@@ -9,6 +9,8 @@ package de.sovity.edc.runtime.modules.model
 
 /**
  * Only for Documentation Generation
+ *
+ * See [The module system](docs/dev/module_system.md#properties)
  */
 enum class ConfigPropCategory(val documentationName: String, val order: Int) {
     IMPORTANT("Important Config", 0),

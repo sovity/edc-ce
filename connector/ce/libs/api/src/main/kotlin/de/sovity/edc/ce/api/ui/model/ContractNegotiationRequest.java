@@ -21,11 +21,14 @@
 package de.sovity.edc.ce.api.ui.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import de.sovity.edc.ce.api.common.model.CallbackAddressDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -49,4 +52,10 @@ public class ContractNegotiationRequest {
 
     @Schema(description = "Asset ID", requiredMode = Schema.RequiredMode.REQUIRED)
     private String assetId;
+
+    @Schema(
+        description = "List of endpoints to call upon given transfer events",
+        requiredMode = Schema.RequiredMode.NOT_REQUIRED
+    )
+    private List<CallbackAddressDto> callbackAddresses;
 }

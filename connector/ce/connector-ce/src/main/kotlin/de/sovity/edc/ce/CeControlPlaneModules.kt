@@ -19,6 +19,7 @@ import de.sovity.edc.ce.modules.config_utils.ConfigUtilsImpl
 import de.sovity.edc.ce.modules.config_utils.ConfigUtilsModule
 import de.sovity.edc.ce.modules.dataspaces.catena.CatenaDataspaceFeatures
 import de.sovity.edc.ce.modules.dataspaces.sovity.SovityDataspaceFeatures
+import de.sovity.edc.ce.modules.dataspaces.sovity.edrs.EdrTokenSecretModule
 import de.sovity.edc.ce.modules.db.DbModule
 import de.sovity.edc.ce.modules.messaging.contract_termination.ContractTerminationModule
 import de.sovity.edc.ce.modules.messaging.messenger.SovityMessengerModule
@@ -81,15 +82,15 @@ object CeControlPlaneModules {
 
         moduleIfCeDataspace(
             CeDataspace.SOVITY_MOCK_IAM,
-            SovityDataspaceFeatures.controlPlaneWithMockIam()
+            SovityDataspaceFeatures.sovityControlPlaneMockIam()
         )
         moduleIfCeDataspace(
             CeDataspace.SOVITY_DAPS,
-            SovityDataspaceFeatures.controlPlaneWithDaps()
+            SovityDataspaceFeatures.sovityControlPlaneDaps()
         )
         moduleIfCeDataspace(
             CeDataspace.SOVITY_DAPS_OMEJDN,
-            SovityDataspaceFeatures.controlPlaneWithDapsOmejdn()
+            SovityDataspaceFeatures.sovityControlPlaneDapsOmejdn()
         )
         moduleIfCeDataspace(
             CeDataspace.CATENA_X,
@@ -106,8 +107,9 @@ object CeControlPlaneModules {
             CeApiModule.instance(),
             ConfigUtilsModule.instance(),
             ContractTerminationModule.instance(),
+            EdrTokenSecretModule.instance(),
             SimplePolicyCreatorModule.instance(),
-            SovityMessengerModule.instance()
+            SovityMessengerModule.instance(),
         )
 
         property(
@@ -240,7 +242,7 @@ object CeControlPlaneModules {
         }
         property(
             ConfigPropCategory.OVERRIDES,
-            CeConfigProps.EDC_RUNTIME_ID
+            CeConfigProps.EDC_COMPONENT_ID
         ) {
             defaultFromProp(CeConfigProps.EDC_PARTICIPANT_ID)
             warnIfOverridden = true

@@ -16,6 +16,7 @@ import org.eclipse.edc.connector.controlplane.contract.spi.types.offer.ContractD
 
 @RequiredArgsConstructor
 @Service
+@Deprecated
 public class ContractDefinitionBuilder {
     private final CriterionMapper criterionMapper;
 

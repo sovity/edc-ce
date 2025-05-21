@@ -1,3 +1,23 @@
+/*
+ * Copyright 2025 sovity GmbH
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Contributors:
+ *     sovity - init and continued development
+ */
 /* eslint-disable */
 /**
  * sovity EDC API Wrapper
@@ -52,6 +72,12 @@ export interface TransferHistoryEntry {
      */
     lastUpdatedDate: Date;
     /**
+     * Transfer Type
+     * @type {string}
+     * @memberof TransferHistoryEntry
+     */
+    transferType: string;
+    /**
      * Transfer History State
      * @type {TransferProcessState}
      * @memberof TransferHistoryEntry
@@ -99,6 +125,12 @@ export interface TransferHistoryEntry {
      * @memberof TransferHistoryEntry
      */
     errorMessage?: string;
+    /**
+     * Whether this transfer is available for consumption via an EDR.
+     * @type {boolean}
+     * @memberof TransferHistoryEntry
+     */
+    isEdrConsumable: boolean;
 }
 
 
@@ -110,6 +142,7 @@ export function instanceOfTransferHistoryEntry(value: any): value is TransferHis
     if (!('transferProcessId' in value) || value['transferProcessId'] === undefined) return false;
     if (!('createdDate' in value) || value['createdDate'] === undefined) return false;
     if (!('lastUpdatedDate' in value) || value['lastUpdatedDate'] === undefined) return false;
+    if (!('transferType' in value) || value['transferType'] === undefined) return false;
     if (!('state' in value) || value['state'] === undefined) return false;
     if (!('contractAgreementId' in value) || value['contractAgreementId'] === undefined) return false;
     if (!('direction' in value) || value['direction'] === undefined) return false;
@@ -117,6 +150,7 @@ export function instanceOfTransferHistoryEntry(value: any): value is TransferHis
     if (!('counterPartyParticipantId' in value) || value['counterPartyParticipantId'] === undefined) return false;
     if (!('assetName' in value) || value['assetName'] === undefined) return false;
     if (!('assetId' in value) || value['assetId'] === undefined) return false;
+    if (!('isEdrConsumable' in value) || value['isEdrConsumable'] === undefined) return false;
     return true;
 }
 
@@ -133,6 +167,7 @@ export function TransferHistoryEntryFromJSONTyped(json: any, ignoreDiscriminator
         'transferProcessId': json['transferProcessId'],
         'createdDate': (new Date(json['createdDate'])),
         'lastUpdatedDate': (new Date(json['lastUpdatedDate'])),
+        'transferType': json['transferType'],
         'state': TransferProcessStateFromJSON(json['state']),
         'contractAgreementId': json['contractAgreementId'],
         'direction': ContractAgreementDirectionFromJSON(json['direction']),
@@ -141,6 +176,7 @@ export function TransferHistoryEntryFromJSONTyped(json: any, ignoreDiscriminator
         'assetName': json['assetName'],
         'assetId': json['assetId'],
         'errorMessage': json['errorMessage'] == null ? undefined : json['errorMessage'],
+        'isEdrConsumable': json['isEdrConsumable'],
     };
 }
 
@@ -158,6 +194,7 @@ export function TransferHistoryEntryToJSONTyped(value?: TransferHistoryEntry | n
         'transferProcessId': value['transferProcessId'],
         'createdDate': ((value['createdDate']).toISOString()),
         'lastUpdatedDate': ((value['lastUpdatedDate']).toISOString()),
+        'transferType': value['transferType'],
         'state': TransferProcessStateToJSON(value['state']),
         'contractAgreementId': value['contractAgreementId'],
         'direction': ContractAgreementDirectionToJSON(value['direction']),
@@ -166,6 +203,7 @@ export function TransferHistoryEntryToJSONTyped(value?: TransferHistoryEntry | n
         'assetName': value['assetName'],
         'assetId': value['assetId'],
         'errorMessage': value['errorMessage'],
+        'isEdrConsumable': value['isEdrConsumable'],
     };
 }
 

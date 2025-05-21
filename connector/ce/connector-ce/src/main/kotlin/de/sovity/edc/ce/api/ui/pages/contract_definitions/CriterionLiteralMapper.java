@@ -18,6 +18,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
+@Deprecated
 public class CriterionLiteralMapper {
 
     public UiCriterionLiteral buildUiCriterionLiteral(Object value) {

@@ -37,8 +37,8 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TransferProcessStatesDto {
     @Schema(description = "States and count of incoming transferprocess counts", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Map<TransferProcessSimplifiedState, Long> incomingTransferProcessCounts;
+    private Map<TransferProcessSimplifiedState, Integer> incomingTransferProcessCounts;
 
     @Schema(description = "States and counts of outgoing transferprocess counts", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Map<TransferProcessSimplifiedState, Long> outgoingTransferProcessCounts;
+    private Map<TransferProcessSimplifiedState, Integer> outgoingTransferProcessCounts;
 }

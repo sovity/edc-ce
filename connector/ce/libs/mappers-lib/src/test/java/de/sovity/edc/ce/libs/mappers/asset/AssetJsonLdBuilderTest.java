@@ -71,24 +71,6 @@ class AssetJsonLdBuilderTest {
     }
 
     @Test
-    void test_create_nuts_empty() {
-        // arrange
-        var uiAssetCreateRequest = UiAssetCreateRequest.builder()
-            .dataSource(dummyDataSource())
-            .id(ASSET_ID)
-            .nutsLocations(List.of())
-            .build();
-
-        var expectedProperties = Json.createObjectBuilder();
-
-        // act
-        var actual = assetJsonLdBuilder.createAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
-
-        // assert
-        assertEqualJson(actual, dummyAssetJsonLd(expectedProperties));
-    }
-
-    @Test
     void test_create_referenceFiles_empty() {
         // arrange
         var uiAssetCreateRequest = UiAssetCreateRequest.builder()

@@ -70,7 +70,7 @@ public class AssetApiService {
     }
 
     private List<Asset> getAllAssets() {
-        return assetService.query(QuerySpec.max()).orElseThrow(ServiceException::new).toList();
+        return assetService.search(QuerySpec.max()).orElseThrow(ServiceException::new);
     }
 
     public boolean assetExists(DSLContext dsl, String assetId) {

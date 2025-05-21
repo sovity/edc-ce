@@ -31,8 +31,6 @@ class AlwaysTruePolicyDefinitionExtension : ServiceExtension {
 
     private lateinit var alwaysTruePolicyDefinitionService: AlwaysTruePolicyDefinitionService
 
-    override fun name(): String = javaClass.name
-
     override fun initialize(context: ServiceExtensionContext) {
         monitor = context.monitor
         alwaysTruePolicyDefinitionService =

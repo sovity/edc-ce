@@ -11,6 +11,7 @@ import de.sovity.edc.ce.api.common.model.BuildInfo
 import de.sovity.edc.ce.api.common.model.UiAsset
 import de.sovity.edc.ce.api.common.model.UiAssetCreateRequest
 import de.sovity.edc.ce.api.common.model.UiAssetEditRequest
+import de.sovity.edc.ce.api.common.model.UiInitiateTransferRequest
 import de.sovity.edc.ce.api.ui.model.AssetPage
 import de.sovity.edc.ce.api.ui.model.ContractAgreementCard
 import de.sovity.edc.ce.api.ui.model.ContractAgreementPage
@@ -46,14 +47,13 @@ import de.sovity.edc.ce.api.ui.pages.data_offer.DataOfferPageApiService
 import de.sovity.edc.ce.api.ui.pages.policy.PolicyDefinitionApiService
 import de.sovity.edc.ce.api.ui.pages.transferhistory.TransferHistoryPageApiService
 import de.sovity.edc.ce.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService
-import de.sovity.edc.ce.modules.db.DslContextFactory
+import de.sovity.edc.ce.modules.db.jooq.DslContextFactory
 import de.sovity.edc.runtime.simple_di.Service
-import lombok.RequiredArgsConstructor
 import org.jooq.DSLContext
 
 // This class is so large so the generated API Clients can have one UiApi
-@RequiredArgsConstructor
 @Service
+@Suppress("LongParameterList")
 class UiResourceImpl(
     private val assetApiService: AssetApiService,
     private val catalogApiService: CatalogApiService,
@@ -74,7 +74,7 @@ class UiResourceImpl(
 
     override fun getDashboardPage(): DashboardPage =
         dslContextFactory.transactionResult {
-            dashboardPageApiService.dashboardPage()
+            dashboardPageApiService.dashboardPage(it)
         }
 
     override fun getAssetPage(): AssetPage =
@@ -133,6 +133,7 @@ class UiResourceImpl(
             )
         }
 
+    @Deprecated("")
     override fun getContractDefinitionPage(): ContractDefinitionPage =
         dslContextFactory.transactionResult {
             ContractDefinitionPage(
@@ -140,6 +141,7 @@ class UiResourceImpl(
             )
         }
 
+    @Deprecated("")
     override fun createContractDefinition(contractDefinitionRequest: ContractDefinitionRequest): IdResponseDto =
         dslContextFactory.transactionResult {
             contractDefinitionApiService.createContractDefinition(
@@ -167,6 +169,19 @@ class UiResourceImpl(
             catalogApiService.fetchDataOffers(
                 participantId,
                 connectorEndpoint
+            )
+        }
+
+    override fun getCatalogPageDataOffer(
+        participantId: String,
+        connectorEndpoint: String,
+        assetId: String
+    ): UiDataOffer =
+        dslContextFactory.transactionResult {
+            catalogApiService.fetchDataOffer(
+                participantId,
+                connectorEndpoint,
+                assetId
             )
         }
 
@@ -204,6 +219,7 @@ class UiResourceImpl(
             )
         }
 
+    @Deprecated("Use [initiateTransferV2] instead")
     override fun initiateTransfer(request: InitiateTransferRequest): IdResponseDto {
         return dslContextFactory.transactionResult { dsl ->
             contractAgreementTransferApiService.initiateTransfer(
@@ -212,11 +228,17 @@ class UiResourceImpl(
         }
     }
 
-    override fun initiateCustomTransfer(request: InitiateCustomTransferRequest): IdResponseDto {
+    override fun initiateTransferV2(request: UiInitiateTransferRequest): IdResponseDto {
         return dslContextFactory.transactionResult { dsl ->
-            contractAgreementTransferApiService.initiateCustomTransfer(
+            contractAgreementTransferApiService.initiateTransferV2(
                 request
             )
+        }
+    }
+
+    override fun initiateCustomTransfer(request: InitiateCustomTransferRequest): IdResponseDto {
+        return dslContextFactory.transactionResult { dsl ->
+            contractAgreementTransferApiService.initiateCustomTransfer(request)
         }
     }
 
@@ -236,7 +258,7 @@ class UiResourceImpl(
     override fun getTransferHistoryPage(): TransferHistoryPage {
         return dslContextFactory.transactionResult { unused: DSLContext? ->
             TransferHistoryPage(
-                transferHistoryPageApiService.transferHistoryEntries
+                transferHistoryPageApiService.getTransferHistoryEntries()
             )
         }
     }

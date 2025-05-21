@@ -30,7 +30,8 @@ public class ContractNegotiationUtils {
         var querySpec = QuerySpec.Builder.newInstance()
             .filter(List.of(new Criterion("contractAgreement.id", "=", contractAgreementId)))
             .build();
-        return contractNegotiationService.query(querySpec).orElseThrow(ServiceException::new)
+        return contractNegotiationService.search(querySpec).orElseThrow(ServiceException::new)
+            .stream()
             .findFirst()
             .orElseThrow(() -> new EdcException("Could not fetch contractNegotiation for " +
                 "contractAgreement"));

@@ -26,6 +26,7 @@ import de.sovity.edc.ce.api.common.model.BuildInfo;
 import de.sovity.edc.ce.api.common.model.UiAsset;
 import de.sovity.edc.ce.api.common.model.UiAssetCreateRequest;
 import de.sovity.edc.ce.api.common.model.UiAssetEditRequest;
+import de.sovity.edc.ce.api.common.model.UiInitiateTransferRequest;
 import de.sovity.edc.ce.api.ui.model.AssetPage;
 import de.sovity.edc.ce.api.ui.model.ContractAgreementCard;
 import de.sovity.edc.ce.api.ui.model.ContractAgreementPage;
@@ -132,14 +133,16 @@ interface UiResource {
     @GET
     @Path("pages/contract-definition-page")
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Collect all data for Contract Definition Page")
+    @Operation(description = "Collect all data for Contract Definition Page", deprecated = true)
+    @Deprecated
     ContractDefinitionPage getContractDefinitionPage();
 
     @POST
     @Path("pages/contract-definition-page/contract-definitions")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @Operation(description = "Create a new Contract Definition")
+    @Operation(description = "Create a new Contract Definition. Use [publishDataOffer] instead.", deprecated = true)
+    @Deprecated
     IdResponseDto createContractDefinition(ContractDefinitionRequest contractDefinitionRequest);
 
     @DELETE
@@ -164,7 +167,20 @@ interface UiResource {
     @Path("pages/catalog-page/data-offers")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Fetch a connector's data offers")
-    List<UiDataOffer> getCatalogPageDataOffers(@QueryParam("participantId") String participantId, @QueryParam("connectorEndpoint") String connectorEndpoint);
+    List<UiDataOffer> getCatalogPageDataOffers(
+        @QueryParam("participantId") String participantId,
+        @QueryParam("connectorEndpoint") String connectorEndpoint
+    );
+
+    @GET
+    @Path("pages/catalog-page/{connectorEndpoint}/{participantId}/data-offers/{dataOfferId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Fetch a specific data offer from a connector")
+    UiDataOffer getCatalogPageDataOffer(
+        @PathParam("participantId") String participantId,
+        @PathParam("connectorEndpoint") String connectorEndpoint,
+        @PathParam("dataOfferId") String dataOfferId
+    );
 
     @POST
     @Path("pages/catalog-page/contract-negotiations")
@@ -200,8 +216,16 @@ interface UiResource {
     @Path("pages/contract-agreement-page/transfers")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Initiate a Transfer Process")
+    @Operation(description = "Initiate a Transfer Process. Deprecated. Use initiateTransferV2 instead", deprecated = true)
+    @Deprecated
     IdResponseDto initiateTransfer(InitiateTransferRequest initiateTransferRequest);
+
+    @POST
+    @Path("pages/contract-agreement-page/initiate-transfer-v2")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Initiate a Transfer Process. V2 Endpoint with support for Callback Addresses and well-typed data sinks")
+    IdResponseDto initiateTransferV2(UiInitiateTransferRequest initiateTransferRequest);
 
     @POST
     @Path("pages/contract-agreement-page/transfers/custom")

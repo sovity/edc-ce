@@ -7,6 +7,8 @@
  */
 package de.sovity.edc.ce.modules.dataspaces.sovity
 
+import de.sovity.edc.ce.dependency_bundles.CeDependencyBundles
+import de.sovity.edc.ce.modules.dataspaces.sovity.edrs.EdrApiServiceV3GenericExtension
 import de.sovity.edc.ce.modules.dataspaces.sovity.iam.DapsModules
 import de.sovity.edc.ce.modules.dataspaces.sovity.iam.IamMockModule
 import de.sovity.edc.ce.modules.dataspaces.sovity.policies.SovityPoliciesModule
@@ -14,7 +16,7 @@ import de.sovity.edc.ce.modules.messaging.contract_termination.ContractTerminati
 import de.sovity.edc.runtime.modules.model.EdcModule
 
 object SovityDataspaceFeatures {
-    fun controlPlaneWithMockIam() = EdcModule(
+    fun sovityControlPlaneMockIam() = EdcModule(
         name = "sovity-dataspace-cp-with-mock-iam",
         documentation = "Dataspace-specific control-plane features for sovity dataspaces with iam-mock"
     ).apply {
@@ -22,7 +24,7 @@ object SovityDataspaceFeatures {
         controlPlaneFeatures()
     }
 
-    fun controlPlaneWithDaps() = EdcModule(
+    fun sovityControlPlaneDaps() = EdcModule(
         name = "sovity-dataspace-cp-with-daps",
         documentation = "Dataspace-specific control-plane features for sovity dataspaces with DAPS"
     ).apply {
@@ -30,7 +32,7 @@ object SovityDataspaceFeatures {
         controlPlaneFeatures()
     }
 
-    fun controlPlaneWithDapsOmejdn() = EdcModule(
+    fun sovityControlPlaneDapsOmejdn() = EdcModule(
         name = "sovity-dataspace-cp-with-daps-omejdn",
         documentation = "Dataspace-specific control-plane features for sovity dataspaces with DAPS Omejdn"
     ).apply {
@@ -43,5 +45,7 @@ object SovityDataspaceFeatures {
             SovityPoliciesModule.instance(),
             ContractTerminationModule.instance()
         )
+        dependencyBundles(CeDependencyBundles.sovityControlPlane)
+        serviceExtensions(EdrApiServiceV3GenericExtension::class.java)
     }
 }

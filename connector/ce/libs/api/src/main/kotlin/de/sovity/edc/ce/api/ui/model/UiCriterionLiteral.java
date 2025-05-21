@@ -35,7 +35,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Schema(description = "Criterion Literal")
+@Schema(description = "Criterion Literal", deprecated = true)
+@Deprecated
 public class UiCriterionLiteral {
 
     private UiCriterionLiteralType type;

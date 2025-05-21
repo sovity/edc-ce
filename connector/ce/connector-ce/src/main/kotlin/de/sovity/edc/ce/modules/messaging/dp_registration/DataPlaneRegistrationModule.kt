@@ -41,13 +41,6 @@ object DataPlaneRegistrationModule {
         }
 
         property(
-            ConfigPropCategory.IMPORTANT,
-            CeConfigProps.SOVITY_INTERNAL_CP_MANAGEMENT_API_KEY
-        ) {
-            required()
-        }
-
-        property(
             ConfigPropCategory.OPTIONAL,
             CeConfigProps.SOVITY_INTERNAL_CP_BASE_PATH
         ) {
@@ -121,29 +114,6 @@ object DataPlaneRegistrationModule {
                 )
 
             }
-        }
-
-        property(
-            ConfigPropCategory.OVERRIDES,
-            CeConfigProps.SOVITY_INTERNAL_CP_MANAGEMENT_API_URL
-        ) {
-            defaultValueFn = DocumentedFn(
-                "Default is built from the `sovity.internal.cp.*` values"
-            ) {
-                UrlPathUtils.urlPathJoin(
-                    CeConfigProps.SOVITY_INTERNAL_CP_PROTOCOL.getStringOrEmpty(it),
-                    CeConfigProps.SOVITY_INTERNAL_CP_FQDN.getStringOrEmpty(it) +
-                        ":" + CeConfigProps.SOVITY_INTERNAL_CP_WEB_HTTP_MANAGEMENT_PORT.getStringOrThrow(it),
-                    CeConfigProps.SOVITY_INTERNAL_CP_WEB_HTTP_MANAGEMENT_PATH.getStringOrEmpty(it)
-                )
-            }
-        }
-
-        property(
-            ConfigPropCategory.OVERRIDES,
-            CeConfigProps.SOVITY_INTERNAL_CP_MANAGEMENT_API_KEY_HEADER
-        ) {
-            defaultValue("X-Api-Key")
         }
     }
 }

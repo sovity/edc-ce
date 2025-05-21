@@ -46,10 +46,10 @@ public class DashboardPage {
     private int numContractDefinitions;
 
     @Schema(description = "Number of consuming Contract Agreements", requiredMode = Schema.RequiredMode.REQUIRED)
-    private long numContractAgreementsConsuming;
+    private int numContractAgreementsConsuming;
 
     @Schema(description = "Number of providing Contract Agreements", requiredMode = Schema.RequiredMode.REQUIRED)
-    private long numContractAgreementsProviding;
+    private int numContractAgreementsProviding;
 
     @Schema(description = "Consuming Transfer Process Amounts", requiredMode = Schema.RequiredMode.REQUIRED)
     private DashboardTransferAmounts transferProcessesConsuming;

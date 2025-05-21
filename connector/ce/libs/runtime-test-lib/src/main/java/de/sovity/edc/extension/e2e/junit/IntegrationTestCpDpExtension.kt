@@ -9,12 +9,14 @@ package de.sovity.edc.extension.e2e.junit
 
 import de.sovity.edc.extension.e2e.junit.edc.EdcPortFinder
 import de.sovity.edc.extension.e2e.junit.edc.SovityEdcTestRuntime
-import de.sovity.edc.extension.e2e.junit.utils.ConnectorPlane
-import de.sovity.edc.extension.e2e.junit.utils.InstancesForEachConnector
-import de.sovity.edc.extension.e2e.junit.utils.InstancesForJunitTest
+import de.sovity.edc.extension.e2e.junit.utils.ControlPlane
+import de.sovity.edc.extension.e2e.junit.utils.DataPlane
+import de.sovity.edc.extension.e2e.junit.utils.InstancesForJUnitTest
 import de.sovity.edc.runtime.config.ConfigUtils
 import de.sovity.edc.runtime.modules.model.ConfigPropRef
 import de.sovity.edc.runtime.modules.model.EdcModule
+import org.eclipse.edc.spi.monitor.Monitor
+import org.eclipse.edc.spi.security.Vault
 import org.eclipse.edc.spi.system.configuration.Config
 import org.junit.jupiter.api.extension.AfterAllCallback
 import org.junit.jupiter.api.extension.AfterEachCallback
@@ -35,63 +37,61 @@ class IntegrationTestCpDpExtension(
     private val rootModule: EdcModule,
     private val controlPlaneConfig: Map<ConfigPropRef, String> = mapOf(),
     private val dataPlaneConfig: (cpConfig: Config, cpConfigUtils: ConfigUtils) -> Map<ConfigPropRef, String> = { _, _ -> mapOf() },
-    private val installEdcMocks: (runtime: SovityEdcTestRuntime) -> Unit = {},
+    private val preBootHook: (runtime: SovityEdcTestRuntime) -> Unit = {},
 
     // This unfortunately needs to be here for Kotlin's delegation pattern to work
-    private val instances: InstancesForJunitTest = InstancesForJunitTest(),
+    val instances: InstancesForJUnitTest = InstancesForJUnitTest(),
     private val runtimeNamePrefixForLogging: String = "edc",
 ) : BeforeAllCallback, AfterAllCallback, AfterEachCallback, ParameterResolver by instances {
 
-    private val instancesForEachConnector = InstancesForEachConnector<ConnectorPlane>(
-        ConnectorPlane.entries,
-        getSideOrNull = { parameter, _ -> ConnectorPlane.fromParameterContextOrNull(parameter) }
-    )
-
     override fun beforeAll(context: ExtensionContext) {
-        instances.put(instancesForEachConnector)
-        instances.addParameterResolver(instancesForEachConnector)
+        instances.addInstance(this)
 
         // Launch CP
-        launchEdc(ConnectorPlane.CONTROL_PLANE, controlPlaneConfig, context)
+        launchEdc(ControlPlane::class.java, controlPlaneConfig, context, preBootHook)
 
         // Build DP Config from CP
         // We need this to know the CPs ports / API Keys, etc.
-        val effectiveCpConfig = instancesForEachConnector
-            .forSide(ConnectorPlane.CONTROL_PLANE)
-            .get(Config::class.java)
-        val effectiveCpConfigUtils = instancesForEachConnector
-            .forSide(ConnectorPlane.CONTROL_PLANE)
-            .get(ConfigUtils::class.java)
+        val effectiveCpConfig = instances.getSingle(Config::class.java, ControlPlane::class.java)
+        val effectiveCpConfigUtils = instances.getSingle(ConfigUtils::class.java, ControlPlane::class.java)
         val initialDpConfig = dataPlaneConfig(effectiveCpConfig, effectiveCpConfigUtils)
 
         // Launch DP
-        launchEdc(ConnectorPlane.DATA_PLANE, initialDpConfig, context)
+        launchEdc(DataPlane::class.java, initialDpConfig, context) {
+            // Re-use CP Vault for DP
+            val monitor = instances.getSingle(Monitor::class.java, ControlPlane::class.java)
+            val vault = instances.getSingle(Vault::class.java, ControlPlane::class.java)
+            it.registerServiceMock(Vault::class.java, vault)
+            monitor.warning("Overwriting the DP vault with the CP vault so they can both use the same in-memory vault.")
+
+            preBootHook(it)
+        }
     }
 
     override fun afterEach(context: ExtensionContext) {
-        for (extension in instancesForEachConnector.all(IntegrationTestExtension::class.java)) {
+        for (extension in instances.getAllForCleanup(IntegrationTestExtension::class.java)) {
             extension.afterEach(context)
         }
     }
 
     override fun afterAll(context: ExtensionContext) {
-        for (extension in instancesForEachConnector.all(IntegrationTestExtension::class.java)) {
+        for (extension in instances.getAllForCleanup(IntegrationTestExtension::class.java)) {
             extension.afterAll(context)
         }
     }
 
     private fun launchEdc(
-        plane: ConnectorPlane,
+        plane: Class<out Annotation>,
         config: Map<ConfigPropRef, String>,
-        context: ExtensionContext
+        context: ExtensionContext,
+        preBootHook: (runtime: SovityEdcTestRuntime) -> Unit,
     ) {
         EdcPortFinder.withAutoPortHandling(numPorts = 6, maxAttempts = 5, config) { configWithPort ->
             val runtimeName =
-                "$runtimeNamePrefixForLogging-${plane.name.lowercase().split("_").map { it[0] }.joinToString("")}"
-            val extension = IntegrationTestExtension(rootModule, configWithPort, installEdcMocks, runtimeName)
+                "$runtimeNamePrefixForLogging-${plane.simpleName}"
+            val extension = IntegrationTestExtension(rootModule, configWithPort, preBootHook, runtimeName)
             extension.beforeAll(context)
-            instancesForEachConnector.forSide(plane).put(extension)
-            instancesForEachConnector.forSide(plane).addParameterResolver(extension)
+            instances.addAll(extension.instances, listOf(plane))
         }
     }
 }

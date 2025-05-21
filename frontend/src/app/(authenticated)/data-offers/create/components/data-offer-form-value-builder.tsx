@@ -42,9 +42,7 @@ export const dataOfferFormValueForEdit = (
       contentType: asset.mediaType ?? undefined,
       endpointDocumentation: asset.landingPageUrl ?? undefined,
       dataModel: asset.dataModel ?? undefined,
-      geoReferenceMethod: asset.geoReferenceMethod ?? undefined,
       sovereignLegalName: asset.sovereignLegalName ?? undefined,
-      geoLocation: asset.geoLocation ?? undefined,
       dataSampleUrls: asset.dataSampleUrls?.map((url) => ({value: url})) ?? [],
       referenceFileUrls:
         asset.referenceFileUrls?.map((url) => ({value: url})) ?? [],
@@ -104,5 +102,16 @@ export const dataOfferFormValueForCreate = (): DataOfferCreateFormModel => {
       mode: 'PUBLISH_UNRESTRICTED',
       policy: {},
     } as DataOfferCreateFormModel['publishing'],
+  };
+};
+
+export const dataOfferFormValueDontPublish = (): DataOfferCreateFormModel => {
+  const empty = dataOfferFormValueForCreate();
+  return {
+    ...empty,
+    publishing: {
+      ...empty.publishing,
+      mode: 'DONT_PUBLISH',
+    },
   };
 };

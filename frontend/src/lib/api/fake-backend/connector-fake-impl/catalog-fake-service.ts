@@ -67,12 +67,31 @@ export const getCatalogPageDataOffers = (
 ): UiDataOffer[] => {
   return dataOffers
     .filter((it) => it.endpoint === connectorEndpoint)
-    .map((it) => ({
-      ...it,
-      contractOffers: it.contractOffers.map((contractOffer) => ({
-        ...contractOffer,
-        // Simulate real backend where the Contract Offer ID is ever-changing ephemeral bullshit for JSON-LD
-        contractOfferId: `${contractOffer.contractOfferId}.${Math.random().toString().substring(2)}`,
-      })),
-    }));
+    .map((it) => freshUiDataOffer(it));
 };
+
+export const getCatalogPageDataOffer = (
+  connectorEndpoint: string,
+  assetId: string,
+): UiDataOffer => {
+  const dataOffer = dataOffers.find(
+    (it) => it.endpoint === connectorEndpoint && it.asset.assetId === assetId,
+  );
+
+  if (!dataOffer) {
+    throw new Error('Data offer not found');
+  }
+
+  return freshUiDataOffer(dataOffer);
+};
+
+function freshUiDataOffer(it: UiDataOffer) {
+  return {
+    ...it,
+    contractOffers: it.contractOffers.map((contractOffer) => ({
+      ...contractOffer,
+      // Simulate real backend where the Contract Offer ID is ever-changing ephemeral bullshit for JSON-LD
+      contractOfferId: `${contractOffer.contractOfferId}.${Math.random().toString().substring(2)}`,
+    })),
+  };
+}

@@ -27,8 +27,6 @@ class SimplePolicyCreatorExtension : ServiceExtension {
     @Inject
     private lateinit var typeManager: TypeManager
 
-    override fun name(): String = javaClass.name
-
     override fun initialize(context: ServiceExtensionContext) {
         ruleBindingRegistry.bind("USE", PolicyEngine.ALL_SCOPES)
 

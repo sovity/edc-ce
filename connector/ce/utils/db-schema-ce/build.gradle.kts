@@ -23,6 +23,7 @@ plugins {
 buildscript {
     dependencies {
         classpath(libs.testcontainers.postgresql)
+        classpath(libs.flyway.postgres)
     }
 }
 
@@ -85,7 +86,6 @@ flyway {
     schemas = arrayOf("public")
 
     cleanDisabled = false
-    cleanOnValidationError = true
     baselineOnMigrate = true
     locations = arrayOf("filesystem:${migrationsDir}")
     configurations = arrayOf("flywayMigration")
@@ -185,3 +185,14 @@ tasks.withType<JooqGenerate> {
         container?.stop()
     }
 }
+
+group = libs.versions.sovityCeGroupName.get()
+
+publishing {
+    publications {
+        create<MavenPublication>(project.name) {
+            from(components["java"])
+        }
+    }
+}
+

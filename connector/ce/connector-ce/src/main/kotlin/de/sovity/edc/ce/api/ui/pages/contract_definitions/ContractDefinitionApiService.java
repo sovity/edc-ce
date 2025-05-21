@@ -25,12 +25,14 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
+@Deprecated
 public class ContractDefinitionApiService {
     private final ContractDefinitionService contractDefinitionService;
     private final CriterionMapper criterionMapper;
     private final ContractDefinitionBuilder contractDefinitionBuilder;
 
     @SneakyThrows
+    @Deprecated
     public List<ContractDefinitionEntry> getContractDefinitions() {
         var definitions = getAllContractDefinitions();
 
@@ -41,6 +43,7 @@ public class ContractDefinitionApiService {
     }
 
     @NotNull
+    @Deprecated
     private ContractDefinitionEntry buildContractDefinitionEntry(ContractDefinition definition) {
         var entry = new ContractDefinitionEntry();
         entry.setContractDefinitionId(definition.getId());
@@ -51,6 +54,7 @@ public class ContractDefinitionApiService {
     }
 
     @NotNull
+    @Deprecated
     public IdResponseDto createContractDefinition(ContractDefinitionRequest request) {
         var contractDefinition = contractDefinitionBuilder.buildContractDefinition(request);
         contractDefinition = contractDefinitionService.create(contractDefinition).orElseThrow(ServiceException::new);
@@ -64,6 +68,6 @@ public class ContractDefinitionApiService {
     }
 
     private List<ContractDefinition> getAllContractDefinitions() {
-        return contractDefinitionService.query(QuerySpec.max()).orElseThrow(ServiceException::new).toList();
+        return contractDefinitionService.search(QuerySpec.max()).orElseThrow(ServiceException::new);
     }
 }

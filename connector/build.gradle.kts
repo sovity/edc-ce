@@ -32,6 +32,7 @@ plugins {
     kotlin("jvm") version libs.versions.kotlin.get() apply false
     kotlin("plugin.lombok") version libs.versions.kotlin.get() apply false
     alias(libs.plugins.taskinfo)
+    alias(libs.plugins.versions)
 }
 
 subprojects {
@@ -44,6 +45,8 @@ subprojects {
         apply(plugin = "org.jetbrains.kotlin.jvm")
         apply(plugin = "org.jetbrains.kotlin.plugin.lombok")
     }
+
+    apply<com.github.benmanes.gradle.versions.VersionsPlugin>()
 
     val libs = rootProject.libs
 
@@ -61,11 +64,19 @@ subprojects {
     }
 
     tasks.withType<Test> {
+        maxHeapSize = "1g"
+
         useJUnitPlatform()
 
         // Enable discovery of extensions via META-INF/services/org.junit.jupiter.api.extension.Extension
         // Used for our JUnit 5 Test Sharding
         jvmArgs = listOf("-Djunit.jupiter.extensions.autodetection.enabled=true")
+
+        if (environment["IS_CI_RUN"] != "true") {
+            systemProperties["junit.jupiter.execution.parallel.enabled"] = false
+            systemProperties["junit.jupiter.execution.parallel.mode.classes.default"] = "concurrent"
+            systemProperties["junit.jupiter.execution.parallel.config.dynamic.factor"] = 1
+        }
 
         testLogging {
             events = setOf(TestLogEvent.FAILED)
@@ -110,9 +121,6 @@ subprojects {
         }
         mavenCentral()
         mavenLocal()
-        maven {
-            url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
-        }
         maven {
             name = "GitHub-TractusX-EDC"
             url = uri("https://maven.pkg.github.com/eclipse-tractusx/tractusx-edc")

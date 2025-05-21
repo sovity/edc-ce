@@ -22,9 +22,16 @@
  */
 package de.sovity.edc.ce.api.usecase;
 
+import de.sovity.edc.ce.api.common.model.CatalogQueryV2;
+import de.sovity.edc.ce.api.common.model.EdrDto;
+import de.sovity.edc.ce.api.ui.model.IdResponseDto;
 import de.sovity.edc.ce.api.ui.model.UiDataOffer;
 import de.sovity.edc.ce.api.usecase.model.CatalogQuery;
+import de.sovity.edc.ce.api.usecase.model.ContractNegotiationStateResult;
 import de.sovity.edc.ce.api.usecase.model.KpiResult;
+import de.sovity.edc.ce.api.usecase.model.NegotiateAllQuery;
+import de.sovity.edc.ce.api.usecase.model.NegotiateAllResult;
+import de.sovity.edc.ce.api.usecase.model.TransferProcessStateResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotNull;
@@ -32,6 +39,7 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
@@ -61,9 +69,70 @@ public interface UseCaseResource {
     @Path("catalog")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Fetch a connector's data offers")
+    @Operation(description = "Fetch a connector's data offers", deprecated = true)
+    @Deprecated
     List<UiDataOffer> queryCatalog(
         @NotNull
         CatalogQuery catalogQuery
+    );
+
+    @POST
+    @Path("catalog-v2")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Fetch a connector's data offers filtering the catalog by nested asset properties")
+    List<UiDataOffer> queryCatalogV2(
+        @NotNull
+        CatalogQueryV2 catalogQuery
+    );
+
+    @POST
+    @Path("negotiations/quick-initiate")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Negotiate all assets with the given nested asset property filter. Only negotiates assets without active agreements. Returns existing agreements if found.")
+    List<NegotiateAllResult> negotiateAll(
+        @NotNull
+        NegotiateAllQuery negotiateAllQuery
+    );
+
+    @POST
+    @Path("contract-negotiations/states")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Operation(description = "Fetch contract negotiation states as batch")
+    List<ContractNegotiationStateResult> getContractNegotiationStates(
+        @NotNull
+        List<String> negotiationIds
+    );
+
+    @POST
+    @Path("transfers/states")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Operation(description = "Fetch transfer process states as batch")
+    List<TransferProcessStateResult> getTransferProcessStates(
+        @NotNull
+        List<String> transferIds
+    );
+
+    @POST
+    @Path("transfers/{transferId}/edr")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Fetch the EDR for a given transfer process. Refreshes EDR if expired. The transfer must have been started as HttpData-PROXY.")
+    EdrDto getTransferProcessEdr(
+        @NotNull
+        @PathParam("transferId")
+        String transferId
+    );
+
+    @POST
+    @Path("transfers/{transferId}/terminate")
+    @Operation(description = "Delete the EDR and terminate the given transfer process.")
+    @Produces(MediaType.APPLICATION_JSON)
+    IdResponseDto terminateTransferProcess(
+        @NotNull
+        @PathParam("transferId")
+        String transferId
     );
 }
