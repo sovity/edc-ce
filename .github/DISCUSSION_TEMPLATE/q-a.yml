@@ -3,7 +3,6 @@ body:
     attributes:
       value: |
         Thank you for contributing to the discussion! Please fill out this form as completely as possible to help us support you better.
-
   - type: textarea
     id: description
     attributes:
@@ -35,7 +34,6 @@ body:
           "setting1": "value",
           "setting2": "value"
         }
-
   - type: textarea
     id: log_output
     attributes:
@@ -43,7 +41,6 @@ body:
       description: Please share relevant logs or error messages with us, ensuring that all sensitive information is removed beforehand.
       placeholder: |
         [Error] Failed to start the application: Connection refused
-
   - type: textarea
     id: screenshots
     attributes:

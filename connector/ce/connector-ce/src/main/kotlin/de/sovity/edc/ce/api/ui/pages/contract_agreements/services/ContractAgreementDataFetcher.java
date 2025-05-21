@@ -164,11 +164,11 @@ public class ContractAgreementDataFetcher {
 
     @NotNull
     private List<ContractAgreement> getAllContractAgreements() {
-        return contractAgreementService.query(QuerySpec.max()).orElseThrow(ServiceException::new).toList();
+        return contractAgreementService.search(QuerySpec.max()).orElseThrow(ServiceException::new);
     }
 
     @NotNull
     private List<TransferProcess> getAllTransferProcesses() {
-        return transferProcessService.query(QuerySpec.max()).orElseThrow(ServiceException::new).toList();
+        return transferProcessService.search(QuerySpec.max()).orElseThrow(ServiceException::new);
     }
 }

@@ -19,6 +19,7 @@ import java.lang.String as JavaString
 
 plugins {
     `java-library`
+    `maven-publish`
 }
 
 buildscript {
@@ -72,3 +73,14 @@ fun generateJvmVersions(target: Provider<RegularFile>) {
 
     javaFile.writeTo(file(target))
 }
+
+group = libs.versions.sovityCeGroupName.get()
+
+publishing {
+    publications {
+        create<MavenPublication>(project.name) {
+            from(components["java"])
+        }
+    }
+}
+

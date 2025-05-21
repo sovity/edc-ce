@@ -25,6 +25,10 @@ export const useBreadcrumbItems = () => {
         label: assetName ?? assetId,
         href: urls.assets.detailPage(assetId),
       }),
+      createPage: () => ({
+        label: t('Pages.AssetCreate.title'),
+        href: urls.assets.createPage(),
+      }),
       editPage: (assetId: string) => ({
         label: t('General.edit'),
         href: urls.assets.editPage(assetId),

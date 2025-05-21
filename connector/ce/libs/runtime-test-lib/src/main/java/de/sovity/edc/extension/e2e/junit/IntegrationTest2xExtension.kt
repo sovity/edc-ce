@@ -12,9 +12,9 @@ import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario
 import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenarioConfig
 import de.sovity.edc.extension.e2e.connector.remotes.test_backend_controller.TestBackendRemote
 import de.sovity.edc.extension.e2e.junit.edc.SovityEdcTestRuntime
-import de.sovity.edc.extension.e2e.junit.utils.E2eTestSide
-import de.sovity.edc.extension.e2e.junit.utils.InstancesForEachConnector
-import de.sovity.edc.extension.e2e.junit.utils.InstancesForJunitTest
+import de.sovity.edc.extension.e2e.junit.utils.Consumer
+import de.sovity.edc.extension.e2e.junit.utils.InstancesForJUnitTest
+import de.sovity.edc.extension.e2e.junit.utils.Provider
 import de.sovity.edc.runtime.config.ConfigUtils
 import de.sovity.edc.runtime.modules.model.ConfigPropRef
 import de.sovity.edc.runtime.modules.model.EdcModule
@@ -27,7 +27,6 @@ import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.ParameterResolver
 import org.mockserver.integration.ClientAndServer
 import org.mockserver.stop.Stop
-import kotlin.reflect.KClass
 
 /**
  * Launches two EDCs, two full connectors:
@@ -44,89 +43,96 @@ class IntegrationTest2xExtension @JvmOverloads constructor(
     private val rootModule: EdcModule,
     private val providerConfig: Map<ConfigPropRef, String> = mapOf(),
     private val consumerConfig: Map<ConfigPropRef, String> = mapOf(),
-    private val installEdcMocks: (runtime: SovityEdcTestRuntime) -> Unit = {},
+    private val preBootHook: (runtime: SovityEdcTestRuntime, annotations: List<Class<out Annotation>>) -> Unit = { _, _ -> },
 
     // This unfortunately needs to be here for Kotlin's delegation pattern to work
-    private val instances: InstancesForJunitTest = InstancesForJunitTest()
+    private val instances: InstancesForJUnitTest = InstancesForJUnitTest()
 ) : BeforeEachCallback, BeforeAllCallback, AfterAllCallback, AfterEachCallback, ParameterResolver by instances {
 
-    private val instancesForEachConnector = InstancesForEachConnector<E2eTestSide>(
-        E2eTestSide.entries,
-        getSideOrNull = { parameter, _ -> E2eTestSide.fromParameterContextOrNull(parameter) }
-    )
-
     override fun beforeAll(context: ExtensionContext) {
-        instances.put(instancesForEachConnector)
-        instances.addParameterResolver(instancesForEachConnector)
+        instances.addInstance(this)
 
-        E2eTestSide.entries.forEach { side ->
+        listOf(
+            Provider::class.java,
+            Consumer::class.java
+        ).forEach { side ->
             val configMerged = when (side) {
-                E2eTestSide.CONSUMER -> consumerConfig
-                E2eTestSide.PROVIDER -> providerConfig
+                Provider::class.java -> providerConfig
+                Consumer::class.java -> consumerConfig
+                else -> error("Unknown side: $side")
             }
 
             val extension = IntegrationTestExtension(
                 rootModule = rootModule,
                 config = configMerged,
-                installEdcMocks = installEdcMocks,
-                runtimeNameForLogging = side.name.lowercase(),
+                preBootHook = { preBootHook(it, listOf(side)) },
+                runtimeNameForLogging = side.simpleName,
             )
 
-            // Register DbRuntimePerClassExtension
-            instancesForEachConnector.forSide(side).put(extension)
-            instancesForEachConnector.forSide(side).addParameterResolver(extension)
+            // Register instances
+            instances.addAll(extension.instances, listOf(side))
 
             // Start EDC
             extension.beforeAll(context)
         }
 
         // Register TestBackendRemote
-        instances.putLazy(TestBackendRemote::class.java) { this.buildTestBackendRemote() }
+        instances.addInstanceLazy(TestBackendRemote::class.java, {
+            this.buildTestBackendRemote()
+        })
     }
 
     override fun beforeEach(context: ExtensionContext) {
         // Register ClientAndServer
-        instances.putLazy(ClientAndServer::class.java) {
+        instances.removeInstance(ClientAndServer::class.java)
+        instances.addInstanceLazy(ClientAndServer::class.java, {
             ClientAndServer.startClientAndServer(Ports.getFreePort())
-        }
+        })
 
         // Register ConnectorRemoteClient
-        instances.putLazy(E2eTestScenario::class.java) { this.buildE2eTestScenario() }
+        instances.removeInstance(E2eTestScenario::class.java)
+        instances.addInstanceLazy(E2eTestScenario::class.java, {
+            this.buildE2eTestScenario()
+        })
     }
 
     override fun afterEach(context: ExtensionContext) {
-        if (instances.isLazyInitialized(ClientAndServer::class.java)) {
-            Stop.stopQuietly(instances.get(ClientAndServer::class.java))
+        instances.getAllForCleanup(ClientAndServer::class.java).forEach {
+            Stop.stopQuietly(it)
         }
-        for (extension in instancesForEachConnector.all(IntegrationTestExtension::class.java)) {
+        for (extension in instances.getAllForCleanup(IntegrationTestExtension::class.java)) {
             extension.afterEach(context)
         }
     }
 
     override fun afterAll(context: ExtensionContext) {
-        for (extension in instancesForEachConnector.all(IntegrationTestExtension::class.java)) {
+        for (extension in instances.getAllForCleanup(IntegrationTestExtension::class.java)) {
             extension.afterAll(context)
         }
     }
 
     private fun buildE2eTestScenario(): E2eTestScenario {
         return E2eTestScenario.builder()
-            .consumerClient(getControlPlaneService(E2eTestSide.CONSUMER, EdcClient::class))
-            .providerClient(getControlPlaneService(E2eTestSide.PROVIDER, EdcClient::class))
-            .mockServer(instances.get(ClientAndServer::class.java))
+            .consumerClient(getConsumerService(EdcClient::class.java))
+            .providerClient(getProviderService(EdcClient::class.java))
+            .mockServer(instances.getSingle(ClientAndServer::class.java))
             .config(
-                E2eTestScenarioConfig.forProviderConfig(
-                    getControlPlaneService(E2eTestSide.PROVIDER, ConfigUtils::class)
+                E2eTestScenarioConfig.forConfig(
+                    getProviderService(ConfigUtils::class.java),
+                    getConsumerService(ConfigUtils::class.java)
                 )
             )
             .build()
     }
 
     private fun buildTestBackendRemote(): TestBackendRemote {
-        val defaultApiUrl = getControlPlaneService(E2eTestSide.CONSUMER, ConfigUtils::class).defaultApiUrl
+        val defaultApiUrl = getConsumerService(ConfigUtils::class.java).defaultApiUrl
         return TestBackendRemote(defaultApiUrl)
     }
 
-    private fun <T : Any> getControlPlaneService(side: E2eTestSide, clazz: KClass<T>): T =
-        instancesForEachConnector.forSide(side).get(clazz.java)
+    private fun <T : Any> getProviderService(clazz: Class<T>): T =
+        instances.getSingle(clazz, Provider::class.java)
+
+    private fun <T : Any> getConsumerService(clazz: Class<T>): T =
+        instances.getSingle(clazz, Consumer::class.java)
 }

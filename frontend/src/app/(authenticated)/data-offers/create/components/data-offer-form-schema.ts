@@ -35,9 +35,7 @@ const dataOfferAdvancedFieldsSchema = z.discriminatedUnion(
       endpointDocumentation: z.string().url().optional(),
 
       dataModel: z.string().optional(),
-      geoReferenceMethod: z.string().optional(),
       sovereignLegalName: z.string().optional(),
-      geoLocation: z.string().optional(),
       dataSampleUrls: z
         .array(
           z.object({

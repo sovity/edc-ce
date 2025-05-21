@@ -34,7 +34,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Schema(description = "Contract Definition List Entry for Contract Definition Page")
+@Schema(description = "Contract Definition List Entry for Contract Definition Page", deprecated = true)
+@Deprecated
 public class ContractDefinitionEntry {
 
     @Schema(description = "Contract Definition ID", requiredMode = Schema.RequiredMode.REQUIRED)

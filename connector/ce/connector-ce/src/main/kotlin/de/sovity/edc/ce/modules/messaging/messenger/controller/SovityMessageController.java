@@ -16,7 +16,6 @@ import de.sovity.edc.ce.modules.messaging.messenger.impl.SovityMessageRequest;
 import de.sovity.edc.ce.modules.messaging.messenger.impl.SovityMessageResponse;
 import de.sovity.edc.ce.modules.messaging.messenger.impl.SovityMessengerStatus;
 import de.sovity.edc.utils.JsonUtils;
-import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import jakarta.ws.rs.HeaderParam;
@@ -29,9 +28,9 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.eclipse.edc.connector.controlplane.services.spi.protocol.ProtocolTokenValidator;
-import org.eclipse.edc.protocol.dsp.http.spi.error.DspErrorResponse;
+import org.eclipse.edc.participant.spi.ParticipantAgent;
+import org.eclipse.edc.policy.context.request.spi.RequestCatalogPolicyContext;
 import org.eclipse.edc.spi.EdcException;
-import org.eclipse.edc.spi.agent.ParticipantAgent;
 import org.eclipse.edc.spi.iam.TokenRepresentation;
 import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.result.ServiceResult;
@@ -40,7 +39,6 @@ import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import java.io.StringReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.UUID;
 
 import static de.sovity.edc.ce.modules.messaging.messenger.controller.SovityMessageController.PATH;
 
@@ -88,18 +86,7 @@ public class SovityMessageController {
 
             return typeTransformerRegistry.transform(response, JsonObject.class)
                 .map(it -> Response.ok().type(MediaType.APPLICATION_JSON).entity(it).build())
-                .orElse(failure -> {
-                    var errorCode = UUID.randomUUID();
-                    monitor.warning(String.format(
-                        "Error transforming %s, error id %s: %s",
-                        response.getClass().getSimpleName(),
-                        errorCode,
-                        failure.getFailureDetail()
-                    ));
-                    return DspErrorResponse
-                        .type(Prop.SovityMessageExt.REQUEST)
-                        .internalServerError();
-                });
+                .orElseThrow(f -> new EdcException("DSP: Transformation failed: %s".formatted(f.getMessages())));
         } catch (Exception e) {
             monitor.warning("Failed to process message with type " + getMessageType(request), e);
             val errorAnswer = buildErrorHandlerExceptionHeader(request);
@@ -141,7 +128,7 @@ public class SovityMessageController {
     private ServiceResult<ParticipantAgent> validateToken(String authorization) {
         val token = TokenRepresentation.Builder.newInstance().token(authorization).build();
         // request.catalog is a magic string to pretend that we are something else and avoid dealing with the policy evaluation engine
-        return protocolTokenValidator.verify(token, "request.catalog");
+        return protocolTokenValidator.verify(token, RequestCatalogPolicyContext::new);
     }
 
     private SovityMessageResponse buildErrorNoHandlerHeader(SovityMessageRequest request) {

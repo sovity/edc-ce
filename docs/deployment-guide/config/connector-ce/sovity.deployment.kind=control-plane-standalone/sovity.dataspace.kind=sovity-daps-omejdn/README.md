@@ -36,15 +36,23 @@ Configures the connector for use in legacy self-hosted sovity dataspaces that us
 
 ### Overrides / Ignore
 
-<details><summary>Show / Hide (5)</summary>
+> [!WARNING]
+> The properties in this section are mentioned for completeness and are not supported.
+> They are present here because we use them internally.
+> Expect them to change without notice.
 
-| Name                          | Required                              | Description                                                                       |
-|-------------------------------|---------------------------------------|-----------------------------------------------------------------------------------|
-| `edc.agent.identity.key`      | Defaults to `client_id`               | OAuth2 / DAPS: Access token claim name that must coincide with the Participant ID |
-| `edc.oauth.certificate.alias` | Defaults to `daps-cert`               | OAuth2 / DAPS: Vault Entry: DAPS C2C IAM Certificate                              |
-| `edc.oauth.endpoint.audience` | Defaults to `idsc:IDS_CONNECTORS_ALL` | OAuth2 / DAPS: Endpoint Audience                                                  |
-| `edc.oauth.private.key.alias` | Defaults to `daps-priv`               | OAuth2 / DAPS: Vault Entry: DAPS C2C IAM Private Key                              |
-| `edc.oauth.provider.audience` | Defaults to `idsc:IDS_CONNECTORS_ALL` | OAuth2 / DAPS: Provider Audience                                                  |
+<details><summary>Show / Hide (8)</summary>
+
+| Name                                           | Required                              | Description                                                                       |
+|------------------------------------------------|---------------------------------------|-----------------------------------------------------------------------------------|
+| `edc.agent.identity.key`                       | Defaults to `client_id`               | OAuth2 / DAPS: Access token claim name that must coincide with the Participant ID |
+| `edc.oauth.certificate.alias`                  | Defaults to `daps-cert`               | OAuth2 / DAPS: Vault Entry: DAPS C2C IAM Certificate                              |
+| `edc.oauth.endpoint.audience`                  | Defaults to `idsc:IDS_CONNECTORS_ALL` | OAuth2 / DAPS: Endpoint Audience                                                  |
+| `edc.oauth.private.key.alias`                  | Defaults to `daps-priv`               | OAuth2 / DAPS: Vault Entry: DAPS C2C IAM Private Key                              |
+| `edc.oauth.provider.audience`                  | Defaults to `idsc:IDS_CONNECTORS_ALL` | OAuth2 / DAPS: Provider Audience                                                  |
+| `edc.oauth.validation.issued.at.leeway`        | Defaults to `10`                      | OAuth2 / DAPS: Leeway for the 'iat' claim in seconds                              |
+| `edc.oauth.validation.nbf.leeway`              | Defaults to `10`                      | OAuth2 / DAPS: Leeway for the 'nbf' claim in seconds                              |
+| `sovity.contract.termination.thread.pool_size` | Defaults to `10`                      | The number of contracts messages that can be simultaneously processed             |
 
 
 </details>

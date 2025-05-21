@@ -26,6 +26,7 @@ jobs:
           output: 'trivy-results.sarif'
           severity: 'CRITICAL'
           github-pat: ${{ secrets.GITHUB_TOKEN }}
+          args: --secret-config trivy-secret.yaml
 
 
       - name: Upload Trivy scan results to GitHub Security tab

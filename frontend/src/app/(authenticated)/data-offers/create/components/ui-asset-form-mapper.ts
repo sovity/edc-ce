@@ -63,14 +63,8 @@ export const buildUiAssetCommonMetadata = (
     dataModel: showAdvancedFields
       ? formValue.advanced.dataModel || undefined
       : undefined,
-    geoReferenceMethod: showAdvancedFields
-      ? formValue.advanced.geoReferenceMethod || undefined
-      : undefined,
     sovereignLegalName: showAdvancedFields
       ? formValue.advanced.sovereignLegalName || undefined
-      : undefined,
-    geoLocation: showAdvancedFields
-      ? formValue.advanced.geoLocation || undefined
       : undefined,
     dataSampleUrls: showAdvancedFields
       ? formValue.advanced.dataSampleUrls?.map((sample) => sample.value).length

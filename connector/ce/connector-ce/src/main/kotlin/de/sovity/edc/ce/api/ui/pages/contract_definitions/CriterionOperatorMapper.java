@@ -19,6 +19,7 @@ import static java.util.Objects.requireNonNull;
 
 @RequiredArgsConstructor
 @Service
+@Deprecated
 public class CriterionOperatorMapper {
     /**
      * @see org.eclipse.edc.connector.controlplane.defaults.storage.CriterionToPredicateConverterImpl

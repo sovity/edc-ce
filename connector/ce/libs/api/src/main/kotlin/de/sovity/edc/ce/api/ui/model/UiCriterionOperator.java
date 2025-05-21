@@ -27,7 +27,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * See <pre>org.eclipse.edc.connector.controlplane.defaults.storage.CriterionToPredicateConverterImpl</pre>
  */
 
-@Schema(description = "Operator for constraints", enumAsRef = true)
+@Schema(description = "Operator for constraints", enumAsRef = true, deprecated = true)
+@Deprecated
 public enum UiCriterionOperator {
     EQ,
     IN,

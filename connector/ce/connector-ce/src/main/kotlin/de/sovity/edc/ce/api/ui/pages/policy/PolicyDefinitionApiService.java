@@ -66,7 +66,7 @@ public class PolicyDefinitionApiService {
     }
 
     private List<PolicyDefinition> getAllPolicyDefinitions() {
-        return policyDefinitionService.query(QuerySpec.max()).orElseThrow(ServiceException::new).toList();
+        return policyDefinitionService.search(QuerySpec.max()).orElseThrow(ServiceException::new);
     }
 
     public PolicyDefinitionDto buildPolicyDefinitionDto(PolicyDefinition policyDefinition) {

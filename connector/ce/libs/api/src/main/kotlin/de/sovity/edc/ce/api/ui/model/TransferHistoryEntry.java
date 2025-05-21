@@ -45,6 +45,9 @@ public class TransferHistoryEntry {
     @Schema(description = "Last Change Date", requiredMode = Schema.RequiredMode.REQUIRED)
     private OffsetDateTime lastUpdatedDate;
 
+    @Schema(description = "Transfer Type", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String transferType;
+
     @Schema(description = "Transfer History State", requiredMode = Schema.RequiredMode.REQUIRED)
     private TransferProcessState state;
 
@@ -69,4 +72,6 @@ public class TransferHistoryEntry {
     @Schema(description = "Error Message")
     private String errorMessage;
 
+    @Schema(description = "Whether this transfer is available for consumption via an EDR.", requiredMode = Schema.RequiredMode.REQUIRED)
+    private Boolean isEdrConsumable;
 }

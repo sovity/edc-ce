@@ -36,8 +36,10 @@ import lombok.RequiredArgsConstructor;
 public class TransferProcessState {
     @Schema(description = "State name or 'CUSTOM'. State names only exist for original EDC Transfer Process States.", requiredMode = Schema.RequiredMode.REQUIRED)
     private String name;
+
     @Schema(description = "State code", requiredMode = Schema.RequiredMode.REQUIRED)
     private Integer code;
+
     @Schema(description = "Whether we are running, in an error state or done.", requiredMode = Schema.RequiredMode.REQUIRED)
     private TransferProcessSimplifiedState simplifiedState;
 }

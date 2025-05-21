@@ -8,6 +8,7 @@
 package de.sovity.edc.ce.api.ui.pages.dashboard.services;
 
 import de.sovity.edc.ce.api.ui.model.DashboardCxDidConfig;
+import de.sovity.edc.ce.config.CeConfigProps;
 import de.sovity.edc.runtime.simple_di.Service;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.spi.system.configuration.Config;
@@ -54,7 +55,8 @@ public class CxDidConfigService {
         cxDidConfig.setMyDid(configValue(EDC_IAM_ISSUER_ID));
         cxDidConfig.setWalletTokenUrl(configValue(EDC_IAM_STS_OAUTH_TOKEN_URL));
         cxDidConfig.setTrustedVcIssuer(configValue(EDC_IAM_TRUSTED_ISSUER_COFINITY_ID));
-        cxDidConfig.setDimUrl(configValue(EDC_IAM_STS_DIM_URL));
+        cxDidConfig.setDimUrl(configValue(CeConfigProps.TX_EDC_IAM_STS_DIM_URL.getProperty()));
+
         cxDidConfig.setBdrsUrl(configValue(TX_IAM_IATP_BDRS_SERVER_URL));
         return isBlank(cxDidConfig.getMyDid()) ? null : cxDidConfig;
     }

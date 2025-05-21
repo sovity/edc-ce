@@ -7,6 +7,7 @@
  */
 package de.sovity.edc.extension.e2e.connector.remotes.management_api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.http.Header;
 import io.restassured.specification.RequestSpecification;
@@ -17,6 +18,7 @@ import jakarta.json.JsonValue;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.assertj.core.api.Assertions;
 import org.eclipse.edc.connector.controlplane.contract.spi.ContractOfferId;
 import org.eclipse.edc.jsonld.TitaniumJsonLd;
 import org.eclipse.edc.jsonld.spi.JsonLd;
@@ -32,6 +34,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
+import static jakarta.json.Json.createArrayBuilder;
 import static jakarta.json.Json.createObjectBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
@@ -48,6 +51,8 @@ import static org.eclipse.edc.spi.constants.CoreConstants.EDC_PREFIX;
 @SuppressWarnings("java:S5960")
 @RequiredArgsConstructor
 public class ManagementApiConnectorRemote {
+
+    private static final String ODRL_JSONLD = "http://www.w3.org/ns/odrl.jsonld";
 
     @Getter
     private final ManagementApiConnectorRemoteConfig config;
@@ -128,13 +133,14 @@ public class ManagementApiConnectorRemote {
             .contentType(JSON);
     }
 
-    public JsonArray getCatalogDatasets(String providerProtocolApiUrl) {
+    public JsonArray getCatalogDatasets(String providerProtocolApiUrl, String providerId) {
         var datasetReference = new AtomicReference<JsonArray>();
         var requestBody = createObjectBuilder()
             .add(CONTEXT, createObjectBuilder().add(EDC_PREFIX, EDC_NAMESPACE))
             .add(TYPE, EDC_NAMESPACE + "CatalogRequest")
+            .add("protocol", "dataspace-protocol-http")
             .add(EDC_NAMESPACE + "counterPartyAddress", providerProtocolApiUrl)
-            .add(EDC_NAMESPACE + "protocol", "dataspace-protocol-http")
+            .add(EDC_NAMESPACE + "counterPartyId", providerId)
             .build();
 
         await().atMost(timeout).untilAsserted(() -> {
@@ -160,8 +166,8 @@ public class ManagementApiConnectorRemote {
         return datasetReference.get();
     }
 
-    public JsonObject getDatasetForAsset(String assetId, String providerProtocolApiUrl) {
-        var datasets = getCatalogDatasets(providerProtocolApiUrl);
+    public JsonObject getDatasetForAsset(String assetId, String providerProtocolApiUrl, String providerId) {
+        var datasets = getCatalogDatasets(providerProtocolApiUrl, providerId);
         return datasets.stream()
             .map(JsonValue::asJsonObject)
             .filter(it -> assetId.equals(getDatasetContractId(it).assetIdPart()))
@@ -172,8 +178,6 @@ public class ManagementApiConnectorRemote {
     public String negotiateContract(
         String providerParticipantId,
         String providerProtocolApiUrl,
-        String offerId,
-        String assetId,
         JsonObject policy
     ) {
         var requestBody = createObjectBuilder()
@@ -199,21 +203,20 @@ public class ManagementApiConnectorRemote {
             assertThat(state).isEqualTo(FINALIZED.name());
         });
 
-        return getContractAgreementId(negotiationId);
+        return awaitContractAgreementIdOrThrow(negotiationId);
     }
 
-    public String getContractAgreementId(String negotiationId) {
+    public String awaitContractAgreementIdOrThrow(String negotiationId) {
         var contractAgreementId = new AtomicReference<String>();
 
         await().atMost(timeout).untilAsserted(() -> {
             var agreementId = getContractNegotiationField(negotiationId);
             assertThat(agreementId).isNotNull().isInstanceOf(String.class);
-
             contractAgreementId.set(agreementId);
         });
 
         var id = contractAgreementId.get();
-        assertThat(id).isNotEmpty();
+        assertThat(id).isNotBlank();
         return id;
     }
 
@@ -242,7 +245,7 @@ public class ManagementApiConnectorRemote {
         return config.getParticipantId();
     }
 
-    public String initiateTransfer(
+    public String initiatePushTransfer(
         String contractAgreementId,
         String assetId,
         String providerProtocolApiUrl,
@@ -252,14 +255,39 @@ public class ManagementApiConnectorRemote {
             .add(CONTEXT, createObjectBuilder()
                 .add(VOCAB, EDC_NAMESPACE))
             .add(TYPE, "TransferRequest")
-            .add("contractId", contractAgreementId)
             .add("counterPartyAddress", providerProtocolApiUrl)
+            .add("contractId", contractAgreementId)
             .add("protocol", "dataspace-protocol-http")
             .add("transferType", "HttpData-PUSH")
             .add("assetId", assetId)
             .add("dataDestination", destination)
-            .add("contractId", contractAgreementId)
             .add("privateProperties", createObjectBuilder().build())
+            .build();
+
+        return prepareManagementApiCall()
+            .contentType(JSON)
+            .body(requestBody)
+            .when()
+            .post("/v3/transferprocesses")
+            .then()
+            .statusCode(200)
+            .extract().body().jsonPath().getString(ID);
+    }
+
+    public String initiatePullTransfer(
+        String connectorId,
+        String providerProtocolApiUrl,
+        String contractAgreementId
+    ) {
+        var requestBody = createObjectBuilder()
+            .add(CONTEXT, createObjectBuilder()
+                .add(VOCAB, EDC_NAMESPACE))
+            .add(TYPE, "TransferRequest")
+            .add("connectorId", connectorId)
+            .add("counterPartyAddress", providerProtocolApiUrl)
+            .add("contractId", contractAgreementId)
+            .add("protocol", "dataspace-protocol-http")
+            .add("transferType", "HttpData-PULL")
             .build();
 
         return prepareManagementApiCall()
@@ -278,7 +306,7 @@ public class ManagementApiConnectorRemote {
         String assetId,
         JsonObject destination
     ) {
-        var dataset = getDatasetForAsset(assetId, providerProtocolApiUrl);
+        var dataset = getDatasetForAsset(assetId, providerProtocolApiUrl, providerId);
         var contractId = getDatasetContractId(dataset);
         var policy = dataset.getJsonArray(ODRL_POLICY_ATTRIBUTE).get(0).asJsonObject();
 
@@ -296,11 +324,9 @@ public class ManagementApiConnectorRemote {
         var contractAgreementId = negotiateContract(
             providerId,
             providerProtocolApiUrl,
-            contractId.toString(),
-            contractId.assetIdPart(),
             editedPolicy);
 
-        var transferProcessId = initiateTransfer(
+        var transferProcessId = initiatePushTransfer(
             contractAgreementId,
             assetId,
             providerProtocolApiUrl,
@@ -312,11 +338,11 @@ public class ManagementApiConnectorRemote {
 
     public void createDataOffer(
         String assetId,
-        String targetUrl
+        String dataSourceUrl
     ) {
         Map<String, Object> dataSource = Map.of(
             EDC_NAMESPACE + "type", "HttpData",
-            EDC_NAMESPACE + "baseUrl", targetUrl,
+            EDC_NAMESPACE + "baseUrl", dataSourceUrl,
             EDC_NAMESPACE + "proxyQueryParams", "true"
         );
 
@@ -354,5 +380,95 @@ public class ManagementApiConnectorRemote {
 
     private RuntimeException throwFailure(Failure failure) {
         return new IllegalStateException(failure.getFailureDetail());
+    }
+
+
+    public String startEdrNegotiation(
+        String providerId,
+        String providerProtocolApi,
+        String assetId
+    ) {
+        var dataset = getDatasetForAsset(assetId, providerProtocolApi, providerId);
+        var policy = dataset.getJsonArray(ODRL_POLICY_ATTRIBUTE).get(0).asJsonObject();
+
+        var requestBody = createObjectBuilder()
+            .add(CONTEXT, createObjectBuilder().add(VOCAB, EDC_NAMESPACE))
+            .add(TYPE, EDC_NAMESPACE + "ContractRequest")
+            .add("counterPartyAddress", providerProtocolApi.toString())
+            .add("protocol", "dataspace-protocol-http")
+            .add("policy", createObjectBuilder()
+                .add(CONTEXT, ODRL_JSONLD)
+                .add(TYPE, "odrl:Offer")
+                .add("@id", policy.getString("@id"))
+                .add("assigner", providerId)
+                .add("target", assetId))
+            .build();
+
+        return prepareManagementApiCall()
+            .contentType(JSON)
+            .body(requestBody)
+            .when()
+            .post("/v2/edrs")
+            .then()
+            .statusCode(200)
+            .extract().body().jsonPath().getString(ID);
+    }
+
+    public String getEdrTransferIdByNegotiationId(String negotiationId) {
+        try {
+            var response = prepareManagementApiCall()
+                .contentType(JSON)
+                .body(createObjectBuilder()
+                    .add(CONTEXT, createObjectBuilder().add(VOCAB, EDC_NAMESPACE))
+                    .add(TYPE, EDC_NAMESPACE + "QuerySpec")
+                    .add("limit", 1)
+                    .add("filterExpression", createArrayBuilder()
+                        .add(createObjectBuilder()
+                            .add("operandLeft", "contractNegotiationId")
+                            .add("operator", "=")
+                            .add("operandRight", negotiationId)
+                            .build())
+                        .build())
+                    .build())
+                .post("/v2/edrs/request")
+                .then().extract().body().asString();
+
+            var edrList = objectMapper.readValue(response, JsonObject[].class);
+            Assertions.assertThat(edrList).isNotEmpty();
+            return edrList[0].getString("transferProcessId").toString();
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Unable to parse EDR response", e);
+        }
+    }
+
+    public JsonObject getEdr(String transferProcessId) {
+        try {
+            var edrPath = String.format("/v2/edrs/%s/dataaddress", transferProcessId);
+            var response = prepareManagementApiCall()
+                .get(edrPath)
+                .then()
+                .statusCode(200)
+                .contentType(JSON).extract().body().asString();
+
+            return objectMapper.readValue(response, JsonObject.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Unable to parse EDR response", e);
+        }
+    }
+
+    public JsonObject getEdrForceRefresh(String transferProcessId) {
+        try {
+            var edrPath = String.format("/v2/edrs/%s/refresh", transferProcessId);
+            var response = prepareManagementApiCall()
+                .contentType(JSON)
+                .post(edrPath)
+                .then()
+                .statusCode(200)
+                .contentType(JSON).extract().body().asString();
+
+            return objectMapper.readValue(response, JsonObject.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Unable to parse EDR response", e);
+        }
     }
 }

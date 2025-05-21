@@ -12,10 +12,10 @@ import de.sovity.edc.ce.config.CeDataspace
 import de.sovity.edc.ce.config.moduleIfCeDataspace
 import de.sovity.edc.ce.config.withCeDataspaceChoice
 import de.sovity.edc.ce.dependency_bundles.CeDependencyBundles
-import de.sovity.edc.ce.modules.auth.DataPlaneEdrTokenConfig
 import de.sovity.edc.ce.modules.config_utils.ConfigUtilsImpl
 import de.sovity.edc.ce.modules.config_utils.ConfigUtilsModule
 import de.sovity.edc.ce.modules.dataspaces.catena.CatenaDataspaceFeatures
+import de.sovity.edc.ce.modules.dataspaces.sovity.edrs.EdrTokenSecretModule
 import de.sovity.edc.ce.modules.db.DbModule
 import de.sovity.edc.ce.modules.messaging.dp_registration.DataPlaneRegistrationModule
 import de.sovity.edc.runtime.config.UrlPathUtils
@@ -71,7 +71,7 @@ object CeDataPlaneModules {
             CeDependencyBundles.dataPlaneFeatures
         )
 
-        modules(DataPlaneEdrTokenConfig.instance())
+        modules(EdrTokenSecretModule.instance())
 
         configurePublicApi()
         configureTransferTypes()

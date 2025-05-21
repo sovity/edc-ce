@@ -20,7 +20,7 @@ import {useTranslations} from 'next-intl';
 import PageContainer from '@/components/page-container';
 
 const PublishDataOfferPage = () => {
-  const pageQuery = useQueryWrapper(queryKeys.assets.listPage(), () => {
+  const pageQuery = useQueryWrapper(queryKeys.dataOffers.publish(), () => {
     return Promise.all([
       api.uiApi.getAssetPage(),
       api.uiApi.getPolicyDefinitionPage(),

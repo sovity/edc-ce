@@ -11,8 +11,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 
-import java.util.List;
-
 /**
  * Where there's a will, there's a way.
  */
@@ -29,7 +27,7 @@ public class FieldAccessUtils {
      */
     @SneakyThrows
     @SuppressWarnings("unchecked")
-    public static <T> T accessField(Object o, List<String> fieldNamePath) {
+    public static <T> T accessField(Object o, String... fieldNamePath) {
         Object result = o;
         for (String fieldName : fieldNamePath) {
             result = accessField(result, fieldName);

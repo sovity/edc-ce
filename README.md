@@ -95,7 +95,7 @@ such as our E2E Test suite and most of our JUnit Integration tests are not prese
 #### Requirements
 
 - Docker Environment
-- JDK 17
+- JDK 21
 - GitHub Maven Registry Access
 - Node 20
 

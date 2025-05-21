@@ -51,7 +51,7 @@ class SimplePolicyCreator(
         ruleBindingRegistry.bind(leftExpressionName, PolicyEngine.ALL_SCOPES)
 
         policyEngine.registerFunction(
-            PolicyEngine.ALL_SCOPES,
+            PolicyContext::class.java,
             Permission::class.java,
             leftExpressionName,
             AtomicConstraintFunction { operator, rightValue, _, policyContext ->

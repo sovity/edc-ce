@@ -28,3 +28,14 @@ dependencies {
     testImplementation(libs.bundles.testUtils)
     testRuntimeOnly(libs.junit.engine)
 }
+
+group = libs.versions.sovityCeGroupName.get()
+
+publishing {
+    publications {
+        create<MavenPublication>(project.name) {
+            from(components["java"])
+        }
+    }
+}
+

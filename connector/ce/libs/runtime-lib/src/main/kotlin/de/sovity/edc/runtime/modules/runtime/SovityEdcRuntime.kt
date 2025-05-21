@@ -11,7 +11,7 @@ import de.sovity.edc.runtime.modules.evaluation.EdcModuleSystemEvaluator
 import de.sovity.edc.runtime.modules.model.EdcModule
 import org.eclipse.edc.boot.system.DefaultServiceExtensionContext
 import org.eclipse.edc.boot.system.ExtensionLoader
-import org.eclipse.edc.boot.system.ExtensionLoader.bootServiceExtensions
+import org.eclipse.edc.boot.system.injection.lifecycle.ExtensionLifecycleManager.bootServiceExtensions
 import org.eclipse.edc.spi.monitor.Monitor
 import org.eclipse.edc.spi.system.ServiceExtension
 import org.eclipse.edc.spi.system.ServiceExtensionContext
@@ -37,18 +37,20 @@ class SovityEdcRuntime(
     private var context: ServiceExtensionContext? = null
 
     fun boot() {
-        val evaluated = EdcModuleSystemEvaluator.evaluate(monitor, rootModule, initialConfig)
+        val actualConfig = InitialConfigFactory.initialConfigFromEnv(initialConfig.entries)
+        val evaluated = EdcModuleSystemEvaluator.evaluate(monitor, rootModule, actualConfig)
         val config = evaluated.evaluatedConfig
 
         // Dev Utility: Print out config and dependencies
-        DevLoggingUtils.printConfigAndEdcJars(monitor, evaluated)
+        DevLoggingUtils.printConfigAndEdcJars(monitor, evaluated, rootModule)
 
         // boot EDC
         val serviceLocator = DynamicServiceLocator(evaluated.serviceClasses)
         context = serviceExtensionContextFactory(monitor, config)
             .also { it.initialize() }
-        serviceExtensions = ExtensionLoader(serviceLocator).loadServiceExtensions(context)
-            .also { bootServiceExtensions(it, context) }
+        serviceExtensions = ExtensionLoader(serviceLocator).buildDependencyGraph(context)
+            .also { bootServiceExtensions(it.injectionContainers, context) }
+            .injectionContainers
             .map { it.injectionTarget }
 
         registerStartupHealthOk()

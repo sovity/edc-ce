@@ -41,7 +41,10 @@ import {
   editAsset,
 } from './connector-fake-impl/asset-fake-service';
 import {buildInfo} from './connector-fake-impl/buildinfo-fake-service';
-import {getCatalogPageDataOffers} from './connector-fake-impl/catalog-fake-service';
+import {
+  getCatalogPageDataOffer,
+  getCatalogPageDataOffers,
+} from './connector-fake-impl/catalog-fake-service';
 import {
   contractAgreementInitiateTransfer,
   contractAgreementPage,
@@ -182,6 +185,12 @@ export const EDC_FAKE_BACKEND: FetchAPI = async (
       const connectorEndpoint = params.get('connectorEndpoint')!;
       const dataOffers = getCatalogPageDataOffers(connectorEndpoint);
       return ok(dataOffers.map(UiDataOfferToJSON));
+    })
+
+    .url('ui/pages/catalog-page/*/*/data-offers/*')
+    .on('GET', (endpointUrl, _, assetId) => {
+      const dataOffer = getCatalogPageDataOffer(endpointUrl, assetId);
+      return ok(UiDataOfferToJSON(dataOffer));
     })
 
     .url('ui/pages/catalog-page/contract-negotiations')

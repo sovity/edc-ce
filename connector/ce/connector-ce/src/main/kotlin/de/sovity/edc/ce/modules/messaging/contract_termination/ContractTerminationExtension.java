@@ -8,7 +8,7 @@
 package de.sovity.edc.ce.modules.messaging.contract_termination;
 
 import de.sovity.edc.ce.config.CeConfigProps;
-import de.sovity.edc.ce.modules.db.DslContextFactory;
+import de.sovity.edc.ce.modules.db.jooq.DslContextFactory;
 import de.sovity.edc.ce.modules.messaging.contract_termination.query.ContractAgreementIsTerminatedQuery;
 import de.sovity.edc.ce.modules.messaging.contract_termination.query.ContractAgreementTerminationDetailsQuery;
 import de.sovity.edc.ce.modules.messaging.contract_termination.query.TerminateContractQuery;
@@ -16,9 +16,9 @@ import de.sovity.edc.ce.modules.messaging.messenger.SovityMessenger;
 import de.sovity.edc.ce.modules.messaging.messenger.SovityMessengerRegistry;
 import lombok.val;
 import org.eclipse.edc.connector.controlplane.transfer.spi.observe.TransferProcessObservable;
+import org.eclipse.edc.participant.spi.ParticipantAgentService;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.runtime.metamodel.annotation.Provides;
-import org.eclipse.edc.spi.agent.ParticipantAgentService;
 import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
@@ -58,6 +58,7 @@ public class ContractTerminationExtension implements ServiceExtension {
         val terminateContractQuery = new TerminateContractQuery();
 
         val terminationService = new ContractAgreementTerminationService(
+            CeConfigProps.SOVITY_CONTRACT_TERMINATION_THREAD_POOL_SIZE.getIntOrThrow(config),
             sovityMessenger,
             contractAgreementTerminationDetailsQuery,
             terminateContractQuery,

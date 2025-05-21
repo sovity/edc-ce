@@ -233,6 +233,18 @@ object CeConfigProps {
     )
 
     @JvmStatic
+    val EDC_OAUTH_VALIDATION_ISSUED_AT_LEEWAY = ConfigPropRef(
+        property = "edc.oauth.validation.issued.at.leeway",
+        defaultDocumentation = "OAuth2 / DAPS: Leeway for the 'iat' claim in seconds",
+    )
+
+    @JvmStatic
+    val EDC_OAUTH_VALIDATION_NBF_LEEWAY = ConfigPropRef(
+        property = "edc.oauth.validation.nbf.leeway",
+        defaultDocumentation = "OAuth2 / DAPS: Leeway for the 'nbf' claim in seconds",
+    )
+
+    @JvmStatic
     val EDC_AGENT_IDENTITY_KEY = ConfigPropRef(
         property = "edc.agent.identity.key",
         defaultDocumentation = "OAuth2 / DAPS: Access token claim name that must coincide with the Participant ID",
@@ -299,14 +311,20 @@ object CeConfigProps {
     )
 
     @JvmStatic
-    val WEB_HTTP_PATH = ConfigPropRef(
-        property = "web.http.path",
+    val EDC_DATASOURCE_EDR_NAME = ConfigPropRef(
+        property = "edc.datasource.edr.name",
+        defaultDocumentation = "EDR Datasource name must be explicitly set because it wrongly defaults to 'edr' rather than 'default'"
+    )
+
+    @JvmStatic
+    val WEB_HTTP_DEFAULT_PATH = ConfigPropRef(
+        property = "web.http.default.path",
         defaultDocumentation = "API Group 'Web' contains misc API endpoints, usually not meant to be public, this is the base path.",
     )
 
     @JvmStatic
-    val WEB_HTTP_PORT = ConfigPropRef(
-        property = "web.http.port",
+    val WEB_HTTP_DEFAULT_PORT = ConfigPropRef(
+        property = "web.http.default.port",
         defaultDocumentation = "API Group 'Web' contains misc API endpoints, usually not meant to be public, this is the port.",
     )
 
@@ -363,6 +381,30 @@ object CeConfigProps {
     )
 
     @JvmStatic
+    val WEB_HTTP_PROXY_PATH = ConfigPropRef(
+        property = "web.http.proxy.path",
+        defaultDocumentation = "API Group 'Consumer API / Proxy' contains private data plane API endpoints for quickly starting data exchanges. This is the base path.",
+    )
+
+    @JvmStatic
+    val WEB_HTTP_PROXY_PORT = ConfigPropRef(
+        property = "web.http.proxy.port",
+        defaultDocumentation = "API Group 'Consumer API / Proxy' contains private data plane API endpoints for quickly starting data exchanges. This is the port.",
+    )
+
+    @JvmStatic
+    val TX_EDC_DPF_CONSUMER_PROXY_PORT = ConfigPropRef(
+        property = "tx.edc.dpf.consumer.proxy.port",
+        defaultDocumentation = "Set to same as ${WEB_HTTP_PROXY_PORT.property}.",
+    )
+
+    @JvmStatic
+    val TX_EDC_DATAPLANE_TOKEN_REFRESH_ENDPOINT = ConfigPropRef(
+        property = "tx.edc.dataplane.token.refresh.endpoint",
+        defaultDocumentation = "Path of the EDR Token Refresh Endpoint. Required config for EDR V3 Token Refreshing to work",
+    )
+
+    @JvmStatic
     val EDC_JSONLD_HTTPS_ENABLED = ConfigPropRef(
         property = "edc.jsonld.https.enabled",
         defaultDocumentation = "Required to be set since Eclipse EDC 0.2.1",
@@ -375,8 +417,8 @@ object CeConfigProps {
     )
 
     @JvmStatic
-    val EDC_RUNTIME_ID = ConfigPropRef(
-        property = "edc.runtime.id",
+    val EDC_COMPONENT_ID = ConfigPropRef(
+        property = "edc.component.id",
         defaultDocumentation = "Connector Name for logging purposes",
     )
 
@@ -396,6 +438,12 @@ object CeConfigProps {
     val EDC_DSP_CALLBACK_ADDRESS = ConfigPropRef(
         property = "edc.dsp.callback.address",
         defaultDocumentation = "Full URL for the DSP callback address",
+    )
+
+    @JvmField
+    val SOVITY_CONTRACT_TERMINATION_THREAD_POOL_SIZE = ConfigPropRef(
+        property = "sovity.contract.termination.thread.pool_size",
+        defaultDocumentation = "The number of contracts messages that can be simultaneously processed"
     )
 
     @JvmStatic
@@ -511,27 +559,9 @@ object CeConfigProps {
     )
 
     @JvmStatic
-    val SOVITY_INTERNAL_CP_MANAGEMENT_API_KEY = ConfigPropRef(
-        property = "sovity.internal.cp.management.api.key",
-        defaultDocumentation = "API Key the control plane's Management API. The data plane uses this to register itself"
-    )
-
-    @JvmStatic
-    val SOVITY_INTERNAL_CP_MANAGEMENT_API_KEY_HEADER = ConfigPropRef(
-        property = "sovity.internal.cp.management.api.key.header",
-        defaultDocumentation = "API Key Header Name for the control plane's Management API. The data plane uses this to register itself"
-    )
-
-    @JvmStatic
     val SOVITY_INTERNAL_CP_CONTROL_API_URL = ConfigPropRef(
         property = "sovity.internal.cp.control.api.url",
         defaultDocumentation = "Control API URL of the control plane, as reachable by the standalone data plane."
-    )
-
-    @JvmStatic
-    val SOVITY_INTERNAL_CP_MANAGEMENT_API_URL = ConfigPropRef(
-        property = "sovity.internal.cp.management.api.url",
-        defaultDocumentation = "Management API URL the control plane, as reachable by the standalone data plane."
     )
 
     @JvmStatic
@@ -607,9 +637,9 @@ object CeConfigProps {
         defaultDocumentation = "DID of this connector. Starts with did:web:"
     )
 
-    @JvmStatic
-    val EDC_IAM_STS_DIM_URL = ConfigPropRef(
-        property = "edc.iam.sts.dim.url",
+    @JvmField
+    val TX_EDC_IAM_STS_DIM_URL = ConfigPropRef(
+        property = "tx.edc.iam.sts.dim.url",
         defaultDocumentation = "STS Dim endpoint"
     )
 
@@ -626,38 +656,38 @@ object CeConfigProps {
     )
 
     @JvmStatic
-    val EDC_IAM_IATP_DEFAULT_SCOPES_GOVERNANCE_ALIAS = ConfigPropRef(
-        property = "edc.iam.iatp.default-scopes.governance.alias",
+    val TX_EDC_IAM_IATP_DEFAULT_SCOPES_GOVERNANCE_ALIAS = ConfigPropRef(
+        property = "tx.edc.iam.iatp.default-scopes.governance.alias",
         defaultDocumentation = "The alias of the scope 'governance'"
     )
 
     @JvmStatic
-    val EDC_IAM_IATP_DEFAULT_SCOPES_GOVERNANCE_TYPE = ConfigPropRef(
-        property = "edc.iam.iatp.default-scopes.governance.type",
+    val TX_EDC_IAM_IATP_DEFAULT_SCOPES_GOVERNANCE_TYPE = ConfigPropRef(
+        property = "tx.edc.iam.iatp.default-scopes.governance.type",
         defaultDocumentation = "The credential type of the scope 'governance'"
     )
 
     @JvmStatic
-    val EDC_IAM_IATP_DEFAULT_SCOPES_GOVERNANCE_OPERATION = ConfigPropRef(
-        property = "edc.iam.iatp.default-scopes.governance.operation",
+    val TX_EDC_IAM_IATP_DEFAULT_SCOPES_GOVERNANCE_OPERATION = ConfigPropRef(
+        property = "tx.edc.iam.iatp.default-scopes.governance.operation",
         defaultDocumentation = "The operation of the scope 'governance' e.g. 'read'"
     )
 
     @JvmStatic
-    val EDC_IAM_IATP_DEFAULT_SCOPES_MEMBERSHIP_ALIAS = ConfigPropRef(
-        property = "edc.iam.iatp.default-scopes.membership.alias",
+    val TX_EDC_IAM_IATP_DEFAULT_SCOPES_MEMBERSHIP_ALIAS = ConfigPropRef(
+        property = "tx.edc.iam.iatp.default-scopes.membership.alias",
         defaultDocumentation = "The alias of the scope 'membership'"
     )
 
     @JvmStatic
-    val EDC_IAM_IATP_DEFAULT_SCOPES_MEMBERSHIP_TYPE = ConfigPropRef(
-        property = "edc.iam.iatp.default-scopes.membership.type",
+    val TX_EDC_IAM_IATP_DEFAULT_SCOPES_MEMBERSHIP_TYPE = ConfigPropRef(
+        property = "tx.edc.iam.iatp.default-scopes.membership.type",
         defaultDocumentation = "The credential type of the scope 'membership'"
     )
 
     @JvmStatic
-    val EDC_IAM_IATP_DEFAULT_SCOPES_MEMBERSHIP_OPERATION = ConfigPropRef(
-        property = "edc.iam.iatp.default-scopes.membership.operation",
+    val TX_EDC_IAM_IATP_DEFAULT_SCOPES_MEMBERSHIP_OPERATION = ConfigPropRef(
+        property = "tx.edc.iam.iatp.default-scopes.membership.operation",
         defaultDocumentation = "The operation of the scope 'membership' e.g. 'read'"
     )
 
@@ -677,18 +707,6 @@ object CeConfigProps {
     val EDC_IAM_STS_OAUTH_CLIENT_SECRET_ALIAS = ConfigPropRef(
         property = "edc.iam.sts.oauth.client.secret.alias",
         defaultDocumentation = "Vault alias for the STS oauth client secret"
-    )
-
-    @JvmStatic
-    val WEB_HTTP_CONSUMER_API_PATH = ConfigPropRef(
-        property = "web.http.consumer.api.path",
-        defaultDocumentation = "API Group 'Consumer API' for Tractus-X Data planes. This is the base path",
-    )
-
-    @JvmStatic
-    val TX_DPF_CONSUMER_PROXY_PORT = ConfigPropRef(
-        property = "tx.dpf.consumer.proxy.port",
-        defaultDocumentation = "API Group 'Consumer API' for Tractus-X Data planes. This is the port.",
     )
 
     @JvmStatic
@@ -755,5 +773,17 @@ object CeConfigProps {
     val SOVITY_EDC_UI_PRECONFIGURED_COUNTERPARTIES = ConfigPropRef(
         property = "sovity.edc.ui.preconfigured.counterparties",
         defaultDocumentation = "Comma separated list of enabled preconfigured counterparties. format is https://connector/api/dsp?participantId=abc"
+    )
+
+    @JvmStatic
+    val SOVITY_TESTCONTAINER_POSTGRES_INITDB_ARGS = ConfigPropRef(
+        property = "sovity.testcontainer.postgres.initdb.args",
+        defaultDocumentation = "The arguments to pass to the Testcontainers' PostgreSQL's POSTGRES_INITDB_ARGS environment variable. e.g.\n-c shared_preload_libraries='pg_stat_statements'",
+    )
+
+    @JvmStatic
+    val SOVITY_TESTCONTAINER_POSTGRES_INIT_SCRIPT = ConfigPropRef(
+        property = "sovity.testcontainer.postgres.init.script",
+        defaultDocumentation = "The name of the init script to execute at the creation of the container.",
     )
 }

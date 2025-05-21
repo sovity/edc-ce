@@ -43,20 +43,7 @@
       "keywords"
     ],
     "http://www.w3.org/ns/dcat#landingPage": "https://data-source.my-org/docs",
-    "https://w3id.org/mobilitydcat-ap/mobilityTheme": {
-      "https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-category": "Infrastructure and Logistics",
-      "https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category": "General Information About Planning Of Routes"
-    },
-    "https://w3id.org/mobilitydcat-ap/georeferencingMethod": "my-geo-reference-method",
-    "https://w3id.org/mobilitydcat-ap/transportMode": "my-transport-mode",
     "http://purl.org/dc/terms/rightsHolder": "my-sovereign",
-    "http://purl.org/dc/terms/spatial": {
-      "http://www.w3.org/2004/02/skos/core#prefLabel": "my-geolocation",
-      "http://purl.org/dc/terms/identifier": [
-        "my-nuts-location1",
-        "my-nuts-location2"
-      ]
-    },
     "http://purl.org/dc/terms/accrualPeriodicity": "my-data-update-frequency",
     "http://purl.org/dc/terms/temporal": {
       "http://www.w3.org/ns/dcat#startDate": "2007-12-03",

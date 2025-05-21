@@ -9,7 +9,6 @@ package de.sovity.edc.ce.modules.db
 
 import de.sovity.edc.ce.config.CeConfigProps
 import de.sovity.edc.ce.dependency_bundles.CeDependencyBundles
-import de.sovity.edc.ce.modules.db.testcontainers.PostgresTestcontainerExtension
 import de.sovity.edc.runtime.modules.isProduction
 import de.sovity.edc.runtime.modules.model.ConfigPropCategory
 import de.sovity.edc.runtime.modules.model.DocumentedFn
@@ -17,6 +16,13 @@ import de.sovity.edc.runtime.modules.model.EdcModule
 import org.eclipse.edc.sql.pool.commons.CommonsConnectionPoolServiceExtension
 
 object DbModule {
+    /**
+     * Setup of the EDC Database:
+     *  - EDC Transaction Management
+     *  - Flyway
+     *  - JooQ
+     *  - Testcontainers (Dev / Test)
+     */
     fun forMigrationScripts(defaultMigrationLocation: String) = EdcModule(
         name = "db-postgres-flyway-jooq",
         documentation = "EDC SQL Stores, DB Access, JooQ + DslContextFactory, Testcontainers in Dev"
@@ -30,8 +36,8 @@ object DbModule {
             DocumentedFn("`!prod && !jdbcUrl`") { config ->
                 !config.isProduction() && CeConfigProps.SOVITY_JDBC_URL.getStringOrEmpty(config) == ""
             },
-            testContainerModule(),
-            documentation = testContainerModule().documentation
+            PostgresTestcontainerModule.instance(),
+            documentation = PostgresTestcontainerModule.instance().documentation
         )
 
         // Required: DB Connection
@@ -77,6 +83,13 @@ object DbModule {
         }
         property(
             ConfigPropCategory.OVERRIDES,
+            CeConfigProps.EDC_DATASOURCE_EDR_NAME
+        ) {
+            defaultValue("default")
+            warnIfOverridden = true
+        }
+        property(
+            ConfigPropCategory.OVERRIDES,
             CeConfigProps.SOVITY_FLYWAY_MIGRATION_LOCATION
         ) {
             defaultValue(defaultMigrationLocation)
@@ -92,12 +105,5 @@ object DbModule {
         ) {
             defaultValue("30")
         }
-    }
-
-    private fun testContainerModule() = EdcModule(
-        name = "postgres-testcontainer",
-        documentation = "Launches DB via Testcontainers"
-    ).apply {
-        serviceExtensions(PostgresTestcontainerExtension::class.java)
     }
 }

@@ -25,11 +25,17 @@ Configures the connector with sovity dataspace features, but in demo mode, mocki
 
 ### Overrides / Ignore
 
-<details><summary>Show / Hide (1)</summary>
+> [!WARNING]
+> The properties in this section are mentioned for completeness and are not supported.
+> They are present here because we use them internally.
+> Expect them to change without notice.
 
-| Name                     | Required                | Description                                                                       |
-|--------------------------|-------------------------|-----------------------------------------------------------------------------------|
-| `edc.agent.identity.key` | Defaults to `client_id` | OAuth2 / DAPS: Access token claim name that must coincide with the Participant ID |
+<details><summary>Show / Hide (2)</summary>
+
+| Name                                           | Required                | Description                                                                       |
+|------------------------------------------------|-------------------------|-----------------------------------------------------------------------------------|
+| `edc.agent.identity.key`                       | Defaults to `client_id` | OAuth2 / DAPS: Access token claim name that must coincide with the Participant ID |
+| `sovity.contract.termination.thread.pool_size` | Defaults to `10`        | The number of contracts messages that can be simultaneously processed             |
 
 
 </details>

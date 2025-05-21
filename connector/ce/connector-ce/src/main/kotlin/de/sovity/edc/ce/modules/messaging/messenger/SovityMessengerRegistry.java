@@ -10,7 +10,7 @@ package de.sovity.edc.ce.modules.messaging.messenger;
 import de.sovity.edc.ce.modules.messaging.messenger.impl.HandlerBox;
 import lombok.SneakyThrows;
 import lombok.val;
-import org.eclipse.edc.spi.agent.ParticipantAgent;
+import org.eclipse.edc.participant.spi.ParticipantAgent;
 
 import java.util.HashMap;
 import java.util.Map;

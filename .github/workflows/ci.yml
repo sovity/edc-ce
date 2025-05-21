@@ -26,15 +26,15 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: "Set up JDK 17"
+      - name: "Set up JDK 21"
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'temurin'
       - name: "Gradle: Validate Gradle Wrapper"
         uses: gradle/wrapper-validation-action@v3
       - name: "Gradle: Test & Build"
-        uses: gradle/gradle-build-action@v2.10.0
+        uses: gradle/actions/setup-gradle@v3
         with:
           build-root-directory: connector
           arguments: build -x test ${{ env.GRADLE_ARGS }}
@@ -89,15 +89,15 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v3
-      - name: "Set up JDK 17"
+      - name: "Set up JDK 21"
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'temurin'
       - name: "Gradle: Validate Gradle Wrapper"
         uses: gradle/wrapper-validation-action@v3
       - name: "Gradle: Test"
-        uses: gradle/gradle-build-action@v2.10.0
+        uses: gradle/actions/setup-gradle@v3
         with:
           build-root-directory: connector
           arguments: test -x :ce:docker-image-ce:assemble
@@ -111,10 +111,10 @@ jobs:
     steps:
       - uses: FranzDiebold/github-env-vars-action@v2
       - uses: actions/checkout@v3
-      - name: "Set up JDK 17"
+      - name: "Set up JDK 21"
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'temurin'
       - name: "Set up Node 20"
         uses: actions/setup-node@v3
@@ -125,7 +125,7 @@ jobs:
       - name: "Gradle: Validate Gradle Wrapper"
         uses: gradle/wrapper-validation-action@v3
       - name: "Gradle: Generate TS Code"
-        uses: gradle/gradle-build-action@v2.10.0
+        uses: gradle/actions/setup-gradle@v3
         with:
           build-root-directory: connector
           arguments: :ce:libs:api-clients:typescript-client:openApiGenerate -x test

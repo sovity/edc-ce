@@ -1,3 +1,23 @@
+/*
+ * Copyright 2025 sovity GmbH
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Contributors:
+ *     sovity - init and continued development
+ */
 /* eslint-disable */
 /**
  * sovity EDC API Wrapper
@@ -87,53 +107,17 @@ export interface UiAssetEditRequest {
      */
     landingPageUrl?: string;
     /**
-     * Data Category
-     * @type {string}
-     * @memberof UiAssetEditRequest
-     */
-    dataCategory?: string;
-    /**
-     * Data Subcategory
-     * @type {string}
-     * @memberof UiAssetEditRequest
-     */
-    dataSubcategory?: string;
-    /**
      * Data Model
      * @type {string}
      * @memberof UiAssetEditRequest
      */
     dataModel?: string;
     /**
-     * Geo-Reference Method
-     * @type {string}
-     * @memberof UiAssetEditRequest
-     */
-    geoReferenceMethod?: string;
-    /**
-     * Transport Mode
-     * @type {string}
-     * @memberof UiAssetEditRequest
-     */
-    transportMode?: string;
-    /**
      * The sovereign is distinct from the publisher by being the legal owner of the data.
      * @type {string}
      * @memberof UiAssetEditRequest
      */
     sovereignLegalName?: string;
-    /**
-     * Geo location
-     * @type {string}
-     * @memberof UiAssetEditRequest
-     */
-    geoLocation?: string;
-    /**
-     * Locations by NUTS standard which divides countries into administrative divisions
-     * @type {Array<string>}
-     * @memberof UiAssetEditRequest
-     */
-    nutsLocations?: Array<string>;
     /**
      * Data sample URLs
      * @type {Array<string>}
@@ -229,14 +213,8 @@ export function UiAssetEditRequestFromJSONTyped(json: any, ignoreDiscriminator: 
         'keywords': json['keywords'] == null ? undefined : json['keywords'],
         'mediaType': json['mediaType'] == null ? undefined : json['mediaType'],
         'landingPageUrl': json['landingPageUrl'] == null ? undefined : json['landingPageUrl'],
-        'dataCategory': json['dataCategory'] == null ? undefined : json['dataCategory'],
-        'dataSubcategory': json['dataSubcategory'] == null ? undefined : json['dataSubcategory'],
         'dataModel': json['dataModel'] == null ? undefined : json['dataModel'],
-        'geoReferenceMethod': json['geoReferenceMethod'] == null ? undefined : json['geoReferenceMethod'],
-        'transportMode': json['transportMode'] == null ? undefined : json['transportMode'],
         'sovereignLegalName': json['sovereignLegalName'] == null ? undefined : json['sovereignLegalName'],
-        'geoLocation': json['geoLocation'] == null ? undefined : json['geoLocation'],
-        'nutsLocations': json['nutsLocations'] == null ? undefined : json['nutsLocations'],
         'dataSampleUrls': json['dataSampleUrls'] == null ? undefined : json['dataSampleUrls'],
         'referenceFileUrls': json['referenceFileUrls'] == null ? undefined : json['referenceFileUrls'],
         'referenceFilesDescription': json['referenceFilesDescription'] == null ? undefined : json['referenceFilesDescription'],
@@ -272,14 +250,8 @@ export function UiAssetEditRequestToJSONTyped(value?: UiAssetEditRequest | null,
         'keywords': value['keywords'],
         'mediaType': value['mediaType'],
         'landingPageUrl': value['landingPageUrl'],
-        'dataCategory': value['dataCategory'],
-        'dataSubcategory': value['dataSubcategory'],
         'dataModel': value['dataModel'],
-        'geoReferenceMethod': value['geoReferenceMethod'],
-        'transportMode': value['transportMode'],
         'sovereignLegalName': value['sovereignLegalName'],
-        'geoLocation': value['geoLocation'],
-        'nutsLocations': value['nutsLocations'],
         'dataSampleUrls': value['dataSampleUrls'],
         'referenceFileUrls': value['referenceFileUrls'],
         'referenceFilesDescription': value['referenceFilesDescription'],

@@ -67,29 +67,11 @@ public class UiAssetEditRequest {
     @Schema(description = "Landing Page URL", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String landingPageUrl;
 
-    @Schema(description = "Data Category", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private String dataCategory;
-
-    @Schema(description = "Data Subcategory", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private String dataSubcategory;
-
     @Schema(description = "Data Model", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String dataModel;
 
-    @Schema(description = "Geo-Reference Method", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private String geoReferenceMethod;
-
-    @Schema(description = "Transport Mode", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private String transportMode;
-
     @Schema(description = "The sovereign is distinct from the publisher by being the legal owner of the data.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String sovereignLegalName;
-
-    @Schema(description = "Geo location", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private String geoLocation;
-
-    @Schema(description = "Locations by NUTS standard which divides countries into administrative divisions", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private List<String> nutsLocations;
 
     @Schema(description = "Data sample URLs", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private List<String> dataSampleUrls;

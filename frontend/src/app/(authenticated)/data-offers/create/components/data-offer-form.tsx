@@ -37,7 +37,7 @@ export const DataOfferForm = ({
   initialFormValue,
   onSubmit,
 }: {
-  mode: 'EDIT' | 'CREATE';
+  mode: 'EDIT' | 'CREATE' | 'CREATE_ASSET';
   initialFormValue: DataOfferCreateFormModel;
   onSubmit: (
     value: DataOfferCreateFormModel,
@@ -138,7 +138,7 @@ export const DataOfferForm = ({
           />
 
           {/* Show Advanced Fields */}
-          {mode === 'CREATE' && (
+          {mode !== 'EDIT' && (
             <CheckboxField
               control={form.control}
               name="advanced.showAdvancedFields"

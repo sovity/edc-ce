@@ -456,7 +456,6 @@ class AssetJsonLdParserTest {
             .title(ASSET_ID)
             .dataSampleUrls(List.of())
             .keywords(List.of())
-            .nutsLocations(List.of())
             .referenceFileUrls(List.of())
             .customJsonLdAsString("{}")
             .privateCustomJsonLdAsString("{}")

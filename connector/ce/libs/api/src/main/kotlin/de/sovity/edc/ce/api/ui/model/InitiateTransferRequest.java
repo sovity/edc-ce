@@ -34,7 +34,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Schema(description = "For type PARAMS_ONLY: Required data for starting a Transfer Process")
+@Schema(description = "For type PARAMS_ONLY: Required data for starting a Transfer Process", deprecated = true)
+@Deprecated
 public class InitiateTransferRequest {
     @Schema(description = "Contract Agreement ID", requiredMode = Schema.RequiredMode.REQUIRED)
     private String contractAgreementId;

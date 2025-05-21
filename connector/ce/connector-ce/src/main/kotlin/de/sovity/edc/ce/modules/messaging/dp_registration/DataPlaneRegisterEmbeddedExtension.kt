@@ -29,8 +29,6 @@ class DataPlaneRegisterEmbeddedExtension : ServiceExtension {
 
     private lateinit var monitor: Monitor
 
-    override fun name() = "Data-Plane Registration (Embedded)"
-
     override fun initialize(context: ServiceExtensionContext) {
         config = context.config
         monitor = context.monitor

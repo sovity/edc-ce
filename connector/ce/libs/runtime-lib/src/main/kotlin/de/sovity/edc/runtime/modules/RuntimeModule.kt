@@ -21,19 +21,15 @@ object RuntimeModule {
     ).apply {
         property(
             ConfigPropCategory.OPTIONAL,
+            RuntimeConfigProps.SOVITY_EDC_CONFIG_JSON
+        )
+        property(
+            ConfigPropCategory.OPTIONAL,
             RuntimeConfigProps.SOVITY_PRINT_CONFIG
         )
         property(
             ConfigPropCategory.OVERRIDES,
             RuntimeConfigProps.SOVITY_FIRST_PORT
-        )
-        property(
-            ConfigPropCategory.OPTIONAL,
-            RuntimeConfigProps.SOVITY_TESTCONTAINER_POSTGRES_INITDB_ARGS,
-        )
-        property(
-            ConfigPropCategory.OPTIONAL,
-            RuntimeConfigProps.SOVITY_TESTCONTAINER_POSTGRES_INIT_SCRIPT,
         )
 
         documentDockerImageEnvVar(

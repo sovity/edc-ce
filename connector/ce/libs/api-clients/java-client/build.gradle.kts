@@ -127,6 +127,9 @@ tasks.withType<JavaCompile> {
     dependsOn("delombok")
     dependsOn("postprocessGeneratedClient")
     options.isWarnings = false
+
+    sourceCompatibility = libs.versions.javaForClients.get()
+    targetCompatibility = libs.versions.javaForClients.get()
 }
 
 group = libs.versions.sovityCeGroupName.get()

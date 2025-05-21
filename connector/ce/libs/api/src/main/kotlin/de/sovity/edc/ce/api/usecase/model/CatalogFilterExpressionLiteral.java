@@ -35,7 +35,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Schema(description = "FilterExpression Criterion Literal")
+@Schema(description = "FilterExpression Criterion Literal", deprecated = true)
+@Deprecated
 public class CatalogFilterExpressionLiteral {
 
     private CatalogFilterExpressionLiteralType type;

@@ -78,6 +78,9 @@ tasks.withType<org.gradle.jvm.tasks.Jar> {
 tasks.withType<JavaCompile> {
     dependsOn("delombok")
     options.isWarnings = false
+
+    sourceCompatibility = libs.versions.javaForClients.get()
+    targetCompatibility = libs.versions.javaForClients.get()
 }
 
 group = libs.versions.sovityCeGroupName.get()

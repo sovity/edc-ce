@@ -71,15 +71,6 @@ public class AssetJsonLdParser {
         uiAsset.setTemporalCoverageFrom(JsonLdUtils.localDate(temporalCoverage, Prop.Dcat.START_DATE));
         uiAsset.setTemporalCoverageToInclusive(JsonLdUtils.localDate(temporalCoverage, Prop.Dcat.END_DATE));
 
-        var spatial = JsonLdUtils.object(properties, Prop.Dcterms.SPATIAL);
-        uiAsset.setGeoLocation(JsonLdUtils.string(spatial, Prop.Skos.PREF_LABEL));
-        uiAsset.setNutsLocations(JsonLdUtils.stringList(spatial, Prop.Dcterms.IDENTIFIER));
-
-        var mobilityTheme = JsonLdUtils.object(properties, Prop.MobilityDcatAp.MOBILITY_THEME);
-        uiAsset.setDataCategory(JsonLdUtils.string(mobilityTheme, Prop.MobilityDcatAp.DataCategoryProps.DATA_CATEGORY));
-        uiAsset.setDataSubcategory(JsonLdUtils.string(mobilityTheme, Prop.MobilityDcatAp.DataCategoryProps.DATA_SUBCATEGORY));
-
-
         var description = JsonLdUtils.string(properties, Prop.Dcterms.DESCRIPTION);
         uiAsset.setDataSourceAvailability(getDataSourceAvailability(properties));
         uiAsset.setAssetId(id);
@@ -97,8 +88,6 @@ public class AssetJsonLdParser {
         uiAsset.setLanguage(JsonLdUtils.string(properties, Prop.Dcterms.LANGUAGE));
         uiAsset.setVersion(JsonLdUtils.string(properties, Prop.Dcat.VERSION));
         uiAsset.setLandingPageUrl(JsonLdUtils.string(properties, Prop.Dcat.LANDING_PAGE));
-        uiAsset.setGeoReferenceMethod(JsonLdUtils.string(properties, Prop.MobilityDcatAp.GEO_REFERENCE_METHOD));
-        uiAsset.setTransportMode(JsonLdUtils.string(properties, Prop.MobilityDcatAp.TRANSPORT_MODE));
         uiAsset.setSovereignLegalName(JsonLdUtils.string(properties, Prop.Dcterms.RIGHTS_HOLDER));
         uiAsset.setDataUpdateFrequency(JsonLdUtils.string(properties, Prop.Dcterms.ACCRUAL_PERIODICITY));
         uiAsset.setKeywords(JsonLdUtils.stringList(properties, Prop.Dcat.KEYWORDS));
@@ -147,11 +136,7 @@ public class AssetJsonLdParser {
             Prop.Dcterms.LICENSE,
             Prop.Dcterms.PUBLISHER,
             Prop.Dcterms.TITLE,
-            Prop.MobilityDcatAp.GEO_REFERENCE_METHOD,
-            Prop.MobilityDcatAp.TRANSPORT_MODE,
             Prop.Dcterms.TEMPORAL,
-            Prop.Dcterms.SPATIAL,
-            Prop.MobilityDcatAp.MOBILITY_THEME,
             Prop.Dcterms.RIGHTS_HOLDER,
             Prop.Dcterms.ACCRUAL_PERIODICITY,
 

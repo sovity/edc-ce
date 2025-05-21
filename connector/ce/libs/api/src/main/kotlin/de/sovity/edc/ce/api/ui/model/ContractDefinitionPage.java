@@ -34,6 +34,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Schema(deprecated = true, description = "Data as required by the UI's Contract Definition Page. " +
+    "Will be replaced with a Catalog Definition Page that shall support asset property paths properly")
+@Deprecated
 public class ContractDefinitionPage {
 
     @Schema(description = "Contract Definition Entries", requiredMode = Schema.RequiredMode.REQUIRED)

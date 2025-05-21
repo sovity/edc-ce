@@ -12,10 +12,10 @@ import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario
 import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenarioConfig
 import de.sovity.edc.extension.e2e.connector.remotes.test_backend_controller.TestBackendRemote
 import de.sovity.edc.extension.e2e.junit.edc.SovityEdcTestRuntime
+import de.sovity.edc.extension.e2e.junit.utils.Consumer
 import de.sovity.edc.extension.e2e.junit.utils.ControlPlane
-import de.sovity.edc.extension.e2e.junit.utils.E2eTestSide
-import de.sovity.edc.extension.e2e.junit.utils.InstancesForEachConnector
-import de.sovity.edc.extension.e2e.junit.utils.InstancesForJunitTest
+import de.sovity.edc.extension.e2e.junit.utils.InstancesForJUnitTest
+import de.sovity.edc.extension.e2e.junit.utils.Provider
 import de.sovity.edc.runtime.config.ConfigUtils
 import de.sovity.edc.runtime.modules.model.ConfigPropRef
 import de.sovity.edc.runtime.modules.model.EdcModule
@@ -29,7 +29,6 @@ import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.ParameterResolver
 import org.mockserver.integration.ClientAndServer
 import org.mockserver.stop.Stop
-import kotlin.reflect.KClass
 
 /**
  * Launches four EDCs that make two connectors:
@@ -52,10 +51,10 @@ class IntegrationTest2xCpDpExtension(
     private val providerDataPlaneConfig: (cpConfig: Config, cpConfigUtils: ConfigUtils) -> Map<ConfigPropRef, String> = { _, _ -> mapOf() },
     private val consumerControlPlaneConfig: Map<ConfigPropRef, String> = mapOf(),
     private val consumerDataPlaneConfig: (dpConfig: Config, dpConfigUtils: ConfigUtils) -> Map<ConfigPropRef, String> = { _, _ -> mapOf() },
-    private val installEdcMocks: (runtime: SovityEdcTestRuntime) -> Unit = {},
+    private val preBootHook: (runtime: SovityEdcTestRuntime) -> Unit = {},
 
     // This unfortunately needs to be here for Kotlin's delegation pattern to work
-    private val instances: InstancesForJunitTest = InstancesForJunitTest()
+    private val instances: InstancesForJUnitTest = InstancesForJUnitTest()
 ) : BeforeEachCallback, BeforeAllCallback, AfterAllCallback, AfterEachCallback, ParameterResolver by instances {
 
     companion object {
@@ -77,88 +76,96 @@ class IntegrationTest2xCpDpExtension(
             )
     }
 
-    private val instancesForEachConnector = InstancesForEachConnector<E2eTestSide>(
-        E2eTestSide.entries,
-        getSideOrNull = { parameter, _ -> E2eTestSide.fromParameterContextOrNull(parameter) }
-    )
-
     override fun beforeAll(context: ExtensionContext) {
-        instances.put(instancesForEachConnector)
-        instances.addParameterResolver(instancesForEachConnector)
+        instances.addInstance(this)
 
-        E2eTestSide.entries.forEach { side ->
+        listOf(
+            Provider::class.java,
+            Consumer::class.java
+        ).forEach { side ->
             val controlPlaneConfig = when (side) {
-                E2eTestSide.CONSUMER -> consumerControlPlaneConfig
-                E2eTestSide.PROVIDER -> providerControlPlaneConfig
+                Provider::class.java -> providerControlPlaneConfig
+                Consumer::class.java -> consumerControlPlaneConfig
+                else -> error("Unknown side: $side")
             }
             val dataPlaneConfig = when (side) {
-                E2eTestSide.CONSUMER -> consumerDataPlaneConfig
-                E2eTestSide.PROVIDER -> providerDataPlaneConfig
+                Provider::class.java -> providerDataPlaneConfig
+                Consumer::class.java -> consumerDataPlaneConfig
+                else -> error("Unknown side: $side")
             }
 
             val extension = IntegrationTestCpDpExtension(
                 rootModule = rootModule,
                 controlPlaneConfig = controlPlaneConfig,
                 dataPlaneConfig = dataPlaneConfig,
-                installEdcMocks = installEdcMocks,
-                runtimeNamePrefixForLogging = side.name.lowercase()
+                preBootHook = preBootHook,
+                runtimeNamePrefixForLogging = side.simpleName
             )
 
             // Register DbRuntimePerClassExtension
-            instancesForEachConnector.forSide(side).put(extension)
-            instancesForEachConnector.forSide(side).addParameterResolver(extension)
+            instances.addAll(extension.instances, listOf(side))
 
             // Start EDC
             extension.beforeAll(context)
         }
 
         // Register TestBackendRemote
-        instances.putLazy(TestBackendRemote::class.java) { this.buildTestBackendRemote() }
+        instances.addInstanceLazy(TestBackendRemote::class.java, {
+            this.buildTestBackendRemote()
+        })
     }
 
     override fun beforeEach(context: ExtensionContext) {
         // Register ClientAndServer
-        instances.putLazy(ClientAndServer::class.java) {
+        instances.removeInstance(ClientAndServer::class.java)
+        instances.addInstanceLazy(ClientAndServer::class.java, {
             ClientAndServer.startClientAndServer(Ports.getFreePort())
-        }
+        })
 
         // Register ConnectorRemoteClient
-        instances.putLazy(E2eTestScenario::class.java) { this.buildE2eTestScenario() }
+        instances.removeInstance(E2eTestScenario::class.java)
+        instances.addInstanceLazy(E2eTestScenario::class.java, {
+            this.buildE2eTestScenario()
+        })
     }
 
     override fun afterEach(context: ExtensionContext) {
-        if (instances.isLazyInitialized(ClientAndServer::class.java)) {
-            Stop.stopQuietly(instances.get(ClientAndServer::class.java))
+        instances.getAllForCleanup(ClientAndServer::class.java).forEach {
+            Stop.stopQuietly(it)
         }
-        for (extension in instancesForEachConnector.all(IntegrationTestCpDpExtension::class.java)) {
+        for (extension in instances.getAllForCleanup(IntegrationTestCpDpExtension::class.java)) {
             extension.afterEach(context)
         }
     }
 
     override fun afterAll(context: ExtensionContext) {
-        for (extension in instancesForEachConnector.all(IntegrationTestCpDpExtension::class.java)) {
+        for (extension in instances.getAllForCleanup(IntegrationTestCpDpExtension::class.java)) {
             extension.afterAll(context)
         }
     }
 
     private fun buildE2eTestScenario(): E2eTestScenario {
         return E2eTestScenario.builder()
-            .consumerClient(getControlPlaneService(E2eTestSide.CONSUMER, EdcClient::class))
-            .providerClient(getControlPlaneService(E2eTestSide.PROVIDER, EdcClient::class))
-            .mockServer(instances.get(ClientAndServer::class.java))
+            .consumerClient(getConsumerControlPlaneService(EdcClient::class.java))
+            .providerClient(getProviderControlPlaneService(EdcClient::class.java))
+            .mockServer(instances.getSingle(ClientAndServer::class.java))
             .config(
-                E2eTestScenarioConfig.forProviderConfig(
-                    getControlPlaneService(E2eTestSide.PROVIDER, ConfigUtils::class)
+                E2eTestScenarioConfig.forConfig(
+                    getProviderControlPlaneService(ConfigUtils::class.java),
+                    getConsumerControlPlaneService(ConfigUtils::class.java)
                 )
             )
             .build()
     }
 
     private fun buildTestBackendRemote(): TestBackendRemote {
-        val defaultApiUrl = getControlPlaneService(E2eTestSide.CONSUMER, ConfigUtils::class).defaultApiUrl
+        val defaultApiUrl = getConsumerControlPlaneService(ConfigUtils::class.java).defaultApiUrl
         return TestBackendRemote(defaultApiUrl)
     }
 
-    private fun <T : Any> getControlPlaneService(side: E2eTestSide, clazz: KClass<T>): T =
-        instancesForEachConnector.forSide(side).get(clazz.java, ControlPlane::class.java)
+    private fun <T : Any> getProviderControlPlaneService(clazz: Class<T>): T =
+        instances.getSingle(clazz, Provider::class.java, ControlPlane::class.java)
+
+    private fun <T : Any> getConsumerControlPlaneService(clazz: Class<T>): T =
+        instances.getSingle(clazz, Consumer::class.java, ControlPlane::class.java)
 }

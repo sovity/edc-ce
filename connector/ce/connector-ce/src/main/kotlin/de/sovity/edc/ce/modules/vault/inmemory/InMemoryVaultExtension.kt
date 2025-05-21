@@ -19,8 +19,6 @@ import org.eclipse.edc.spi.system.ServiceExtensionContext
 @BaseExtension
 @Extension(value = "InMemoryVaultExtension")
 class InMemoryVaultExtension : ServiceExtension {
-    override fun name(): String = InMemoryVaultExtension::class.java.name
-
     @Provider
     fun vault(context: ServiceExtensionContext): Vault {
         val monitor = context.monitor

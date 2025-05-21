@@ -22,8 +22,6 @@ class EvaluationTimePolicyExtension : ServiceExtension {
     @Inject
     private lateinit var simplePolicyCreator: SimplePolicyCreator
 
-    override fun name(): String = javaClass.name
-
     override fun initialize(context: ServiceExtensionContext) {
         simplePolicyCreator.registerPolicyFunction(
             leftExpressionName = "POLICY_EVALUATION_TIME",

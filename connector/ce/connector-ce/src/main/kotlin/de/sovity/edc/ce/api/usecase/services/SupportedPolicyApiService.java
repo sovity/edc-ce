@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.policy.engine.spi.PolicyEngine;
 
 import java.util.List;
-import java.util.Map;
 
 import static de.sovity.edc.ce.api.utils.FieldAccessUtils.accessField;
 
@@ -22,8 +21,8 @@ public class SupportedPolicyApiService {
     private final PolicyEngine policyEngine;
 
     public List<String> getSupportedFunctions() {
-        Map<String, List<Object>> constraintFunctions = accessField(policyEngine, "constraintFunctions");
-        return constraintFunctions.values().stream().flatMap(List::stream)
+        List<Object> constraintFunctions = accessField(policyEngine, "constraintFunctions");
+        return constraintFunctions.stream()
             .map(it -> (String) accessField(it, "key"))
             .distinct()
             .sorted()

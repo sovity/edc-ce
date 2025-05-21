@@ -125,8 +125,6 @@ public class AssetJsonLdBuilder {
         addNotBlank(properties, Prop.Dcterms.LANGUAGE, request.getLanguage());
         addNotBlank(properties, Prop.Dcat.VERSION, request.getVersion());
         addNotBlank(properties, Prop.Dcat.LANDING_PAGE, request.getLandingPageUrl());
-        addNotBlank(properties, Prop.MobilityDcatAp.GEO_REFERENCE_METHOD, request.getGeoReferenceMethod());
-        addNotBlank(properties, Prop.MobilityDcatAp.TRANSPORT_MODE, request.getTransportMode());
         addNotBlank(properties, Prop.Dcterms.RIGHTS_HOLDER, request.getSovereignLegalName());
         addNotBlank(properties, Prop.Dcterms.ACCRUAL_PERIODICITY, request.getDataUpdateFrequency());
         addNotBlankStringArray(properties, Prop.Dcat.KEYWORDS, request.getKeywords());
@@ -136,8 +134,6 @@ public class AssetJsonLdBuilder {
         addCreator(properties, organizationName);
         addDistribution(properties, request);
         addTemporal(properties, request);
-        addSpatial(properties, request);
-        addMobilityTheme(properties, request);
 
         addCustomJsonLd(properties, request);
         addDataSourceHints(properties, dataAddressJsonLd);
@@ -169,20 +165,6 @@ public class AssetJsonLdBuilder {
         addNonNullJsonValue(properties, Prop.SovityDcatExt.DISTRIBUTION, distribution);
     }
 
-    private void addMobilityTheme(JsonObjectBuilder properties, UiAssetCreateRequest request) {
-        var dataCategory = request.getDataCategory();
-        var dataSubcategory = request.getDataSubcategory();
-
-        if (isBlank(dataCategory) && isBlank(dataSubcategory)) {
-            return;
-        }
-
-        var mobilityTheme = Json.createObjectBuilder();
-        addNotBlank(mobilityTheme, Prop.MobilityDcatAp.DataCategoryProps.DATA_CATEGORY, dataCategory);
-        addNotBlank(mobilityTheme, Prop.MobilityDcatAp.DataCategoryProps.DATA_SUBCATEGORY, dataSubcategory);
-        properties.add(Prop.MobilityDcatAp.MOBILITY_THEME, mobilityTheme);
-    }
-
     private void addPublisher(JsonObjectBuilder properties, UiAssetCreateRequest request) {
         var publisherHomepage = request.getPublisherHomepage();
 
@@ -192,19 +174,6 @@ public class AssetJsonLdBuilder {
 
         var publisher = Json.createObjectBuilder().add(Prop.Foaf.HOMEPAGE, publisherHomepage);
         properties.add(Prop.Dcterms.PUBLISHER, publisher);
-    }
-
-    private void addSpatial(JsonObjectBuilder properties, UiAssetCreateRequest request) {
-        var nutsLocations = request.getNutsLocations();
-
-        if (isBlank(request.getGeoLocation()) && CollectionUtils.isEmpty(nutsLocations)) {
-            return;
-        }
-
-        var spatial = Json.createObjectBuilder();
-        addNotBlank(spatial, Prop.Skos.PREF_LABEL, request.getGeoLocation());
-        addNotBlankStringArray(spatial, Prop.Dcterms.IDENTIFIER, request.getNutsLocations());
-        properties.add(Prop.Dcterms.SPATIAL, spatial);
     }
 
     private void addTemporal(JsonObjectBuilder properties, UiAssetCreateRequest request) {

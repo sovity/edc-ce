@@ -1,0 +1,117 @@
+{
+  "@id": "226c3357-5ca1-44be-abab-abbbac66e312",
+  "@type": "dcat:Catalog",
+  "dcat:dataset": {
+    "@id": "my-data-offer-2023-11",
+    "@type": "dcat:Dataset",
+    "odrl:hasPolicy": {
+      "@id": "bXktZGF0YS1vZmZlci0yMDIzLTEx:bXktZGF0YS1vZmZlci0yMDIzLTEx:OWI1Mzc5ZmEtMTJlNS00Yjc0LWIwYzEtOTZjM2Y1NmJlYjg0",
+      "@type": "odrl:Offer",
+      "odrl:permission": {
+        "odrl:action": {
+          "@id": "USE"
+        },
+        "odrl:constraint": {
+          "odrl:and": [
+            {
+              "odrl:leftOperand": {
+                "@id": "POLICY_EVALUATION_TIME"
+              },
+              "odrl:operator": {
+                "@id": "odrl:gt"
+              },
+              "odrl:rightOperand": "2025-04-10T11:04:30.659755273+02:00"
+            },
+            {
+              "odrl:leftOperand": {
+                "@id": "POLICY_EVALUATION_TIME"
+              },
+              "odrl:operator": {
+                "@id": "odrl:lt"
+              },
+              "odrl:rightOperand": "2025-04-12T11:04:30.659858529+02:00"
+            }
+          ]
+        }
+      },
+      "odrl:prohibition": [],
+      "odrl:obligation": [],
+      "odrl:assigner": "theParticipantId"
+    },
+    "dcat:distribution": [
+      {
+        "@type": "dcat:Distribution",
+        "dct:format": {
+          "@id": "HttpData-PULL"
+        },
+        "dcat:accessService": {
+          "@id": "892841f1-9e78-444d-adc1-089e40c3a839",
+          "@type": "dcat:DataService",
+          "dcat:endpointDescription": "dspace:connector",
+          "dcat:endpointUrl": "http://localhost:16100/api/dsp",
+          "dcat:endpointURL": "http://localhost:16100/api/dsp"
+        }
+      },
+      {
+        "@type": "dcat:Distribution",
+        "dct:format": {
+          "@id": "HttpData-PUSH"
+        },
+        "dcat:accessService": {
+          "@id": "892841f1-9e78-444d-adc1-089e40c3a839",
+          "@type": "dcat:DataService",
+          "dcat:endpointDescription": "dspace:connector",
+          "dcat:endpointUrl": "http://localhost:16100/api/dsp",
+          "dcat:endpointURL": "http://localhost:16100/api/dsp"
+        }
+      },
+      {
+        "@type": "dcat:Distribution",
+        "dct:format": {
+          "@id": "AmazonS3-PUSH"
+        },
+        "dcat:accessService": {
+          "@id": "892841f1-9e78-444d-adc1-089e40c3a839",
+          "@type": "dcat:DataService",
+          "dcat:endpointDescription": "dspace:connector",
+          "dcat:endpointUrl": "http://localhost:16100/api/dsp",
+          "dcat:endpointURL": "http://localhost:16100/api/dsp"
+        }
+      }
+    ],
+    "dct:license": "https://my-department.my-org.com/my-data-offer#license",
+    "https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyBody": "false",
+    "dcat:version": "2023-11",
+    "dct:creator": {
+      "http://xmlns.com/foaf/0.1/name": "Example Company"
+    },
+    "https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyPath": "false",
+    "dct:title": "My Data Offer",
+    "dct:language": "EN",
+    "dct:description": "Example Data Offer.",
+    "dct:publisher": {
+      "http://xmlns.com/foaf/0.1/homepage": "https://my-department.my-org.com/my-data-offer"
+    },
+    "https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyMethod": "false",
+    "id": "my-data-offer-2023-11",
+    "https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyQueryParams": "false"
+  },
+  "dcat:catalog": [],
+  "dcat:distribution": [],
+  "dcat:service": {
+    "@id": "892841f1-9e78-444d-adc1-089e40c3a839",
+    "@type": "dcat:DataService",
+    "dcat:endpointDescription": "dspace:connector",
+    "dcat:endpointUrl": "http://localhost:16100/api/dsp",
+    "dcat:endpointURL": "http://localhost:16100/api/dsp"
+  },
+  "dspace:participantId": "theParticipantId",
+  "@context": {
+    "dcat": "http://www.w3.org/ns/dcat#",
+    "dct": "http://purl.org/dc/terms/",
+    "odrl": "http://www.w3.org/ns/odrl/2/",
+    "dspace": "https://w3id.org/dspace/v0.8/",
+    "@vocab": "https://w3id.org/edc/v0.0.1/ns/",
+    "edc": "https://w3id.org/edc/v0.0.1/ns/"
+  }
+}

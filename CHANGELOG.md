@@ -2,6 +2,63 @@
 
 The versions of the sovity EDC CE are aligned with the sovity EDC EE.
 
+## [v13.0.0] - 2025-05-21
+
+### Overview
+
+Bumped Eclipse EDC to `0.11.1` and Tractus-X EDC to `0.9.0`. sovity API Wrapper improvements for Use Case App support. Chat App Use Case App Demo added as a permanent interactive tutorial and example.
+
+#### Major Changes
+
+- Major migrations
+  - Java `17` → `21`
+  - Eclipse EDC `0.7.2` → `0.11.1`
+  - Tractus-X EDC `0.7.7` → `0.9.0`
+    - The sovity EDC Java API Client Library is still available as Java 17.
+  - Postgres `16` → `17`
+
+#### Minor Changes
+
+- "Chat App" - Example Use Case App and interactive tutorial to be refined over time demonstrating the current sovity-endorsed way of building Use Case Apps with each version of the sovity EDC
+- Use Case API and UI API improvements
+  - Well-Typed data sinks / transfer initiations
+  - Well-Typed catalog filtering
+  - Well-Typed batch negotiation by catalog filter
+  - HTTP Proxy & EDR Support in API Wrapper
+  - Batch endpoint for fetching Contract Negotiation States
+  - Batch endpoint for fetching Transfer Process States
+  - Callback support: Get notified on Negotiation Success / Failure
+  - Callback support: Get notified on Transfer Success / Failure / Started
+- Easier handling of EDC configuration properties in Bash environments, `SOVITY_EDC_CONFIG_JSON` can be set to additional config, e.g. `{"my.difficult.prop-for-bash": "value"}`. This helps with config properties containing dots and dashes.
+
+#### Patch Changes
+
+- Fixed the 404 when opening the create asset page [CE#1127](https://github.com/sovity/edc-ce/issues/1127)
+- Fixed a query caching issue between assets and data offers for the publish data offer page
+- Fixed EDRs not working correctly due to path configuration bugs
+- Fixed issues with OAuth-protected data sources/sinks
+- Optimized the dashboard API endpoint for better performance
+- Optimized catalog detail page with new `getCatalogDataOffer` endpoint
+- Removed obsolete mobility dataspace elements from the asset model, while keeping some fields for now
+
+### Deployment Migration Notes
+
+- Property changes for Catena variant control- and data planes:
+  - **renamed** `edc.iam.sts.dim.url` → `tx.edc.iam.sts.dim.url`
+- Property changes for standalone data planes:
+  - **removed** `sovity.internal.cp.management.api.url`
+  - **removed** `sovity.internal.cp.management.api.key`
+  - **removed** `sovity.internal.cp.management.api.key.header`
+- The transfer type (https://w3id.org/edc/v0.0.1/ns/transferType) in when doing a custom transfer request is now mandatory.
+
+#### Compatible Versions
+
+- EDC CE Backend: `ghcr.io/sovity/edc-ce:13.0.0`
+- EDC CE Frontend: `ghcr.io/sovity/edc-ce-ui:13.0.0`
+- PostgreSQL: `17`
+- Eclipse EDC Fork: [v0.11.1.1](https://github.com/sovity/core-edc/releases/tag/v0.11.1.1)
+- Tractus-X: `0.9.0`
+
 ## [v12.0.0] - 2025-04-08
 
 ### Overview

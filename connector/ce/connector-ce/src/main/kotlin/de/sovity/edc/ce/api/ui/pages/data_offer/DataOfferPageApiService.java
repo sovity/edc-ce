@@ -78,7 +78,6 @@ public class DataOfferPageApiService {
     }
 
     public IdResponseDto createDataOffer(DSLContext dsl, DataOfferCreateRequest dataOfferCreateRequest) {
-
         val commonId = dataOfferCreateRequest.getAsset().getId();
 
         return switch (dataOfferCreateRequest.getPublishType()) {

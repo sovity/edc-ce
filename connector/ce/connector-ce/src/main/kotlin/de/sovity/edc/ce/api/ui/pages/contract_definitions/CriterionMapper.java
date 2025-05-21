@@ -19,6 +19,7 @@ import java.util.Objects;
 
 @RequiredArgsConstructor
 @Service
+@Deprecated
 public class CriterionMapper {
     private final CriterionOperatorMapper criterionOperatorMapper;
     private final CriterionLiteralMapper criterionLiteralMapper;

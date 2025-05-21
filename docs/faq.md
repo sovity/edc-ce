@@ -24,7 +24,7 @@ It is not possible with the EDC, as this is an intended behavior. The EDC will o
 
 There are three levels of authorization in the EDC:
 1. **Protected Management-API / API-Wrapper**: OAuth2
-2. **EDC to EDC communication**: normally DAPS/MIW 
+2. **EDC to EDC communication**: normally DAPS/STS DIM 
 3. **Protected provider backends**: OAuth2, Basic Auth, API-Keys
 
 ### How do I determine the correct OfferId to use when starting a contract negotiation via the Management-API?

@@ -12,7 +12,6 @@ import de.sovity.edc.client.gen.model.ContractDefinitionRequest
 import de.sovity.edc.client.gen.model.ContractNegotiationRequest
 import de.sovity.edc.client.gen.model.ContractNegotiationSimplifiedState
 import de.sovity.edc.client.gen.model.DataSourceType
-import de.sovity.edc.client.gen.model.InitiateTransferRequest
 import de.sovity.edc.client.gen.model.OperatorDto
 import de.sovity.edc.client.gen.model.PolicyDefinitionCreateDto
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest
@@ -23,8 +22,12 @@ import de.sovity.edc.client.gen.model.UiCriterionLiteral
 import de.sovity.edc.client.gen.model.UiCriterionLiteralType
 import de.sovity.edc.client.gen.model.UiCriterionOperator
 import de.sovity.edc.client.gen.model.UiDataOffer
+import de.sovity.edc.client.gen.model.UiDataSinkHttpDataPush
+import de.sovity.edc.client.gen.model.UiDataSinkHttpDataPushMethod
 import de.sovity.edc.client.gen.model.UiDataSource
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData
+import de.sovity.edc.client.gen.model.UiInitiateTransferRequest
+import de.sovity.edc.client.gen.model.UiInitiateTransferType
 import de.sovity.edc.client.gen.model.UiPolicyConstraint
 import de.sovity.edc.client.gen.model.UiPolicyExpression
 import de.sovity.edc.client.gen.model.UiPolicyExpressionType
@@ -37,7 +40,7 @@ import de.sovity.edc.extension.e2e.junit.utils.ControlPlane
 import de.sovity.edc.extension.e2e.junit.utils.Provider
 import de.sovity.edc.runtime.config.ConfigUtils
 import de.sovity.edc.utils.jsonld.vocab.Prop
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.awaitility.Awaitility
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -206,22 +209,25 @@ abstract class ApiWrapperDemoTestBase {
             }
         )
 
-        Assertions.assertThat<ContractNegotiationSimplifiedState?>(negotiation.getState().getSimplifiedState())
-            .isEqualTo(
-                ContractNegotiationSimplifiedState.AGREED
-            )
+        assertThat(negotiation.state.simplifiedState).isEqualTo(ContractNegotiationSimplifiedState.AGREED)
         return negotiation
     }
 
     private fun initiateTransfer(negotiation: UiContractNegotiation) {
-        val contractAgreementId = negotiation.getContractAgreementId()!!
-        val transferRequest = InitiateTransferRequest.builder()
+        val contractAgreementId = negotiation.contractAgreementId!!
+
+        val transferRequest = UiInitiateTransferRequest.builder()
             .contractAgreementId(contractAgreementId)
-            .transferType("HttpData-PUSH")
-            .dataSinkProperties(dataAddress.getDataSinkProperties())
+            .type(UiInitiateTransferType.HTTP_DATA_PUSH)
+            .httpDataPush(
+                UiDataSinkHttpDataPush.builder()
+                    .baseUrl(dataAddress.dataSinkUrl)
+                    .method(UiDataSinkHttpDataPushMethod.PUT)
+                    .build()
+            )
             .build()
 
-        consumerClient.uiApi().initiateTransfer(transferRequest)
+        consumerClient.uiApi().initiateTransferV2(transferRequest)
     }
 }
 

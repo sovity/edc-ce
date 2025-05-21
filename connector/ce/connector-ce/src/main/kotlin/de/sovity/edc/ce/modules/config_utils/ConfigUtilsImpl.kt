@@ -59,8 +59,8 @@ class ConfigUtilsImpl(config: Config) : ConfigUtils {
             return UrlPathUtils.urlPathJoin(
                 CeConfigProps.SOVITY_HTTP_PROTOCOL.getStringOrEmpty(config),
                 CeConfigProps.SOVITY_EDC_FQDN_INTERNAL.getStringOrEmpty(config) +
-                    ":" + CeConfigProps.WEB_HTTP_PORT.getStringOrEmpty(config),
-                CeConfigProps.WEB_HTTP_PATH.getStringOrEmpty(config)
+                    ":" + CeConfigProps.WEB_HTTP_DEFAULT_PORT.getStringOrEmpty(config),
+                CeConfigProps.WEB_HTTP_DEFAULT_PATH.getStringOrEmpty(config)
             )
         }
 
@@ -87,8 +87,8 @@ class ConfigUtilsImpl(config: Config) : ConfigUtils {
         fun getProxyApiUrl(config: Config): String {
             return UrlPathUtils.urlPathJoin(
                 CeConfigProps.SOVITY_HTTP_PROTOCOL.getStringOrEmpty(config),
-                getPublicEdcHost(config, CeConfigProps.TX_DPF_CONSUMER_PROXY_PORT),
-                CeConfigProps.WEB_HTTP_CONSUMER_API_PATH.getStringOrEmpty(config)
+                getPublicEdcHost(config, CeConfigProps.TX_EDC_DPF_CONSUMER_PROXY_PORT),
+                CeConfigProps.WEB_HTTP_PROXY_PATH.getStringOrEmpty(config)
             )
         }
 

@@ -20,17 +20,11 @@
  */
 package de.sovity.edc.ce.libs.mappers;
 
-import de.sovity.edc.ce.libs.mappers.asset.AssetEditRequestMapper;
 import de.sovity.edc.ce.libs.mappers.asset.AssetJsonLdBuilder;
 import de.sovity.edc.ce.libs.mappers.asset.AssetJsonLdParser;
 import de.sovity.edc.ce.libs.mappers.asset.OwnConnectorEndpointService;
-import de.sovity.edc.ce.libs.mappers.asset.utils.AssetJsonLdUtils;
-import de.sovity.edc.ce.libs.mappers.asset.utils.EdcPropertyUtils;
-import de.sovity.edc.ce.libs.mappers.asset.utils.ShortDescriptionBuilder;
-import de.sovity.edc.ce.libs.mappers.dataaddress.DataSourceMapper;
-import de.sovity.edc.ce.libs.mappers.dataaddress.http.HttpDataSourceMapper;
-import de.sovity.edc.ce.libs.mappers.dataaddress.http.HttpHeaderMapper;
 import de.sovity.edc.runtime.config.ConfigUtils;
+import de.sovity.edc.runtime.simple_di.SimpleDi;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.mockito.Mockito;
@@ -44,24 +38,22 @@ public class Factory {
         val configUtils = Mockito.mock(ConfigUtils.class);
         when(configUtils.getProtocolApiUrl()).thenReturn("http://example.com/dummy/baseUrl");
 
-        return new AssetJsonLdBuilder(
-            new DataSourceMapper(
-                new EdcPropertyUtils(),
-                new HttpDataSourceMapper(
-                    new HttpHeaderMapper(),
-                    new PlaceholderEndpointService(configUtils))
-            ),
-            newAssetJsonLdParser(ownConnectorEndpointService),
-            new AssetEditRequestMapper()
-        );
+        return new SimpleDi()
+            .addInstance(configUtils)
+            .addInstance(ownConnectorEndpointService)
+            .addAllowedPackage("de.sovity.edc.ce.libs.mappers")
+            .addClassToInstantiate(AssetJsonLdBuilder.class)
+            .toInstances()
+            .getSingle(AssetJsonLdBuilder.class);
     }
 
     @NotNull
     public static AssetJsonLdParser newAssetJsonLdParser(OwnConnectorEndpointService ownConnectorEndpointService) {
-        return new AssetJsonLdParser(
-            new AssetJsonLdUtils(),
-            new ShortDescriptionBuilder(),
-            ownConnectorEndpointService
-        );
+        return new SimpleDi()
+            .addInstance(ownConnectorEndpointService)
+            .addAllowedPackage("de.sovity.edc.ce.libs.mappers")
+            .addClassToInstantiate(AssetJsonLdParser.class)
+            .toInstances()
+            .getSingle(AssetJsonLdParser.class);
     }
 }

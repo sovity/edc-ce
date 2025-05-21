@@ -1,3 +1,23 @@
+/*
+ * Copyright 2025 sovity GmbH
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Contributors:
+ *     sovity - init and continued development
+ */
 /* eslint-disable */
 /**
  * sovity EDC API Wrapper
@@ -159,53 +179,17 @@ export interface UiAsset {
      */
     httpDatasourceHintsProxyBody?: boolean;
     /**
-     * Data Category
-     * @type {string}
-     * @memberof UiAsset
-     */
-    dataCategory?: string;
-    /**
-     * Data Subcategory
-     * @type {string}
-     * @memberof UiAsset
-     */
-    dataSubcategory?: string;
-    /**
      * Data Model
      * @type {string}
      * @memberof UiAsset
      */
     dataModel?: string;
     /**
-     * Geo-Reference Method
-     * @type {string}
-     * @memberof UiAsset
-     */
-    geoReferenceMethod?: string;
-    /**
-     * Transport Mode
-     * @type {string}
-     * @memberof UiAsset
-     */
-    transportMode?: string;
-    /**
      * The sovereign is distinct from the publisher by being the legal owner of the data.
      * @type {string}
      * @memberof UiAsset
      */
     sovereignLegalName?: string;
-    /**
-     * Geo location
-     * @type {string}
-     * @memberof UiAsset
-     */
-    geoLocation?: string;
-    /**
-     * Locations by NUTS standard which divides countries into administrative divisions
-     * @type {Array<string>}
-     * @memberof UiAsset
-     */
-    nutsLocations?: Array<string>;
     /**
      * Data sample URLs
      * @type {Array<string>}
@@ -328,14 +312,8 @@ export function UiAssetFromJSONTyped(json: any, ignoreDiscriminator: boolean): U
         'httpDatasourceHintsProxyPath': json['httpDatasourceHintsProxyPath'] == null ? undefined : json['httpDatasourceHintsProxyPath'],
         'httpDatasourceHintsProxyQueryParams': json['httpDatasourceHintsProxyQueryParams'] == null ? undefined : json['httpDatasourceHintsProxyQueryParams'],
         'httpDatasourceHintsProxyBody': json['httpDatasourceHintsProxyBody'] == null ? undefined : json['httpDatasourceHintsProxyBody'],
-        'dataCategory': json['dataCategory'] == null ? undefined : json['dataCategory'],
-        'dataSubcategory': json['dataSubcategory'] == null ? undefined : json['dataSubcategory'],
         'dataModel': json['dataModel'] == null ? undefined : json['dataModel'],
-        'geoReferenceMethod': json['geoReferenceMethod'] == null ? undefined : json['geoReferenceMethod'],
-        'transportMode': json['transportMode'] == null ? undefined : json['transportMode'],
         'sovereignLegalName': json['sovereignLegalName'] == null ? undefined : json['sovereignLegalName'],
-        'geoLocation': json['geoLocation'] == null ? undefined : json['geoLocation'],
-        'nutsLocations': json['nutsLocations'] == null ? undefined : json['nutsLocations'],
         'dataSampleUrls': json['dataSampleUrls'] == null ? undefined : json['dataSampleUrls'],
         'referenceFileUrls': json['referenceFileUrls'] == null ? undefined : json['referenceFileUrls'],
         'referenceFilesDescription': json['referenceFilesDescription'] == null ? undefined : json['referenceFilesDescription'],
@@ -384,14 +362,8 @@ export function UiAssetToJSONTyped(value?: UiAsset | null, ignoreDiscriminator: 
         'httpDatasourceHintsProxyPath': value['httpDatasourceHintsProxyPath'],
         'httpDatasourceHintsProxyQueryParams': value['httpDatasourceHintsProxyQueryParams'],
         'httpDatasourceHintsProxyBody': value['httpDatasourceHintsProxyBody'],
-        'dataCategory': value['dataCategory'],
-        'dataSubcategory': value['dataSubcategory'],
         'dataModel': value['dataModel'],
-        'geoReferenceMethod': value['geoReferenceMethod'],
-        'transportMode': value['transportMode'],
         'sovereignLegalName': value['sovereignLegalName'],
-        'geoLocation': value['geoLocation'],
-        'nutsLocations': value['nutsLocations'],
         'dataSampleUrls': value['dataSampleUrls'],
         'referenceFileUrls': value['referenceFileUrls'],
         'referenceFilesDescription': value['referenceFilesDescription'],

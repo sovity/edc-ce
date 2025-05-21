@@ -8,6 +8,7 @@
 plugins {
     `java-library`
     alias(libs.plugins.taskinfo)
+    `maven-publish`
 }
 
 dependencies {
@@ -28,9 +29,15 @@ dependencies {
     api(libs.edc.httpLib)
     api(libs.edc.httpSpi)
     api(libs.edc.keysLib)
+    api(libs.edc.managementApiLib)
     api(libs.edc.oauth2Spi)
+    api(libs.edc.participantSpi)
     api(libs.edc.policyEngineSpi)
+    api(libs.edc.sqlLib)
     api(libs.edc.transferSpi)
+
+    // Tractus-X SPIs
+    api(libs.tractus.edrSpi)
 
     // Core EDC LIBs
     api(libs.edc.bootLib)
@@ -45,6 +52,7 @@ dependencies {
 
     api(libs.apache.commonsIo)
     api(libs.apache.commonsLang)
+    api(libs.flyway.postgres)
     api(libs.hibernate.validation)
     api(libs.jackson.jsr310)
     api(libs.jakarta.el)
@@ -60,4 +68,15 @@ dependencies {
     testImplementation(libs.bundles.testUtils)
     testRuntimeOnly(libs.junit.engine)
 }
+
+group = libs.versions.sovityCeGroupName.get()
+
+publishing {
+    publications {
+        create<MavenPublication>(project.name) {
+            from(components["java"])
+        }
+    }
+}
+
 

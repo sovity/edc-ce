@@ -79,6 +79,24 @@ public class E2eTestScenario {
 
     private final Random random = new Random();
 
+    /**
+     * For rare cases when the provider is the consumer and the consumer is the provider
+     */
+    public E2eTestScenario reverseScenario() {
+        return E2eTestScenario.builder()
+            .config(new E2eTestScenarioConfig(
+                // reversed
+                config.getConsumer(),
+                // reversed
+                config.getProvider(),
+                config.getTimeout()
+            ))
+            .consumerClient(providerClient)
+            .providerClient(consumerClient)
+            .mockServer(mockServer)
+            .build();
+    }
+
     public String createAsset() {
         val dummyDataSource = UiDataSource.builder()
             .type(DataSourceType.HTTP_DATA)
@@ -87,7 +105,7 @@ public class E2eTestScenario {
                 .build())
             .build();
 
-        return internalCreateAsset(nextAssetId(), dummyDataSource).getId();
+        return internalCreateAsset(providerClient, nextAssetId(), dummyDataSource).getId();
     }
 
     public @NotNull String nextAssetId() {
@@ -100,11 +118,11 @@ public class E2eTestScenario {
             .httpData(uiDataSourceHttpData)
             .build();
 
-        return internalCreateAsset(id, uiDataSource).getId();
+        return internalCreateAsset(providerClient, id, uiDataSource).getId();
     }
 
     public String createAsset(String id, UiDataSource uiDataSource) {
-        return internalCreateAsset(id, uiDataSource).getId();
+        return internalCreateAsset(providerClient, id, uiDataSource).getId();
     }
 
     public String createAsset(UiAssetCreateRequest uiAssetCreateRequest) {
@@ -128,13 +146,13 @@ public class E2eTestScenario {
             return HttpResponse.response().withStatusCode(200);
         });
 
-        internalCreateAsset(id, uiDataSource);
+        internalCreateAsset(providerClient, id, uiDataSource);
 
         return new MockedAsset(id, accesses);
     }
 
-    private IdResponseDto internalCreateAsset(String assetId, UiDataSource dataSource) {
-        return providerClient.uiApi()
+    private IdResponseDto internalCreateAsset(EdcClient client, String assetId, UiDataSource dataSource) {
+        return client.uiApi()
             .createAsset(UiAssetCreateRequest.builder()
                 .id(assetId)
                 .title("AssetName " + assetId)
@@ -164,23 +182,36 @@ public class E2eTestScenario {
             .build());
     }
 
+    /**
+     * Negotiate from the consumer an asset located on the provider side
+     */
     public UiContractNegotiation negotiateAssetAndAwait(String assetId) {
-        val connectorEndpoint = config.getProviderProtocolApiUrl();
-        val participantId = config.getProviderParticipantId();
-        val offers = consumerClient.useCaseApi().queryCatalog(CatalogQuery.builder()
-            .participantId(participantId)
-            .connectorEndpoint(connectorEndpoint)
-            .filterExpressions(List.of(
-                CatalogFilterExpression.builder()
-                    .operandLeft(Asset.PROPERTY_ID)
-                    .operator(CatalogFilterExpressionOperator.EQ)
-                    .operandRight(CatalogFilterExpressionLiteral.builder()
-                        .type(CatalogFilterExpressionLiteralType.VALUE)
-                        .value(assetId)
-                        .build())
-                    .build()
-            ))
-            .build());
+        val connectorEndpoint = config.getProvider().getProtocolApiUrl();
+        val participantId = config.getProvider().getParticipantId();
+        return negotiate(consumerClient, connectorEndpoint, participantId, assetId);
+    }
+
+    private UiContractNegotiation negotiate(
+        EdcClient negotiator,
+        String connectorEndpoint,
+        String participantId,
+        String assetId
+    ) {
+        val offers = negotiator.useCaseApi()
+            .queryCatalog(CatalogQuery.builder()
+                .participantId(participantId)
+                .connectorEndpoint(connectorEndpoint)
+                .filterExpressions(List.of(
+                    CatalogFilterExpression.builder()
+                        .operandLeft(Asset.PROPERTY_ID)
+                        .operator(CatalogFilterExpressionOperator.EQ)
+                        .operandRight(CatalogFilterExpressionLiteral.builder()
+                            .type(CatalogFilterExpressionLiteralType.VALUE)
+                            .value(assetId)
+                            .build())
+                        .build()
+                ))
+                .build());
 
         val offersContainingContract = offers.stream()
             .filter(offer -> offer.getAsset().getAssetId().equals(assetId))
@@ -198,10 +229,10 @@ public class E2eTestScenario {
             .policyJsonLd(firstContractOffer.getPolicy().getPolicyJsonLd())
             .build();
 
-        val negotiation = consumerClient.uiApi().initiateContractNegotiation(negotiationRequest);
+        val negotiation = negotiator.uiApi().initiateContractNegotiation(negotiationRequest);
 
         val neg = Awaitility.await().atMost(config.getTimeout()).until(
-            () -> consumerClient.uiApi().getContractNegotiation(negotiation.getContractNegotiationId()),
+            () -> negotiator.uiApi().getContractNegotiation(negotiation.getContractNegotiationId()),
             it -> it.getState().getSimplifiedState() != ContractNegotiationSimplifiedState.IN_PROGRESS
         );
 
@@ -249,19 +280,19 @@ public class E2eTestScenario {
 
     public String transferAndAwait(InitiateTransferRequest transferRequest) {
         val transferInit = consumerClient.uiApi().initiateTransfer(transferRequest).getId();
-        awaitTransferCompletion(transferInit);
+        awaitTransferCompletion(consumerClient, transferInit);
         return transferInit;
     }
 
     public String transferAndAwait(InitiateCustomTransferRequest transferRequest) {
         val transferInit = consumerClient.uiApi().initiateCustomTransfer(transferRequest).getId();
-        awaitTransferCompletion(transferInit);
+        awaitTransferCompletion(consumerClient, transferInit);
         return transferInit;
     }
 
-    public void awaitTransferCompletion(String transferId) {
+    public void awaitTransferCompletion(EdcClient client, String transferId) {
         Awaitility.await().atMost(config.getTimeout()).until(
-            () -> consumerClient.uiApi()
+            () -> client.uiApi()
                 .getTransferHistoryPage()
                 .getTransferEntries()
                 .stream()
@@ -285,7 +316,11 @@ public class E2eTestScenario {
     }
 
     public String createDataOffer(String assetId) {
-        return providerClient.uiApi().createDataOffer(
+        return internalCreateDataOffer(providerClient, assetId);
+    }
+
+    private String internalCreateDataOffer(EdcClient client, String assetId) {
+        return client.uiApi().createDataOffer(
             DataOfferCreateRequest.builder()
                 .asset(
                     UiAssetCreateRequest.builder()

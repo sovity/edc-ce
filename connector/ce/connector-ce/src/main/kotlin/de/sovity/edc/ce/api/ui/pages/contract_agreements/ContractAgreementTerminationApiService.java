@@ -9,6 +9,7 @@ package de.sovity.edc.ce.api.ui.pages.contract_agreements;
 
 import de.sovity.edc.ce.api.ui.model.ContractTerminationRequest;
 import de.sovity.edc.ce.api.ui.model.IdResponseDto;
+import de.sovity.edc.ce.api.utils.ValidatorUtils;
 import de.sovity.edc.ce.modules.messaging.contract_termination.ContractAgreementTerminationService;
 import de.sovity.edc.ce.modules.messaging.contract_termination.ContractTerminationParam;
 import de.sovity.edc.runtime.simple_di.Service;
@@ -16,8 +17,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.eclipse.edc.spi.EdcException;
 import org.jooq.DSLContext;
-
-import static de.sovity.edc.ce.api.utils.ValidatorUtils.validate;
 
 @RequiredArgsConstructor
 @Service
@@ -30,7 +29,7 @@ public class ContractAgreementTerminationApiService {
         String contractAgreementId,
         ContractTerminationRequest contractTerminationRequest
     ) {
-        validate(contractTerminationRequest);
+        ValidatorUtils.validate(contractTerminationRequest);
 
         try {
             val terminatedAt = contractAgreementTerminationService.terminateAgreementOrThrow(

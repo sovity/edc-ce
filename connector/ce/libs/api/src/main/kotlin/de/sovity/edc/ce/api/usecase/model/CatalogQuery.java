@@ -34,7 +34,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Schema(description = "Catalog query parameters")
+@Schema(description = "Catalog query parameters", deprecated = true)
+@Deprecated
 public class CatalogQuery {
     @Schema(description = "Target EDC DSP endpoint URL. Can contain a queryParam 'participantId', which is provided by default in the " +
         "Connector Endpoint in the EDC UI.", requiredMode = Schema.RequiredMode.REQUIRED)

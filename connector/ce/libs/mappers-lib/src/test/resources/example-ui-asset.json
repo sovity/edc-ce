@@ -28,16 +28,7 @@
     "keywords"
   ],
   "landingPageUrl": "https://data-source.my-org/docs",
-  "dataCategory": "Infrastructure and Logistics",
-  "dataSubcategory": "General Information About Planning Of Routes",
-  "geoReferenceMethod": "my-geo-reference-method",
-  "transportMode": "my-transport-mode",
   "sovereignLegalName": "my-sovereign",
-  "geoLocation": "my-geolocation",
-  "nutsLocations": [
-    "my-nuts-location1",
-    "my-nuts-location2"
-  ],
   "dataUpdateFrequency": "my-data-update-frequency",
   "temporalCoverageFrom": "2007-12-03",
   "temporalCoverageToInclusive": "2024-01-22",

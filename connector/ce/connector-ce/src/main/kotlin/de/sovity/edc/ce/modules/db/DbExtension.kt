@@ -8,7 +8,10 @@
 package de.sovity.edc.ce.modules.db
 
 import de.sovity.edc.ce.config.CeConfigProps
-import de.sovity.edc.ce.modules.db.testcontainers.PostgresTestcontainer
+import de.sovity.edc.ce.modules.db.flyway.FlywayFactory
+import de.sovity.edc.ce.modules.db.flyway.FlywayMigrator
+import de.sovity.edc.ce.modules.db.jooq.DslContextFactory
+import de.sovity.edc.ce.modules.db.pool.ConnectionPoolFactory
 import org.eclipse.edc.runtime.metamodel.annotation.Inject
 import org.eclipse.edc.runtime.metamodel.annotation.Provides
 import org.eclipse.edc.spi.system.ServiceExtension
@@ -37,8 +40,6 @@ class DbExtension : ServiceExtension {
 
     private var pool: CommonsConnectionPool? = null
 
-    override fun name() = "Postgres + Flyway"
-
     override fun initialize(context: ServiceExtensionContext) {
         val monitor = context.monitor
         val config = context.config
@@ -58,11 +59,7 @@ class DbExtension : ServiceExtension {
 
     private fun getJdbcCredentials(config: Config): JdbcCredentials {
         if (postgresTestcontainer != null) {
-            return JdbcCredentials(
-                postgresTestcontainer!!.container.jdbcUrl,
-                postgresTestcontainer!!.container.username,
-                postgresTestcontainer!!.container.password
-            )
+            return postgresTestcontainer!!.getJdbcCredentials()
         }
 
         return JdbcCredentials(
