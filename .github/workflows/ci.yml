@@ -131,7 +131,6 @@ jobs:
           echo "GRADLE_ARGS=$GRADLE_ARGS" >> $GITHUB_ENV
       - name: "Gradle: Overwrite Artifact Version (Main Only)"
         if: ${{ github.ref == 'refs/heads/main' }}
-      - uses: FranzDiebold/github-env-vars-action@v2
         run: |
           GRADLE_ARGS="-Pversion=0.0.1-$(date '+%Y%m%d.%H%M%S')-main-$CI_SHA_SHORT"
           echo "GRADLE_ARGS=$GRADLE_ARGS" >> $GITHUB_ENV
