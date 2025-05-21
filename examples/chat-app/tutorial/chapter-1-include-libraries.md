@@ -38,6 +38,6 @@ We want to add two libraries:
 // backend/build.gradle.kts
 
 // sovity EDC Dependencies
-implementation("de.sovity.edc:client:13.0.0")
-implementation("de.sovity.edc:jsonld-lib:13.0.0")
+implementation("de.sovity.edc:client:13.0.1")
+implementation("de.sovity.edc:jsonld-lib:13.0.1")
 ```
