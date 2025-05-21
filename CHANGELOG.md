@@ -2,7 +2,7 @@
 
 The versions of the sovity EDC CE are aligned with the sovity EDC EE.
 
-## [v13.0.1] - 2025-05-21
+## [v13.0.2] - 2025-05-21
 
 ### Overview
 
@@ -53,8 +53,8 @@ Bumped Eclipse EDC to `0.11.1` and Tractus-X EDC to `0.9.0`. sovity API Wrapper 
 
 #### Compatible Versions
 
-- EDC CE Backend: `ghcr.io/sovity/edc-ce:13.0.1`
-- EDC CE Frontend: `ghcr.io/sovity/edc-ce-ui:13.0.1`
+- EDC CE Backend: `ghcr.io/sovity/edc-ce:13.0.2`
+- EDC CE Frontend: `ghcr.io/sovity/edc-ce-ui:13.0.2`
 - PostgreSQL: `17`
 - Eclipse EDC Fork: [v0.11.1.1](https://github.com/sovity/core-edc/releases/tag/v0.11.1.1)
 - Tractus-X: `0.9.0`

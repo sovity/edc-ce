@@ -10,7 +10,7 @@ services:
       CONNECTOR_UPSTREAM_HOST: 'consumer-connector'
       FRONTEND_UPSTREAM_HOST: 'consumer-ui'
   consumer-ui:
-    image: 'ghcr.io/sovity/edc-ce-ui:13.0.1'
+    image: 'ghcr.io/sovity/edc-ce-ui:13.0.2'
     restart: 'always'
     environment:
       NEXT_PUBLIC_MANAGEMENT_API_URL: '/api/management'
@@ -72,13 +72,13 @@ services:
       CONNECTOR_UPSTREAM_HOST: 'provider-connector'
       FRONTEND_UPSTREAM_HOST: 'provider-ui'
   provider-ui:
-    image: 'ghcr.io/sovity/edc-ce-ui:13.0.1'
+    image: 'ghcr.io/sovity/edc-ce-ui:13.0.2'
     restart: 'always'
     environment:
       NEXT_PUBLIC_MANAGEMENT_API_URL: '/api/management'
       NEXT_PUBLIC_MANAGEMENT_API_KEY: 'SomeOtherApiKey'
   provider-connector:
-    image: 'ghcr.io/sovity/edc-ce:13.0.1'
+    image: 'ghcr.io/sovity/edc-ce:13.0.2'
     restart: 'always'
     depends_on:
       provider-connector-db:
