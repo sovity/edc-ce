@@ -23,6 +23,7 @@ jobs:
       contents: read
       packages: write
     steps:
+      - uses: FranzDiebold/github-env-vars-action@v2
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
@@ -33,7 +34,7 @@ jobs:
           distribution: 'temurin'
       - name: "Gradle: Validate Gradle Wrapper"
         uses: gradle/wrapper-validation-action@v3
-      - name: "Gradle: Test & Build"
+      - name: "Gradle: Build"
         uses: gradle/actions/setup-gradle@v3
         with:
           build-root-directory: connector
@@ -81,7 +82,7 @@ jobs:
           image-description: "UI for the sovity EDC CE Connector"
           connector-ui-dir: "frontend"
   run-connector-tests-ce:
-    name: Run CE Gradle Tests
+    name: Run CE Gradle Tests & Publish JARs
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -103,6 +104,24 @@ jobs:
           arguments: test -x :ce:docker-image-ce:assemble
         env:
           USERNAME: ${{ env.REGISTRY_USER }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Gradle: Overwrite Artifact Version (Release Only)"
+        if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+        run: |
+          GRADLE_ARGS="-Pversion=${GITHUB_REF#refs/tags/v}"
+          echo "GRADLE_ARGS=$GRADLE_ARGS" >> $GITHUB_ENV
+      - name: "Gradle: Overwrite Artifact Version (Main Only)"
+        if: ${{ github.ref == 'refs/heads/main' }}
+        run: |
+          GRADLE_ARGS="-Pversion=0.0.1-$(date '+%Y%m%d.%H%M%S')-main-$CI_SHA_SHORT"
+          echo "GRADLE_ARGS=$GRADLE_ARGS" >> $GITHUB_ENV
+      - name: "Gradle: Publish (Main & Release Only)"
+        uses: gradle/actions/setup-gradle@v3
+        if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v') }}
+        with:
+          arguments: publish -x :ce:docker-image-ce:assemble ${{ env.GRADLE_ARGS }}
+        env:
+          USERNAME: ${{ github.actor }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
   build-client-library-typescript:
     name: TS API Client Library
