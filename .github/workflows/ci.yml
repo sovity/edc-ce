@@ -82,7 +82,7 @@ jobs:
           image-description: "UI for the sovity EDC CE Connector"
           connector-ui-dir: "frontend"
   run-connector-tests-ce:
-    name: Run CE Gradle Tests & Publish JARs
+    name: Run CE Gradle Tests
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -105,6 +105,25 @@ jobs:
         env:
           USERNAME: ${{ env.REGISTRY_USER }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  publish-jars-ce:
+    name: Publish CE Jars
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v3
+      - name: "Set up JDK 21"
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+      - name: "Gradle: Validate Gradle Wrapper"
+        uses: gradle/wrapper-validation-action@v3
+        env:
+          USERNAME: ${{ env.REGISTRY_USER }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: "Gradle: Overwrite Artifact Version (Release Only)"
         if: ${{ startsWith(github.ref, 'refs/tags/v') }}
         run: |
@@ -119,7 +138,8 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
         if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v') }}
         with:
-          arguments: publish -x :ce:docker-image-ce:assemble ${{ env.GRADLE_ARGS }}
+          build-root-directory: connector
+          arguments: publish -x test -x :ce:docker-image-ce:assemble ${{ env.GRADLE_ARGS }}
         env:
           USERNAME: ${{ github.actor }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -230,6 +250,7 @@ jobs:
     needs:
       - build-connector-image-ce
       - build-connector-ui-image-ce
+      - publish-jars-ce
       - run-connector-tests-ce
       - build-client-library-typescript
       - check-migration-script-names
