@@ -129,14 +129,9 @@ jobs:
         run: |
           GRADLE_ARGS="-Pversion=${GITHUB_REF#refs/tags/v}"
           echo "GRADLE_ARGS=$GRADLE_ARGS" >> $GITHUB_ENV
-      - name: "Gradle: Overwrite Artifact Version (Main Only)"
-        if: ${{ github.ref == 'refs/heads/main' }}
-        run: |
-          GRADLE_ARGS="-Pversion=0.0.1-SNAPSHOT-ce-main"
-          echo "GRADLE_ARGS=$GRADLE_ARGS" >> $GITHUB_ENV
-      - name: "Gradle: Publish (Main & Release Only)"
+      - name: "Gradle: Publish (Release Only)"
         uses: gradle/actions/setup-gradle@v3
-        if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v') }}
+        if: ${{ startsWith(github.ref, 'refs/tags/v') }}
         with:
           build-root-directory: connector
           arguments: publish -x test -x :ce:docker-image-ce:assemble ${{ env.GRADLE_ARGS }}
