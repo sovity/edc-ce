@@ -34,4 +34,4 @@ trap cleanup INT TERM
 # Start Docker Compose
 ./dco.sh pull
 ./dco.sh up -d --build --remove-orphans
-./dco.sh logs -f provider consumer provider-chat-app-backend consumer-chat-app-backend provider-chat-app-frontend consumer-chat-app-frontend
+./dco.sh logs -f
