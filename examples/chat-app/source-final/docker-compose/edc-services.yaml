@@ -16,7 +16,7 @@ services:
       NEXT_PUBLIC_MANAGEMENT_API_URL: '/api/management'
       NEXT_PUBLIC_MANAGEMENT_API_KEY: 'SomeOtherApiKey'
   consumer-connector:
-    image: 'ghcr.io/sovity/edc-ee-unreleased-ce:latest'
+    image: 'ghcr.io/sovity/edc-ce:13.0.3'
     restart: 'always'
     depends_on:
       consumer-connector-db:
