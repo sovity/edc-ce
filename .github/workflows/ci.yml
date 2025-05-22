@@ -132,7 +132,7 @@ jobs:
       - name: "Gradle: Overwrite Artifact Version (Main Only)"
         if: ${{ github.ref == 'refs/heads/main' }}
         run: |
-          GRADLE_ARGS="-Pversion=0.0.1-$(date '+%Y%m%d.%H%M%S')-main-$CI_SHA_SHORT"
+          GRADLE_ARGS="-Pversion=0.0.1-SNAPSHOT-ce-main"
           echo "GRADLE_ARGS=$GRADLE_ARGS" >> $GITHUB_ENV
       - name: "Gradle: Publish (Main & Release Only)"
         uses: gradle/actions/setup-gradle@v3
