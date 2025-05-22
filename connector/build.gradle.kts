@@ -129,6 +129,20 @@ subprojects {
     }
 }
 
+allprojects {
+    plugins.withId("maven-publish") {
+        extensions.configure<PublishingExtension> {
+            repositories {
+                maven {
+                    name = "GitHub-sovity-edc-ce"
+                    url = uri("https://maven.pkg.github.com/sovity/edc-ce")
+                    withGitHubCredentials()
+                }
+            }
+        }
+    }
+}
+
 fun MavenArtifactRepository.withGitHubCredentials() {
     val gitHubUser = System.getenv("USERNAME")
         ?: project.findProperty("gpr.user") as String?

@@ -145,10 +145,6 @@ publishing {
         create<MavenPublication>(project.name) {
             artifactId = "client"
             from(components["java"])
-        }
-        create<MavenPublication>("maven") {
-            artifactId = "client"
-            from(components["java"])
             artifact(sourcesJar)
         }
     }
