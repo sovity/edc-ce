@@ -1,0 +1,86 @@
+name: "Feature Request Form"
+description: Quickly capture a feature request by describing the problem, who it impacts, and why it matters. No need to propose a solution.
+labels: ["kind/idea"]
+body:
+  - type: textarea
+    id: problem_statement
+    attributes:
+      label: 1. What problem are you trying to solve?
+      description: Focus on the user need or pain point. Avoid jumping to solutions. 
+      placeholder: Users can’t export their data for offline analysis, which is a blocker for compliance reporting.
+    validations:
+      required: true
+  - type: dropdown
+    id: stakeholder_group
+    attributes:
+      label: 2. Who would care about the solution? 
+      description: Multiple selections possible, click on the dropdown again. Of course everything we do benefits end users. However, sometimes some stakeholders require particular attention.
+      multiple: true
+      options:
+        - All users
+        - Specific Customer (s)
+        - Internal Team
+        - Strategic Account / Partners
+        - App Provider / Reseller
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: importance
+    attributes:
+      label: 3. How important is this?
+      description: Choose from dropdown.
+      options:
+        - Not selected
+        - Must-have (blocks usage/revenue or increases costs)
+        - Nice-to-have (improves UX or efficiency)
+        - Low priority (future consideration)
+    validations:
+      required: true
+  - type: checkboxes
+    id: problem_frequency
+    attributes:
+      label: 4. How many times per month does the problem occur?
+      description: Providing an average number is good enough.
+      options:
+        - label: 1 time
+        - label: 2-10 times
+        - label: 11+ times
+  - type: input
+    id: problem_duration
+    attributes:
+      label: 5. In minutes, how long does one instance of the  problem last? 
+      description: Providing an average number is good enough.    
+  - type: checkboxes
+    id: problem_mention
+    attributes:
+      label: 6. In your role, how many different sources mentioned the problem?
+      description: Providing an average number is good enough.
+      options:
+        - label: 1 source
+        - label: 2-5 sources
+        - label: 6+ sources
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: 7. What does success look like?
+      description: Optional but encouraged. Define clear outcomes or acceptance criteria.
+      placeholder: User can click ‘Export’ and download a CSV with all visible data columns.
+  - type: textarea
+    id: constraint
+    attributes:
+      label: 8. Any constraints or requirements?
+      description: Optional. Security, performance, compliance, etc.
+      placeholder: Must be compatible with CX Industry Core KIT.
+  - type: textarea
+    id: solution
+    attributes:
+      label: 9. Suggested solution (if any)
+      description: Optional. Only if the requester has a clear idea. Otherwise, leave to product/engineering.
+      placeholder: Add a button next to the report filters.
+  - type: textarea
+    id: attachments
+    attributes:
+      label: 10. Attachments or references
+      description: Optional. Screenshots, links to customer feedback, MS Teams threads, etc.
+      
