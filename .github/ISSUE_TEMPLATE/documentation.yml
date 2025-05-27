@@ -1,0 +1,59 @@
+name: "(Form) Documentation Update Request"
+description: Help us improve our documentation.
+labels: ["task/documentation"]
+body:
+  - type: checkboxes
+    id: description
+    attributes:
+      label: 1. What section or topic needs to be updated?
+      description: Use sovity product names or component names.
+      options:
+         - label: Connector as a Service (CaaS)
+         - label: DAPS
+         - label: Data Space Portal (DSPortal)
+         - label: Digital Twin Registry
+         - label: EDC
+         - label: ECU App
+         - label: Traceability App (TA)
+         - label: sovity Hub
+         - label: Other
+  - type: input
+    id: other_specification
+    attributes:
+      label: If you selected Other above, please specify.
+  - type: dropdown
+    id: justification
+    attributes:
+      label: 2. Why is the update necessary?
+      options:
+        - Not selected
+        - Outdated content that needs to be matched with product update
+        - Missing information
+        - Existing information lacks clarity
+        - Grammar mistake
+        - Requires visualization (screenshot, illustration, process diagram, etc.)
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: current_documentation
+    attributes:
+      label: 3. Please provide link to the current documentation related to the topic.
+      description: Ff it exists.
+  - type: textarea
+    id: proposed_changes
+    attributes:
+      label: 4. Describe the changes that need to be made. 
+      description: Please be as specific as possible.
+    validations:
+      required: true
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: 5. Additional Context 
+      description: Include any additional context, screenshots, examples, or references that might help in understanding the update request.
+  - type: input
+    id: deadline
+    attributes:
+      label: 6. Deadline
+      description: When applicable, Set a deadline for completing the documentation update.
