@@ -81,7 +81,7 @@ These are Env Vars that are outside of our EDC module system. These are neither 
 | `LOGGING_LEVEL`        | Default value `INFO`<br>Default set in `docker-entrypoint.sh`           | Docker Image Logging: Changes the Log4j XML to the given logging level. Allowed values are `INFO` or `DEBUG`.                                                                  |
 | `REMOTE_DEBUG`         | Default value `false`<br>Default set in `docker-entrypoint.sh`          | Docker Image Remote Debugging: Enables Java Remote Debugging if set to `true`                                                                                                  |
 | `REMOTE_DEBUG_SUSPEND` | Default value `false`<br>Default set in `docker-entrypoint.sh`          | Docker Image Remote Debugging: Suspend the application on startup if set to `true`. Requires remote debugging to be enabled.                                                   |
-| `REMOTE_DEBUG_SUSPEND` | Default value `127.0.0.1:5005`<br>Default set in `docker-entrypoint.sh` | Docker Image Remote Debugging: Changes the bind address the remote debugger will bind itself to. Can be used to change the port, too. Requires remote debugging to be enabled. |
+| `REMOTE_DEBUG_BIND` | Default value `127.0.0.1:5005`<br>Default set in `docker-entrypoint.sh` | Docker Image Remote Debugging: Changes the bind address the remote debugger will bind itself to. Can be used to change the port, too. Requires remote debugging to be enabled. |
 
 
 ## Reference: All Known Configuration Properties
