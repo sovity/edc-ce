@@ -1,0 +1,101 @@
+name: "Idea / Gap Box"
+description: Quickly capture an idea or a gap in sovity products, who it impacts, and why it matters. No need to propose a solution.
+type: Idea / Gap
+body:
+  - type: textarea
+    id: problem_statement
+    attributes:
+      label: 1. I have this Idea / I identified this Gap:*
+      description: Focus on the user's needs / pains / goals. Avoid jumping to solutions. Give as much context as possible.
+      placeholder: As a user of sovity CaaS, I want [INSERT WISH / NEED], so that I can [INSERT GOAL].
+    validations:
+      required: true
+  - type: dropdown
+    id: stakeholder_group
+    attributes:
+      label: 2. A solution to the idea / gap will make happy:* 
+      description: Multiple selections possible, click on the dropdown again. Of course everything we do benefits end users. However, sometimes some stakeholders require particular attention.
+      multiple: true
+      options:
+        - All users
+        - Specific Customer (s)
+        - Strategic Account / Partner
+        - App Provider / Reseller
+        - Internal Team
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: stakeholder_specification
+    attributes:
+      label: If you selected 'Specific Customer(s)'/'Strategic Account / Partners'/'App Provider / Reseller'/'Other' above, please specify. 
+      description: For example, new tender name, consortium, etc.
+  - type: dropdown
+    id: importance
+    attributes:
+      label: 3. What’s the impact if this isn’t addressed?*
+      description: Choose from dropdown.
+      options:
+        - Not selected
+        - High (blocks users or revenue)
+        - Medium (causes friction or inefficiency)
+        - Low (minor inconvenience or cosmetic)
+    validations:
+      required: true
+  - type: checkboxes
+    id: problem_frequency
+    attributes:
+      label: 4. How many times per month does the problem occur?
+      description: Providing an average number is good enough.
+      options:
+        - label: 1 time
+        - label: 2-10 times
+        - label: 11+ times
+  - type: input
+    id: frequency_specification
+    attributes:
+      label: If you selected '11+ times' above, please specify. 
+      description: For example, 55 times.
+  - type: input
+    id: problem_duration
+    attributes:
+      label: 5. In minutes, how long does one instance of the  problem last? 
+      description: Providing an average number is good enough.    
+  - type: checkboxes
+    id: problem_mention
+    attributes:
+      label: 6. In your role, how many different sources mentioned the problem?
+      description: Providing an average number is good enough.
+      options:
+        - label: 1 source
+        - label: 2-5 sources
+        - label: 6+ sources
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: 7. What does success look like?
+      description: Optional but encouraged. Define clear outcomes or acceptance criteria.
+      placeholder: User can click ‘Export’ on UI and download a CSV with all visible data columns.
+  - type: textarea
+    id: constraint
+    attributes:
+      label: 8. Any constraints or requirements?
+      description: Optional. Security, performance, compliance, etc.
+      placeholder: Must be compatible with CX Industry Core KIT.
+  - type: textarea
+    id: internal_stakeholder
+    attributes:
+      label: 9. Internal stakeholders for whom this idea might be valuable. 
+      description: Tag them with @ !
+  - type: textarea
+    id: solution
+    attributes:
+      label: 10. Potential Directions or Solutions (if any)
+      description: Optional. If you already have thoughts on how to approach this, list them here. Product and Engineering teams will consider them.
+      placeholder: Add a button next to the report filters on the page X of apps YYY.
+  - type: textarea
+    id: attachments
+    attributes:
+      label: 11. Attachments or references
+      description: Optional. Screenshots, links to customer feedback, MS Teams threads, etc.
+      
