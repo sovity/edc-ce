@@ -1,6 +1,6 @@
 name: Bug Report Template
 description: Report a bug to help us improve
-labels: ["kind/bug"]
+type: Bug Report
 body:
   - type: textarea
     id: description
