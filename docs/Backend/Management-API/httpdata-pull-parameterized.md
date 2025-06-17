@@ -63,6 +63,7 @@ After adding the asset, the asset only needs to be linked in a Contract Definiti
 To access the dataset, query the Provider's EDC catalog and identify the required asset. Extract the following details:
 - `dcat:dataset.{asset}.odrl:hasPolicy.@id` - The data offer ID, later to be used for `{{data-offer-id}}`
 - `dcat:dataset.{asset}.odrl:hasPolicy.odrl:permission` - The policies, in this case permissions, needed to start the negotiation, later used for `{{permissions}}`
+- all JSON-LD context of the response, which must be inserted into the future JSON-LD context of the next call, otherwise, namespaces of the provider policy will not be resolved correctly `{{provider-context}}`, however, the vocabulary vocab does not need to be copied
 
 ##### Step 2: Negotiating the EDR
 
@@ -74,7 +75,8 @@ Next, request the `EDR token`:
 ```json
 {
     "@context": {
-        "@vocab": "https://w3id.org/edc/v0.0.1/ns/"
+        "@vocab": "https://w3id.org/edc/v0.0.1/ns/",
+        {{provider-context}}
     },
     "@type": "https://w3id.org/edc/v0.0.1/ns/ContractRequest",
     "counterPartyAddress": "{{target-edc}}/control/api/v1/dsp",
