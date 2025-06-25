@@ -1,6 +1,7 @@
 # Table of contents
 
 * [Welcome](welcome.md)
+* [Initial Onboarding](initial-onboarding.md)
 * [Key Concepts](key-concepts.md)
 * [FAQ](faq.md)
 
