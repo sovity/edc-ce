@@ -2,7 +2,7 @@
  
  This documentation provides an overview of how to use the Management-API to manage and evaluate Business Partner Group policies.
  The Business Partner Group policy enables categorizing business partners into groups and defining access- and contract-policies based on their membership.
- For example, a company can restrict access to certain assets to members of specific groups like "group1" or "group2".
+ For example, a company can restrict access to certain assets to members of specific groups like `group1` or `group2`.
  This is useful for scenarios where assets or resources are only accessible to specific groups of business partners.
  
  ## API Endpoints and Usage
@@ -12,7 +12,7 @@
  This endpoint assigns a specific BPN to one or more groups. The groups do not need to be created explicitly; they are defined dynamically upon assignment.
  
  **Request**  
- `POST {{Management-API}}/business-partner-groups`
+ `POST {{Management-API}}/v3/business-partner-groups`
  
  **Payload Example**:
  {% code title="JSON" overflow="wrap" lineNumbers="true" %}
@@ -35,7 +35,7 @@
  This endpoint retrieves the groups a specific BPN is assigned to. Use this to verify that the assignment was successful.
  
  **Request**  
- `GET {{Management-API}}/business-partner-groups/BPNL000000000000`
+ `GET {{Management-API}}/v3/business-partner-groups/BPNL000000000000`
  
  **Response Example:**
  {% code title="JSON" overflow="wrap" lineNumbers="true" %}
