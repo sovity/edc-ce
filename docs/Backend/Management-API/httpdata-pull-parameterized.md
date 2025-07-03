@@ -1,7 +1,5 @@
 ## Data-Transfer using HttpData-Pull and EDR
 
-{% hint style="warning" %} In version 11.0.0, the in the following documentation required EDR-APIs are only available in the Catena configuration and not when using an IAM-mock or a DAPS. {% endhint %}
-
 **Parameterization**: In certain scenarios, it is beneficial to expose multiple datasets via a single asset, reducing contract negotiations and catalog size, thus improving Connector scalability.
 
 {% hint style="info" %} Parameterization is optional and does not have to be activated by the Provider if the datasource API does not require or enable it. In this case, the corresponding parameters do not have to be enabled when creating an asset and the Consumer does not have to add any additional parameters to the endpoint from the EDR. {% endhint %}
@@ -68,7 +66,7 @@ To access the dataset, query the Provider's EDC catalog and identify the require
 
 Next, request the `EDR token`:
 
-`POST {{MANAGEMENT-API}}/v2/edrs`
+`POST {{MANAGEMENT-API}}/v3/edrs`
 
 {% code title="JSON" overflow="wrap" lineNumbers="true" %}
 ```json
@@ -103,7 +101,7 @@ Successfully reaching this stage confirms a successful negotiation.
 
 Use the EDR token ID to retrieve the `transferProcessId`:
 
-`POST {{control_url}}/v2/edrs/request`
+`POST {{MANAGEMENT-API}}/v3/edrs/request`
 
 {% code title="JSON" overflow="wrap" lineNumbers="true" %}
 ```json
@@ -131,7 +129,7 @@ Copy the `transferProcessId` from the response to proceed, later to be used for 
 
 To obtain the data address from which the dataset can be requested:
 
-`GET {{MANAGEMENT-API}}/v2/edrs/{{transferProcessId}}/dataaddress`
+`GET {{MANAGEMENT-API}}/v3/edrs/{{transferProcessId}}/dataaddress`
 
 The response contains two crucial data points:
 - `endpoint` – The URL of the data plane providing the requested asset, later to be used for `{{endpoint}}`.
