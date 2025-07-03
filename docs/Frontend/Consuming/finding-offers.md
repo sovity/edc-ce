@@ -30,12 +30,11 @@ When clicking ```Negotiate``` You will see a prompt asking you to accept the sta
 
 ![EDC UI Terms & Conditions](/docs/images/edc-ui-tos.png)
 
-- If you haven’t done so already, take a moment to review the  "Standard License" and "Policy" sections in the contract offer. Click anywhere on the screen to go back to the contract offer.
-- Once you’ve reviewed everything, click on the checkbox that says  "I agree to the Data Offer Terms & Conditions".
-- After you’ve checked the box, click on the "Confirm" button.
+- If you haven’t done so already, take a moment to review the  `Standard License` and `Policy` sections in the contract offer. Click anywhere on the screen to go back to the contract offer.
+- Once you’ve reviewed everything, click on the checkbox that says `I agree to the Data Offer Terms & Conditions`.
+- After you’ve checked the box, click on the `Confirm` button.
 Congratulations! You’ve now started the contract negotiation process. Keep an eye out for a notification at the top middle of your screen. This will let you know when your contract negotiation has ended and its result.
 
 {% hint style="warning" %} Contract Negotiations can also end unsuccessfully under certain conditions, for example when contract-policies are not met. {% endhint %}
 
 After a successful negotiation, the data transfer can be started.
- 
