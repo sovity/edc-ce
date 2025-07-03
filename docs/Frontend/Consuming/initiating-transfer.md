@@ -1,6 +1,6 @@
 # Data Transfer Process
 
-{% hint style="warning" %} When using the Connector UI, only a HttpData-Push can be triggered, not an HttpData-Pull. For an HttpData-Pull, the Management-API of the connector must be used instead. {% endhint %}
+{% hint style="warning" %} When using the Connector UI, only a HttpData-Push can be triggered, not an HttpData-Pull. {% endhint %}
 
 To transfer the data to your desired data sink, navigate to the ```Contracts``` page. This page displays all your contract agreements, including both consuming and providing contract agreements. You can easily distinguish between them by the arrow next to the Contract Agreement (Up = providing, Down = consuming). You can inspect data on your contract agreements, such as the counterpart Connector.
 
