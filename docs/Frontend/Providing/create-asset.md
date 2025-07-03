@@ -29,7 +29,7 @@ You can connect data from any REST-API endpoint by supplying a HTTP-method and t
 ![Asset Datasource Information](/docs/images/edc-ui-create-asset-datasource.png)
 
 #### Authentication
-By specifying the header `Authentication`, you could for example enable basic HTTP-auth or bearer-token authentication. Optionally a single header can be marked as authentication header and can have its value supplied by a vault-secret in our vault connected to your CaaS, "Header with Vault Secret". 
+By specifying the header `Authentication`, you could for example enable basic HTTP-auth or bearer-token authentication. Optionally a single header can be marked as authentication header and can have its value supplied by a vault-secret in our vault connected to your CaaS, `Header with Vault Secret`.
 
 **Custom Datasource**  
 If the UI does not support your desired data address type, you can provide a custom data address config JSON.
