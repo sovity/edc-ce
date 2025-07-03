@@ -52,7 +52,7 @@ Here, `"type": "HttpData"` indicates that the EDC will interpret the destination
 
 #### 3. Transfer Data via Custom Transfer Process Request (JSON)
 
-For passing parameters to the providing Connector or detailed configuration of EDC transfer processes, use the Custom Transfer Process Request (JSON) option.
+For detailed configuration of EDC transfer processes, use the Custom Transfer Process Request (JSON) option.
 
 **Example:**
 {% code title="JSON" overflow="wrap" lineNumbers="true" %}
@@ -82,8 +82,6 @@ For passing parameters to the providing Connector or detailed configuration of E
 }
 ```
 {% endcode %}
-
-Note that this option requires providing the data sink and may include fields for the transfer process request, if enabled by the provider. This is useful for specific cases, such as transferring files to blobs.
 
 Click on ```Initiate Transfer``` to send the asset to the desired data sink.
 
