@@ -9,16 +9,18 @@ Below is an example of a `ContractDefinition` configuration where the `assetsSel
 {% code title="JSON" overflow="wrap" lineNumbers="true" %}
 ```json
 {
+    "@context": {
+        "@vocab": "https://w3id.org/edc/v0.0.1/ns/"
+    },
    "@id": "contractdefinition",
-   "@type": "https://w3id.org/edc/v0.0.1/ns/ContractDefinition",
-   "https://w3id.org/edc/v0.0.1/ns/accessPolicyId": "always-true",
-   "https://w3id.org/edc/v0.0.1/ns/contractPolicyId": "always-true",
-   "https://w3id.org/edc/v0.0.1/ns/assetsSelector": [
+   "accessPolicyId": "always-true",
+   "contractPolicyId": "always-true",
+   "assetsSelector": [
     {
       "@type": "CriterionDto",
-      "https://w3id.org/edc/v0.0.1/ns/operandLeft": "https://w3id.org/edc/v0.0.1/ns/id",
-      "https://w3id.org/edc/v0.0.1/ns/operator": "in",
-      "https://w3id.org/edc/v0.0.1/ns/operandRight": ["test1","test2"]
+      "operandLeft": "id",
+      "operator": "in",
+      "operandRight": ["test1","test2"]
     }
    ]
 }
