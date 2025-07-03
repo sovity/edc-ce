@@ -30,7 +30,7 @@ Use this endpoint to create a new secret in the Connector Vault.
 {% endcode %}
 
 - `@id`: Unique identifier (alias) for the secret.
-- `edc:value`: The secret value to be stored.
+- `value`: The secret value to be stored.
 
 
 ### 2. Retrieve a Secret
@@ -70,7 +70,7 @@ Use this endpoint to update the value of an existing secret.
 {% endcode %}
 
 - `@id`: Unique identifier (alias) for the secret.
-- `edc:value`: The updated secret value to be stored.
+- `value`: The updated secret value to be stored.
 
 ## Limitations
 - You cannot add json structures to the vault. This is necessary if you want to add AWS-S3 Credentials to the vault.
