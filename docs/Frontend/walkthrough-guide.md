@@ -34,7 +34,7 @@ The last step on the part of the data provider should be to create a contract de
 
 ## Consumer: Catalog Browser
 
-One of the consumer's first steps is to query the data catalog of another connector. To do this, the Catalog Browser page must be opened in the UI. Another Connector endpoint can then be entered so that its data offers are displayed according where the access-policy-check passed. If a suitable data offer has been found, the detail page can be accessed by clicking on the title of the data offer. This page also offers the option of starting a contract negotiation by clicking on the corresponding button when having the detail page opened.
+One of the consumer's first steps is to query the data catalog of another connector. To do this, the Catalog Browser page must be opened in the UI. Another Connector endpoint can then be entered so that its data offers are displayed according where the access-policy-check passed, but please keep in mind, that Catalog requests now require the participantId of the requested other Connector in the UI to be appended. If a suitable data offer has been found, the detail page can be accessed by clicking on the title of the data offer. This page also offers the option of starting a contract negotiation by clicking on the corresponding button when having the detail page opened.
 
 ![Catalog Browser](/docs/images/edc-ui-walkthrough-catalog-browser.png)
 
