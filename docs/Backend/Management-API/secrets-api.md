@@ -13,7 +13,7 @@ This API is designed for managing and creating secrets in the Connector Vault, w
 Use this endpoint to create a new secret in the Connector Vault.
 
 **Endpoint**:  
-`POST {{EDC_MANAGEMENT_URL}}/v3/secrets`
+`POST {{Management-API}}/v3/secrets`
 
 **Request Body**:
 {% code title="JSON" overflow="wrap" lineNumbers="true" %}
@@ -37,7 +37,7 @@ Use this endpoint to create a new secret in the Connector Vault.
 Use this endpoint to retrieve a secret by its unique identifier.
 
 **Endpoint**:  
-`GET {{EDC_MANAGEMENT_URL}}/v3/secrets/:secret-id`
+`GET {{Management-API}}/v3/secrets/:secret-id`
 
 - Replace `:secret-id` with the unique identifier (alias) of the secret.
 
@@ -45,7 +45,7 @@ Use this endpoint to retrieve a secret by its unique identifier.
 Use this endpoint to delete a stored secret by its unique identifier.
 
 **Endpoint**:  
-`DELETE {{EDC_MANAGEMENT_URL}}/v3/secrets/:secret-id`
+`DELETE {{Management-API}}/v3/secrets/:secret-id`
 
 - Replace `:secret-id` with the unique identifier (alias) of the secret.
 
@@ -53,7 +53,7 @@ Use this endpoint to delete a stored secret by its unique identifier.
 Use this endpoint to update the value of an existing secret.
 
 **Endpoint**:  
-`PUT {{EDC_MANAGEMENT_URL}}/v3/secrets`
+`PUT {{Management-API}}/v3/secrets`
 
 **Request Body**:
 {% code title="JSON" overflow="wrap" lineNumbers="true" %}
