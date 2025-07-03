@@ -18,7 +18,7 @@ In this case, the base URL remains: `https://example.com/dataset/`.
 
 To add an asset that references such a base URL which supports parameterization, use the following API request:
 
-`POST {{MANAGEMENT-API}}/v3/assets`
+`POST {{Management-API}}/v3/assets`
 
 {% code title="JSON" overflow="wrap" lineNumbers="true" %}
 ```json
@@ -66,7 +66,7 @@ To access the dataset, query the Provider's EDC catalog and identify the require
 
 Next, request the `EDR token`:
 
-`POST {{MANAGEMENT-API}}/v3/edrs`
+`POST {{Management-API}}/v3/edrs`
 
 {% code title="JSON" overflow="wrap" lineNumbers="true" %}
 ```json
@@ -101,7 +101,7 @@ Successfully reaching this stage confirms a successful negotiation.
 
 Use the EDR token ID to retrieve the `transferProcessId`:
 
-`POST {{MANAGEMENT-API}}/v3/edrs/request`
+`POST {{Management-API}}/v3/edrs/request`
 
 {% code title="JSON" overflow="wrap" lineNumbers="true" %}
 ```json
@@ -129,7 +129,7 @@ Copy the `transferProcessId` from the response to proceed, later to be used for 
 
 To obtain the data address from which the dataset can be requested:
 
-`GET {{MANAGEMENT-API}}/v3/edrs/{{transferProcessId}}/dataaddress`
+`GET {{Management-API}}/v3/edrs/{{transferProcessId}}/dataaddress`
 
 The response contains two crucial data points:
 - `endpoint` – The URL of the data plane providing the requested asset, later to be used for `{{endpoint}}`.
