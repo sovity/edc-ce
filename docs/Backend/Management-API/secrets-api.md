@@ -20,11 +20,11 @@ Use this endpoint to create a new secret in the Connector Vault.
 ```json
 {
     "@context": {
-        "edc": "https://w3id.org/edc/v0.0.1/ns/"
+        "@vocab": "https://w3id.org/edc/v0.0.1/ns/"
     },
     "@type": "Secret",
     "@id": "secret-alias",
-    "edc:value": "my-secret"
+    "value": "my-secret"
 }
 ```
 {% endcode %}
@@ -60,11 +60,11 @@ Use this endpoint to update the value of an existing secret.
 ```json
 {
     "@context": {
-        "edc": "https://w3id.org/edc/v0.0.1/ns/"
+        "@vocab": "https://w3id.org/edc/v0.0.1/ns/"
     },
     "@type": "Secret",
     "@id": "secret-id",
-    "edc:value": "my-updated-secret"
+    "value": "my-updated-secret"
 }
 ```
 {% endcode %}
