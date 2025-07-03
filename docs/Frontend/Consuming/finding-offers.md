@@ -8,8 +8,6 @@ To find and consume data from another Connector, you first need to get the Conne
 
 Once you have the Connector Endpoint of the Connector to explore, click on the tab ```Catalog Browser``` and enter the URL into the ```Connector Endpoint``` search bar. Your Connector will automatically show you all available offerings from the other Connector that your Connector is entitled to see.
 
-You can also connect to multiple Catalogs at once by entering multiple Connector Endpoints, separated by commas, in the search bar.
-
 The information symbol in the ```Connector Endpoint``` search bar provides basic information on the current status of the connection process to the entered catalogs, as well as potential error messages.
 
 The ```Search catalog``` bar lets you search for a specific offering within the Catalog Browser.
