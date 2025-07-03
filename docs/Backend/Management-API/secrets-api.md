@@ -4,8 +4,8 @@ This API is designed for managing and creating secrets in the Connector Vault, w
 
 ## Key Concepts
 
-- **`secret-alias`**: Represents the unique identifier (alias) for the secret in the vault. It acts as a reference to retrieve or manage the stored secret.
-- **`my-secret`**: Represents the actual value of the secret that needs to be stored. This could be sensitive data, such as client credentials or tokens.
+- `secret-alias`: Represents the unique identifier (alias) for the secret in the vault. It acts as a reference to retrieve or manage the stored secret.
+- `my-secret`: Represents the actual value of the secret that needs to be stored. This could be sensitive data, such as client credentials or tokens.
 
 ## Endpoints
 
