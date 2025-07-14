@@ -44,8 +44,8 @@ flowchart TD
       edc-11002[edc:11002<br>Management API]
       edc-11003[edc:11003<br>Protocol API]
       edc-11004[edc:11004<br>Control API]
-      edc-11005[edc:12005<br>Public API]
-      edc-11006[edc:12006<br>Proxy API]
+      edc-11005[edc:11005<br>Public API]
+      edc-11006[edc:11006<br>Proxy API]
     end
     auth-proxy[Auth Proxy]
     ui[UI]

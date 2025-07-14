@@ -8,17 +8,20 @@ Our CaaS is mostly controlled by our users via the UI, i.e., assets are created,
 
 ### Endpoints
 
-The `{{Management-API}}` specifies the URL of the Management-API, and the prefixes `v2` and `v3` indicate that the endpoints are currently versioned independently of each other.
+The `{{Management-API}}` specifies the base-URL of the Management-API, which can be seen e.g. at the sovity EDC UI Dashboard.
 
 | Resource            | Endpoint                                      |
 |---------------------|-----------------------------------------------|
-| **Asset**           | `{{Management-API}}/v2/assets` or `{{Management-API}}/v3/assets` |
-| **Policy Definition** | `{{Management-API}}/v2/policydefinitions`    |
-| **Contract Definition** | `{{Management-API}}/v2/contractdefinitions` |
-| **Catalog**         | `{{Management-API}}/v2/catalog`               |
-| **Contract Negotiation** | `{{Management-API}}/v2/contractnegotiations` |
-| **Contract Agreement** | `{{Management-API}}/v2/contractagreements`   |
-| **Transfer Process** | `{{Management-API}}/v2/transferprocesses`     |
+| **Assets**          | `{{Management-API}}/v3/assets` |
+| **Policies**        | `{{Management-API}}/v3/policydefinitions`    |
+| **Business Partner Groups** | `{{Management-API}}/v3/business-partner-groups`    |
+| **Contract Definitions** | `{{Management-API}}/v3/contractdefinitions` |
+| **Catalog**         | `{{Management-API}}/v3/catalog/request`               |
+| **Contract Negotiations** | `{{Management-API}}/v3/contractnegotiations` |
+| **Contract Agreements** | `{{Management-API}}/v3/contractagreements`   |
+| **Transfer Process** | `{{Management-API}}/v3/transferprocesses`     |
+| **EDRs**            | `{{Management-API}}/v3/edrs`     |
+| **Secrets**         | `{{Management-API}}/v3/secrets`     |
 
 ### Brief JSON-LD Introduction
 

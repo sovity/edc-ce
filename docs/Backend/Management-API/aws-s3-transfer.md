@@ -18,13 +18,13 @@
 ```json
 {
     "@context": {
-        "edc": "https://w3id.org/edc/v0.0.1/ns/"
+        "@vocab": "https://w3id.org/edc/v0.0.1/ns/"
     },
     "asset": {
         "properties": {
             "asset:prop:name": "aws s3",
             "asset:prop:description": "Asset capable of accessing s3 storage",
-            "edc:id": "aws-s3"
+            "id": "aws-s3"
         }
     },
     "dataAddress": {

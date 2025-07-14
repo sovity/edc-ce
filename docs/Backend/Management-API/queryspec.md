@@ -17,16 +17,18 @@ These APIs either have the QuerySpec as a complete body or the QuerySpec is part
 {% code title="JSON" overflow="wrap" lineNumbers="true" %}
 ```json
 {
-    "@type": "https://w3id.org/edc/v0.0.1/ns/QuerySpec",
-    "https://w3id.org/edc/v0.0.1/ns/offset": 0,
-    "https://w3id.org/edc/v0.0.1/ns/limit": 100,
-    "https://w3id.org/edc/v0.0.1/ns/sortOrder": "DESC",
-    "https://w3id.org/edc/v0.0.1/ns/sortField": "fieldName",
-    "https://w3id.org/edc/v0.0.1/ns/filterExpression": [
+    "@context": {
+        "@vocab": "https://w3id.org/edc/v0.0.1/ns/"
+    },
+    "offset": 0,
+    "limit": 100,
+    "sortOrder": "DESC",
+    "sortField": "fieldName",
+    "filterExpression": [
         {
-            "https://w3id.org/edc/v0.0.1/ns/operandLeft": "assetId",
-            "https://w3id.org/edc/v0.0.1/ns/operator": "=",
-            "https://w3id.org/edc/v0.0.1/ns/operandRight": "test"
+            "operandLeft": "assetId",
+            "operator": "=",
+            "operandRight": "test"
         }
     ]
 }
@@ -41,14 +43,16 @@ For example, pagination can be enabled by changing the number of returned data r
 {% code title="JSON" overflow="wrap" lineNumbers="true" %}
 ```json
 {
-    "@type": "https://w3id.org/edc/v0.0.1/ns/QuerySpec",
-    "https://w3id.org/edc/v0.0.1/ns/offset": 0,
-    "https://w3id.org/edc/v0.0.1/ns/limit": 100,
-    "https://w3id.org/edc/v0.0.1/ns/filterExpression": [
+    "@context": {
+        "@vocab": "https://w3id.org/edc/v0.0.1/ns/"
+    },
+    "offset": 0,
+    "limit": 100,
+    "filterExpression": [
         {
-            "https://w3id.org/edc/v0.0.1/ns/operandLeft": "asset:prop:type",
-            "https://w3id.org/edc/v0.0.1/ns/operator": "=",
-            "https://w3id.org/edc/v0.0.1/ns/operandRight": "data.core.digitalTwinRegistry"
+            "operandLeft": "asset:prop:type",
+            "operator": "=",
+            "operandRight": "data.core.digitalTwinRegistry"
         }
     ]
 }
@@ -64,9 +68,8 @@ The `POST` body should of course be adapted to the specific situation as needed.
 ```json
 {
    "@context": {
-       "edc": "https://w3id.org/edc/v0.0.1/ns/"
+       "@vocab": "https://w3id.org/edc/v0.0.1/ns/"
    },
-   "@type": "QuerySpecDto",
    "offset": 0,
    "limit": 100,
    "filterExpression": [

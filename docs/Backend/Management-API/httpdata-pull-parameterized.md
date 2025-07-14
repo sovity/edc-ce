@@ -1,7 +1,5 @@
 ## Data-Transfer using HttpData-Pull and EDR
 
-{% hint style="warning" %} In version 11.0.0, the in the following documentation required EDR-APIs are only available in the Catena configuration and not when using an IAM-mock or a DAPS. {% endhint %}
-
 **Parameterization**: In certain scenarios, it is beneficial to expose multiple datasets via a single asset, reducing contract negotiations and catalog size, thus improving Connector scalability.
 
 {% hint style="info" %} Parameterization is optional and does not have to be activated by the Provider if the datasource API does not require or enable it. In this case, the corresponding parameters do not have to be enabled when creating an asset and the Consumer does not have to add any additional parameters to the endpoint from the EDR. {% endhint %}
@@ -20,7 +18,7 @@ In this case, the base URL remains: `https://example.com/dataset/`.
 
 To add an asset that references such a base URL which supports parameterization, use the following API request:
 
-`POST {{MANAGEMENT-API}}/v3/assets`
+`POST {{Management-API}}/v3/assets`
 
 {% code title="JSON" overflow="wrap" lineNumbers="true" %}
 ```json
@@ -63,18 +61,20 @@ After adding the asset, the asset only needs to be linked in a Contract Definiti
 To access the dataset, query the Provider's EDC catalog and identify the required asset. Extract the following details:
 - `dcat:dataset.{asset}.odrl:hasPolicy.@id` - The data offer ID, later to be used for `{{data-offer-id}}`
 - `dcat:dataset.{asset}.odrl:hasPolicy.odrl:permission` - The policies, in this case permissions, needed to start the negotiation, later used for `{{permissions}}`
+- all JSON-LD context of the response, which must be inserted into the future JSON-LD context of the next call, otherwise, namespaces of the provider policy will not be resolved correctly `{{provider-context}}`, however, the vocabulary vocab does not need to be copied
 
 ##### Step 2: Negotiating the EDR
 
 Next, request the `EDR token`:
 
-`POST {{MANAGEMENT-API}}/v2/edrs`
+`POST {{Management-API}}/v3/edrs`
 
 {% code title="JSON" overflow="wrap" lineNumbers="true" %}
 ```json
 {
     "@context": {
-        "@vocab": "https://w3id.org/edc/v0.0.1/ns/"
+        "@vocab": "https://w3id.org/edc/v0.0.1/ns/",
+        {{provider-context}}
     },
     "@type": "https://w3id.org/edc/v0.0.1/ns/ContractRequest",
     "counterPartyAddress": "{{target-edc}}/control/api/v1/dsp",
@@ -103,7 +103,7 @@ Successfully reaching this stage confirms a successful negotiation.
 
 Use the EDR token ID to retrieve the `transferProcessId`:
 
-`POST {{control_url}}/v2/edrs/request`
+`POST {{Management-API}}/v3/edrs/request`
 
 {% code title="JSON" overflow="wrap" lineNumbers="true" %}
 ```json
@@ -131,7 +131,7 @@ Copy the `transferProcessId` from the response to proceed, later to be used for 
 
 To obtain the data address from which the dataset can be requested:
 
-`GET {{MANAGEMENT-API}}/v2/edrs/{{transferProcessId}}/dataaddress`
+`GET {{Management-API}}/v3/edrs/{{transferProcessId}}/dataaddress`
 
 The response contains two crucial data points:
 - `endpoint` – The URL of the data plane providing the requested asset, later to be used for `{{endpoint}}`.

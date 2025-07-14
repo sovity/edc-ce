@@ -12,17 +12,13 @@ The EDC API-Wrapper contains several APIs that are included with our Connector-a
 
 Special API endpoints available in our Connector-as-a-Service (CaaS). For a list of APIs provided by the API-Wrapper and how to use them, please refer to our postman collection.
 
-#### Use Case API
-
-Generic API for Use Case Applications. Its goal is to replace the Management API, providing stable endpoints across milestones in our auto-generated client libraries. This API is still in development, so expect many new endpoints to be added in the near future.
-
 #### UI API
 
 API endpoints for our EDC UI: These endpoints might contain interesting data that a Use Case Application might benefit from, but please note that these endpoints are unstable and subject to change.
 
 ### Using the Java Client Library
 
-This requires JDK11 or higher, and either a Gradle or Maven project.
+This requires JDK17 or higher, and either a Gradle or Maven project.
 
 #### Installing The Java Client Library
 
