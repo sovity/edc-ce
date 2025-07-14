@@ -19,7 +19,7 @@ The only supported OAuth2 flow right now is the Client Credentials flow.
 
 ### API-Keys
 
-- `authKey` -> optional authentication header, e.g., ```X-Api-Key```
+- `authKey` -> optional authentication header, e.g., `X-Api-Key`
 - `authCode` -> optional authentication value, such as the actual API key
 
 ### Data-Sources
@@ -90,7 +90,7 @@ POST to `/v3/assets`
 
 ### Data Sinks
 
-The data-sink settings must be entered when initiating the transfer. 
+The data-sink settings must be entered when initiating the transfer.
 
 #### Initiating Transfer via UI
 

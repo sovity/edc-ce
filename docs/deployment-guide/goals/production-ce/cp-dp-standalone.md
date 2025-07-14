@@ -35,7 +35,7 @@ In general:
   - Data Plane Public API URL:
     - `https://${MY_EDC_FQDN}/data/api/public` -> `data-plane:12005/data/api/public`
   - Proxy API (originally only for Catena-X):
-    - `https://${MY_EDC_FQDN}/data/api/proxy` -> `data-plane:12006/data/api/proxy
+    - `https://${MY_EDC_FQDN}/data/api/proxy` -> `data-plane:12006/data/api/proxy`
 - UI:
   - `https://${MY_EDC_FQDN}/**` -> **[Auth Proxy]** -> `connector-ui:8080`
 

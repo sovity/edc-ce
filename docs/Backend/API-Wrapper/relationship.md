@@ -26,7 +26,7 @@ The API-Wrapper, introduced in the sovity EDC Community Edition, serves as a hig
 - Simplifies interaction with EDC, making it more accessible via API.
 - Offers stable and simplified API endpoints, reducing the learning curve.
 - Ideal for quick integration and use in common scenarios without needing in-depth EDC knowledge.
-- The UI of our EDC CE is based on the API-Wrapper.
+- The UI of our sovity EDC is based on the API-Wrapper.
 
 ### Relationship and Differences
 
