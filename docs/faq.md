@@ -4,17 +4,17 @@ icon: message-question
 
 ## Welcome to our Frequently Asked Questions (FAQ) collection!
 
-This section is designed to provide quick and clear answers to the most common queries we receive. Whether you're looking for information on our products, services, policies, or need help with troubleshooting, you'll find the answers here. If you can't find the answer to your question, don't hesitate to open a [dicussion](https://github.com/sovity/edc-ce/discussions).
+This section is designed to provide quick and clear answers to the most common queries we receive. Whether you're looking for information on our products, services, policies, or need help with troubleshooting, you'll find the answers here. If you can't find the answer to your question, don't hesitate to open a [discussion](https://github.com/sovity/edc-ce/discussions).
 
 ### How does the EDC API-key work for backend and frontend for API-authentication?
 
 **Backend (EDC):**
-The variable ```EDC_API_AUTH_KEY``` in the EDC backend is used to define the API-key for the Management-API and API-Wrapper in the first place. External requests from external services to the EDC backend and its Management-API/API-Wrapper are then authenticated against this value and the requests must contain this API-key accordingly.
+The variable `edc.api.auth.key` in the EDC backend is used to define the API-key for the Management-API and API-Wrapper in the first place. External requests from external services to the EDC backend and its Management-API/API-Wrapper are then authenticated against this value and the requests must contain this API-key accordingly.
  
 **Frontend (EDC UI):**
-The frontend is such an external service whose API requests to the Management-API/API-Wrapper of the EDC backend must be authenticated like any other API request, hence the variable ```EDC_UI_MANAGEMENT_API_KEY``` in the EDC UI. It therefore tells the UI which API-key it should use for its own requests to the EDC backend in order to be successfully authenticated there, so that the UI can query and display data from the EDC backend or create assets etc.
+The frontend is such an external service whose API requests to the Management-API/API-Wrapper of the EDC backend must be authenticated like any other API request, hence the variable `NEXT_PUBLIC_MANAGEMENT_API_KEY` in the EDC UI. It therefore tells the UI which API-key it should use for its own requests to the EDC backend in order to be successfully authenticated there, so that the UI can query and display data from the EDC backend or create assets etc.
 
-**General Note:** When using docker-compose quotation marks shouldn't be used and therefore the API-Key can't start with a special character like ```&```.
+**General Note:** When using docker-compose `quotation marks` shouldn't be used and therefore the API-Key can't start with a special character like `&`.
 
 ### Can the EDC forward the response content of an error message from the data sink/source?
 
@@ -71,7 +71,7 @@ During the creation of the contract definition, the provider has the opportunity
 
 **2. Terminating an Ongoing Contract Negotiation via API Call**
 
-Within the Management-API, there is an API that can abort and terminate ongoing contract negotiations at any time, independent of policies: `POST /v2/contractnegotiations/{id}/terminate`. If this API is used while a contract negotiation is ongoing, the contract negotiation will be aborted prematurely, ending in the terminated state.
+Within the Management-API, there is an API that can abort and terminate ongoing contract negotiations at any time, independent of policies: `POST /v3/contractnegotiations/{id}/terminate`. If this API is used while a contract negotiation is ongoing, the contract negotiation will be aborted prematurely, ending in the terminated state.
 
 ### Why am I getting a 500 error when accessing the /public endpoint of the Data-Plane?
 

@@ -12,7 +12,7 @@
   * [1. Create Data Offer](Frontend/Providing/create-data-offer.md)
   * [2. Create Asset](Frontend/Providing/create-asset.md)
   * [3. Create Policy](Frontend/Providing/create-policy.md)
-  * [4. Create Contract Definition](Frontend/Providing/create-contract-definition.md)
+  * [4. Publish Data Offer](Frontend/Providing/publish-data-offer.md)
 * [Consuming](Frontend/Consuming/Readme.md)
   * [1. Finding Offers](Frontend/Consuming/finding-offers.md)
   * [2. Initiating Transfers (HttpData-Push)](Frontend/Consuming/initiating-transfer.md)
@@ -37,6 +37,7 @@
   * [AWS S3 Transfer](Backend/Management-API/aws-s3-transfer.md)
   * [Source: Audit Headers](Backend/data-source-audit-headers.md)
   * [Source/Sink: OAuth2/API-Key](Backend/Management-API/oauth2-or-api-keys.md)
+* [Static Callback](Backend/Management-API/static-callback.md)
 
 ## Community Edition Deployment
 
