@@ -8,11 +8,11 @@
 'use client';
 
 import {DataTableColumnHeader} from '@/components/data-column-header';
-import {AssetLink} from '@/components/links/asset-link';
 import {type ContractDefinitionEntry} from '@/lib/api/client/generated';
 import {type ColumnDef} from '@tanstack/react-table';
 import {useTranslations} from 'next-intl';
 import DataOfferActionMenu from './data-offer-action-menu';
+import {AssetSelectorRenderer} from '@/components/policy-editor/renderer/asset-selector-renderer';
 
 type ColumnType = ColumnDef<ContractDefinitionEntry>[];
 
@@ -61,20 +61,14 @@ export const useDataOfferTableColumns = (): ColumnType => {
       accessorFn: (row: ContractDefinitionEntry) =>
         row.assetSelector.map((x) => x.operandRight.value).join(', '),
       header: ({column}) => (
-        <DataTableColumnHeader column={column} title={t('General.assets')} />
+        <DataTableColumnHeader
+          column={column}
+          title={t('General.assetSelector')}
+        />
       ),
-      cell: ({row}) => {
-        return row.original.assetSelector.map((asset, i) => {
-          if (asset.operandRight.value)
-            return (
-              <AssetLink
-                key={`asset-${i}`}
-                assetId={asset.operandRight.value}
-                assetName={asset.operandRight.value}
-              />
-            );
-        });
-      },
+      cell: ({row}) => (
+        <AssetSelectorRenderer assetSelector={row.original.assetSelector} />
+      ),
     },
     {
       id: 'actions',

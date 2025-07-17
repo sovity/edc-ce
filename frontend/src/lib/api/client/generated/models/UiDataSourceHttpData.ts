@@ -32,6 +32,13 @@
  */
 
 import { mapValues } from '../runtime';
+import type { UiHttpAuth } from './UiHttpAuth';
+import {
+    UiHttpAuthFromJSON,
+    UiHttpAuthFromJSONTyped,
+    UiHttpAuthToJSON,
+    UiHttpAuthToJSONTyped,
+} from './UiHttpAuth';
 import type { UiDataSourceHttpDataMethod } from './UiDataSourceHttpDataMethod';
 import {
     UiDataSourceHttpDataMethodFromJSON,
@@ -39,13 +46,6 @@ import {
     UiDataSourceHttpDataMethodToJSON,
     UiDataSourceHttpDataMethodToJSONTyped,
 } from './UiDataSourceHttpDataMethod';
-import type { SecretValue } from './SecretValue';
-import {
-    SecretValueFromJSON,
-    SecretValueFromJSONTyped,
-    SecretValueToJSON,
-    SecretValueToJSONTyped,
-} from './SecretValue';
 
 /**
  * HTTP_DATA type Data Source.
@@ -72,17 +72,11 @@ export interface UiDataSourceHttpData {
      */
     queryString?: string;
     /**
-     * Auth Header name. The auth header is handled specially by the EDC as its value can be read from a vault.
-     * @type {string}
+     * The authentication method.
+     * @type {UiHttpAuth}
      * @memberof UiDataSourceHttpData
      */
-    authHeaderName?: string;
-    /**
-     * Auth Header value.
-     * @type {SecretValue}
-     * @memberof UiDataSourceHttpData
-     */
-    authHeaderValue?: SecretValue;
+    auth?: UiHttpAuth;
     /**
      * HTTP Request Headers. HTTP Header Parameterization is not available.
      * @type {{ [key: string]: string; }}
@@ -138,8 +132,7 @@ export function UiDataSourceHttpDataFromJSONTyped(json: any, ignoreDiscriminator
         'method': json['method'] == null ? undefined : UiDataSourceHttpDataMethodFromJSON(json['method']),
         'baseUrl': json['baseUrl'],
         'queryString': json['queryString'] == null ? undefined : json['queryString'],
-        'authHeaderName': json['authHeaderName'] == null ? undefined : json['authHeaderName'],
-        'authHeaderValue': json['authHeaderValue'] == null ? undefined : SecretValueFromJSON(json['authHeaderValue']),
+        'auth': json['auth'] == null ? undefined : UiHttpAuthFromJSON(json['auth']),
         'headers': json['headers'] == null ? undefined : json['headers'],
         'enableMethodParameterization': json['enableMethodParameterization'] == null ? undefined : json['enableMethodParameterization'],
         'enablePathParameterization': json['enablePathParameterization'] == null ? undefined : json['enablePathParameterization'],
@@ -162,8 +155,7 @@ export function UiDataSourceHttpDataToJSONTyped(value?: UiDataSourceHttpData | n
         'method': UiDataSourceHttpDataMethodToJSON(value['method']),
         'baseUrl': value['baseUrl'],
         'queryString': value['queryString'],
-        'authHeaderName': value['authHeaderName'],
-        'authHeaderValue': SecretValueToJSON(value['authHeaderValue']),
+        'auth': UiHttpAuthToJSON(value['auth']),
         'headers': value['headers'],
         'enableMethodParameterization': value['enableMethodParameterization'],
         'enablePathParameterization': value['enablePathParameterization'],

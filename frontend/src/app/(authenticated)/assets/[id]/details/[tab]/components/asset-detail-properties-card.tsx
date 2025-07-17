@@ -14,16 +14,14 @@ import {Separator} from '@/components/ui/separator';
 import {buildHttpDatasourceParametrizationHints} from '@/lib/utils/assets/http-datasource';
 import {getLanguageSelectItemById} from '@/lib/utils/assets/language-select-item-service';
 import {getTemporalCoverageStr} from '@/lib/utils/assets/temporal-coverage';
-import {recordToList} from '@/lib/utils/object-utils';
+import {mapValues, recordToList} from '@/lib/utils/object-utils';
 import {
   BookAIcon,
   BookTextIcon,
-  BoxIcon,
   Building2Icon,
   BuildingIcon,
   CalendarIcon,
   EclipseIcon,
-  FileBoxIcon,
   FileCodeIcon,
   FileText,
   FileTypeIcon,
@@ -32,10 +30,7 @@ import {
   HouseIcon,
   IdCardIcon,
   LinkIcon,
-  LocateFixed,
-  LocateIcon,
   MailIcon,
-  MapPin,
   PaperclipIcon,
   RotateCwIcon,
   ScaleIcon,
@@ -44,7 +39,6 @@ import {
   VariableIcon,
 } from 'lucide-react';
 import {useTranslations} from 'next-intl';
-import {z} from 'zod';
 import {type UiAssetProps} from './asset-detail-overview-card';
 import {AssetProperty} from './asset-property';
 import {AssetPropertyCard} from './asset-property-card';
@@ -52,27 +46,39 @@ import {buildMailtoUrl} from '@/lib/utils/mailto-link-utils';
 
 const parseJsonToRecord = (
   jsonString: string | undefined,
-): Record<string, string> => {
-  const parsed: unknown = JSON.parse(jsonString ?? '{}');
-  return z.record(z.string()).parse(parsed);
+): Record<string, unknown> => {
+  const parsed: unknown = JSON.parse(jsonString || '{}');
+  return typeof parsed === 'object' && parsed !== null
+    ? (parsed as Record<string, unknown>)
+    : {};
+};
+
+const stringifyCustomProperty = (value: any): string => {
+  if (typeof value === 'object') {
+    return JSON.stringify(value, null, 2);
+  }
+  return String(value);
+};
+
+const customPropertiesToList = (
+  json: string | null | undefined,
+): {key: string; value: string}[] => {
+  const record = parseJsonToRecord(json ?? '');
+  const recordWithStrings = mapValues(record, stringifyCustomProperty);
+  return recordToList(recordWithStrings);
 };
 
 export const AssetDetailPropertiesCard = ({data}: UiAssetProps) => {
   const t = useTranslations();
 
-  const customPropertiesObj = parseJsonToRecord(data.customJsonAsString);
-  const customLdPropertiesObj = parseJsonToRecord(data.customJsonLdAsString);
-  const privateCustomPropertiesObj = parseJsonToRecord(
+  const customProperties = customPropertiesToList(data.customJsonAsString);
+  const customLdProperties = customPropertiesToList(data.customJsonLdAsString);
+  const privateCustomProperties = customPropertiesToList(
     data.privateCustomJsonAsString,
   );
-  const privateCustomLdPropertiesObj = parseJsonToRecord(
+  const privateCustomLdProperties = customPropertiesToList(
     data.privateCustomJsonLdAsString,
   );
-
-  const customProperties = recordToList(customPropertiesObj);
-  const customLdProperties = recordToList(customLdPropertiesObj);
-  const privateCustomProperties = recordToList(privateCustomPropertiesObj);
-  const privateCustomLdProperties = recordToList(privateCustomLdPropertiesObj);
 
   const showAdditionalProperties =
     data.dataModel ||

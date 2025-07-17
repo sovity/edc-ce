@@ -9,10 +9,7 @@ package de.sovity.edc.ce
 
 import de.sovity.edc.ce.config.CeConfigProps
 import de.sovity.edc.ce.config.CeDataspace
-import de.sovity.edc.ce.config.CeVaultEntries
 import de.sovity.edc.ce.modules.auth.ApiKeyAuthModule
-import de.sovity.edc.ce.modules.vault.inmemory.toConfigPropRef
-import de.sovity.edc.ce.utils.TestKeypairs
 import de.sovity.edc.extension.e2e.junit.IntegrationTest2xCpDpExtension
 import de.sovity.edc.runtime.modules.RuntimeConfigProps
 import org.junit.jupiter.api.extension.RegisterExtension
@@ -40,12 +37,6 @@ class ApiWrapperDemoTestIamMockCpDp : ApiWrapperDemoTestBase() {
                 // Management API
                 CeConfigProps.SOVITY_MANAGEMENT_API_IAM_KIND to ApiKeyAuthModule.instance().name,
                 CeConfigProps.EDC_API_AUTH_KEY to randomUUID().toString(),
-
-                // EDR Keys
-                CeVaultEntries.TRANSFER_PROXY_PUBLIC.toConfigPropRef() to
-                    TestKeypairs.dummyEdrEncryptionKeypair.certificate,
-                CeVaultEntries.TRANSFER_PROXY_PRIVATE.toConfigPropRef() to
-                    TestKeypairs.dummyEdrEncryptionKeypair.privateKey,
             ),
             providerDataPlaneConfig = { cpConfig, cpConfigUtils ->
                 mapOf(
@@ -76,12 +67,6 @@ class ApiWrapperDemoTestIamMockCpDp : ApiWrapperDemoTestBase() {
                 // Management API
                 CeConfigProps.SOVITY_MANAGEMENT_API_IAM_KIND to ApiKeyAuthModule.instance().name,
                 CeConfigProps.EDC_API_AUTH_KEY to randomUUID().toString(),
-
-                // EDR Keys
-                CeVaultEntries.TRANSFER_PROXY_PUBLIC.toConfigPropRef() to
-                    TestKeypairs.dummyEdrEncryptionKeypair.certificate,
-                CeVaultEntries.TRANSFER_PROXY_PRIVATE.toConfigPropRef() to
-                    TestKeypairs.dummyEdrEncryptionKeypair.privateKey,
             ),
             consumerDataPlaneConfig = { cpConfig, cpConfigUtils ->
                 mapOf(

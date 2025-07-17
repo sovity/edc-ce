@@ -27,7 +27,7 @@ const DialogsProvider = () => {
             key={dialog.id}
             open={dialog.isOpen}
             onOpenChange={(open) => handleOpenChange(dialog.id, open)}>
-            <DialogContent className="max-h-[90%]">
+            <DialogContent className="max-h-[90%] !max-w-fit">
               {<dialog.dialogContent />}
             </DialogContent>
           </Dialog>

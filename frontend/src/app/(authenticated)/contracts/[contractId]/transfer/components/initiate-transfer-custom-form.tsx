@@ -14,9 +14,12 @@ import {jsonString} from '@/lib/utils/zod/schema-utils';
 import {useTranslations} from 'next-intl';
 import {type UseFormReturn} from 'react-hook-form';
 import {z} from 'zod';
+import InputField from '@/components/form/input-field';
 
 export const initiateTransferCustomSchema = z.object({
   transferType: z.literal('CUSTOM_JSON' satisfies DataOfferLiveType),
+  customTransferType: z.string().min(1),
+  transferPropertiesJson: jsonString(),
   dataAddressJson: jsonString(),
 });
 
@@ -36,6 +39,22 @@ export const InitiateTransferCustomForm = ({
   return (
     value.transferType === 'CUSTOM_JSON' && (
       <>
+        {/* Custom Transfer Type */}
+        <InputField
+          className={'grow'}
+          control={form.control}
+          name={'customTransferType'}
+          placeholder={'e.g. HttpData-PUSH'}
+          label={t('General.customTransferType')}
+          isRequired
+        />
+        {/* Custom Transfer Properties JSON */}
+        <TextareaField
+          control={form.control}
+          name={'transferPropertiesJson'}
+          placeholder="{...}"
+          label={t('General.transferPropertiesJson')}
+        />
         {/* Custom Data Address JSON */}
         <TextareaField
           control={form.control}

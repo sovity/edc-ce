@@ -43,6 +43,11 @@ object EdcUiModule {
 
         property(
             category,
+            CeConfigProps.SOVITY_EDC_UI_FEATURES_ADD_WILDCARD
+        )
+
+        property(
+            category,
             CeConfigProps.SOVITY_EDC_UI_FEATURES_EXCLUDE
         )
 

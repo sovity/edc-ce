@@ -29,8 +29,6 @@ public class ContractAgreementTerminationApiService {
         String contractAgreementId,
         ContractTerminationRequest contractTerminationRequest
     ) {
-        ValidatorUtils.validate(contractTerminationRequest);
-
         try {
             val terminatedAt = contractAgreementTerminationService.terminateAgreementOrThrow(
                 dsl,

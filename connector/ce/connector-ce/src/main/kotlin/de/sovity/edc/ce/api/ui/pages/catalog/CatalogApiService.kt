@@ -8,10 +8,10 @@
 package de.sovity.edc.ce.api.ui.pages.catalog
 
 import de.sovity.edc.ce.api.ui.model.UiDataOffer
+import de.sovity.edc.ce.api.utils.notFoundError
 import de.sovity.edc.ce.libs.mappers.dsp.DspCatalogService
 import de.sovity.edc.runtime.simple_di.Service
 import de.sovity.edc.utils.jsonld.vocab.Prop
-import jakarta.ws.rs.WebApplicationException
 import org.eclipse.edc.spi.query.Criterion
 import org.eclipse.edc.spi.query.QuerySpec
 
@@ -45,6 +45,6 @@ class CatalogApiService(
             querySpec
         )
         return uiDataOfferBuilder.buildUiDataOffers(dspCatalog).firstOrNull()
-            ?: throw WebApplicationException("No data offer found", 404)
+            ?: notFoundError("No data offer found")
     }
 }

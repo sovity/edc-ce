@@ -40,6 +40,7 @@ import org.eclipse.edc.policy.engine.spi.PolicyEngine
 import org.eclipse.edc.policy.engine.spi.RuleBindingRegistry
 import org.eclipse.edc.runtime.metamodel.annotation.Inject
 import org.eclipse.edc.spi.constants.CoreConstants
+import org.eclipse.edc.spi.security.Vault
 import org.eclipse.edc.spi.system.ServiceExtension
 import org.eclipse.edc.spi.system.ServiceExtensionContext
 import org.eclipse.edc.spi.types.TypeManager
@@ -133,6 +134,9 @@ class CeApiExtension : ServiceExtension {
     @Inject
     private lateinit var webService: WebService
 
+    @Inject
+    private lateinit var vault: Vault
+
     override fun initialize(context: ServiceExtensionContext) {
         val objectMapper = typeManager.getMapper(CoreConstants.JSON_LD)
         fixObjectMapperDateSerialization(objectMapper)
@@ -140,14 +144,14 @@ class CeApiExtension : ServiceExtension {
         val instances = SimpleDi()
             .addAllowedPackage(
                 CeApiExtension::class.java.packageName,
-                "de.sovity.edc.ce.libs.mappers"
+                "de.sovity.edc.ce.libs.mappers",
             )
             .addClassesToInstantiate( // the order is important here
                 ExpressionExtractor::class.java,
                 OwnConnectorEndpointServiceImpl::class.java,
                 UiResourceImpl::class.java,
                 UseCaseResourceImpl::class.java,
-                OnDemandAssetDataSourceController::class.java
+                OnDemandAssetDataSourceController::class.java,
             )
             .addInstances(
                 context.config,
@@ -174,7 +178,8 @@ class CeApiExtension : ServiceExtension {
                 transferProcessService,
                 transferProcessStore,
                 typeTransformerRegistry,
-                objectMapper
+                objectMapper,
+                vault
             )
             .addInstance(contractAgreementService)
             .onInstanceCreatedRegisterEdcService(context)

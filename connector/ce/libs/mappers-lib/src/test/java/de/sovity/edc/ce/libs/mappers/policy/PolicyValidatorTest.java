@@ -103,14 +103,12 @@ class PolicyValidatorTest {
 
         // assert
         assertThat(errors.getErrors()).containsExactlyInAnyOrder(
-            "$: Policy has no permissions.",
-            "$: Policy has prohibitions, which are currently unsupported.",
-            "$: Policy has obligations, which are currently unsupported.",
-            "$: Policy has inheritsFrom, which is currently unsupported.",
-            "$: Policy has an assigner, which is currently unsupported.",
-            "$: Policy has an assignee, which is currently unsupported.",
-            "$: Policy has extensible properties.",
-            "$: Policy does not have type SET, but OFFER, which is currently unsupported."
+            "$: Warning: Policy has no permissions.",
+            "$: Warning: Policy has prohibitions, which are currently unsupported.",
+            "$: Warning: Policy has obligations, which are currently unsupported.",
+            "$: Warning: Policy has inheritsFrom, which is currently unsupported.",
+            "$: Warning: Policy has an assignee, which is currently unsupported.",
+            "$: Warning: Policy has extensible properties."
         );
     }
 
@@ -124,7 +122,7 @@ class PolicyValidatorTest {
         policyValidator.validateOtherPermissionFieldsUnset(permission, errors);
 
         // assert
-        assertThat(errors.getErrors()).containsExactly("$: Permission is null.");
+        assertThat(errors.getErrors()).containsExactly("$: Warning: Permission is null.");
     }
 
     @Test
@@ -178,7 +176,7 @@ class PolicyValidatorTest {
         // assert
         assertThat(errors.getErrors()).containsExactlyInAnyOrder(
             "$: Permission has duties, which is currently unsupported.",
-            "$.action: Action has a type that is not 'USE', but 'idk'.",
+            "$.action: Action has a type that is not '[USE, use, http://www.w3.org/ns/odrl/2/use]', but 'idk'.",
             "$.action: Action has a value for includedIn, which is currently unsupported.",
             "$.action: Action has a constraint, which is currently unsupported."
         );

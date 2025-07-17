@@ -33,6 +33,9 @@ import de.sovity.edc.ce.api.ui.model.TransferHistoryPage
 import de.sovity.edc.ce.api.ui.model.UiConfig
 import de.sovity.edc.ce.api.ui.model.UiContractNegotiation
 import de.sovity.edc.ce.api.ui.model.UiDataOffer
+import de.sovity.edc.ce.api.ui.model.VaultSecretCreateSubmit
+import de.sovity.edc.ce.api.ui.model.VaultSecretEditSubmit
+import de.sovity.edc.ce.api.ui.model.VaultSecretQuery
 import de.sovity.edc.ce.api.ui.pages.asset.AssetApiService
 import de.sovity.edc.ce.api.ui.pages.catalog.CatalogApiService
 import de.sovity.edc.ce.api.ui.pages.config.UiConfigApiService
@@ -47,6 +50,8 @@ import de.sovity.edc.ce.api.ui.pages.data_offer.DataOfferPageApiService
 import de.sovity.edc.ce.api.ui.pages.policy.PolicyDefinitionApiService
 import de.sovity.edc.ce.api.ui.pages.transferhistory.TransferHistoryPageApiService
 import de.sovity.edc.ce.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService
+import de.sovity.edc.ce.api.ui.pages.vault_secret.VaultSecretApiService
+import de.sovity.edc.ce.api.utils.ValidatorUtils
 import de.sovity.edc.ce.modules.db.jooq.DslContextFactory
 import de.sovity.edc.runtime.simple_di.Service
 import org.jooq.DSLContext
@@ -70,6 +75,7 @@ class UiResourceImpl(
     private val policyDefinitionApiService: PolicyDefinitionApiService,
     private val transferHistoryPageApiService: TransferHistoryPageApiService,
     private val transferHistoryPageAssetFetcherService: TransferHistoryPageAssetFetcherService,
+    private val vaultSecretApiService: VaultSecretApiService,
 ) : UiResource {
 
     override fun getDashboardPage(): DashboardPage =
@@ -102,6 +108,36 @@ class UiResourceImpl(
     override fun deleteAsset(assetId: String): IdResponseDto =
         dslContextFactory.transactionResult {
             assetApiService.deleteAsset(assetId)
+        }
+
+    override fun createVaultSecret(submitRequest: VaultSecretCreateSubmit) =
+        dslContextFactory.transactionResult { dsl ->
+            ValidatorUtils.validate(submitRequest)
+            vaultSecretApiService.createSubmit(dsl, submitRequest)
+        }
+
+    override fun editVaultSecretPage(key: String) =
+        dslContextFactory.transactionResult { dsl ->
+            vaultSecretApiService.editPage(dsl, key)
+        }
+
+    override fun editVaultSecret(
+        key: String,
+        submitRequest: VaultSecretEditSubmit
+    ) =
+        dslContextFactory.transactionResult { dsl ->
+            ValidatorUtils.validate(submitRequest)
+            vaultSecretApiService.editSubmit(dsl, key, submitRequest)
+        }
+
+    override fun listVaultSecretsPage(vaultSecretQuery: VaultSecretQuery?) =
+        dslContextFactory.transactionResult { dsl ->
+            vaultSecretApiService.listPage(dsl, vaultSecretQuery)
+        }
+
+    override fun deleteVaultSecret(key: String) =
+        dslContextFactory.transactionResult { dsl ->
+            vaultSecretApiService.deleteSubmit(dsl, key)
         }
 
     override fun getPolicyDefinitionPage(): PolicyDefinitionPage =
@@ -247,6 +283,7 @@ class UiResourceImpl(
         contractTerminationRequest: ContractTerminationRequest
     ): IdResponseDto {
         return dslContextFactory.transactionResult { dsl ->
+            ValidatorUtils.validate(contractTerminationRequest)
             contractAgreementTerminationApiService.terminate(
                 dsl,
                 contractAgreementId,

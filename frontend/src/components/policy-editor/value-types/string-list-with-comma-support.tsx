@@ -7,12 +7,7 @@
  */
 'use client';
 
-import {TagInputField} from '@/components/form/tag-input-field';
 import {readArrayLiteral} from '@/components/policy-editor/core/policy-jsonld-utils';
-import type {TreeNode} from '@/components/policy-editor/core/tree-node';
-import {OperatorSelect} from '@/components/policy-editor/editor/operator-select';
-import type {UsePolicyEditor} from '@/components/policy-editor/editor/use-policy-editor';
-import type {PolicyEditorNodeValue} from '@/components/policy-editor/model/policy-editor-node-value';
 import type {PolicyValueTypeAdapter} from '@/components/policy-editor/model/policy-value-type-adapter';
 import {
   type PolicyEditorConstraintFormValue,
@@ -20,7 +15,6 @@ import {
 } from '@/components/policy-editor/value-types/all';
 import {filterNonNull} from '@/lib/utils/array-utils';
 import {OperatorDto} from '@sovity.de/edc-client';
-import {useTranslations} from 'next-intl';
 import {z} from 'zod';
 
 export const stringListWithCommaSupportFormSchema = z.object({
@@ -74,27 +68,4 @@ export const stringListWithCommaSupportAdapter: PolicyValueTypeAdapter = {
       valueList: [],
     },
   }),
-};
-
-export const PolicyEditorConstraintStringList = ({
-  policyEditor,
-  treeNode,
-}: {
-  policyEditor: UsePolicyEditor;
-  treeNode: TreeNode<PolicyEditorNodeValue>;
-}) => {
-  const t = useTranslations();
-  return (
-    <div className={'flex gap-4'}>
-      <OperatorSelect policyEditor={policyEditor} treeNode={treeNode} />
-      <TagInputField
-        className={'grow'}
-        name={policyEditor.formKeyForNode(treeNode, 'stringList')}
-        control={policyEditor.form.control}
-        label={treeNode.value.verb?.operandRightTitle?.(t) ?? 'Unknown'}
-        placeholder={treeNode.value.verb?.operandRightPlaceholder?.(t)}
-        isRequired={true}
-      />
-    </div>
-  );
 };

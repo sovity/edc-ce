@@ -49,7 +49,7 @@ export const DataOfferLiveCustomForm = ({
           control={form.control}
           name={fieldKey('dataAddressJson')}
           placeholder='{"https://w3id.org/edc/v0.0.1/ns/type": "HttpData", ...}'
-          label={t('Pages.DataOfferCreate.custom_datasource_config_json_label')}
+          label={t('Pages.DataOfferCreate.dataSourceTypeCustom')}
         />
       </>
     )

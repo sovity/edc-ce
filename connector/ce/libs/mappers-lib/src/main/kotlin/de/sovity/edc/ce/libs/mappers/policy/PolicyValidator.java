@@ -21,13 +21,16 @@
 package de.sovity.edc.ce.libs.mappers.policy;
 
 import de.sovity.edc.runtime.simple_di.Service;
+
+import java.util.List;
+import java.util.Set;
+
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.edc.policy.model.Action;
 import org.eclipse.edc.policy.model.Permission;
 import org.eclipse.edc.policy.model.Policy;
-import org.eclipse.edc.policy.model.PolicyType;
 
 import static org.apache.commons.collections4.CollectionUtils.isEmpty;
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
@@ -36,7 +39,11 @@ import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 @Service
 public class PolicyValidator {
 
-    public static final String ALLOWED_ACTION = "USE";
+    public static final List<String> ALLOWED_ACTION_VALUES = List.of(
+        "USE",
+        "use",
+        "http://www.w3.org/ns/odrl/2/use"
+    );
 
     public void validateOtherPolicyFieldsUnset(Policy policy, MappingErrors errors) {
         if (policy == null) {
@@ -45,41 +52,33 @@ public class PolicyValidator {
         }
 
         if (isEmpty(policy.getPermissions())) {
-            errors.add("Policy has no permissions.");
+            errors.add("Warning: Policy has no permissions.");
         }
 
         if (isNotEmpty(policy.getProhibitions())) {
-            errors.add("Policy has prohibitions, which are currently unsupported.");
+            errors.add("Warning: Policy has prohibitions, which are currently unsupported.");
         }
 
         if (isNotEmpty(policy.getObligations())) {
-            errors.add("Policy has obligations, which are currently unsupported.");
+            errors.add("Warning: Policy has obligations, which are currently unsupported.");
         }
 
         if (StringUtils.isNotBlank(policy.getInheritsFrom())) {
-            errors.add("Policy has inheritsFrom, which is currently unsupported.");
-        }
-
-        if (StringUtils.isNotBlank(policy.getAssigner())) {
-            errors.add("Policy has an assigner, which is currently unsupported.");
+            errors.add("Warning: Policy has inheritsFrom, which is currently unsupported.");
         }
 
         if (StringUtils.isNotBlank(policy.getAssignee())) {
-            errors.add("Policy has an assignee, which is currently unsupported.");
+            errors.add("Warning: Policy has an assignee, which is currently unsupported.");
         }
 
         if (policy.getExtensibleProperties() != null && !policy.getExtensibleProperties().isEmpty()) {
-            errors.add("Policy has extensible properties.");
-        }
-
-        if (policy.getType() != PolicyType.SET) {
-            errors.add("Policy does not have type SET, but %s, which is currently unsupported.".formatted(policy.getType()));
+            errors.add("Warning: Policy has extensible properties.");
         }
     }
 
     public void validateOtherPermissionFieldsUnset(Permission permission, MappingErrors errors) {
         if (permission == null) {
-            errors.add("Permission is null.");
+            errors.add("Warning: Permission is null.");
             return;
         }
 
@@ -96,8 +95,8 @@ public class PolicyValidator {
             return;
         }
 
-        if (!ALLOWED_ACTION.equals(action.getType())) {
-            errors.add("Action has a type that is not '%s', but '%s'.".formatted(ALLOWED_ACTION, action.getType()));
+        if (!ALLOWED_ACTION_VALUES.contains(action.getType())) {
+            errors.add("Action has a type that is not '%s', but '%s'.".formatted(ALLOWED_ACTION_VALUES, action.getType()));
         }
 
         if (StringUtils.isNotBlank(action.getIncludedIn())) {

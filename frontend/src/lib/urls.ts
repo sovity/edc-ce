@@ -5,9 +5,8 @@
  *
  * SPDX-License-Identifier: Elastic-2.0
  */
-const encodeParams = (...params: string[]): string[] => {
-  return params.map((param) => encodeURIComponent(param));
-};
+
+import {encodeParam} from '@/lib/utils/http-utils';
 
 const addSelector = (url: string, selector?: string) => {
   if (selector) {
@@ -16,44 +15,39 @@ const addSelector = (url: string, selector?: string) => {
   return url;
 };
 
+// shorthand for faster access
+const e = encodeParam;
+
 export const urls = {
   rootPage: () => '/',
   transferHistory: () => '/transfer-history',
   assets: {
     listPage: () => '/assets',
     createPage: () => '/assets/create',
-    detailPage: (assetId: string, tab = 'overview') => {
-      const [encodedAssetId, encodedTab] = encodeParams(assetId, tab);
-      return `/assets/${encodedAssetId}/details/${encodedTab}`;
-    },
-    editPage: (assetId: string) => {
-      const [encodedAssetId] = encodeParams(assetId);
-      return `/assets/${encodedAssetId}/edit`;
-    },
+    detailPage: (assetId: string, tab = 'overview') =>
+      `/assets/${e(assetId)}/details/${e(tab)}`,
+    editPage: (assetId: string) => `/assets/${e(assetId)}/edit`,
+  },
+  vaultSecrets: {
+    listPage: () => '/vault-secrets',
+    createPage: () => '/vault-secrets/create',
+    editPage: (id: string) => `/vault-secrets/${e(id)}/edit`,
   },
   catalog: {
     browserPage: () => '/catalog',
-    listPage: (participantId: string, connectorEndpoint: string) => {
-      const [encodedParticipantId, encodedConnectorEndpoint] = encodeParams(
-        participantId,
-        connectorEndpoint,
-      );
-      return `/catalog/${encodedParticipantId}/${encodedConnectorEndpoint}`;
-    },
+    listPage: (participantId: string, connectorEndpoint: string) =>
+      `/catalog/${e(participantId)}/${e(connectorEndpoint)}`,
     detailPage: (
       participantId: string,
       endpointUrl: string,
       assetId: string,
       tab = 'overview',
       selector?: string,
-    ) => {
-      const [encodedParticipantId, encodedEndpointUrl, encodedAssetId] =
-        encodeParams(participantId, endpointUrl, assetId);
-      return addSelector(
-        `/catalog/${encodedParticipantId}/${encodedEndpointUrl}/${encodedAssetId}/${tab}`,
+    ) =>
+      addSelector(
+        `/catalog/${e(participantId)}/${e(endpointUrl)}/${e(assetId)}/${e(tab)}`,
         selector,
-      );
-    },
+      ),
   },
   dataOffers: {
     listPage: () => '/data-offers',
@@ -66,11 +60,9 @@ export const urls = {
   },
   contracts: {
     listPage: () => '/contracts',
-    detailPage: (contractId: string, tab = 'contract-agreement') => {
-      const [encodedContractId] = encodeParams(contractId);
-      return `/contracts/${encodedContractId}/details/${tab}`;
-    },
+    detailPage: (contractId: string, tab = 'contract-agreement') =>
+      `/contracts/${e(contractId)}/details/${e(tab)}`,
     transferPage: (contractId: string) =>
-      `/contracts/${encodeURIComponent(contractId)}/transfer`,
+      `/contracts/${e(contractId)}/transfer`,
   },
 };

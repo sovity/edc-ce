@@ -748,7 +748,7 @@ object CeConfigProps {
     @JvmStatic
     val SOVITY_EDC_UI_FEATURES = ConfigPropRef(
         property = "sovity.edc.ui.features",
-        defaultDocumentation = "Comma separated enabled EDC UI features. Note that most of these require a sovity EDC EE backend.\n\n" +
+        defaultDocumentation = "Comma separated enabled EDC UI features. Not all given available values are supported by the Community Edition.\n\n" +
             "Available values:\n" +
             UiConfigFeature.entries.joinToString("\n") { " * `$it`" },
     )
@@ -756,15 +756,23 @@ object CeConfigProps {
     @JvmStatic
     val SOVITY_EDC_UI_FEATURES_ADD = ConfigPropRef(
         property = "sovity.edc.ui.features.add",
-        defaultDocumentation = "Comma separated EDC UI features to add on top of `${SOVITY_EDC_UI_FEATURES.property}`. Note that most of these require a sovity EDC EE backend.\n\n" +
+        defaultDocumentation = "Comma separated EDC UI features to add on top of `${SOVITY_EDC_UI_FEATURES.property}`. Not all given available values are supported by the Community Edition.\n\n" +
             "Available values:\n" +
+            UiConfigFeature.entries.joinToString("\n") { " * `$it`" }
+    )
+
+    @JvmStatic
+    val SOVITY_EDC_UI_FEATURES_ADD_WILDCARD = ConfigPropRef(
+        property = "sovity.edc.ui.features.add.*",
+        defaultDocumentation = "Set to `true` to individually enable the given EDC UI Feature. Not all given available values are supported by the Community Edition.\n\n" +
+            "Available values for the asterisk:\n" +
             UiConfigFeature.entries.joinToString("\n") { " * `$it`" }
     )
 
     @JvmStatic
     val SOVITY_EDC_UI_FEATURES_EXCLUDE = ConfigPropRef(
         property = "sovity.edc.ui.features.exclude",
-        defaultDocumentation = "Comma separated enabled EDC UI to exclude from `${SOVITY_EDC_UI_FEATURES.property}`. Note that most of these require a sovity EDC EE backend.\n\n" +
+        defaultDocumentation = "Comma separated enabled EDC UI to exclude from `${SOVITY_EDC_UI_FEATURES.property}`. Not all given available values are supported by the Community Edition.\n\n" +
             "Available values:\n" +
             UiConfigFeature.entries.joinToString("\n") { " * `$it`" }
     )
@@ -785,5 +793,11 @@ object CeConfigProps {
     val SOVITY_TESTCONTAINER_POSTGRES_INIT_SCRIPT = ConfigPropRef(
         property = "sovity.testcontainer.postgres.init.script",
         defaultDocumentation = "The name of the init script to execute at the creation of the container.",
+    )
+
+    @JvmStatic
+    val SOVITY_CERTIFICATES_GENERATOR_METHOD = ConfigPropRef(
+        property = "sovity.certificates.generator.method",
+        defaultDocumentation = "The method to use to generate the certificates.",
     )
 }

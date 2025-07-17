@@ -23,12 +23,25 @@ export const AssetProperty = ({
   value,
   className,
 }: AssetPropertyProps) => {
+  // break words exactly when we:
+  // - have a JSON object
+  // - have a single long word (probably a URL or ID)
+  const breakAll =
+    typeof value === 'string' &&
+    (value.startsWith('{') || !value.includes(' '));
+
   return value ? (
     <div className={cn('flex w-full gap-3 rounded-lg p-3', className)}>
       <Icon className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
-      <div className="flex grow flex-col">
+      <div className="flex grow flex-col overflow-hidden">
         <div className="text-xs text-muted-foreground">{label}</div>
-        <div className="text-sm font-medium">{value}</div>
+        <div
+          className={cn(
+            'whitespace-pre-wrap text-sm font-medium',
+            breakAll && 'break-all',
+          )}>
+          {value}
+        </div>
       </div>
     </div>
   ) : null;

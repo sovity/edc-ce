@@ -22,6 +22,7 @@ postgresDbImage = "postgres:17-alpine"
 # Other Libraries
 assertj = "3.27.3"
 awaitility = "4.3.0"
+bouncyCastle = "1.81"
 commonsCollections = "4.4"
 commonsIo = "2.19.0"
 commonsLang = "3.17.0"
@@ -171,6 +172,10 @@ tractus-edrIndexLockSql = { module = "org.eclipse.tractusx.edc:edr-index-lock-sq
 tractus-edrSpi = { module = "org.eclipse.tractusx.edc:edr-spi", version.ref = "tractus" }
 tractus-jsonLdCore = { module = "org.eclipse.tractusx.edc:json-ld-core", version.ref = "tractus" }
 tractus-provisionAdditionalHeaders = { module = "org.eclipse.tractusx.edc:provision-additional-headers", version.ref = "tractus" }
+tractus-retirementEvaluationApi = { module = "org.eclipse.tractusx.edc:retirement-evaluation-api", version.ref = "tractus" }
+tractus-retirementEvaluationCore = { module = "org.eclipse.tractusx.edc:retirement-evaluation-core", version.ref = "tractus" }
+tractus-retirementEvaluationSpi = { module = "org.eclipse.tractusx.edc:retirement-evaluation-spi", version.ref = "tractus" }
+tractus-retirementEvaluationStoreSql = { module = "org.eclipse.tractusx.edc:retirement-evaluation-store-sql", version.ref = "tractus" }
 tractus-tokenRefreshApi = { module = "org.eclipse.tractusx.edc:token-refresh-api", version.ref = "tractus" }
 tractus-tokenRefreshCore = { module = "org.eclipse.tractusx.edc:token-refresh-core", version.ref = "tractus" }
 tractus-tokenrefreshHandler = { module = "org.eclipse.tractusx.edc:tokenrefresh-handler", version.ref = "tractus" }
@@ -180,6 +185,8 @@ apache-commonsCollections = { module = "org.apache.commons:commons-collections4"
 apache-commonsIo = { module = "commons-io:commons-io", version.ref = "commonsIo" }
 apache-commonsLang = { module = "org.apache.commons:commons-lang3", version.ref = "commonsLang" }
 apicatalog-titaniumJsonLd = { module = "com.apicatalog:titanium-json-ld", version.ref = "titaniumLd" }
+bouncyCastle-bcprovJdk18on = { module = "org.bouncycastle:bcprov-jdk18on", version.ref = "bouncyCastle" }
+bouncyCastle-bcpkixJdk18on = { module = "org.bouncycastle:bcpkix-jdk18on", version.ref = "bouncyCastle" }
 findbugs-jsr305 = { module = "com.google.code.findbugs:jsr305", version.ref = "findbugs" }
 flexmark-all = { module = "com.vladsch.flexmark:flexmark-all", version.ref = "flexmark" }
 flyway-core = { module = "org.flywaydb:flyway-core", version.ref = "flyway" }

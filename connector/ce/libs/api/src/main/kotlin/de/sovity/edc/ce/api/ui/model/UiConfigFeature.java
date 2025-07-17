@@ -35,4 +35,10 @@ public enum UiConfigFeature {
 
     // Enterprise Edition specific flag to enable marketing for other Enterprise Edition variants in basic connectors
     EE_BASIC_MARKETING,
+
+    // Enables Catena-X Policies in the UI
+    CATENA_POLICIES,
+
+    // Enables sovity Policies in the UI
+    SOVITY_POLICIES,
 }

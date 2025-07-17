@@ -5,7 +5,6 @@
  *
  * SPDX-License-Identifier: Elastic-2.0
  */
-import {type InitiateTransferHttpFormValue} from '@/app/(authenticated)/contracts/[contractId]/transfer/components/initiate-transfer-http-form';
 import {type DataOfferLiveCustomFormValue} from '@/app/(authenticated)/data-offers/create/components/data-offer-live-custom-form';
 import {type DataOfferLiveFormValue} from '@/app/(authenticated)/data-offers/create/components/data-offer-live-form';
 import {type DataOfferLiveHttpFormValue} from '@/app/(authenticated)/data-offers/create/components/data-offer-live-http-form';
@@ -16,7 +15,12 @@ import {
   everythingBefore,
   trimOrEmpty,
 } from '@/lib/utils/string-utils';
-import {type UiDataSource} from '@sovity.de/edc-client';
+import {
+  type UiDataSource,
+  type UiHttpAuth,
+  UiHttpAuthType,
+  UiHttpOauth2AuthType,
+} from '@sovity.de/edc-client';
 
 export const buildUiDataSource = (
   formValue: DataOfferTypeFormValue,
@@ -77,7 +81,7 @@ const buildHttpDataSource = (
     formValue.httpQueryParams ?? [],
   );
 
-  const authFields = getAuthFields(formValue);
+  const auth = getAuth(formValue);
 
   return {
     type: 'HTTP_DATA',
@@ -85,11 +89,7 @@ const buildHttpDataSource = (
       method: formValue.httpMethod,
       baseUrl,
       queryString: queryString ?? undefined,
-      authHeaderName: authFields.authHeaderName ?? undefined,
-      authHeaderValue: {
-        secretName: authFields.authHeaderSecretName ?? undefined,
-        rawValue: authFields.authHeaderValue ?? undefined,
-      },
+      auth: auth ?? undefined,
       headers: buildHttpHeaders(formValue.httpAdditionalHeaders ?? []),
       enableMethodParameterization: formValue.httpMethodParameterization,
       enablePathParameterization: formValue.httpPathParameterization,
@@ -97,6 +97,66 @@ const buildHttpDataSource = (
       enableBodyParameterization: formValue.httpRequestBodyParameterization,
     },
   };
+};
+
+const getAuth = (formValue: DataOfferLiveHttpFormValue): UiHttpAuth | null => {
+  const auth = formValue.auth;
+  const authType = auth.type;
+  if (authType === 'NONE') {
+    return null;
+  }
+
+  if (authType === 'VAULT_SECRET') {
+    return {
+      type: UiHttpAuthType.ApiKey,
+      apiKey: {
+        headerName: auth.headerName,
+        vaultKey: auth.headerSecretName,
+      },
+    };
+  }
+
+  if (authType === 'BASIC') {
+    return {
+      type: UiHttpAuthType.Basic,
+      basic: {
+        username: auth.username,
+        password: auth.password,
+      },
+    };
+  }
+
+  if (authType === 'OAUTH2_CLIENT_CREDENTIALS') {
+    return {
+      type: UiHttpAuthType.Oauth2,
+      oauth: {
+        tokenUrl: auth.tokenUrl,
+        scope: auth.scope,
+        type: UiHttpOauth2AuthType.SharedSecret,
+        sharedSecret: {
+          clientId: auth.clientId,
+          clientSecretName: auth.clientSecretKeyName,
+        },
+      },
+    };
+  }
+
+  if (auth.type === 'OAUTH2_PRIVATE_KEY') {
+    return {
+      type: UiHttpAuthType.Oauth2,
+      oauth: {
+        tokenUrl: auth.tokenUrl,
+        scope: auth.scope,
+        type: UiHttpOauth2AuthType.PrivateKey,
+        privateKey: {
+          privateKeyName: auth.privateKeyName,
+          tokenValidityInSeconds: +auth.tokenValidityInSeconds,
+        },
+      },
+    };
+  }
+
+  throw new Error(`Unknown auth type: ${authType}`);
 };
 
 export const buildHttpHeaders = (
@@ -141,30 +201,4 @@ export function encodeQueryParam(param: {key: string; value?: string}): string {
 
 export function buildQueryParam(name: string, value: string) {
   return `${name}=${value}`;
-}
-export function getAuthFields(
-  formValue: DataOfferLiveHttpFormValue | InitiateTransferHttpFormValue,
-): {
-  authHeaderName: string | null;
-  authHeaderValue: string | null;
-  authHeaderSecretName: string | null;
-} {
-  let authHeaderName: string | null = null;
-  if (
-    formValue.auth.type === 'VALUE' ||
-    formValue.auth.type === 'VAULT_SECRET'
-  ) {
-    authHeaderName = formValue.auth.headerName.trim() || null;
-  }
-
-  let authHeaderValue: string | null = null;
-  if (authHeaderName && formValue.auth.type === 'VALUE') {
-    authHeaderValue = formValue.auth.headerValue.trim() || null;
-  }
-
-  let authHeaderSecretName: string | null = null;
-  if (authHeaderName && formValue.auth.type === 'VAULT_SECRET') {
-    authHeaderSecretName = formValue.auth.headerSecretName.trim() || null;
-  }
-  return {authHeaderName, authHeaderValue, authHeaderSecretName};
 }

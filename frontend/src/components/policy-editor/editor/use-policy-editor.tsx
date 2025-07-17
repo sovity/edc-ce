@@ -53,7 +53,7 @@ export const usePolicyEditor = (
     addExpression(parentPath, {
       type: 'CONSTRAINT',
       constraint: {
-        left: verb.operandLeftId,
+        left: verb.operandLeftIds[0],
         ...policyContext.getAdapter(verb).emptyConstraintValue(),
       },
     });
@@ -231,7 +231,7 @@ export const usePolicyEditor = (
         return {
           type: 'CONSTRAINT',
           constraint: {
-            left: value.verb!.operandLeftId,
+            left: value.verb!.operandLeftIds[0],
             operator: formValueNode.operator,
             right: adapter.buildValueFn(formValueNode),
           },

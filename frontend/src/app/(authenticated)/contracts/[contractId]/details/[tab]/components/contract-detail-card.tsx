@@ -9,7 +9,7 @@
 
 import CopyTextButton from '@/components/copy-text-button';
 import {PolicyRenderer} from '@/components/policy-editor/renderer/policy-renderer';
-import {sovityDataspacePolicyContext} from '@/components/policy-editor/supported-policies';
+import {usePolicyContext} from '@/components/policy-editor/use-policy-context';
 import {Card, CardContent} from '@/components/ui/card';
 import {AssetProperty} from '@/app/(authenticated)/assets/[id]/details/[tab]/components/asset-property';
 import {canTerminate} from '@/app/(authenticated)/contracts/components/contract-agreement-capabilities';
@@ -29,7 +29,7 @@ export const ContractDetailCard = (props: ContractAgreementDetailsProps) => {
   const t = useTranslations();
   const {contract} = props;
 
-  const policyContext = sovityDataspacePolicyContext();
+  const policyContext = usePolicyContext();
 
   const expression = contract.contractPolicy.expression
     ? policyContext.policyExpressionMapper.buildPolicyExpressionMapped(

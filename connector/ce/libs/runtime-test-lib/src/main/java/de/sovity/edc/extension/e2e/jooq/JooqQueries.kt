@@ -10,6 +10,7 @@ package de.sovity.edc.extension.e2e.jooq
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import de.sovity.edc.ce.db.jooq.Tables
+import de.sovity.edc.ce.db.jooq.tables.records.SovityVaultSecretRecord
 import org.eclipse.edc.connector.controlplane.asset.spi.domain.Asset
 import org.eclipse.edc.connector.controlplane.contract.spi.types.agreement.ContractAgreement
 import org.eclipse.edc.connector.controlplane.contract.spi.types.negotiation.ContractNegotiation
@@ -19,6 +20,7 @@ import org.eclipse.edc.connector.controlplane.transfer.spi.types.TransferProcess
 import org.jooq.DSLContext
 import org.jooq.JSON
 import org.jooq.JSON.jsonOrNull
+import java.time.OffsetDateTime
 
 class JooqQueries(
     private val objectMapper: ObjectMapper
@@ -60,6 +62,18 @@ class JooqQueries(
         dsl.batchInsert(records).execute()
     }
 
+    fun removeAllVaultSecrets(dsl: DSLContext) = dsl.deleteFrom(Tables.SOVITY_VAULT_SECRET).execute()
+
+    fun insertVaultSecret(dsl: DSLContext, key: String, addMore: (SovityVaultSecretRecord) -> Unit = {}) {
+        dsl.newRecord(Tables.SOVITY_VAULT_SECRET).also {
+            it.key = key
+            it.description = "$key description"
+            it.updatedAt = OffsetDateTime.now()
+            addMore(it)
+            it.insert()
+        }
+    }
+
     fun insertPolicies(dsl: DSLContext, policyDefinitions: List<PolicyDefinition>) {
         val records = policyDefinitions.map { policyDef ->
             dsl.newRecord(Tables.EDC_POLICYDEFINITIONS).also {
@@ -78,6 +92,7 @@ class JooqQueries(
                 it.assignee = policy.assignee
                 it.target = policy.target
                 it.policyType = toJsonString(policy.type)
+                it.profiles = toJson(policy.profiles)
             }
         }
         dsl.batchInsert(records).execute()

@@ -39,7 +39,9 @@
 export const UiConfigFeature = {
     ConnectorLimits: 'CONNECTOR_LIMITS',
     OpenSourceMarketing: 'OPEN_SOURCE_MARKETING',
-    EeBasicMarketing: 'EE_BASIC_MARKETING'
+    EeBasicMarketing: 'EE_BASIC_MARKETING',
+    CatenaPolicies: 'CATENA_POLICIES',
+    SovityPolicies: 'SOVITY_POLICIES'
 } as const;
 export type UiConfigFeature = typeof UiConfigFeature[keyof typeof UiConfigFeature];
 

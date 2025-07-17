@@ -7,6 +7,7 @@
  */
 package de.sovity.edc.ce.modules.dataspaces.catena
 
+import de.sovity.edc.ce.api.ui.model.UiConfigFeature
 import de.sovity.edc.ce.config.CeConfigProps
 import de.sovity.edc.ce.config.CeVaultEntries
 import de.sovity.edc.ce.dependency_bundles.CeDependencyBundles
@@ -26,9 +27,17 @@ object CatenaDataspaceFeatures {
         documentation = "Enable Tractus-X Extensions and Catena-X C2C IAM"
     ).apply {
         dependencyBundles(CeDependencyBundles.tractusControlPlane)
-        excludeServiceExtensions(EdrCacheApiExtension::class.java)
         configureIatp()
         serviceExtensions(EdrApiServiceV2CatenaExtension::class.java)
+        excludeServiceExtensions(EdrCacheApiExtension::class.java)
+
+        // UI Features
+        property(
+            ConfigPropCategory.OVERRIDES,
+            CeConfigProps.SOVITY_EDC_UI_FEATURES_ADD_WILDCARD.withWildcardValue(UiConfigFeature.CATENA_POLICIES.name)
+        ) {
+            defaultValue("true")
+        }
     }
 
     fun tractusDataPlane() = EdcModule(

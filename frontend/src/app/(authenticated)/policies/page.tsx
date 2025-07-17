@@ -8,7 +8,7 @@
 'use client';
 
 import {CenteredLoadingSpinner} from '@/components/loading-spinner';
-import {sovityDataspacePolicyContext} from '@/components/policy-editor/supported-policies';
+import {usePolicyContext} from '@/components/policy-editor/use-policy-context';
 import {buildPolicyDefinitionMapped} from '@/app/(authenticated)/policies/components/policy-definition-mapped';
 import PolicyDefinitionTable from '@/app/(authenticated)/policies/components/policy-definition-table';
 import {api} from '@/lib/api/client';
@@ -32,7 +32,7 @@ const PolicyListPage = () => {
   useBreadcrumbs([breadcrumbItems.policies.listPage()]);
 
   // Supported Policies
-  const policyContext = sovityDataspacePolicyContext();
+  const policyContext = usePolicyContext();
 
   return matchQueryState({
     query: pageQuery,

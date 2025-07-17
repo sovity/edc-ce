@@ -87,8 +87,7 @@ class IntegrationTestCpDpExtension(
         preBootHook: (runtime: SovityEdcTestRuntime) -> Unit,
     ) {
         EdcPortFinder.withAutoPortHandling(numPorts = 6, maxAttempts = 5, config) { configWithPort ->
-            val runtimeName =
-                "$runtimeNamePrefixForLogging-${plane.simpleName}"
+            val runtimeName = "$runtimeNamePrefixForLogging-${plane.simpleName}"
             val extension = IntegrationTestExtension(rootModule, configWithPort, preBootHook, runtimeName)
             extension.beforeAll(context)
             instances.addAll(extension.instances, listOf(plane))

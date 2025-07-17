@@ -21,17 +21,25 @@
 package de.sovity.edc.ce.libs.mappers.asset;
 
 import de.sovity.edc.ce.api.common.model.DataSourceType;
-import de.sovity.edc.ce.api.common.model.SecretValue;
 import de.sovity.edc.ce.api.common.model.UiAssetCreateRequest;
 import de.sovity.edc.ce.api.common.model.UiDataSource;
 import de.sovity.edc.ce.api.common.model.UiDataSourceHttpData;
 import de.sovity.edc.ce.api.common.model.UiDataSourceHttpDataMethod;
 import de.sovity.edc.ce.api.common.model.UiDataSourceOnRequest;
+import de.sovity.edc.ce.api.common.model.UiHttpAuth;
+import de.sovity.edc.ce.api.common.model.UiHttpAuthApiKey;
+import de.sovity.edc.ce.api.common.model.UiHttpAuthBasic;
+import de.sovity.edc.ce.api.common.model.UiHttpAuthOauth2;
+import de.sovity.edc.ce.api.common.model.UiHttpAuthType;
+import de.sovity.edc.ce.api.common.model.UiHttpOauth2AuthType;
+import de.sovity.edc.ce.api.common.model.UiHttpOauth2PrivateKeyAuthorization;
+import de.sovity.edc.ce.api.common.model.UiHttpOauth2SharedSecretAuthorization;
 import de.sovity.edc.ce.libs.mappers.Factory;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonObjectBuilder;
+import org.eclipse.edc.iam.oauth2.spi.Oauth2DataAddressSchema;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -39,6 +47,7 @@ import java.util.List;
 import java.util.Map;
 
 import static de.sovity.edc.ce.libs.mappers.JsonAssertsUtils.assertEqualJson;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.mock;
 
 class AssetJsonLdBuilderTest {
@@ -438,14 +447,19 @@ class AssetJsonLdBuilderTest {
     }
 
     @Test
-    void test_create_httpData_authHeader_secretName() {
+    void test_create_httpData_auth_apiKeyFromVault_secretName() {
         // arrange
         var dataSource = UiDataSource.builder()
             .type(DataSourceType.HTTP_DATA)
             .httpData(UiDataSourceHttpData.builder()
                 .baseUrl("https://example.com")
-                .authHeaderName("X-Test")
-                .authHeaderValue(SecretValue.builder().secretName("mySecretName").build())
+                .auth(UiHttpAuth.builder()
+                    .type(UiHttpAuthType.API_KEY)
+                    .apiKey(UiHttpAuthApiKey.builder()
+                        .headerName("X-Test")
+                        .vaultKey("mySecretName")
+                        .build())
+                    .build())
                 .build())
             .build();
 
@@ -471,14 +485,19 @@ class AssetJsonLdBuilderTest {
     }
 
     @Test
-    void test_create_httpData_authHeader_rawValue() {
+    void test_create_httpData_auth_basic() {
         // arrange
         var dataSource = UiDataSource.builder()
             .type(DataSourceType.HTTP_DATA)
             .httpData(UiDataSourceHttpData.builder()
                 .baseUrl("https://example.com")
-                .authHeaderName("X-Test")
-                .authHeaderValue(SecretValue.builder().rawValue("myKey").build())
+                .auth(UiHttpAuth.builder()
+                    .type(UiHttpAuthType.BASIC)
+                    .basic(UiHttpAuthBasic.builder()
+                        .username("foo")
+                        .password("password")
+                        .build())
+                    .build())
                 .build())
             .build();
 
@@ -491,8 +510,106 @@ class AssetJsonLdBuilderTest {
             .add(Prop.TYPE, Prop.Edc.TYPE_DATA_ADDRESS)
             .add(Prop.Edc.TYPE, Prop.Edc.DATA_ADDRESS_TYPE_HTTP_DATA)
             .add(Prop.Edc.BASE_URL, "https://example.com")
-            .add(Prop.Edc.AUTH_KEY, "X-Test")
-            .add(Prop.Edc.AUTH_CODE, "myKey");
+            .add(Prop.Edc.AUTH_KEY, "Authorization")
+            .add(Prop.Edc.AUTH_CODE, "Basic Zm9vOnBhc3N3b3Jk");
+
+        var expectedProperties = dummyAssetCommonProperties();
+
+        // act
+        var actual = assetJsonLdBuilder.createAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
+
+        // assert
+        assertEqualJson(actual, dummyAssetJsonLd(dataAddress, expectedProperties));
+    }
+
+    @Test
+    void test_create_httpData_auth_oauth_clientSecretKey() {
+        // arrange
+        var dataSource = UiDataSource.builder()
+            .type(DataSourceType.HTTP_DATA)
+            .httpData(UiDataSourceHttpData.builder()
+                .baseUrl("https://example.com")
+                .auth(UiHttpAuth.builder()
+                    .type(UiHttpAuthType.OAUTH2)
+                    .oauth(UiHttpAuthOauth2.builder()
+                        .type(UiHttpOauth2AuthType.SHARED_SECRET)
+                        .sharedSecret(UiHttpOauth2SharedSecretAuthorization.builder()
+                            .clientId("clientId")
+                            .clientSecretName("secretKey")
+                            .build())
+                        .tokenUrl("https://example.com/token")
+                        .scope("scope")
+                        .build())
+                    .build())
+                .build())
+            .build();
+
+        var uiAssetCreateRequest = UiAssetCreateRequest.builder()
+            .dataSource(dataSource)
+            .id(ASSET_ID)
+            .build();
+
+        // ensure key's stability
+        assertThat(Oauth2DataAddressSchema.TOKEN_URL).isEqualTo("oauth2:tokenUrl");
+        assertThat(Oauth2DataAddressSchema.SCOPE).isEqualTo("oauth2:scope");
+        assertThat(Oauth2DataAddressSchema.CLIENT_ID).isEqualTo("oauth2:clientId");
+        assertThat(Oauth2DataAddressSchema.CLIENT_SECRET_KEY).isEqualTo("oauth2:clientSecretKey");
+        assertThat(Oauth2DataAddressSchema.VALIDITY).isEqualTo("oauth2:validity");
+        assertThat(Oauth2DataAddressSchema.PRIVATE_KEY_NAME).isEqualTo("oauth2:privateKeyName");
+
+        var dataAddress = Json.createObjectBuilder()
+            .add(Prop.TYPE, Prop.Edc.TYPE_DATA_ADDRESS)
+            .add(Prop.Edc.TYPE, Prop.Edc.DATA_ADDRESS_TYPE_HTTP_DATA)
+            .add(Prop.Edc.BASE_URL, "https://example.com")
+            .add(Oauth2DataAddressSchema.TOKEN_URL, "https://example.com/token")
+            .add(Oauth2DataAddressSchema.SCOPE, "scope")
+            .add(Oauth2DataAddressSchema.CLIENT_ID, "clientId")
+            .add(Oauth2DataAddressSchema.CLIENT_SECRET_KEY, "secretKey");
+
+        var expectedProperties = dummyAssetCommonProperties();
+
+        // act
+        var actual = assetJsonLdBuilder.createAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
+
+        // assert
+        assertEqualJson(actual, dummyAssetJsonLd(dataAddress, expectedProperties));
+    }
+
+    @Test
+    void test_create_httpData_auth_oauth_privateKey() {
+        // arrange
+        var dataSource = UiDataSource.builder()
+            .type(DataSourceType.HTTP_DATA)
+            .httpData(UiDataSourceHttpData.builder()
+                .baseUrl("https://example.com")
+                .auth(UiHttpAuth.builder()
+                    .type(UiHttpAuthType.OAUTH2)
+                    .oauth(UiHttpAuthOauth2.builder()
+                        .type(UiHttpOauth2AuthType.PRIVATE_KEY)
+                        .privateKey(UiHttpOauth2PrivateKeyAuthorization.builder()
+                            .privateKeyName("privateKeyName")
+                            .tokenValidityInSeconds(123456789L)
+                            .build())
+                        .tokenUrl("https://example.com/token")
+                        .scope("scope")
+                        .build())
+                    .build())
+                .build())
+            .build();
+
+        var uiAssetCreateRequest = UiAssetCreateRequest.builder()
+            .dataSource(dataSource)
+            .id(ASSET_ID)
+            .build();
+
+        var dataAddress = Json.createObjectBuilder()
+            .add(Prop.TYPE, Prop.Edc.TYPE_DATA_ADDRESS)
+            .add(Prop.Edc.TYPE, Prop.Edc.DATA_ADDRESS_TYPE_HTTP_DATA)
+            .add(Prop.Edc.BASE_URL, "https://example.com")
+            .add(Oauth2DataAddressSchema.TOKEN_URL, "https://example.com/token")
+            .add(Oauth2DataAddressSchema.SCOPE, "scope")
+            .add(Oauth2DataAddressSchema.PRIVATE_KEY_NAME, "privateKeyName")
+            .add(Oauth2DataAddressSchema.VALIDITY, "123456789");
 
         var expectedProperties = dummyAssetCommonProperties();
 

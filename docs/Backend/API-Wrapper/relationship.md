@@ -28,6 +28,15 @@ The API-Wrapper, introduced in the sovity EDC Community Edition, serves as a hig
 - Ideal for quick integration and use in common scenarios without needing in-depth EDC knowledge.
 - The UI of our sovity EDC is based on the API-Wrapper.
 
+#### Use Case Highlight: Chat-App
+
+To illustrate the practical application of the API-Wrapper in contrast to the Management-API, sovity provides the open-source **Chat-App** as a real-world use case example.
+
+The Chat-App demonstrates how the API-Wrapper can be leveraged to build event-driven applications using HttpData-PULL and EDRs. It combines backend logic and a user interface, showcasing the end-to-end integration capabilities of sovity EDC.
+
+Explore the Chat-App project to see these concepts in action:  
+[Chat-App on GitHub](https://github.com/sovity/edc-ce/tree/main/examples/chat-app)
+
 ### Relationship and Differences
 
 While both the Management-API and the API-Wrapper allow interaction with the EDC, they cater to different needs and user expertise levels. The Management-API is for advanced users who need complete control over the EDC's capabilities. In contrast, the API-Wrapper is tailored for users who require a more straightforward and less detailed interface, enabling quicker and easier integration.

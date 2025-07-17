@@ -24,9 +24,10 @@ import {dataOfferFormValueForEdit} from '@/app/(authenticated)/data-offers/creat
 import {useAssetEditMutation} from '@/app/(authenticated)/assets/[id]/edit/use-asset-edit-mutation';
 import {matchQueryState} from '@/lib/utils/match-query-state';
 import {api} from '@/lib/api/client';
+import {decodeParams} from '@/lib/utils/http-utils';
 
 export default function AssetEditPage({params}: {params: {id: string}}) {
-  const {id} = params;
+  const {id} = decodeParams(params);
   const t = useTranslations();
   const breadcrumbItems = useBreadcrumbItems();
 

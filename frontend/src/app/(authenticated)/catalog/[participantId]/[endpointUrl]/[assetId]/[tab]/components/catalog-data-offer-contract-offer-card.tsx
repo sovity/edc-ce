@@ -8,7 +8,7 @@
 'use client';
 
 import {PolicyRenderer} from '@/components/policy-editor/renderer/policy-renderer';
-import {sovityDataspacePolicyContext} from '@/components/policy-editor/supported-policies';
+import {usePolicyContext} from '@/components/policy-editor/use-policy-context';
 import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
 import {type UiAsset, type UiContractOffer} from '@/lib/api/client/generated';
 import {useTranslations} from 'next-intl';
@@ -27,7 +27,7 @@ export const CatalogDataOfferContractOfferCard = (
 ) => {
   const {contractOffers, asset, endpointUrl, participantId} = props;
 
-  const policyContext = sovityDataspacePolicyContext();
+  const policyContext = usePolicyContext();
 
   const t = useTranslations();
 

@@ -34,7 +34,6 @@ import static de.sovity.edc.ce.db.jooq.enums.ContractTerminatedBy.COUNTERPARTY;
 import static de.sovity.edc.ce.db.jooq.enums.ContractTerminatedBy.SELF;
 
 public class ContractAgreementTerminationService {
-    private final int threadPoolSize;
     private final SovityMessenger sovityMessenger;
     private final ContractAgreementTerminationDetailsQuery contractAgreementTerminationDetailsQuery;
     private final TerminateContractQuery terminateContractQuery;
@@ -44,8 +43,14 @@ public class ContractAgreementTerminationService {
     private final Observable<ContractTerminationObserver> contractTerminationObservable = new ObservableImpl<>();
     private ExecutorService executor;
 
-    public ContractAgreementTerminationService(int threadPoolSize, SovityMessenger sovityMessenger, ContractAgreementTerminationDetailsQuery contractAgreementTerminationDetailsQuery, TerminateContractQuery terminateContractQuery, Monitor monitor, String thisParticipantId) {
-        this.threadPoolSize = threadPoolSize;
+    public ContractAgreementTerminationService(
+        int threadPoolSize,
+        SovityMessenger sovityMessenger,
+        ContractAgreementTerminationDetailsQuery contractAgreementTerminationDetailsQuery,
+        TerminateContractQuery terminateContractQuery,
+        Monitor monitor,
+        String thisParticipantId
+    ) {
         this.sovityMessenger = sovityMessenger;
         this.contractAgreementTerminationDetailsQuery = contractAgreementTerminationDetailsQuery;
         this.terminateContractQuery = terminateContractQuery;

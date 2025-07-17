@@ -39,12 +39,12 @@ class HttpDataSourceMapper(
      */
     fun buildDataAddress(httpData: UiDataSourceHttpData): MutableMap<String, String?> {
         require(httpData.baseUrl != null) { "baseUrl must not be null" }
+
         val props = httpDataAddressMapper.buildDataAddress(
             baseUrl = httpData.baseUrl,
             method = httpData.method?.name,
             queryString = httpData.queryString,
-            authHeaderName = httpData.authHeaderName,
-            authHeaderValue = httpData.authHeaderValue,
+            auth = httpData.auth,
             headers = httpData.headers ?: emptyMap(),
         )
 

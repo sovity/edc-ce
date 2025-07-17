@@ -5,6 +5,9 @@
  *
  * SPDX-License-Identifier: Elastic-2.0
  */
+
+import {filterNonNull} from './utils/array-utils';
+
 export const queryKeys = {
   config: {
     key: () => ['config'],
@@ -60,6 +63,20 @@ export const queryKeys = {
       ...queryKeys.assets.id(assetId),
       'detailsPage',
     ],
+  },
+  vaultSecrets: {
+    key: () => ['vaultSecrets'],
+    all: () => [...queryKeys.vaultSecrets.key(), 'all'],
+    id: (key: string) => [...queryKeys.vaultSecrets.key(), key],
+
+    listPage: (query?: string, limit?: number) =>
+      filterNonNull([
+        ...queryKeys.vaultSecrets.all(),
+        'listPage',
+        query,
+        limit,
+      ]),
+    editPage: (key: string) => [...queryKeys.vaultSecrets.id(key), 'editPage'],
   },
   contractNegotiation: {
     key: () => ['contractNegotiation'],

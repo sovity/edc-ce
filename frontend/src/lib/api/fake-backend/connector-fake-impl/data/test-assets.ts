@@ -201,8 +201,11 @@ This is a short description text that should be fully rendered without being **c
     httpDatasourceHintsProxyPath: true,
     httpDatasourceHintsProxyMethod: true,
     httpDatasourceHintsProxyBody: true,
-    customJsonAsString: '{"http://unknown/usecase": "my-use-case"}',
-    privateCustomJsonAsString:
+    customJsonAsString: '{"useCase": "my-use-case"}',
+    customJsonLdAsString:
+      '{"http://purl.org/dc/terms/type":{"@id":"https://w3id.org/catenax/taxonomy#Submodel"},"https://admin-shell.io/aas/3/0/HasSemantics/semanticId":{"@id":"urn:samm:io.catenax.business_partner_certificate:3.0.0#BusinessPartnerCertificate"},"https://w3id.org/catenax/ontology/common#version":"3.0"}',
+    privateCustomJsonAsString: '{ "internalId": "my-internal-id-123"}',
+    privateCustomJsonLdAsString:
       '{ "http://unknown/internal-id": "my-internal-id-123"}',
   };
 
