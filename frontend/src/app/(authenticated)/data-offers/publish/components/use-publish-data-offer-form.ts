@@ -10,8 +10,16 @@ import {useTranslations} from 'next-intl';
 import {useForm} from 'react-hook-form';
 import z from 'zod';
 import {type TranslateFn} from '@/lib/utils/translation-utils';
+import {api} from '@/lib/api/client';
+import {
+  type CancellablePromise,
+  useCancellablePromise,
+} from '@/lib/hooks/use-cancellable-promise';
 
-const publishDataOfferSchema = (t: TranslateFn) =>
+const publishDataOfferSchema = (
+  t: TranslateFn,
+  withCancellation: CancellablePromise,
+) =>
   z.object({
     dataOfferId: z
       .string()
@@ -19,7 +27,28 @@ const publishDataOfferSchema = (t: TranslateFn) =>
       .max(128)
       .regex(/^[^\s:]*$/, {
         message: t('General.dataOfferIdValidationWhitespacesColons'),
-      }),
+      })
+      .refine(
+        async (dataOfferId) => {
+          const response = await withCancellation(
+            Promise.all([
+              api.uiApi.isContractDefinitionIdAvailable({
+                contractDefinitionId: dataOfferId,
+              }),
+              api.uiApi.isAssetIdAvailable({
+                assetId: dataOfferId,
+              }),
+              api.uiApi.isPolicyIdAvailable({
+                policyId: dataOfferId,
+              }),
+            ]),
+          );
+          return response.every((r) => r.available);
+        },
+        {
+          message: t('General.Validators.dataOfferIdTaken'),
+        },
+      ),
     assetIdList: z.array(z.string()).min(1, {
       message: t('General.validationSelectOneAsset'),
     }),
@@ -33,11 +62,12 @@ export type PublishDataOfferFormValue = z.infer<
 
 export const usePublishDataOfferForm = () => {
   const t = useTranslations();
+  const withCancellation = useCancellablePromise();
 
   return {
     form: useForm<PublishDataOfferFormValue>({
       mode: 'onTouched',
-      resolver: zodResolver(publishDataOfferSchema(t)),
+      resolver: zodResolver(publishDataOfferSchema(t, withCancellation)),
       defaultValues: {
         dataOfferId: '',
         assetIdList: [],

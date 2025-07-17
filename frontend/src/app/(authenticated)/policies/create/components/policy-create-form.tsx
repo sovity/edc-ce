@@ -11,7 +11,7 @@ import FormGroup from '@/components/form/form-group';
 import InputField from '@/components/form/input-field';
 import PolicyEditor from '@/components/policy-editor/editor/policy-editor';
 import {usePolicyEditor} from '@/components/policy-editor/editor/use-policy-editor';
-import {sovityDataspacePolicyContext} from '@/components/policy-editor/supported-policies';
+import {usePolicyContext} from '@/components/policy-editor/use-policy-context';
 import {Button} from '@/components/ui/button';
 import {Form} from '@/components/ui/form';
 import {usePolicyCreateMutation} from './use-policy-create-mutation';
@@ -27,7 +27,7 @@ export const PolicyCreateForm = () => {
   const t = useTranslations();
 
   // Supported Policies
-  const policyContext = sovityDataspacePolicyContext();
+  const policyContext = usePolicyContext();
   const policyEditor = usePolicyEditor(policyContext, form, 'policy');
 
   async function onSubmit(values: PolicyCreateFormValue) {

@@ -14,12 +14,14 @@ import {
 import {zodResolver} from '@hookform/resolvers/zod';
 import {useForm} from 'react-hook-form';
 import {useAssetIdGeneration} from '@/app/(authenticated)/data-offers/create/components/use-asset-id-generation';
+import {type DataOfferFormMode} from './data-offer-form-mode';
 
 export const useDataOfferCreateForm = (
   initialFormValue: DataOfferCreateFormModel,
+  formMode: DataOfferFormMode,
 ) => {
   const form = useForm<DataOfferCreateFormModel>({
-    mode: 'onTouched',
+    mode: 'all',
     resolver: zodResolver(dataOfferFormSchema),
     defaultValues: initialFormValue,
   });
@@ -28,6 +30,7 @@ export const useDataOfferCreateForm = (
     form: form,
     assetIdFieldName: 'general.assetId',
     assetNameFieldName: 'general.title',
+    formMode,
   });
 
   return {

@@ -25,6 +25,7 @@ import {
   UiCriterionOperator,
 } from '@sovity.de/edc-client';
 import {useTranslations} from 'next-intl';
+import {ASSET_ID_PROPERTY_NAME} from '@/components/policy-editor/renderer/asset-selector-property-label';
 
 interface PublishDataOfferFormProps {
   assets: UiAsset[];
@@ -42,7 +43,7 @@ const PublishDataOfferForm = ({
   async function onSubmit(values: PublishDataOfferFormValue) {
     const assetSelector = [
       {
-        operandLeft: 'https://w3id.org/edc/v0.0.1/ns/id',
+        operandLeft: ASSET_ID_PROPERTY_NAME,
         operator: UiCriterionOperator.In,
         operandRight: {
           type: UiCriterionLiteralType.ValueList,

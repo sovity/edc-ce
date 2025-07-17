@@ -63,7 +63,7 @@ export const InitiateTransferForm = ({
             items={[
               {
                 id: 'CUSTOM_JSON' satisfies InitiateTransferType,
-                label: t('Pages.DataOfferCreate.dataSourceTypeCustom'),
+                label: t('Pages.DataOfferCreate.dataSinkTypeCustom'),
               },
               {
                 id: 'HTTP' satisfies InitiateTransferType,

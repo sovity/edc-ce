@@ -50,6 +50,22 @@ class ConfigPropRef(
         }
     }
 
+    fun withWildcardValue(suffix: String): ConfigPropRef {
+        require(property.endsWith(".*")) { "Property $property is not a wildcard property." }
+        return ConfigPropRef(
+            "${property.removeSuffix(".*")}.$suffix",
+            "Filled out wildcard property `$property` with value `$suffix`. $defaultDocumentation"
+        )
+    }
+
+    fun getWildcardValues(config: Config): Map<String, String> {
+        require(property.endsWith(".*")) { "Property $property is not a wildcard property." }
+        val prefix = property.removeSuffix("*")
+        return config.entries
+            .filter { it.key.startsWith(prefix) }
+            .mapKeys { it.key.removePrefix(prefix) }
+    }
+
     fun getListOrEmpty(config: Config): List<String> {
         return config.getString(property, "")
             .split(",")

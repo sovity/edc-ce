@@ -34,6 +34,19 @@ export const useBreadcrumbItems = () => {
         href: urls.assets.editPage(assetId),
       }),
     },
+    vaultSecrets: {
+      listPage: () => ({
+        label: t('General.vaultSecrets'),
+        href: urls.vaultSecrets.listPage(),
+      }),
+      detailPage: (key: string) => ({
+        label: key,
+      }),
+      editPage: (key: string) => ({
+        label: t('General.edit'),
+        href: urls.vaultSecrets.editPage(key),
+      }),
+    },
     contracts: {
       listPage: () => ({
         label: t('Pages.ContractList.title'),

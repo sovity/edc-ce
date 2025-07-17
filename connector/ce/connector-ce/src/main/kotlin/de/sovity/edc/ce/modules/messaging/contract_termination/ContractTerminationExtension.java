@@ -9,22 +9,29 @@ package de.sovity.edc.ce.modules.messaging.contract_termination;
 
 import de.sovity.edc.ce.config.CeConfigProps;
 import de.sovity.edc.ce.modules.db.jooq.DslContextFactory;
-import de.sovity.edc.ce.modules.messaging.contract_termination.query.ContractAgreementIsTerminatedQuery;
 import de.sovity.edc.ce.modules.messaging.contract_termination.query.ContractAgreementTerminationDetailsQuery;
 import de.sovity.edc.ce.modules.messaging.contract_termination.query.TerminateContractQuery;
 import de.sovity.edc.ce.modules.messaging.messenger.SovityMessenger;
 import de.sovity.edc.ce.modules.messaging.messenger.SovityMessengerRegistry;
 import lombok.val;
+import org.eclipse.edc.connector.controlplane.contract.spi.policy.TransferProcessPolicyContext;
 import org.eclipse.edc.connector.controlplane.transfer.spi.observe.TransferProcessObservable;
+import org.eclipse.edc.connector.policy.monitor.spi.PolicyMonitorContext;
 import org.eclipse.edc.participant.spi.ParticipantAgentService;
+import org.eclipse.edc.policy.engine.spi.PolicyEngine;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.runtime.metamodel.annotation.Provides;
 import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
+import org.eclipse.tractusx.edc.agreements.retirement.AgreementRetirementValidator;
+import org.eclipse.tractusx.edc.agreements.retirement.spi.service.AgreementsRetirementService;
 
 @Provides(ContractAgreementTerminationService.class)
 public class ContractTerminationExtension implements ServiceExtension {
+
+    @Inject
+    private AgreementsRetirementService service;
 
     @Inject
     private DslContextFactory dslContextFactory;
@@ -43,6 +50,9 @@ public class ContractTerminationExtension implements ServiceExtension {
 
     @Inject
     private ParticipantAgentService participantAgentService;
+
+    @Inject
+    private PolicyEngine policyEngine;
 
     @Override
     public void initialize(ServiceExtensionContext context) {
@@ -91,9 +101,8 @@ public class ContractTerminationExtension implements ServiceExtension {
     }
 
     private void setupTransferPrevention() {
-        observable.registerListener(
-            new TransferProcessBlocker(
-                dslContextFactory,
-                new ContractAgreementIsTerminatedQuery()));
+        var validator = new AgreementRetirementValidator(service);
+        policyEngine.registerPreValidator(TransferProcessPolicyContext.class, validator.transferProcess());
+        policyEngine.registerPreValidator(PolicyMonitorContext.class, validator.policyMonitor());
     }
 }

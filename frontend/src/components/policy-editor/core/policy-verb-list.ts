@@ -26,7 +26,7 @@ export class PolicyVerbList {
 
   private getFallbackVerbConfig(verb: string): PolicyVerbConfig {
     return {
-      operandLeftId: verb,
+      operandLeftIds: [verb],
       operandLeftTitle: byFallback(verb),
       operandLeftDescription: byFallback(''),
       supportedOperators: this.operators.map((it) => it.id),
@@ -39,9 +39,10 @@ export class PolicyVerbList {
   }
 
   private buildByIdMap(): Map<string, PolicyVerbConfig> {
-    return associateBy(
-      this.getSupportedPolicyVerbs(),
-      (it) => it.operandLeftId,
+    return new Map(
+      this.getSupportedPolicyVerbs().flatMap((verb) =>
+        verb.operandLeftIds.map((id) => [id, verb]),
+      ),
     );
   }
 }

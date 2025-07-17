@@ -60,6 +60,9 @@ subprojects {
         compilerOptions {
             jvmTarget = JvmTarget.fromTarget(libs.versions.java.get())
             compilerOptions.javaParameters = true
+            optIn = listOf(
+                "kotlin.io.encoding.ExperimentalEncodingApi"
+            )
         }
     }
 

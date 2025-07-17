@@ -74,3 +74,12 @@ The **Catalog** is a collection of assets that a provider offers for sharing to 
 
 **Related Concepts**:
 - **Data Transfer**: Data transfer ceases after the contract is terminated.
+
+## Use Case Example: Chat-App
+
+To illustrate how these key concepts work together in a real-world scenario, sovity provides the **Chat-App** as an open-source use-case application.
+
+The Chat-App demonstrates the integration of the API Wrapper, HttpData-PULL, and EDRs in a practical and hands-on manner. It combines backend logic with a user interface, offering developers a clear example to learn from and build upon.
+
+Explore the Chat-App and deepen your understanding of sovity EDC’s core concepts by seeing them in action:  
+[Chat-App on GitHub](https://github.com/sovity/edc-ce/tree/main/examples/chat-app)

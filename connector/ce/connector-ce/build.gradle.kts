@@ -5,10 +5,36 @@
  *
  * SPDX-License-Identifier: Elastic-2.0
  */
+
+import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.FileSpec
+import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.KModifier
+import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.TypeSpec
+import org.eclipse.edc.spi.query.CriterionOperatorRegistry
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import kotlin.reflect.KClass
+
 plugins {
     `java-library`
     alias(libs.plugins.taskinfo)
     `maven-publish`
+}
+
+buildscript {
+    repositories {
+        maven {
+            url =
+                uri("https://pkgs.dev.azure.com/sovity/41799556-91c8-4df6-8ddb-4471d6f15953/_packaging/core-edc/maven/v1")
+            name = "AzureRepo"
+        }
+    }
+
+    dependencies {
+        classpath(libs.squareup.kotlinpoet)
+        classpath(libs.edc.coreSpi)
+    }
 }
 
 dependencies {
@@ -52,6 +78,8 @@ dependencies {
 
     api(libs.apache.commonsIo)
     api(libs.apache.commonsLang)
+    api(libs.bouncyCastle.bcprovJdk18on)
+    api(libs.bouncyCastle.bcpkixJdk18on)
     api(libs.flyway.postgres)
     api(libs.hibernate.validation)
     api(libs.jackson.jsr310)
@@ -71,6 +99,14 @@ dependencies {
 
 group = libs.versions.sovityCeGroupName.get()
 
+sourceSets {
+    main {
+        kotlin {
+            srcDir(layout.buildDirectory.dir("generated/sources/kotlin"))
+        }
+    }
+}
+
 publishing {
     publications {
         create<MavenPublication>(project.name) {
@@ -79,4 +115,68 @@ publishing {
     }
 }
 
+val generateCriterionOperatorEnum by tasks.registering(Task::class) {
+    // regenerate from the source to ensure we don't miss any criterion operator (at compile time)
+    generateEnumerationFromInterfaceFields(
+        enumerationPackageName = "de.sovity.edc.ce.utils",
+        enumClassName = "CriterionOperatorEnum",
+        classToCopy = CriterionOperatorRegistry::class,
+    )
+}
 
+val kotlinCompile = tasks.withType(KotlinCompile::class) {
+    dependsOn(generateCriterionOperatorEnum)
+}
+
+fun generateEnumerationFromInterfaceFields(
+    enumerationPackageName: String,
+    enumClassName: String,
+    classToCopy: KClass<CriterionOperatorRegistry>
+) {
+    val enumClass = ClassName.bestGuess("$enumerationPackageName.$enumClassName")
+    val fieldName = "symbol"
+
+    val enumBuilder = TypeSpec.enumBuilder(enumClass)
+        .primaryConstructor(
+            FunSpec.constructorBuilder()
+                .addParameter(fieldName, String::class)
+                .build()
+        )
+        .addProperty(
+            PropertySpec.builder(fieldName, String::class, KModifier.PUBLIC)
+                .initializer(fieldName)
+                .build()
+        )
+        .addType(
+            TypeSpec.companionObjectBuilder()
+                .addFunction(
+                    FunSpec.builder("parseFrom${fieldName.replaceFirstChar(Char::uppercase)}")
+                        .addParameter(fieldName, String::class)
+                        .returns(enumClass)
+                        .addCode("return entries.first { it.${fieldName} == ${fieldName} }")
+                        .build()
+                )
+                .build()
+        )
+
+    classToCopy.java.declaredFields
+        .filter { field -> field.name == field.name.uppercase() }
+        .forEach { field ->
+            enumBuilder.addEnumConstant(
+                field.name,
+                TypeSpec.anonymousClassBuilder()
+                    .addSuperclassConstructorParameter("%S", field.get(null))
+                    .build()
+            )
+        }
+
+    val outputPath = "generated/sources/kotlin"
+    val outputDir = project.layout.buildDirectory.dir(outputPath).get().asFile.also { it.mkdirs() }
+
+    val fileSpec = FileSpec.builder(enumerationPackageName, enumClassName)
+        .addType(enumBuilder.build())
+        .build()
+
+    fileSpec.writeTo(outputDir)
+    fileSpec.writeTo(System.out)
+}

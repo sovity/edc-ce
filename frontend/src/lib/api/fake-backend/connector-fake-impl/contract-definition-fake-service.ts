@@ -39,10 +39,43 @@ let contractDefinitions: ContractDefinitionEntry[] = [
     assetSelector: [
       {
         operandLeft: AssetProperty.id,
+        operator: 'IN',
+        operandRight: {
+          type: 'VALUE_LIST',
+          valueList: ['test-asset-1', 'test-asset-2'],
+        },
+      },
+      {
+        operandLeft: 'https://example/my-use-case-id',
         operator: 'EQ',
-        operandRight: {type: 'VALUE', value: 'test-asset-2'},
+        operandRight: {
+          type: 'VALUE',
+          value: 'MyUseCase',
+        },
+      },
+      {
+        operandLeft: 'https://example/my-framework-contract',
+        operator: 'LIKE',
+        operandRight: {
+          type: 'VALUE',
+          value: 'MyContractType:%',
+        },
+      },
+      {
+        operandLeft: 'https://example/my-use-case-id',
+        operator: 'IN',
+        operandRight: {
+          type: 'VALUE_LIST',
+          valueList: [],
+        },
       },
     ],
+  },
+  {
+    contractDefinitionId: 'test-data-offer-publishes-all-assets',
+    contractPolicyId: 'test-policy-definition-2',
+    accessPolicyId: 'test-policy-definition-2',
+    assetSelector: [],
   },
 ];
 

@@ -57,18 +57,12 @@ public class UiDataSinkHttpDataPush {
     )
     private String queryString;
 
-    @Schema(
-        description = "Auth Header name. The auth header is handled specially by the EDC as its value can be read from a vault.",
-        example = "Authorization",
-        requiredMode = Schema.RequiredMode.NOT_REQUIRED
-    )
-    private String authHeaderName;
 
     @Schema(
-        description = "Auth Header value.",
+        description = "The authentication method.",
         requiredMode = Schema.RequiredMode.NOT_REQUIRED
     )
-    private SecretValue authHeaderValue;
+    private UiHttpPushAuth auth;
 
     @Schema(
         description = "HTTP Request Headers.",

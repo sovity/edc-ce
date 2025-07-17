@@ -21,6 +21,10 @@
 package de.sovity.edc.ce.libs.mappers.dataaddress.http
 
 import de.sovity.edc.ce.api.common.model.UiDataSinkHttpDataPush
+import de.sovity.edc.ce.api.common.model.UiHttpAuth
+import de.sovity.edc.ce.api.common.model.UiHttpAuthType
+import de.sovity.edc.ce.api.common.model.UiHttpPushAuth
+import de.sovity.edc.ce.api.common.model.UiHttpPushAuthType
 import de.sovity.edc.ce.libs.mappers.dataaddress.model.InitiateTransferParams
 import de.sovity.edc.runtime.simple_di.Service
 
@@ -40,13 +44,30 @@ class HttpDataPushTransferMapper(
             baseUrl = httpData.baseUrl,
             method = httpData.method?.name,
             queryString = httpData.queryString,
-            authHeaderName = httpData.authHeaderName,
-            authHeaderValue = httpData.authHeaderValue,
+            auth = mapAuth(httpData.auth),
             headers = httpData.headers
         )
         return InitiateTransferParams().also {
             it.dataSinkProperties += dataAddress
             it.transferType = "HttpData-PUSH"
         }
+    }
+
+    private fun mapAuth(auth: UiHttpPushAuth?): UiHttpAuth? {
+        if (auth == null) {
+            return null
+        }
+
+        val type = when (auth.type!!) {
+            UiHttpPushAuthType.BASIC -> UiHttpAuthType.BASIC
+            UiHttpPushAuthType.API_KEY -> UiHttpAuthType.API_KEY
+        }
+
+        return UiHttpAuth(
+            type,
+            auth.basic,
+            auth.apiKey,
+            null
+        )
     }
 }

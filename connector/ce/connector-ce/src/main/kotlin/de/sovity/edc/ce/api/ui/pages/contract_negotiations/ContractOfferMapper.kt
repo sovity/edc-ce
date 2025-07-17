@@ -16,14 +16,17 @@ import org.eclipse.edc.connector.controlplane.contract.spi.types.offer.ContractO
 class ContractOfferMapper(
     private val policyMapper: PolicyMapper,
 ) {
-    fun buildContractOffer(contractRequest: ContractNegotiationRequest): ContractOffer {
+    @Suppress("FunctionMaxLength")
+    fun buildContractOfferForNegotiationInitiation(contractRequest: ContractNegotiationRequest): ContractOffer {
         val policy = policyMapper.buildPolicy(contractRequest.policyJsonLd)
 
         // Required or Eclipse EDC Validation in DSP panics
         // despite assetId being a field on the ContractOffer
         // despite the catalog not putting it out while policies aren't asset specific
         val policyEdited = policy.toBuilder()
+            // see https://github.com/eclipse-tractusx/tractusx-edc/blob/0.10.0/docs/usage/management-api-walkthrough/05_contractnegotiations.md#creating-a-new-contract-negotiation
             .target(contractRequest.assetId)
+            // see https://github.com/eclipse-tractusx/tractusx-edc/blob/0.10.0/docs/usage/management-api-walkthrough/05_contractnegotiations.md#creating-a-new-contract-negotiation
             .assigner(contractRequest.counterPartyId)
             .build()
 

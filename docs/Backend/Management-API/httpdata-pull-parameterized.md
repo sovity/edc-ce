@@ -4,7 +4,19 @@
 
 {% hint style="info" %} Parameterization is optional and does not have to be activated by the Provider if the datasource API does not require or enable it. In this case, the corresponding parameters do not have to be enabled when creating an asset and the Consumer does not have to add any additional parameters to the endpoint from the EDR. {% endhint %}
 
-#### Provider: Asset
+## Practical Example: Chat-App Use Case
+
+A concrete implementation of the HttpData-Pull is demonstrated by the **Chat-App**, an open-source project developed by sovity.
+
+- The Chat-App leverages the HttpData-Pull flow to dynamically request messages or chat data based on user interaction
+- It illustrates how parameters are constructed and used to fetch relevant data slices
+- The Chat-App also demonstrates integration with EDRs
+
+For developers looking to see this in action or build similar use cases, the Chat-App repository provides valuable reference code and architectural insights:
+
+[Chat-App on GitHub](https://github.com/sovity/edc-ce/tree/main/examples/chat-app)
+
+## Provider: Asset
 
 A datasource API can be structured with a base URL and path parameters to differentiate datasets:
 - `https://example.com/dataset/1`
@@ -14,7 +26,7 @@ A datasource API can be structured with a base URL and path parameters to differ
 
 In this case, the base URL remains: `https://example.com/dataset/`.
 
-##### Defining the Asset
+### Defining the Asset
 
 To add an asset that references such a base URL which supports parameterization, use the following API request:
 
@@ -54,16 +66,16 @@ Ensure that `proxyPath` and `proxyQueryParams` are correctly set and enabled `tr
 
 After adding the asset, the asset only needs to be linked in a Contract Definition/Data Offer along with Policies in order to make it available for potential Consumers to consume.
 
-#### Consumer: Consuming Data
+## Consumer: Consuming Data
 
-##### Step 1: Catalog Querying
+#### Step 1: Catalog Querying
 
 To access the dataset, query the Provider's EDC catalog and identify the required asset. Extract the following details:
 - `dcat:dataset.{asset}.odrl:hasPolicy.@id` - The data offer ID, later to be used for `{{data-offer-id}}`
 - `dcat:dataset.{asset}.odrl:hasPolicy.odrl:permission` - The policies, in this case permissions, needed to start the negotiation, later used for `{{permissions}}`
 - all JSON-LD context of the response, which must be inserted into the future JSON-LD context of the next call, otherwise, namespaces of the provider policy will not be resolved correctly `{{provider-context}}`, however, the vocabulary vocab does not need to be copied
 
-##### Step 2: Negotiating the EDR
+#### Step 2: Negotiating the EDR
 
 Next, request the `EDR token`:
 
@@ -99,7 +111,7 @@ Extract the `@id` from the response, later to be used for `{{edr-id}}`.
 This ID represents the EDR token and is required for the next steps.
 Successfully reaching this stage confirms a successful negotiation.
 
-##### Step 3: Transfer Process
+#### Step 3: Transfer Process
 
 Use the EDR token ID to retrieve the `transferProcessId`:
 
@@ -127,7 +139,7 @@ Use the EDR token ID to retrieve the `transferProcessId`:
 
 Copy the `transferProcessId` from the response to proceed, later to be used for `{{transferProcessId}}`.
 
-##### Step 4: Data Address
+#### Step 4: Data Address
 
 To obtain the data address from which the dataset can be requested:
 
@@ -137,7 +149,7 @@ The response contains two crucial data points:
 - `endpoint` – The URL of the data plane providing the requested asset, later to be used for `{{endpoint}}`.
 - `authorization` – The authorization information required for data retrieval, e.g. a token.
 
-##### Step 5: Requesting the Data
+#### Step 5: Requesting the Data
 
 Finally, execute a `GET` request using the endpoint and authorization information.
 
@@ -152,9 +164,12 @@ Any additional path parameters appended to `{{endpoint}}` will be included in th
 
 {% hint style="info" %} As parameterization is optional for the Provider, the additional parameters like {{dataset-id}} in this example do not need to be set by the Consumer if the Provider doesn't support it. {% endhint %}
 
-##### Parameterized Example
+#### Parameterized Example
 
 As the information is obtained from the contents of the EDR, if requesting dataset `1` from the Provider as in the example at the top, the final request would be:
 
 `GET https://example.com/dataset/1`
 -  plus additional authorization headers as specified in the EDR
+
+If you want to deepen your understanding or implement your own use case app, studying the Chat-App example is highly recommended.
+

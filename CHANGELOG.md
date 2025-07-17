@@ -2,6 +2,53 @@
 
 The versions of the sovity EDC CE are aligned with the sovity EDC EE.
 
+## [v14.0.0] - 2025-07-17
+
+### Overview
+
+Improved Catena-X support in UI, User-Managed Vault Secrets in the UI
+
+#### Major Changes
+
+- API Wrapper changes with some minor breaking changes:
+  - Removed properties `authHeaderName` and `authHeaderValue` in favor of new `UiHttpAuth` type with additional options.
+
+#### Minor Changes
+
+- UI & API Wrapper: Http Data Sources protected by Basic Auth.
+- UI & API Wrapper: Http Data Sources protected by OAuth2 Shared Secret, OAuth2 Private Key.
+- UI & API Wrapper: Vault Secret Management
+- Sovity Contract Termination merged with Catena / Tractus-X Contract Retirement and both now terminate the contract on both ends.
+- Basic support for some Catena-X Policies: Membership, BPN, BPN Group, Framework Agreement, Usage Purpose
+- Added combobox to select vault secrets in forms
+- UI now renders all data offer asset selectors correctly including asset selectors with multiple criteria
+
+#### Patch Changes
+
+- Implemented asynchronous validators for all create pages
+- Reduce the database load when leases are involved
+- Fix an error when trying to display a policy definition that existed before a migration.
+- The data plane's certificate for proxy transfers are now generated if they don't already exist.
+- Fixes a UI redirect issue where encoded slashes in Catalog Page URLs were decoded causing 404s
+- Fixes a UI issue on the asset property page preventing it from opening when custom properties were complex objects
+- Fixes a UI issue where data offers with non-EQ operators that were not EQ (equals) were rendered incorrectly
+- Fixed policy warnings appearing with ok policies due to the new handling of the ODRL "action"
+- Fixed an error from a wrong port in the deployment guide
+- Minor wording fixes in the EDC UI
+- Policies created with the API Wrapper now get assigned the ODRL action type `http://www.w3.org/ns/odrl/2/use` instead of `USE`.
+
+### Deployment Migration Notes
+
+- Vault secrets to be used in data offers are not automatically added to the "User-Managed Vault Secrets" visible through the UI and must be manually added via the UI or the API, if to be actively managed through the UI.
+
+#### Compatible Versions
+
+- EDC CE Backend: `ghcr.io/sovity/edc-ce:14.0.0`
+- EDC CE Frontend: `ghcr.io/sovity/edc-ce-ui:14.0.0`
+- PostgreSQL: `17`
+- Eclipse EDC Fork: [v0.11.1.1](https://github.com/sovity/core-edc/releases/tag/v0.11.1.1)
+- Tractus-X: `0.9.0`
+
 ## [v13.0.4] - 2025-07-14
 
 ### Overview

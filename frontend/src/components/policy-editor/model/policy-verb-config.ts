@@ -10,7 +10,7 @@ import {type TranslatedString} from '@/lib/utils/translation-utils';
 import {type OperatorDto} from '@sovity.de/edc-client';
 
 export interface PolicyVerbConfig {
-  operandLeftId: string;
+  operandLeftIds: [string, ...string[]];
   operandLeftTitle: TranslatedString;
   operandLeftDescription: TranslatedString;
   operandRightTitle?: TranslatedString;

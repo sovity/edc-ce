@@ -27,13 +27,14 @@ dependencies {
     annotationProcessor(libs.lombok)
     compileOnly(libs.lombok)
 
-    api(libs.edc.policyModel)
-    api(libs.edc.coreSpi)
+    api(libs.edc.assetSpi)
     api(libs.edc.controlPlaneSpi)
-    api(libs.edc.transformSpi)
+    api(libs.edc.coreSpi)
     api(libs.edc.jsonLdLib)
     api(libs.edc.jsonLdSpi)
-    api(libs.edc.assetSpi)
+    api(libs.edc.oauth2Spi)
+    api(libs.edc.policyModel)
+    api(libs.edc.transformSpi)
 
     api(project(":ce:libs:api"))
     api(project(":ce:libs:jsonld-lib"))
@@ -43,6 +44,7 @@ dependencies {
     implementation(libs.apache.commonsCollections)
     implementation(libs.flexmark.all)
     implementation(libs.okhttp.okhttp)
+    implementation(libs.jakarta.rsApi)
 
     testAnnotationProcessor(libs.lombok)
     testImplementation(libs.lombok)

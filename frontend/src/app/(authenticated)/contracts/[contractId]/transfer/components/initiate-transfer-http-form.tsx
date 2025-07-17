@@ -18,8 +18,10 @@ import {UiDataSourceHttpDataMethod} from '@sovity.de/edc-client';
 import {useTranslations} from 'next-intl';
 import {type UseFormReturn} from 'react-hook-form';
 import {z} from 'zod';
+import {type DataSourceHttpAuthType} from '@/app/(authenticated)/data-offers/create/components/data-offer-live-http-form';
+import VaultSecretField from '@/components/vault-secret-field';
 
-export type InitiateTransferAuthType = 'NONE' | 'VALUE' | 'VAULT_SECRET';
+export type InitiateTransferAuthType = 'NONE' | 'VAULT_SECRET';
 
 export const initiateTransferHttpSchema = z.object({
   transferType: z.literal('HTTP' satisfies InitiateTransferType),
@@ -39,14 +41,14 @@ export const initiateTransferHttpSchema = z.object({
       type: z.literal('NONE' satisfies InitiateTransferAuthType),
     }),
     z.object({
-      type: z.literal('VALUE' satisfies InitiateTransferAuthType),
-      headerName: z.string().min(1).max(128),
-      headerValue: z.string().min(1).max(1024),
-    }),
-    z.object({
       type: z.literal('VAULT_SECRET' satisfies InitiateTransferAuthType),
       headerName: z.string().min(1),
       headerSecretName: z.string().max(1024),
+    }),
+    z.object({
+      type: z.literal('BASIC' satisfies DataSourceHttpAuthType),
+      username: z.string().min(1).max(1024),
+      password: z.string().min(1).max(1024),
     }),
   ]),
 });
@@ -110,40 +112,18 @@ export const InitiateTransferHttpForm = ({
               label: t('General.none'),
             },
             {
-              id: 'VALUE' satisfies InitiateTransferAuthType,
-              label: t('General.headerWithValue'),
+              id: 'VAULT_SECRET' satisfies InitiateTransferAuthType,
+              label: t('General.authCustomHeader'),
             },
             {
-              id: 'VAULT_SECRET' satisfies InitiateTransferAuthType,
-              label: t('General.headerWithVaultSecret'),
+              id: 'BASIC' satisfies DataSourceHttpAuthType,
+              label: t('General.authBasic'),
             },
           ]}
           placeholder={''}
         />
 
-        {/* HTTP Data Source: Auth Header Name */}
-        {value.auth.type === 'VALUE' && (
-          <div className={'flex gap-4'}>
-            <InputField
-              className={'grow'}
-              control={form.control}
-              name={'auth.headerName'}
-              placeholder={t('General.httpAuthHeaderNamePlaceholder')}
-              label={t('General.httpAuthHeaderNameLabel')}
-              isRequired
-            />
-            <InputField
-              className={'grow'}
-              control={form.control}
-              name={'auth.headerValue'}
-              placeholder={t('General.httpAuthHeaderValuePlaceholder')}
-              label={t('General.httpAuthHeaderValueLabel')}
-              isRequired
-            />
-          </div>
-        )}
-
-        {/* HTTP Data Source: Auth Header Secret Name */}
+        {/* HTTP Data Source: Auth Header via Secret */}
         {value.auth.type === 'VAULT_SECRET' && (
           <div className={'flex gap-4'}>
             <InputField
@@ -154,15 +134,37 @@ export const InitiateTransferHttpForm = ({
               label={t('General.httpAuthHeaderNameLabel')}
               isRequired
             />
-            <InputField
+            <VaultSecretField
               className={'grow'}
               control={form.control}
               name={'auth.headerSecretName'}
-              placeholder={'MySecret123'}
               label={t('General.httpAuthHeaderSecretValueLabel')}
               isRequired
             />
           </div>
+        )}
+
+        {/* HTTP Data Source: Auth Basic */}
+        {value.auth.type === 'BASIC' && (
+          <>
+            <InputField
+              control={form.control}
+              name={'auth.username'}
+              placeholder={'my-username'}
+              label={t('General.username')}
+              isRequired
+            />
+            <InputField
+              control={form.control}
+              name={'auth.password'}
+              placeholder={'my-password'}
+              label={t('General.password')}
+              isRequired
+            />
+            <div className={'text-sm'}>
+              {t('General.basicAuthUsageWarning')}
+            </div>
+          </>
         )}
 
         {/* HTTP Data Source: Additional Headers */}

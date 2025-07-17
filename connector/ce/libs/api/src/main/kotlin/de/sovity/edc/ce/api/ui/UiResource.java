@@ -48,6 +48,11 @@ import de.sovity.edc.ce.api.ui.model.TransferHistoryPage;
 import de.sovity.edc.ce.api.ui.model.UiConfig;
 import de.sovity.edc.ce.api.ui.model.UiContractNegotiation;
 import de.sovity.edc.ce.api.ui.model.UiDataOffer;
+import de.sovity.edc.ce.api.ui.model.VaultSecretCreateSubmit;
+import de.sovity.edc.ce.api.ui.model.VaultSecretEditPage;
+import de.sovity.edc.ce.api.ui.model.VaultSecretEditSubmit;
+import de.sovity.edc.ce.api.ui.model.VaultSecretListPageEntry;
+import de.sovity.edc.ce.api.ui.model.VaultSecretQuery;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -101,6 +106,42 @@ interface UiResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Delete an Asset")
     IdResponseDto deleteAsset(@PathParam("assetId") String assetId);
+
+    @POST
+    @Path("pages/vault-secrets/create-secret")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Operation(description = "Create a new Vault Secret")
+    IdResponseDto createVaultSecret(VaultSecretCreateSubmit submitRequest);
+
+    @GET
+    @Path("pages/vault-secrets/{key}/edit-secret")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Operation(description = "Collect all data for the Edit Vault Secret Page")
+    VaultSecretEditPage editVaultSecretPage(@PathParam("key") String key);
+
+    @POST
+    @Path("pages/vault-secrets/{key}/edit-secret")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Operation(description = "Edit an existing vault secret")
+    IdResponseDto editVaultSecret(@PathParam("key") String key, VaultSecretEditSubmit submitRequest);
+
+    @GET
+    @Path("pages/vault-secrets/list-page")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Operation(description = "Collect all data for the Vault Secrets List Page")
+    List<VaultSecretListPageEntry> listVaultSecretsPage(
+        @Nullable VaultSecretQuery vaultSecretQuery
+    );
+
+    @DELETE
+    @Path("pages/vault-secrets/{key}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Delete a vault secret")
+    IdResponseDto deleteVaultSecret(@PathParam("key") String key);
 
     @GET
     @Path("pages/policy-page")

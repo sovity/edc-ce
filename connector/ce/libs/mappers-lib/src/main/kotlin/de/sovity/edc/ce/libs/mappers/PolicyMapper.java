@@ -82,7 +82,8 @@ public class PolicyMapper {
     public Policy buildPolicy(UiPolicyExpression expression) {
         var constraints = expressionMapper.buildConstraint(expression);
 
-        var action = Action.Builder.newInstance().type(PolicyValidator.ALLOWED_ACTION).build();
+        var actionType = PolicyValidator.ALLOWED_ACTION_VALUES.iterator().next();
+        var action = Action.Builder.newInstance().type(actionType).build();
 
         var permission = Permission.Builder.newInstance()
             .action(action)
@@ -92,7 +93,6 @@ public class PolicyMapper {
         return Policy.Builder.newInstance()
             .type(PolicyType.SET)
             .permission(permission)
-            .assigner(configUtils.getParticipantId())
             .build();
     }
 

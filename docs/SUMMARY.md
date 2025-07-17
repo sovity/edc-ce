@@ -24,6 +24,7 @@
 * [Postman](Backend/Postman/setting-up-postman.md)
 * [API-Wrapper vs Management-API](Backend/API-Wrapper/relationship.md)
 * [API-Wrapper](Backend/API-Wrapper/what-is-the-api-wrapper.md)
+  * [Chat App](Backend/API-Wrapper/chat-app.md)
   * [Java Client Library](Backend/API-Wrapper/java-client-library-examples.md)
 * [Management-API](Backend/Management-API/what-is-the-management-api.md)
   * [Secrets API](Backend/Management-API/secrets-api.md)

@@ -23,8 +23,6 @@ object EdrTokenSecretModule {
             Used in Tractus-X by: `org.eclipse.tractusx.edc.dataplane.tokenrefresh.core.DataPlaneTokenRefreshServiceImpl`
         """.trimIndent()
     ).apply {
-        serviceExtensions(EdrTokenSecretValidationExtension::class.java)
-
         vaultEntry(CeVaultEntries.TRANSFER_PROXY_PUBLIC)
         vaultEntry(CeVaultEntries.TRANSFER_PROXY_PRIVATE)
         property(
@@ -38,6 +36,13 @@ object EdrTokenSecretModule {
             CeConfigProps.EDC_TRANSFER_PROXY_TOKEN_SIGNER_PRIVATEKEY_ALIAS
         ) {
             defaultValue(CeVaultEntries.TRANSFER_PROXY_PRIVATE.key)
+        }
+        property(
+            ConfigPropCategory.OVERRIDES,
+            CeConfigProps.SOVITY_CERTIFICATES_GENERATOR_METHOD
+        ) {
+            defaultValue(SupportedCertificateMethod.RSA4096.name)
+            enumValues(SupportedCertificateMethod::class.java)
         }
     }
 }

@@ -7,6 +7,8 @@
  */
 package de.sovity.edc.ce.api.utils.jooq
 
+import de.sovity.edc.ce.utils.escapeForSqlLike
+import org.apache.commons.lang3.StringUtils
 import org.jooq.Condition
 import org.jooq.Field
 import org.jooq.impl.DSL
@@ -24,4 +26,12 @@ object JooqUtilsSovity {
 
     inline fun <reified T> Field<T>.neAny(values: Collection<T>): Condition =
         this.ne(DSL.any(*values.toTypedArray()))
+
+    fun Field<String?>.containsString(lowercaseWord: String): Condition {
+        if (StringUtils.isBlank(lowercaseWord)) {
+            return DSL.trueCondition()
+        }
+
+        return this.likeIgnoreCase("%" + lowercaseWord.escapeForSqlLike() + "%")
+    }
 }

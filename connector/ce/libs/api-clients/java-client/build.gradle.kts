@@ -64,7 +64,7 @@ val extractOpenapiYaml by tasks.registering(Copy::class) {
     }
 }
 
-tasks.getByName<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("openApiGenerate") {
+val openApiGenerate = tasks.getByName<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("openApiGenerate") {
     dependsOn(extractOpenapiYaml)
     generatorName.set("java")
     configOptions.set(
@@ -91,7 +91,7 @@ tasks.getByName<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("op
 }
 
 val postprocessGeneratedClient by tasks.registering(Copy::class) {
-    dependsOn("openApiGenerate")
+    dependsOn(openApiGenerate)
     from("${buildDirectory}/generated/client-project/src/main/java")
 
     // @lombok.Builder clashes with the following generated model file.
@@ -114,7 +114,7 @@ sourceSets["main"].java.srcDir("${buildDirectory}/generated/sources/openapi/java
 
 tasks.configureEach {
     if (name == "generateEffectiveLombokConfig") {
-        dependsOn("postprocessGeneratedClient")
+        dependsOn(postprocessGeneratedClient)
     }
 }
 
@@ -123,13 +123,18 @@ tasks.test {
 }
 
 tasks.withType<JavaCompile> {
-    dependsOn("openApiGenerate")
+    dependsOn(openApiGenerate)
     dependsOn("delombok")
-    dependsOn("postprocessGeneratedClient")
+    dependsOn(postprocessGeneratedClient)
     options.isWarnings = false
 
     sourceCompatibility = libs.versions.javaForClients.get()
     targetCompatibility = libs.versions.javaForClients.get()
+}
+
+val generateJavaClient by tasks.registering {
+    group = "sovity"
+    dependsOn(tasks.withType(JavaCompile::class.java))
 }
 
 group = libs.versions.sovityCeGroupName.get()

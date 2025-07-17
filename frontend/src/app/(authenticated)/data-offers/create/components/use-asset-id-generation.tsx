@@ -7,24 +7,39 @@
  */
 'use client';
 
-import {type UseFormReturn} from 'react-hook-form';
 import {useEffect, useState} from 'react';
+import {type UseFormReturn} from 'react-hook-form';
+import {type DataOfferFormMode} from './data-offer-form-mode';
+import {useAsyncIdValidation} from './use-async-id-validation';
 
 export const useAssetIdGeneration = ({
   form,
   assetIdFieldName,
   assetNameFieldName,
+  formMode,
 }: {
   form: UseFormReturn<any>;
   assetIdFieldName: string;
   assetNameFieldName: string;
+  formMode: DataOfferFormMode;
 }) => {
   const [oldAssetName, setOldAssetName] = useState<string>('');
   const assetId = form.watch(assetIdFieldName) as string;
   const assetName = form.watch(assetNameFieldName) as string;
 
+  useAsyncIdValidation({
+    form,
+    assetIdFieldName,
+    assetId,
+    formMode,
+  });
+
   useEffect(() => {
     if (assetName == oldAssetName) {
+      return;
+    }
+
+    if (formMode === 'EDIT' && assetId) {
       return;
     }
 
@@ -37,7 +52,7 @@ export const useAssetIdGeneration = ({
     }
 
     setOldAssetName(assetName);
-  }, [form, assetId, assetIdFieldName, assetName, oldAssetName]);
+  }, [form, assetId, assetIdFieldName, assetName, oldAssetName, formMode]);
 };
 
 const generateAssetId = (assetName: string | null): string => {

@@ -190,6 +190,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IdResponseDto'
+  /wrapper/ui/pages/vault-secrets/create-secret:
+    post:
+      tags:
+      - UI
+      description: Create a new Vault Secret
+      operationId: createVaultSecret
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VaultSecretCreateSubmit'
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponseDto'
   /wrapper/ui/pages/asset-page/assets/{assetId}:
     put:
       tags:
@@ -263,6 +281,67 @@ paths:
         required: true
         schema:
           type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponseDto'
+  /wrapper/ui/pages/vault-secrets/{key}:
+    delete:
+      tags:
+      - UI
+      description: Delete a vault secret
+      operationId: deleteVaultSecret
+      parameters:
+      - name: key
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponseDto'
+  /wrapper/ui/pages/vault-secrets/{key}/edit-secret:
+    get:
+      tags:
+      - UI
+      description: Collect all data for the Edit Vault Secret Page
+      operationId: editVaultSecretPage
+      parameters:
+      - name: key
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VaultSecretEditPage'
+    post:
+      tags:
+      - UI
+      description: Edit an existing vault secret
+      operationId: editVaultSecret
+      parameters:
+      - name: key
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VaultSecretEditSubmit'
       responses:
         default:
           description: default response
@@ -599,6 +678,26 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IdAvailabilityResponse'
+  /wrapper/ui/pages/vault-secrets/list-page:
+    get:
+      tags:
+      - UI
+      description: Collect all data for the Vault Secrets List Page
+      operationId: listVaultSecretsPage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VaultSecretQuery'
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VaultSecretListPageEntry'
   /wrapper/ui/pages/content-agreement-page/{contractAgreementId}/terminate:
     post:
       tags:
@@ -841,20 +940,6 @@ components:
       - HTTP_DATA
       - ON_REQUEST
       - CUSTOM
-    SecretValue:
-      type: object
-      description: A value either inlined or to be fetched from the Vault. Raw secret
-        values will land in the database and will be retrievable via the Eclipse EDC
-        Management API.
-      properties:
-        secretName:
-          type: string
-          description: Secret Name / Vault Key Name.
-          example: myApiAuthKey
-        rawValue:
-          type: string
-          description: Raw inline Value.
-          example: <auth key here>
     UiAssetCreateRequest:
       type: object
       description: Type-safe data offer metadata for creating an asset as supported
@@ -989,14 +1074,9 @@ components:
           type: string
           description: HTTP Request Query Params / Query String.
           example: search=example&limit=10
-        authHeaderName:
-          type: string
-          description: Auth Header name. The auth header is handled specially by the
-            EDC as its value can be read from a vault.
-          example: Authorization
-        authHeaderValue:
-          $ref: '#/components/schemas/SecretValue'
-          description: Auth Header value.
+        auth:
+          $ref: '#/components/schemas/UiHttpAuth'
+          description: The authentication method.
         headers:
           type: object
           additionalProperties:
@@ -1049,6 +1129,124 @@ components:
       required:
       - contactEmail
       - contactPreferredEmailSubject
+    UiHttpAuth:
+      type: object
+      description: Available authentication methods for http data sources. Use only
+        one.
+      properties:
+        type:
+          $ref: '#/components/schemas/UiHttpAuthType'
+          description: The type of authentication.
+        basic:
+          $ref: '#/components/schemas/UiHttpAuthBasic'
+          description: Required when type=BASIC. To use basic authentication.
+        apiKey:
+          $ref: '#/components/schemas/UiHttpAuthApiKey'
+          description: Required when type=API_KEY. To use api key authentication with
+            a secret from the vault.
+        oauth:
+          $ref: '#/components/schemas/UiHttpAuthOauth2'
+          description: Required when type=OAUTH. To use oauth authentication.
+      required:
+      - type
+    UiHttpAuthApiKey:
+      type: object
+      description: Api Key parameters
+      properties:
+        headerName:
+          type: string
+          description: Auth Header name.
+          example: Authorization
+        vaultKey:
+          type: string
+          description: Auth Header key in the vault.
+      required:
+      - headerName
+      - vaultKey
+    UiHttpAuthBasic:
+      type: object
+      description: "Basic Auth as defined in RFC 7617. This is a wrapper for setting\
+        \ the header as Authorization: Basic Zm9vOnBhc3N3b3Jk. Using basic auth is\
+        \ not recommended in general for security reasons, but it is also not recommended\
+        \ because the secret will be saved in the database rather than the vault."
+      properties:
+        username:
+          type: string
+          description: The username
+          example: foo
+        password:
+          type: string
+          description: The password
+          example: password
+      required:
+      - password
+      - username
+    UiHttpAuthOauth2:
+      type: object
+      description: OAuth 2 authentication information
+      properties:
+        tokenUrl:
+          type: string
+          description: The token URL where the access-token can be fetched from.
+        scope:
+          type: string
+          description: (optional) The requested scope.
+        type:
+          $ref: '#/components/schemas/UiHttpOauth2AuthType'
+          description: The type of credential.
+        privateKey:
+          $ref: '#/components/schemas/UiHttpOauth2PrivateKeyAuthorization'
+          description: Required if type=PRIVATE_KEY. For private key-based authorization.
+        sharedSecret:
+          $ref: '#/components/schemas/UiHttpOauth2SharedSecretAuthorization'
+          description: Required if type=SHARED_SECRET. For shared secret-based authorization.
+      required:
+      - tokenUrl
+      - type
+    UiHttpAuthType:
+      type: string
+      description: Supported authentication types for HTTP Data Sinks
+      enum:
+      - BASIC
+      - OAUTH2
+      - API_KEY
+    UiHttpOauth2AuthType:
+      type: string
+      description: Types of OAuth2 flows supported
+      enum:
+      - SHARED_SECRET
+      - PRIVATE_KEY
+    UiHttpOauth2PrivateKeyAuthorization:
+      type: object
+      description: OAuth 2 authorization with a private key
+      properties:
+        privateKeyName:
+          type: string
+          description: The vault entry name of the private key used to sign the JWT
+            sent to the Oauth2 server.
+        tokenValidityInSeconds:
+          type: integer
+          format: int64
+          description: The validity of the JWT token sent to the Oauth2 server (in
+            seconds).
+      required:
+      - privateKeyName
+      - tokenValidityInSeconds
+    UiHttpOauth2SharedSecretAuthorization:
+      type: object
+      description: OAuth 2 shared secret authorization. This uses the OAuth2 client
+        credentials flow.
+      properties:
+        clientId:
+          type: string
+          description: The client identifier.
+        clientSecretName:
+          type: string
+          description: The key with which the shared secret for authenticating to
+            the Oauth2 server is stored into the Vault.
+      required:
+      - clientId
+      - clientSecretName
     BuildInfo:
       type: object
       description: Build information about the connector backend.
@@ -1309,6 +1507,23 @@ components:
       required:
       - expression
       - policyDefinitionId
+    VaultSecretCreateSubmit:
+      type: object
+      description: Submit Request for creating a new User Managed Vault Secret
+      properties:
+        key:
+          type: string
+          description: Key
+        value:
+          type: string
+          description: Value
+        description:
+          type: string
+          description: Description
+      required:
+      - description
+      - key
+      - value
     UiAssetEditRequest:
       type: object
       description: Type-safe data offer metadata for editing an asset as supported
@@ -1398,6 +1613,32 @@ components:
           type: string
           description: Same as customJsonLdAsString but the data will be stored in
             the private properties. The same limitations apply.
+    VaultSecretEditSubmit:
+      type: object
+      description: Submit Request for editing a User Managed Vault Secret
+      properties:
+        value:
+          type: string
+          description: "Secret value of the vault secret. If null, will not change\
+            \ the stored value"
+        description:
+          type: string
+          description: Description
+      required:
+      - description
+    VaultSecretEditPage:
+      type: object
+      description: Data for the Edit Page for User Managed Vault Secrets
+      properties:
+        key:
+          type: string
+          description: Key
+        description:
+          type: string
+          description: Description
+      required:
+      - description
+      - key
     AssetPage:
       type: object
       description: All data for the Asset Page
@@ -2224,14 +2465,9 @@ components:
           type: string
           description: HTTP Request Query Params / Query String.
           example: search=example&limit=10
-        authHeaderName:
-          type: string
-          description: Auth Header name. The auth header is handled specially by the
-            EDC as its value can be read from a vault.
-          example: Authorization
-        authHeaderValue:
-          $ref: '#/components/schemas/SecretValue'
-          description: Auth Header value.
+        auth:
+          $ref: '#/components/schemas/UiHttpPushAuth'
+          description: The authentication method.
         headers:
           type: object
           additionalProperties:
@@ -2248,6 +2484,31 @@ components:
       - PATCH
       - DELETE
       - OPTIONS
+    UiHttpPushAuth:
+      type: object
+      description: Available authentication methods for when pushing data into a data
+        sink with HTTP PUSH. Use only one.
+      properties:
+        type:
+          $ref: '#/components/schemas/UiHttpPushAuthType'
+          description: The type of authentication.
+        basic:
+          $ref: '#/components/schemas/UiHttpAuthBasic'
+          description: Required when type=BASIC. To use basic authentication.
+        apiKey:
+          $ref: '#/components/schemas/UiHttpAuthApiKey'
+          description: Required when type=API_KEY. To use api key authentication with
+            a secret from the vault.
+      required:
+      - type
+    UiHttpPushAuthType:
+      type: string
+      description: Supported authentication types for HTTP Push Transfers. OAuth2
+        is not supported in the deprecated HttpPush transfer type due to previous
+        security concerns in the architecture of this flow
+      enum:
+      - BASIC
+      - API_KEY
     UiInitiateTransferRequest:
       type: object
       description: Type-safe data sink as supported by the sovity product landscape.
@@ -2310,6 +2571,35 @@ components:
           type: boolean
       required:
       - id
+    VaultSecretListPageEntry:
+      type: object
+      description: List Page Entry for the List Page of User Managed Vault Secrets
+      properties:
+        key:
+          type: string
+          description: Key
+        description:
+          type: string
+          description: Description
+        updatedAt:
+          type: string
+          format: date-time
+          description: Updated At
+      required:
+      - description
+      - key
+      - updatedAt
+    VaultSecretQuery:
+      type: object
+      description: Query for filtering Vault Secrets
+      properties:
+        searchQuery:
+          type: string
+          description: Search Query String
+        limit:
+          type: integer
+          format: int32
+          description: Number of items to display
     ContractTerminationRequest:
       type: object
       description: Data for terminating a Contract Agreement
@@ -2368,6 +2658,8 @@ components:
       - CONNECTOR_LIMITS
       - OPEN_SOURCE_MARKETING
       - EE_BASIC_MARKETING
+      - CATENA_POLICIES
+      - SOVITY_POLICIES
     UiConfigPreconfiguredCounterparty:
       type: object
       description: Pre-configured counterparty for the Catalog

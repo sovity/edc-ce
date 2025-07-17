@@ -104,6 +104,23 @@ dependencyBundles.bundle(
     // Adds headers Edc-Bpn and Edc-Contract-Agreement-Id to proxied calls via EDRs
     // A Tractus-X dependency, yet compatible with vanilla EDCs for now
     api(libs.tractus.provisionAdditionalHeaders)
+
+    /**
+     * Contract Retirement
+     *
+     * The contract retirement SQL store is replaced by
+     * de.sovity.edc.ce.modules.messaging.contract_termination.tractus_bridge.TractusToSovityContractRetirementBridge
+     *
+     * see docs/dev/modules/tractus-retirement-to-sovity-termination-bridge.md
+     *
+     * api(libs.tractus.retirementEvaluationStoreSql)
+     *
+     * The dependencies below are made available everywhere to re-use the transfer process stopping features from Tractus.
+     *
+     * Only the `api(libs.tractus.retirementEvaluationApi)` is added in the tractus-specific
+     */
+    api(libs.tractus.retirementEvaluationCore)
+    api(libs.tractus.retirementEvaluationSpi)
 }
 
 dependencyBundles.bundle(
@@ -258,6 +275,8 @@ dependencyBundles.bundle(
     // sql extensions
     api(libs.tractus.businessPartnerStoreSql)
     api(libs.tractus.edrIndexLockSql)
+
+    api(libs.tractus.retirementEvaluationApi)
 }
 
 dependencyBundles.bundle(

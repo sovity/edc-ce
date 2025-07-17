@@ -16,7 +16,6 @@ import {useTitle} from '@/lib/hooks/use-title';
 import {matchQueryState} from '@/lib/utils/match-query-state';
 import {queryKeys} from '@/lib/queryKeys';
 import {decodeParams} from '@/lib/utils/http-utils';
-import {useTranslations} from 'next-intl';
 import CatalogDataOfferDetailPageContent from './catalog-data-offer-detail-page';
 import PageContainer from '@/components/page-container';
 
@@ -30,7 +29,6 @@ export default function CatalogDataOfferDetailPage({
     tab: string;
   };
 }) {
-  const t = useTranslations();
   const breadcrumbItems = useBreadcrumbItems();
   const {participantId, endpointUrl, assetId} = decodeParams(params);
 

@@ -8,6 +8,7 @@
 package de.sovity.edc.ce.modules.messaging.contract_termination
 
 import de.sovity.edc.ce.config.CeConfigProps
+import de.sovity.edc.ce.modules.messaging.contract_termination.tractus_bridge.TractusSovityContractTerminationBridgeExtension
 import de.sovity.edc.runtime.modules.model.ConfigPropCategory
 import de.sovity.edc.runtime.modules.model.EdcModule
 
@@ -17,6 +18,7 @@ object ContractTerminationModule {
         documentation = "Contract Termination for sovity dataspaces"
     ).apply {
         serviceExtensions(ContractTerminationExtension::class.java)
+        serviceExtensions(TractusSovityContractTerminationBridgeExtension::class.java)
 
         property(
             ConfigPropCategory.OVERRIDES,

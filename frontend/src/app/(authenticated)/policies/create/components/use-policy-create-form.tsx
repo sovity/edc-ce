@@ -8,22 +8,52 @@
 'use client';
 
 import {policyEditorFormSchema} from '@/components/policy-editor/editor/policy-editor-form-schema';
+import {api} from '@/lib/api/client';
+import {
+  type CancellablePromise,
+  useCancellablePromise,
+} from '@/lib/hooks/use-cancellable-promise';
 import {zodResolver} from '@hookform/resolvers/zod';
+import {useTranslations} from 'next-intl';
 import {useForm} from 'react-hook-form';
 import {z} from 'zod';
 
-export const policyCreateForm = z.object({
-  policyDefinitionId: z.string().min(1),
-  policy: policyEditorFormSchema,
-});
+export const policyCreateForm = (
+  withCancellation: CancellablePromise,
+  policyIdValidationMessage: string,
+) =>
+  z.object({
+    policyDefinitionId: z
+      .string()
+      .min(1)
+      .refine(
+        async (policyId) => {
+          const {available} = await withCancellation(
+            api.uiApi.isPolicyIdAvailable({policyId}),
+          );
+          return available;
+        },
+        {message: policyIdValidationMessage},
+      ),
+    policy: policyEditorFormSchema,
+  });
 
-export type PolicyCreateFormValue = z.infer<typeof policyCreateForm>;
+export type PolicyCreateFormValue = z.infer<
+  ReturnType<typeof policyCreateForm>
+>;
 
 export const usePolicyCreateForm = () => {
+  const withCancellation = useCancellablePromise();
+  const policyIdValidationMessage = useTranslations()(
+    'General.Validators.policyIdTaken',
+  );
+
   return {
     form: useForm<PolicyCreateFormValue>({
       mode: 'onTouched',
-      resolver: zodResolver(policyCreateForm),
+      resolver: zodResolver(
+        policyCreateForm(withCancellation, policyIdValidationMessage),
+      ),
       defaultValues: {
         policyDefinitionId: '',
         policy: {},

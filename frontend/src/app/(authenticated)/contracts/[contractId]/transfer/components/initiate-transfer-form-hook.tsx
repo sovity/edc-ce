@@ -25,7 +25,9 @@ export const useInitiateTransferForm = () => {
 
   const defaultCustom: InitiateTransferFormValue = {
     transferType: 'CUSTOM_JSON',
-    dataAddressJson: '',
+    dataAddressJson: '{\n}',
+    customTransferType: '',
+    transferPropertiesJson: '{\n}',
   };
 
   return {

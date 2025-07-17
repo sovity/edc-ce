@@ -18,7 +18,7 @@ import TextareaField from '@/components/form/textarea-field';
 import ValueListField from '@/components/form/value-list-field';
 import PolicyEditor from '@/components/policy-editor/editor/policy-editor';
 import {usePolicyEditor} from '@/components/policy-editor/editor/use-policy-editor';
-import {sovityDataspacePolicyContext} from '@/components/policy-editor/supported-policies';
+import {usePolicyContext} from '@/components/policy-editor/use-policy-context';
 import {Button} from '@/components/ui/button';
 import {Form} from '@/components/ui/form';
 import {DataOfferLiveForm} from '@/app/(authenticated)/data-offers/create/components/data-offer-live-form';
@@ -31,24 +31,25 @@ import {
   type UiPolicyExpression,
 } from '@sovity.de/edc-client';
 import {useTranslations} from 'next-intl';
+import {type DataOfferFormMode} from './data-offer-form-mode';
 
 export const DataOfferForm = ({
   mode,
   initialFormValue,
   onSubmit,
 }: {
-  mode: 'EDIT' | 'CREATE' | 'CREATE_ASSET';
+  mode: DataOfferFormMode;
   initialFormValue: DataOfferCreateFormModel;
   onSubmit: (
     value: DataOfferCreateFormModel,
     expression: UiPolicyExpression,
   ) => Promise<unknown>;
 }) => {
-  const {form} = useDataOfferCreateForm(initialFormValue);
+  const {form} = useDataOfferCreateForm(initialFormValue, mode);
   const t = useTranslations();
 
   // Supported Policies
-  const policyContext = sovityDataspacePolicyContext();
+  const policyContext = usePolicyContext();
   const policyEditor = usePolicyEditor(
     policyContext,
     form,
@@ -112,8 +113,17 @@ export const DataOfferForm = ({
           <InputField
             control={form.control}
             name="general.assetId"
-            placeholder={t('Pages.DataOfferCreate.asset_id_label')}
-            label={t('Pages.DataOfferCreate.asset_id_label')}
+            disabled={mode === 'EDIT'}
+            placeholder={
+              mode === 'CREATE_ASSET'
+                ? t('Pages.DataOfferCreate.asset_id_label')
+                : t('Pages.DataOfferCreate.data_offer_id_placeholder')
+            }
+            label={
+              mode === 'CREATE_ASSET'
+                ? t('Pages.DataOfferCreate.asset_id_label')
+                : t('Pages.DataOfferCreate.data_offer_id_label')
+            }
             tooltip={t('Pages.DataOfferCreate.asset_id_tooltip')}
             isRequired
           />

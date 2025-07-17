@@ -32,6 +32,13 @@
  */
 
 import { mapValues } from '../runtime';
+import type { UiHttpPushAuth } from './UiHttpPushAuth';
+import {
+    UiHttpPushAuthFromJSON,
+    UiHttpPushAuthFromJSONTyped,
+    UiHttpPushAuthToJSON,
+    UiHttpPushAuthToJSONTyped,
+} from './UiHttpPushAuth';
 import type { UiDataSinkHttpDataPushMethod } from './UiDataSinkHttpDataPushMethod';
 import {
     UiDataSinkHttpDataPushMethodFromJSON,
@@ -39,13 +46,6 @@ import {
     UiDataSinkHttpDataPushMethodToJSON,
     UiDataSinkHttpDataPushMethodToJSONTyped,
 } from './UiDataSinkHttpDataPushMethod';
-import type { SecretValue } from './SecretValue';
-import {
-    SecretValueFromJSON,
-    SecretValueFromJSONTyped,
-    SecretValueToJSON,
-    SecretValueToJSONTyped,
-} from './SecretValue';
 
 /**
  * HTTP_DATA type Data Source. This is an HttpData-PUSH data sink. Note that consumption of parameterized data sources is not supported via HttpData-PUSH
@@ -72,17 +72,11 @@ export interface UiDataSinkHttpDataPush {
      */
     queryString?: string;
     /**
-     * Auth Header name. The auth header is handled specially by the EDC as its value can be read from a vault.
-     * @type {string}
+     * The authentication method.
+     * @type {UiHttpPushAuth}
      * @memberof UiDataSinkHttpDataPush
      */
-    authHeaderName?: string;
-    /**
-     * Auth Header value.
-     * @type {SecretValue}
-     * @memberof UiDataSinkHttpDataPush
-     */
-    authHeaderValue?: SecretValue;
+    auth?: UiHttpPushAuth;
     /**
      * HTTP Request Headers.
      * @type {{ [key: string]: string; }}
@@ -114,8 +108,7 @@ export function UiDataSinkHttpDataPushFromJSONTyped(json: any, ignoreDiscriminat
         'method': json['method'] == null ? undefined : UiDataSinkHttpDataPushMethodFromJSON(json['method']),
         'baseUrl': json['baseUrl'],
         'queryString': json['queryString'] == null ? undefined : json['queryString'],
-        'authHeaderName': json['authHeaderName'] == null ? undefined : json['authHeaderName'],
-        'authHeaderValue': json['authHeaderValue'] == null ? undefined : SecretValueFromJSON(json['authHeaderValue']),
+        'auth': json['auth'] == null ? undefined : UiHttpPushAuthFromJSON(json['auth']),
         'headers': json['headers'] == null ? undefined : json['headers'],
     };
 }
@@ -134,8 +127,7 @@ export function UiDataSinkHttpDataPushToJSONTyped(value?: UiDataSinkHttpDataPush
         'method': UiDataSinkHttpDataPushMethodToJSON(value['method']),
         'baseUrl': value['baseUrl'],
         'queryString': value['queryString'],
-        'authHeaderName': value['authHeaderName'],
-        'authHeaderValue': SecretValueToJSON(value['authHeaderValue']),
+        'auth': UiHttpPushAuthToJSON(value['auth']),
         'headers': value['headers'],
     };
 }

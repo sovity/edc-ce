@@ -19,6 +19,7 @@ import de.sovity.edc.ce.modules.config_utils.ConfigUtilsImpl
 import de.sovity.edc.ce.modules.config_utils.ConfigUtilsModule
 import de.sovity.edc.ce.modules.dataspaces.catena.CatenaDataspaceFeatures
 import de.sovity.edc.ce.modules.dataspaces.sovity.SovityDataspaceFeatures
+import de.sovity.edc.ce.modules.dataspaces.sovity.edrs.EdrTokenSecretAutogenerationExtension
 import de.sovity.edc.ce.modules.dataspaces.sovity.edrs.EdrTokenSecretModule
 import de.sovity.edc.ce.modules.db.DbModule
 import de.sovity.edc.ce.modules.messaging.contract_termination.ContractTerminationModule
@@ -57,6 +58,8 @@ object CeControlPlaneModules {
         withCeDataspaceChoice()
 
         dependencyBundles(CeDependencyBundles.controlPlaneBase)
+
+        serviceExtensions(EdrTokenSecretAutogenerationExtension::class.java)
 
         modules(
             // CE base

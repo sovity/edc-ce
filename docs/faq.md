@@ -6,6 +6,27 @@ icon: message-question
 
 This section is designed to provide quick and clear answers to the most common queries we receive. Whether you're looking for information on our products, services, policies, or need help with troubleshooting, you'll find the answers here. If you can't find the answer to your question, don't hesitate to open a [discussion](https://github.com/sovity/edc-ce/discussions).
 
+### What is the Chat-App and how can it help me?
+
+The **Chat-App** is an open-source use-case demonstration application provided by sovity that showcases how to use the EDC API-Wrapper, pull flow, and EDRs together in a real-world use case.
+
+It includes both backend logic and a user interface, making it an excellent reference for:
+
+- Developers looking for a practical example of how to implement data exchange flows using sovity EDC
+- Users interested in seeing how frontend and backend components interact within the sovity ecosystem
+- Teams aiming to accelerate their own integration projects by learning from a working example
+
+**Key benefits include:**
+- A runnable, end-to-end example demonstrating core sovity EDC concepts
+- Insights into best practices for handling data synchronization and event-driven communication
+- Clear separation of concerns between UI and backend logic, helping to design modular apps
+
+You can explore the full source code and documentation for the Chat-App here:  
+[Chat-App on GitHub](https://github.com/sovity/edc-ce/tree/main/examples/chat-app)
+
+Studying the Chat-App will help you better understand the architecture and capabilities of the sovity EDC, speeding up your own development and integration efforts.
+If you’re new to the sovity EDC, starting with the Chat-App is highly recommended to get hands-on experience with the platform.
+
 ### How does the EDC API-key work for backend and frontend for API-authentication?
 
 **Backend (EDC):**

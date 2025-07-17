@@ -21,7 +21,7 @@ class ContractNegotiationBuilder(
 
     fun buildContractNegotiation(request: ContractNegotiationRequest): ContractRequest {
         val counterPartyAddress = request.counterPartyAddress
-        val contractOffer = contractOfferMapper.buildContractOffer(request)
+        val contractOffer = contractOfferMapper.buildContractOfferForNegotiationInitiation(request)
 
         return ContractRequest.Builder.newInstance()
             .counterPartyAddress(counterPartyAddress)

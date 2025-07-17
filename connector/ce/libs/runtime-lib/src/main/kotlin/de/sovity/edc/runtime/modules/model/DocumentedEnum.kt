@@ -14,10 +14,14 @@ interface DocumentedEnum {
     val documentation: String
     val name: String
 
-    fun isSelectedOption(rawValue: String?): Boolean = name == (rawValue ?: "").uppercase()
-        .replace(" ", "_")
-        .replace("-", "_")
-        .replace(".", "_")
+    fun isSelectedOption(rawValue: String?): Boolean =
+        EnumUtils.isSelectedEnumOptionIgnoreCase(name, rawValue)
 
     val nameKebabCase get() = name.lowercase().replace("_", "-")
+
+    companion object {
+        inline fun <reified T> getSelectedValue(stringOrNull: String?): T
+            where T : DocumentedEnum, T : Enum<T> =
+            EnumUtils.getSelectedEnumOptionIgnoreCase(stringOrNull)
+    }
 }

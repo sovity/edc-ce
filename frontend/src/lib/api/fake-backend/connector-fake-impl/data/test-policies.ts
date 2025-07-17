@@ -29,14 +29,35 @@ export namespace TestPolicies {
   export const connectorRestricted: UiPolicy = policy(
     multi(
       'AND',
-      constraint('POLICY_EVALUATION_TIME', 'GEQ', '2020-11-30T23:00:00.000Z'),
-      constraint('POLICY_EVALUATION_TIME', 'LT', '2020-12-07T23:00:00.000Z'),
+      constraint('https://w3id.org/catenax/policy/Membership', 'EQ', 'active'),
+      constraint(
+        'https://w3id.org/tractusx/v0.0.1/ns/BusinessPartnerGroup',
+        'EQ',
+        'alpha',
+      ),
+      constraint(
+        'https://w3id.org/edc/v0.0.1/ns/inForceDate',
+        'LT',
+        '2020-12-07T23:00:00.000Z',
+      ),
       multi(
         'OR',
-        constraint('REFERRING_CONNECTOR', 'EQ', 'BPNL1234XX.C1234XX'),
-        constraint('REFERRING_CONNECTOR', 'EQ', 'BPNL1234XX.C1235YY'),
+        constraint(
+          'https://w3id.org/catenax/policy/FrameworkAgreement',
+          'EQ',
+          'DataExchangeGovernance:x.y.z',
+        ),
+        constraint(
+          'https://w3id.org/catenax/policy/FrameworkAgreement',
+          'EQ',
+          'DataExchangeGovernance:a.b.c',
+        ),
       ),
-      constraint('ALWAYS_TRUE', 'EQ', 'true'),
+      constraint(
+        'https://w3id.org/catenax/policy/UsagePurpose',
+        'EQ',
+        'cx.bpdm.pool:1',
+      ),
     ),
   );
 

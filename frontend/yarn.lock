@@ -3852,6 +3852,7 @@ __metadata:
     ts-node: "npm:^10.9.2"
     tsx: "npm:^4.19.3"
     typescript: "npm:^5.8.3"
+    use-debounce: "npm:^10.0.5"
     uuid: "npm:^11.1.0"
     zod: "npm:^3.24.2"
     zustand: "npm:^4.5.6"
@@ -8702,6 +8703,15 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 10c0/f887488c6e6075cdad4962979da1714b217bcb1ee009a9e57ce9a844bcfc4c3a99e93983dfc2e5af9e0913824d24e730090ff255e902c516dcb58d2d3837e01c
+  languageName: node
+  linkType: hard
+
+"use-debounce@npm:^10.0.5":
+  version: 10.0.5
+  resolution: "use-debounce@npm:10.0.5"
+  peerDependencies:
+    react: "*"
+  checksum: 10c0/8232538aa2e2b1252716ef2918204709f16bd53661b56a3a29ad790bf61bc7cbf3bb1126d888408db276a2b05fa6a941e9452149be14bfe438aa22054ccf4e4a
   languageName: node
   linkType: hard
 

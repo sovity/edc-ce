@@ -60,7 +60,7 @@ const PolicyEditorAddButton = ({
         <DropdownMenuSeparator />
         {availableVerbs.map((verb) => (
           <DropdownMenuItem
-            key={verb.operandLeftId}
+            key={verb.operandLeftIds[0]}
             onClick={() => policyEditor.addConstraint(treeNode.path, verb)}>
             {verb.operandLeftTitle(t)}
           </DropdownMenuItem>

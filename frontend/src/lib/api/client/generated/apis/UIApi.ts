@@ -60,6 +60,11 @@ import type {
   UiContractNegotiation,
   UiDataOffer,
   UiInitiateTransferRequest,
+  VaultSecretCreateSubmit,
+  VaultSecretEditPage,
+  VaultSecretEditSubmit,
+  VaultSecretListPageEntry,
+  VaultSecretQuery,
 } from '../models/index';
 import {
     AssetPageFromJSON,
@@ -114,6 +119,16 @@ import {
     UiDataOfferToJSON,
     UiInitiateTransferRequestFromJSON,
     UiInitiateTransferRequestToJSON,
+    VaultSecretCreateSubmitFromJSON,
+    VaultSecretCreateSubmitToJSON,
+    VaultSecretEditPageFromJSON,
+    VaultSecretEditPageToJSON,
+    VaultSecretEditSubmitFromJSON,
+    VaultSecretEditSubmitToJSON,
+    VaultSecretListPageEntryFromJSON,
+    VaultSecretListPageEntryToJSON,
+    VaultSecretQueryFromJSON,
+    VaultSecretQueryToJSON,
 } from '../models/index';
 
 export interface CreateAssetRequest {
@@ -136,6 +151,10 @@ export interface CreatePolicyDefinitionV2Request {
     policyDefinitionCreateDto?: PolicyDefinitionCreateDto;
 }
 
+export interface CreateVaultSecretRequest {
+    vaultSecretCreateSubmit?: VaultSecretCreateSubmit;
+}
+
 export interface DeleteAssetRequest {
     assetId: string;
 }
@@ -148,9 +167,22 @@ export interface DeletePolicyDefinitionRequest {
     policyId: string;
 }
 
+export interface DeleteVaultSecretRequest {
+    key: string;
+}
+
 export interface EditAssetRequest {
     assetId: string;
     uiAssetEditRequest?: UiAssetEditRequest;
+}
+
+export interface EditVaultSecretRequest {
+    key: string;
+    vaultSecretEditSubmit?: VaultSecretEditSubmit;
+}
+
+export interface EditVaultSecretPageRequest {
+    key: string;
 }
 
 export interface GetCatalogPageDataOfferRequest {
@@ -206,6 +238,10 @@ export interface IsContractDefinitionIdAvailableRequest {
 
 export interface IsPolicyIdAvailableRequest {
     policyId: string;
+}
+
+export interface ListVaultSecretsPageRequest {
+    vaultSecretQuery?: VaultSecretQuery;
 }
 
 export interface TerminateContractAgreementRequest {
@@ -394,6 +430,35 @@ export class UIApi extends runtime.BaseAPI {
     }
 
     /**
+     * Create a new Vault Secret
+     */
+    async createVaultSecretRaw(requestParameters: CreateVaultSecretRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<IdResponseDto>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/wrapper/ui/pages/vault-secrets/create-secret`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: VaultSecretCreateSubmitToJSON(requestParameters['vaultSecretCreateSubmit']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => IdResponseDtoFromJSON(jsonValue));
+    }
+
+    /**
+     * Create a new Vault Secret
+     */
+    async createVaultSecret(requestParameters: CreateVaultSecretRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<IdResponseDto> {
+        const response = await this.createVaultSecretRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Delete an Asset
      */
     async deleteAssetRaw(requestParameters: DeleteAssetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<IdResponseDto>> {
@@ -493,6 +558,39 @@ export class UIApi extends runtime.BaseAPI {
     }
 
     /**
+     * Delete a vault secret
+     */
+    async deleteVaultSecretRaw(requestParameters: DeleteVaultSecretRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<IdResponseDto>> {
+        if (requestParameters['key'] == null) {
+            throw new runtime.RequiredError(
+                'key',
+                'Required parameter "key" was null or undefined when calling deleteVaultSecret().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/wrapper/ui/pages/vault-secrets/{key}`.replace(`{${"key"}}`, encodeURIComponent(String(requestParameters['key']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => IdResponseDtoFromJSON(jsonValue));
+    }
+
+    /**
+     * Delete a vault secret
+     */
+    async deleteVaultSecret(requestParameters: DeleteVaultSecretRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<IdResponseDto> {
+        const response = await this.deleteVaultSecretRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Updates an Asset\'s metadata and optionally also the data source.
      */
     async editAssetRaw(requestParameters: EditAssetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<IdResponseDto>> {
@@ -525,6 +623,75 @@ export class UIApi extends runtime.BaseAPI {
      */
     async editAsset(requestParameters: EditAssetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<IdResponseDto> {
         const response = await this.editAssetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Edit an existing vault secret
+     */
+    async editVaultSecretRaw(requestParameters: EditVaultSecretRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<IdResponseDto>> {
+        if (requestParameters['key'] == null) {
+            throw new runtime.RequiredError(
+                'key',
+                'Required parameter "key" was null or undefined when calling editVaultSecret().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/wrapper/ui/pages/vault-secrets/{key}/edit-secret`.replace(`{${"key"}}`, encodeURIComponent(String(requestParameters['key']))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: VaultSecretEditSubmitToJSON(requestParameters['vaultSecretEditSubmit']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => IdResponseDtoFromJSON(jsonValue));
+    }
+
+    /**
+     * Edit an existing vault secret
+     */
+    async editVaultSecret(requestParameters: EditVaultSecretRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<IdResponseDto> {
+        const response = await this.editVaultSecretRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Collect all data for the Edit Vault Secret Page
+     */
+    async editVaultSecretPageRaw(requestParameters: EditVaultSecretPageRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<VaultSecretEditPage>> {
+        if (requestParameters['key'] == null) {
+            throw new runtime.RequiredError(
+                'key',
+                'Required parameter "key" was null or undefined when calling editVaultSecretPage().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/wrapper/ui/pages/vault-secrets/{key}/edit-secret`.replace(`{${"key"}}`, encodeURIComponent(String(requestParameters['key']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => VaultSecretEditPageFromJSON(jsonValue));
+    }
+
+    /**
+     * Collect all data for the Edit Vault Secret Page
+     */
+    async editVaultSecretPage(requestParameters: EditVaultSecretPageRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<VaultSecretEditPage> {
+        const response = await this.editVaultSecretPageRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -1083,6 +1250,35 @@ export class UIApi extends runtime.BaseAPI {
      */
     async isPolicyIdAvailable(requestParameters: IsPolicyIdAvailableRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<IdAvailabilityResponse> {
         const response = await this.isPolicyIdAvailableRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Collect all data for the Vault Secrets List Page
+     */
+    async listVaultSecretsPageRaw(requestParameters: ListVaultSecretsPageRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<VaultSecretListPageEntry>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/wrapper/ui/pages/vault-secrets/list-page`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+            body: VaultSecretQueryToJSON(requestParameters['vaultSecretQuery']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(VaultSecretListPageEntryFromJSON));
+    }
+
+    /**
+     * Collect all data for the Vault Secrets List Page
+     */
+    async listVaultSecretsPage(requestParameters: ListVaultSecretsPageRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<VaultSecretListPageEntry>> {
+        const response = await this.listVaultSecretsPageRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

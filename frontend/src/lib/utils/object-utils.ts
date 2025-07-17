@@ -11,6 +11,15 @@ export function patchObj<T>(obj: T, patcher: Patcher<T>): T {
   return {...obj, ...patcher(obj)};
 }
 
+export function mapValues<T, U>(
+  obj: Record<string, T>,
+  mapper: (value: T) => U,
+): Record<string, U> {
+  return Object.fromEntries(
+    Object.entries(obj).map(([key, value]) => [key, mapper(value)]),
+  );
+}
+
 export const recordToList = <T>(
   obj?: Record<string, T>,
 ): {key: string; value: T}[] => {

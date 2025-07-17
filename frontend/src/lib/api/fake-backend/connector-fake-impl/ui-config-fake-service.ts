@@ -14,9 +14,31 @@ export interface UiConfigFakeBackendOption {
 
 export const UI_CONFIG_OPTIONS: UiConfigFakeBackendOption[] = [
   {
-    name: 'CE',
+    name: 'CE Catena',
     config: {
-      features: ['OPEN_SOURCE_MARKETING'],
+      features: ['OPEN_SOURCE_MARKETING', 'CATENA_POLICIES'],
+      preconfiguredCounterparties: [
+        {
+          connectorEndpoint: 'https://existing-other-connector/api/dsp',
+          participantId: 'BPNL1234XX.C1234XX',
+        },
+        {
+          connectorEndpoint:
+            'https://does-not-exist-but-is-super-long-so-we-can-test/api/dsp',
+          participantId: 'BPNL1234XX.C1235XX',
+        },
+        {
+          connectorEndpoint:
+            'https://how-wrapping-works-in-subtext-of-catalog-url-select/api/dsp',
+          participantId: 'BPNL1234XX.C1237XX',
+        },
+      ],
+    },
+  },
+  {
+    name: 'CE Sovity',
+    config: {
+      features: ['OPEN_SOURCE_MARKETING', 'SOVITY_POLICIES'],
       preconfiguredCounterparties: [
         {
           connectorEndpoint: 'https://existing-other-connector/api/dsp',

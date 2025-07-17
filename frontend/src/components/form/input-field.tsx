@@ -18,6 +18,7 @@ import {
 import {Input} from '@/components/ui/input';
 import {type Control} from 'react-hook-form';
 import FormLabelContent from './form-label-content';
+import {type HTMLInputTypeAttribute} from 'react';
 
 export interface TextFieldProps {
   control: Control<any, any>;
@@ -25,7 +26,7 @@ export interface TextFieldProps {
   label: string;
   tooltip?: string;
   placeholder?: string;
-  number?: boolean;
+  type?: HTMLInputTypeAttribute;
   value?: string;
   icon?: React.ReactNode;
   onIconClick?: () => void;
@@ -43,7 +44,7 @@ const InputField = ({
   label,
   tooltip,
   placeholder,
-  number,
+  type,
   icon,
   onIconClick,
   disableAutoComplete,
@@ -74,7 +75,7 @@ const InputField = ({
                 data-testid={`form-input-${name}`}
                 placeholder={placeholder}
                 {...field}
-                type={number ? 'number' : 'text'}
+                type={type ?? 'text'}
                 autoComplete={disableAutoComplete ? 'off' : undefined}
                 disabled={disabled}
               />

@@ -32,6 +32,9 @@ import {
   UiConfigToJSON,
   UiContractNegotiationToJSON,
   UiDataOfferToJSON,
+  VaultSecretCreateSubmitFromJSON,
+  VaultSecretEditSubmitFromJSON,
+  VaultSecretQueryFromJSON,
 } from '@sovity.de/edc-client';
 import {
   assetIdAvailable,
@@ -82,6 +85,13 @@ import {
 } from './utils/request-utils';
 import {ok} from './utils/response-utils';
 import {UrlInterceptor} from './utils/url-interceptor';
+import {
+  createVaultSecret,
+  deleteVaultSecret,
+  editVaultSecret,
+  editVaultSecretPage,
+  listVaultSecretsPage,
+} from '@/lib/api/fake-backend/connector-fake-impl/secrets-fake-service';
 
 export const EDC_FAKE_BACKEND: FetchAPI = async (
   input: RequestInfo,
@@ -280,6 +290,41 @@ export const EDC_FAKE_BACKEND: FetchAPI = async (
     .on('GET', (contractDefinitionId) => {
       const response = contractDefinitionIdAvailable(contractDefinitionId);
       return ok(IdAvailabilityResponseToJSON(response));
+    })
+
+    .url('ui/pages/vault-secrets/list-page')
+    .on('GET', () => {
+      const query =
+        body !== undefined ? VaultSecretQueryFromJSON(body) : undefined;
+      const response = listVaultSecretsPage(query);
+      return ok(response);
+    })
+
+    .url('ui/pages/vault-secrets/*')
+    .on('DELETE', (secret) => {
+      const response = deleteVaultSecret(secret);
+      return ok(response);
+    })
+
+    .url('ui/pages/vault-secrets/create-secret')
+    .on('POST', () => {
+      const secret = createVaultSecret(VaultSecretCreateSubmitFromJSON(body));
+      return ok(IdResponseDtoToJSON(secret));
+    })
+
+    .url('ui/pages/vault-secrets/*/edit-secret')
+    .on('GET', (secret) => {
+      const response = editVaultSecretPage(secret);
+      return ok(response);
+    })
+
+    .url('ui/pages/vault-secrets/*/edit-secret')
+    .on('POST', (key) => {
+      const response = editVaultSecret(
+        key,
+        VaultSecretEditSubmitFromJSON(body),
+      );
+      return ok(response);
     })
 
     .url('ui/build-info')

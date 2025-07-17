@@ -7,12 +7,15 @@
  */
 package de.sovity.edc.ce.modules.dataspaces.sovity
 
+import de.sovity.edc.ce.api.ui.model.UiConfigFeature
+import de.sovity.edc.ce.config.CeConfigProps
 import de.sovity.edc.ce.dependency_bundles.CeDependencyBundles
 import de.sovity.edc.ce.modules.dataspaces.sovity.edrs.EdrApiServiceV3GenericExtension
 import de.sovity.edc.ce.modules.dataspaces.sovity.iam.DapsModules
 import de.sovity.edc.ce.modules.dataspaces.sovity.iam.IamMockModule
 import de.sovity.edc.ce.modules.dataspaces.sovity.policies.SovityPoliciesModule
 import de.sovity.edc.ce.modules.messaging.contract_termination.ContractTerminationModule
+import de.sovity.edc.runtime.modules.model.ConfigPropCategory
 import de.sovity.edc.runtime.modules.model.EdcModule
 
 object SovityDataspaceFeatures {
@@ -47,5 +50,13 @@ object SovityDataspaceFeatures {
         )
         dependencyBundles(CeDependencyBundles.sovityControlPlane)
         serviceExtensions(EdrApiServiceV3GenericExtension::class.java)
+
+        // UI Features
+        property(
+            ConfigPropCategory.OVERRIDES,
+            CeConfigProps.SOVITY_EDC_UI_FEATURES_ADD_WILDCARD.withWildcardValue(UiConfigFeature.SOVITY_POLICIES.name)
+        ) {
+            defaultValue("true")
+        }
     }
 }

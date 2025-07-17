@@ -12,6 +12,7 @@ import de.sovity.edc.ce.api.ui.model.UiConfigFeature
 import de.sovity.edc.ce.api.ui.model.UiConfigPreconfiguredCounterparty
 import de.sovity.edc.ce.config.CeConfigProps
 import de.sovity.edc.runtime.modules.model.ConfigPropRef
+import de.sovity.edc.runtime.modules.model.EnumUtils
 import de.sovity.edc.runtime.simple_di.Service
 import org.eclipse.edc.spi.system.configuration.Config
 
@@ -19,9 +20,12 @@ import org.eclipse.edc.spi.system.configuration.Config
 class UiConfigApiService(
     config: Config,
 ) {
-    private val features = getFeatures(config, CeConfigProps.SOVITY_EDC_UI_FEATURES) +
+    private val features by lazy {
+        getFeatures(config, CeConfigProps.SOVITY_EDC_UI_FEATURES) +
+            getFeaturesFromWildcardProperty(config, CeConfigProps.SOVITY_EDC_UI_FEATURES_ADD_WILDCARD) +
             getFeatures(config, CeConfigProps.SOVITY_EDC_UI_FEATURES_ADD) -
             getFeatures(config, CeConfigProps.SOVITY_EDC_UI_FEATURES_EXCLUDE).toSet()
+    }
 
     private val preconfiguredCounterparties = getPreconfiguredCounterparties(config)
     private val logoutUrl = CeConfigProps.SOVITY_EDC_UI_LOGOUT_URL.getStringOrNull(config)
@@ -41,7 +45,15 @@ class UiConfigApiService(
     private fun getFeatures(config: Config, configPropRef: ConfigPropRef) =
         configPropRef
             .getListOrEmpty(config)
-            .map { UiConfigFeature.valueOf(it) }
+            .map { EnumUtils.getSelectedEnumOptionIgnoreCase<UiConfigFeature>(it) }
+
+    private fun getFeaturesFromWildcardProperty(config: Config, configPropRef: ConfigPropRef): Set<UiConfigFeature> =
+        configPropRef
+            .getWildcardValues(config)
+            .entries
+            .filter { it.value == "true" }
+            .map { EnumUtils.getSelectedEnumOptionIgnoreCase<UiConfigFeature>(it.key) }
+            .toSet()
 
     private fun getPreconfiguredCounterparties(config: Config) =
         CeConfigProps.SOVITY_EDC_UI_PRECONFIGURED_COUNTERPARTIES

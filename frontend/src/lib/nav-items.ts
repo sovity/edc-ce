@@ -15,6 +15,7 @@ import {
   FileClockIcon,
   FilePlusIcon,
   FileStackIcon,
+  LockIcon,
   Rows3Icon,
   SquareLibraryIcon,
 } from 'lucide-react';
@@ -89,6 +90,11 @@ export const useNavItems = (): NavItemGroup[] => {
           name: t('General.assets'),
           href: urls.assets.listPage(),
           icon: FileStackIcon,
+        },
+        {
+          name: t('General.vaultSecrets'),
+          href: urls.vaultSecrets.listPage(),
+          icon: LockIcon,
         },
       ],
     },

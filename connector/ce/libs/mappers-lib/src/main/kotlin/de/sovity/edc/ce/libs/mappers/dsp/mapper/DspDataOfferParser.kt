@@ -46,7 +46,7 @@ class DspDataOfferParser(
         return DspCatalog.builder()
             .endpoint(endpoint)
             .participantId(participantId)
-            .dataOffers(dataOffers.stream().map { dataset: JsonObject -> this.parseDataOffer(dataset) }.toList())
+            .dataOffers(dataOffers.map { this.parseDataOffer(it) })
             .build()
     }
 

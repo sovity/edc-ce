@@ -18,19 +18,36 @@ import {
 } from '@/components/policy-editor/value-types/datetime-truncate-to-date';
 import {
   rawJsonAdapter,
-  rawJsonFormSchema,
-} from '@/components/policy-editor/value-types/raw-json-form-schema';
+  rawJsonSchema,
+} from '@/components/policy-editor/value-types/raw-json';
 import {
-  PolicyEditorConstraintStringList,
   stringListWithCommaSupportAdapter,
   stringListWithCommaSupportFormSchema,
 } from '@/components/policy-editor/value-types/string-list-with-comma-support';
 import {z} from 'zod';
+import {
+  inForceDateAdapter,
+  inForceDateSchema,
+  PolicyEditorConstraintInForceDate,
+} from '@/components/policy-editor/value-types/in-force-date';
+import {
+  stringListCatenaStyleAdapter,
+  stringListCatenaStyleFormSchema,
+} from '@/components/policy-editor/value-types/string-list-catena-style';
+import {PolicyEditorConstraintStringList} from '@/components/policy-editor/value-types/string-list-common';
+import {
+  PolicyEditorConstraintString,
+  stringAdapter,
+  stringFormSchema,
+} from '@/components/policy-editor/value-types/string';
 
 export type PolicyValueType =
   | 'RAW_JSON'
+  | 'STRING'
   | 'DATETIME_TRUNCATE_TO_DATE'
-  | 'STRING_LIST_WITH_COMMA_SUPPORT';
+  | 'IN_FORCE_DATE'
+  | 'STRING_LIST_WITH_COMMA_SUPPORT'
+  | 'STRING_LIST_CATENA_STYLE';
 
 /**
  * All known policy value types
@@ -40,16 +57,22 @@ export const policyValueTypeAdaptersById: Record<
   PolicyValueTypeAdapter
 > = {
   RAW_JSON: rawJsonAdapter,
+  STRING: stringAdapter,
   DATETIME_TRUNCATE_TO_DATE: datetimeTruncateToDateAdapter,
+  IN_FORCE_DATE: inForceDateAdapter,
   STRING_LIST_WITH_COMMA_SUPPORT: stringListWithCommaSupportAdapter,
+  STRING_LIST_CATENA_STYLE: stringListCatenaStyleAdapter,
 };
 
 /**
  * Discriminated Union for a Policy Editor Constraint Node
  */
 export const policyEditorConstraintFormSchema = z.discriminatedUnion('type', [
-  rawJsonFormSchema,
+  rawJsonSchema,
+  stringFormSchema,
   datetimeTruncateToDateFormSchema,
+  inForceDateSchema,
+  stringListCatenaStyleFormSchema,
   stringListWithCommaSupportFormSchema,
 ]);
 
@@ -73,13 +96,26 @@ export const PolicyEditorConstraintForm = ({
   // There is no way to create Raw Json type constraints right now
   return (
     <>
+      {treeNode.value.verb?.valueType === 'STRING' && (
+        <PolicyEditorConstraintString
+          policyEditor={policyEditor}
+          treeNode={treeNode}
+        />
+      )}
       {treeNode.value.verb?.valueType === 'DATETIME_TRUNCATE_TO_DATE' && (
         <PolicyEditorConstraintDate
           policyEditor={policyEditor}
           treeNode={treeNode}
         />
       )}
-      {treeNode.value.verb?.valueType === 'STRING_LIST_WITH_COMMA_SUPPORT' && (
+      {treeNode.value.verb?.valueType === 'IN_FORCE_DATE' && (
+        <PolicyEditorConstraintInForceDate
+          policyEditor={policyEditor}
+          treeNode={treeNode}
+        />
+      )}
+      {(treeNode.value.verb?.valueType === 'STRING_LIST_WITH_COMMA_SUPPORT' ||
+        treeNode.value.verb?.valueType === 'STRING_LIST_CATENA_STYLE') && (
         <PolicyEditorConstraintStringList
           policyEditor={policyEditor}
           treeNode={treeNode}
