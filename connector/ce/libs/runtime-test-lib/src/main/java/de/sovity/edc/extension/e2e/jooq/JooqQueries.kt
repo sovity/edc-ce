@@ -74,6 +74,16 @@ class JooqQueries(
         }
     }
 
+    fun insertEdcBusinessPartnerGroup(dsl: DSLContext, bpn: String, groups: List<String> = emptyList()) {
+        dsl.newRecord(Tables.EDC_BUSINESS_PARTNER_GROUP).also {
+            it.bpn = bpn
+            it.groups = toJson(groups)
+            it.insert()
+        }
+    }
+
+    fun removeAllEdcBusinessPartners(dsl: DSLContext) = dsl.deleteFrom(Tables.EDC_BUSINESS_PARTNER_GROUP).execute()
+
     fun insertPolicies(dsl: DSLContext, policyDefinitions: List<PolicyDefinition>) {
         val records = policyDefinitions.map { policyDef ->
             dsl.newRecord(Tables.EDC_POLICYDEFINITIONS).also {

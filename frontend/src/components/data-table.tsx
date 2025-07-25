@@ -50,6 +50,7 @@ interface DataTableProps<TData, TValue> {
   invisibleColumns?: string[];
   filterComponents?: React.ReactNode;
   rowLink?: (row: Row<TData>) => string;
+  disableUpdateUrlParams?: boolean;
 }
 
 declare module '@tanstack/table-core' {
@@ -69,6 +70,7 @@ export function DataTable<TData, TValue>({
   invisibleColumns,
   filterComponents,
   rowLink,
+  disableUpdateUrlParams,
 }: DataTableProps<TData, TValue>) {
   const {search, sort} = useUrlParams();
   const urlSorting = sort.map((s) => {
@@ -77,7 +79,8 @@ export function DataTable<TData, TValue>({
 
   const [sorting, setSorting] = useState<SortingState>(urlSorting ?? []);
   const [globalFilter, setGlobalFilter] = useState(search ?? '');
-  useUpdateTableSearchParamState(globalFilter, sorting);
+
+  useUpdateTableSearchParamState(globalFilter, sorting, disableUpdateUrlParams);
 
   const columnVisibility: Record<string, boolean> | undefined =
     invisibleColumns?.reduce(

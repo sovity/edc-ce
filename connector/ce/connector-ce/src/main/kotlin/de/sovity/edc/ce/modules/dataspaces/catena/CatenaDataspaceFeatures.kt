@@ -38,6 +38,13 @@ object CatenaDataspaceFeatures {
         ) {
             defaultValue("true")
         }
+        property(
+            ConfigPropCategory.OVERRIDES,
+            CeConfigProps.SOVITY_EDC_UI_FEATURES_ADD_WILDCARD
+                .withWildcardValue(UiConfigFeature.BUSINESS_PARTNER_GROUP_MANAGEMENT.name)
+        ) {
+            defaultValue("true")
+        }
     }
 
     fun tractusDataPlane() = EdcModule(

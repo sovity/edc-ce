@@ -6,6 +6,9 @@
 
 The sovity EDC offers client libraries for selected languages, including Java and Kotlin. The used version should always be the version of the used EDC itself to ensure compatibility. These client libraries are hosted in the GitHub Maven Registry of the sovity/edc-ce repository, thus we need to add that maven registry to add the dependency.
 
+> If you haven't set up GitHub Maven Registry credentials yet, please refer to the prerequisites section in the parent [README](../README.md).
+
+```markdown
 ```kotlin
 // File:
 // backend/build.gradle.kts
@@ -23,21 +26,24 @@ maven {
     }
 }
 ```
+```
 
-See the prerequisites section of the parent [README](../README.md) for instructions on how to set up the GitHub Maven Registry credentials.
+### Include sovity EDC Client Libraries
 
-### Include EDC Client Library
+Add the following two libraries to your project dependencies:
 
-We want to add two libraries:
+- The sovity EDC Java Client, which works with all sovity-built EDC variants, including Catena-compatible and EE variants
+- The sovity EDC JSON & JSON-LD Utility library, providing useful constants such as EDC JSON-LD Properties (e.g. Asset ID)
 
-- The sovity EDC Java Client usable for all variants of sovity-built EDCs, including the Catena-compatible variants and EE variants
-- The sovity EDC JSON & JSON-LD Utility library, which will contain useful constants, e.g. for EDC JSON-LD Properties such as the Asset ID.
+These libraries are essential to interact smoothly with the sovity EDC services.
 
+```markdown
 ```kotlin
 // File:
 // backend/build.gradle.kts
 
 // sovity EDC Dependencies
-implementation("de.sovity.edc:client:14.0.0")
-implementation("de.sovity.edc:jsonld-lib:14.0.0")
+implementation("de.sovity.edc:client:14.1.0")
+implementation("de.sovity.edc:jsonld-lib:14.1.0")
+```
 ```

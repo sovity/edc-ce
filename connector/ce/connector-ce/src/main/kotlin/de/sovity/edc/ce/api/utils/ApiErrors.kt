@@ -7,6 +7,6 @@
  */
 package de.sovity.edc.ce.api.utils
 
-import jakarta.ws.rs.WebApplicationException
+import jakarta.ws.rs.NotFoundException
 
-fun notFoundError(msg: String): Nothing = throw WebApplicationException(msg, 404)
+fun notFoundError(msg: String): Nothing = throw NotFoundException(msg)

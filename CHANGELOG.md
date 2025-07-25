@@ -2,6 +2,31 @@
 
 The versions of the sovity EDC CE are aligned with the sovity EDC EE.
 
+## [v14.1.0] - 2025-07-25
+
+### Overview
+
+Added Business Partner Groups management.
+
+#### Minor Changes
+
+- Added input field to policy editor to select business partner group
+- Added a wrapper API endpoint to select business partner group
+
+#### Patch Changes
+
+### Deployment Migration Notes
+
+_No special deployment migration steps required_
+
+#### Compatible Versions
+
+- EDC CE Backend: `ghcr.io/sovity/edc-ce:14.1.0`
+- EDC CE Frontend: `ghcr.io/sovity/edc-ce-ui:14.1.0`
+- PostgreSQL: `17`
+- Eclipse EDC Fork: [v0.11.1.1](https://github.com/sovity/core-edc/releases/tag/v0.11.1.1)
+- Tractus-X: `0.9.0`
+
 ## [v14.0.0] - 2025-07-17
 
 ### Overview

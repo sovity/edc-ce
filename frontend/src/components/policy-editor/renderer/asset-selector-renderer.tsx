@@ -8,7 +8,7 @@
 'use client';
 
 import {TreeLike} from '@/components/policy-editor/renderer/tree-like';
-import {UiCriterion} from '@sovity.de/edc-client';
+import {type UiCriterion} from '@sovity.de/edc-client';
 import {AssetSelectorPropertyLabel} from '@/components/policy-editor/renderer/asset-selector-property-label';
 import {useTranslations} from 'next-intl';
 import {AssetSelectorValue} from '@/components/policy-editor/renderer/asset-selector-value';

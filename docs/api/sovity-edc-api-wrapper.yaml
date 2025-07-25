@@ -94,6 +94,87 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BuildInfo'
+  /wrapper/ui/pages/business-partner-groups/create:
+    post:
+      tags:
+      - UI
+      description: Create a new Business Partner Group
+      operationId: businessPartnerGroupCreateSubmit
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BusinessPartnerGroupCreateSubmit'
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponseDto'
+  /wrapper/ui/pages/business-partner-groups/{id}/edit-page:
+    get:
+      tags:
+      - UI
+      description: Collect all data for the Business Partner Group Edit Page
+      operationId: businessPartnerGroupEditPage
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BusinessPartnerGroupEditPage'
+  /wrapper/ui/pages/business-partner-groups/{id}/edit-group:
+    put:
+      tags:
+      - UI
+      description: Edit a Business Partner Group
+      operationId: businessPartnerGroupEditSubmit
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BusinessPartnerGroupEditSubmit'
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponseDto'
+  /wrapper/ui/pages/business-partner-groups/list-page:
+    get:
+      tags:
+      - UI
+      description: Collect all data for the Business Partner Groups List Page
+      operationId: businessPartnerGroupListPage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BusinessPartnerGroupQuery'
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BusinessPartnerGroupListPageEntry'
   /wrapper/ui/pages/asset-page/assets:
     post:
       tags:
@@ -250,6 +331,25 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IdResponseDto'
+  /wrapper/ui/pages/business-partner-groups/{id}:
+    delete:
+      tags:
+      - UI
+      description: Delete a Business Partner Group
+      operationId: deleteBusinessPartnerGroup
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponseDto'
   /wrapper/ui/pages/contract-definition-page/contract-definitions/{contractDefinitionId}:
     delete:
       tags:
@@ -326,7 +426,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/VaultSecretEditPage'
-    post:
+    put:
       tags:
       - UI
       description: Edit an existing vault secret
@@ -1277,6 +1377,77 @@ components:
       required:
       - id
       - lastUpdatedDate
+    BusinessPartnerGroupCreateSubmit:
+      type: object
+      description: Business Partner Group Create Submit
+      properties:
+        groupId:
+          type: string
+          description: Business Partner Group ID
+        businessPartnerNumbers:
+          type: array
+          description: List of BPNs in the created group
+          items:
+            type: string
+          maxItems: 2147483647
+          minItems: 1
+      required:
+      - businessPartnerNumbers
+      - groupId
+    BusinessPartnerGroupEditPage:
+      type: object
+      description: Business Partner Group Edit Page
+      properties:
+        groupId:
+          type: string
+          description: Business Partner Group ID
+        businessPartnerNumbers:
+          type: array
+          description: List of BPNs in this group
+          items:
+            type: string
+      required:
+      - businessPartnerNumbers
+      - groupId
+    BusinessPartnerGroupEditSubmit:
+      type: object
+      description: Business Partner Group Edit Submit
+      properties:
+        businessPartnerNumbers:
+          type: array
+          description: List of BPNs in the edited group
+          items:
+            type: string
+          maxItems: 2147483647
+          minItems: 1
+      required:
+      - businessPartnerNumbers
+    BusinessPartnerGroupListPageEntry:
+      type: object
+      description: Business Partner Group List Page Entry
+      properties:
+        groupId:
+          type: string
+          description: Business Partner Group Id
+        businessPartnerNumbers:
+          type: array
+          description: List of BPNs in this group
+          items:
+            type: string
+      required:
+      - businessPartnerNumbers
+      - groupId
+    BusinessPartnerGroupQuery:
+      type: object
+      description: Query for filtering Business Partner Groups
+      properties:
+        searchQuery:
+          type: string
+          description: Search Query String
+        limit:
+          type: integer
+          format: int32
+          description: Number of items to display
     ContractDefinitionRequest:
       type: object
       deprecated: true
@@ -2660,6 +2831,7 @@ components:
       - EE_BASIC_MARKETING
       - CATENA_POLICIES
       - SOVITY_POLICIES
+      - BUSINESS_PARTNER_GROUP_MANAGEMENT
     UiConfigPreconfiguredCounterparty:
       type: object
       description: Pre-configured counterparty for the Catalog

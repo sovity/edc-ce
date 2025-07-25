@@ -16,7 +16,11 @@ export const UI_CONFIG_OPTIONS: UiConfigFakeBackendOption[] = [
   {
     name: 'CE Catena',
     config: {
-      features: ['OPEN_SOURCE_MARKETING', 'CATENA_POLICIES'],
+      features: [
+        'OPEN_SOURCE_MARKETING',
+        'CATENA_POLICIES',
+        'BUSINESS_PARTNER_GROUP_MANAGEMENT',
+      ],
       preconfiguredCounterparties: [
         {
           connectorEndpoint: 'https://existing-other-connector/api/dsp',

@@ -7,7 +7,6 @@
  */
 'use client';
 
-import type {PolicyOperatorConfig} from '@/components/policy-editor/model/policy-operator-config';
 import {
   Tooltip,
   TooltipContent,
@@ -15,8 +14,8 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import {useTranslations} from 'next-intl';
-import {UiCriterionOperator} from '@sovity.de/edc-client';
-import {TranslatedString} from '@/lib/utils/translation-utils';
+import {type UiCriterionOperator} from '@sovity.de/edc-client';
+import {type TranslatedString} from '@/lib/utils/translation-utils';
 
 interface AssetSelectorOperatorDef {
   title: TranslatedString;
