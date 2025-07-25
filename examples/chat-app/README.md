@@ -6,7 +6,7 @@ With this example we will build and test the example Use Case Application "Chat 
 
 This will take us through how two Use Case Applications communicate with each other using the "notification" pattern and set themselves up.
 
-What separates this example from other projects is that it is fully integrated into our CI and will be evolved over time to demonstrate sovity's current endorsed way of building Use Case Applications at each point in time. The turorial itself is extracted by automation and thus ensured to be up-to-date and alive for all future versions.
+What separates this example from other projects is that it is fully integrated into our CI and will be evolved over time to demonstrate sovity's current endorsed way of building Use Case Applications at each point in time. The tutorial itself is extracted by automation and thus ensured to be up-to-date and alive for all future versions.
 
 > Note that this example does not use the Eclipse EDC Management API, but the sovity EDC API Wrapper which contains a well-typed API surface for the EDC with generated client libraries and contains endpoints not available for vanilla EDCs.
 
@@ -65,3 +65,15 @@ This should start a Docker Compose with two Chat Apps. Relevant URLs are:
   - Connector Dataspace Identity:
     - Participant ID: `consumer`
     - Connector Endpoint: http://consumer/api/dsp
+
+### Establish a channel
+
+- Open http://localhost:13000/
+- Click `New Chat`
+  - Participant ID: `consumer`
+  - Connection endpoint: `http://consumer/api/dsp`
+- Open http://localhost:23000/
+- Click `New Chat`
+  - Participant ID: `provider`
+  - Connection endpoint: `http://provider/api/dsp`
+- Write a message and check the counterparty's chat page.

@@ -33,6 +33,11 @@ export const urls = {
     createPage: () => '/vault-secrets/create',
     editPage: (id: string) => `/vault-secrets/${e(id)}/edit`,
   },
+  businessPartnerGroups: {
+    createPage: () => '/business-partner-groups/create',
+    listPage: () => '/business-partner-groups',
+    editPage: (id: string) => `/business-partner-groups/${e(id)}/edit`,
+  },
   catalog: {
     browserPage: () => '/catalog',
     listPage: (participantId: string, connectorEndpoint: string) =>

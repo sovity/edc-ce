@@ -13,6 +13,9 @@ import de.sovity.edc.ce.api.common.model.UiAssetCreateRequest
 import de.sovity.edc.ce.api.common.model.UiAssetEditRequest
 import de.sovity.edc.ce.api.common.model.UiInitiateTransferRequest
 import de.sovity.edc.ce.api.ui.model.AssetPage
+import de.sovity.edc.ce.api.ui.model.BusinessPartnerGroupCreateSubmit
+import de.sovity.edc.ce.api.ui.model.BusinessPartnerGroupEditSubmit
+import de.sovity.edc.ce.api.ui.model.BusinessPartnerGroupQuery
 import de.sovity.edc.ce.api.ui.model.ContractAgreementCard
 import de.sovity.edc.ce.api.ui.model.ContractAgreementPage
 import de.sovity.edc.ce.api.ui.model.ContractAgreementPageQuery
@@ -37,6 +40,7 @@ import de.sovity.edc.ce.api.ui.model.VaultSecretCreateSubmit
 import de.sovity.edc.ce.api.ui.model.VaultSecretEditSubmit
 import de.sovity.edc.ce.api.ui.model.VaultSecretQuery
 import de.sovity.edc.ce.api.ui.pages.asset.AssetApiService
+import de.sovity.edc.ce.api.ui.pages.business_partner_group.BusinessPartnerGroupApiService
 import de.sovity.edc.ce.api.ui.pages.catalog.CatalogApiService
 import de.sovity.edc.ce.api.ui.pages.config.UiConfigApiService
 import de.sovity.edc.ce.api.ui.pages.contract_agreements.ContractAgreementPageApiService
@@ -54,7 +58,6 @@ import de.sovity.edc.ce.api.ui.pages.vault_secret.VaultSecretApiService
 import de.sovity.edc.ce.api.utils.ValidatorUtils
 import de.sovity.edc.ce.modules.db.jooq.DslContextFactory
 import de.sovity.edc.runtime.simple_di.Service
-import org.jooq.DSLContext
 
 // This class is so large so the generated API Clients can have one UiApi
 @Service
@@ -76,6 +79,7 @@ class UiResourceImpl(
     private val transferHistoryPageApiService: TransferHistoryPageApiService,
     private val transferHistoryPageAssetFetcherService: TransferHistoryPageAssetFetcherService,
     private val vaultSecretApiService: VaultSecretApiService,
+    private val businessPartnerGroupApiService: BusinessPartnerGroupApiService
 ) : UiResource {
 
     override fun getDashboardPage(): DashboardPage =
@@ -138,6 +142,36 @@ class UiResourceImpl(
     override fun deleteVaultSecret(key: String) =
         dslContextFactory.transactionResult { dsl ->
             vaultSecretApiService.deleteSubmit(dsl, key)
+        }
+
+    override fun businessPartnerGroupListPage(businessPartnerGroupQuery: BusinessPartnerGroupQuery?) =
+        dslContextFactory.transactionResult { dsl ->
+            businessPartnerGroupApiService.listPage(dsl, businessPartnerGroupQuery)
+        }
+
+    override fun businessPartnerGroupEditPage(id: String) =
+        dslContextFactory.transactionResult { dsl ->
+            businessPartnerGroupApiService.editPage(dsl, id)
+        }
+
+    override fun businessPartnerGroupEditSubmit(
+        id: String,
+        submitRequest: BusinessPartnerGroupEditSubmit
+    ) =
+        dslContextFactory.transactionResult { dsl ->
+            ValidatorUtils.validate(submitRequest)
+            businessPartnerGroupApiService.editSubmit(dsl, id, submitRequest)
+        }
+
+    override fun businessPartnerGroupCreateSubmit(submitRequest: BusinessPartnerGroupCreateSubmit) =
+        dslContextFactory.transactionResult { dsl ->
+            ValidatorUtils.validate(submitRequest)
+            businessPartnerGroupApiService.createSubmit(dsl, submitRequest)
+        }
+
+    override fun deleteBusinessPartnerGroup(id: String) =
+        dslContextFactory.transactionResult { dsl ->
+            businessPartnerGroupApiService.deleteSubmit(dsl, id)
         }
 
     override fun getPolicyDefinitionPage(): PolicyDefinitionPage =
@@ -293,7 +327,7 @@ class UiResourceImpl(
     }
 
     override fun getTransferHistoryPage(): TransferHistoryPage {
-        return dslContextFactory.transactionResult { unused: DSLContext? ->
+        return dslContextFactory.transactionResult {
             TransferHistoryPage(
                 transferHistoryPageApiService.getTransferHistoryEntries()
             )
@@ -301,7 +335,7 @@ class UiResourceImpl(
     }
 
     override fun getTransferProcessAsset(transferProcessId: String): UiAsset {
-        return dslContextFactory.transactionResult { dsl ->
+        return dslContextFactory.transactionResult {
             transferHistoryPageAssetFetcherService.getAssetForTransferHistoryPage(
                 transferProcessId
             )

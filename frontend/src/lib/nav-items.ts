@@ -12,6 +12,7 @@ import {
   ShieldCheckIcon,
 } from '@heroicons/react/24/outline';
 import {
+  BriefcaseBusinessIcon,
   FileClockIcon,
   FilePlusIcon,
   FileStackIcon,
@@ -22,6 +23,9 @@ import {
 import {useTranslations} from 'next-intl';
 import {urls} from './urls';
 import {type SvgIcon} from './utils/svg-icon';
+import {useConfig} from './hooks/use-config';
+import {UiConfigFeature} from '@sovity.de/edc-client';
+import {takeIf} from './utils/array-utils';
 
 export interface NavItem {
   name: string;
@@ -35,6 +39,7 @@ export interface NavItemGroup {
 }
 
 export const useNavItems = (): NavItemGroup[] => {
+  const config = useConfig();
   const t = useTranslations();
 
   return [
@@ -96,6 +101,16 @@ export const useNavItems = (): NavItemGroup[] => {
           href: urls.vaultSecrets.listPage(),
           icon: LockIcon,
         },
+        ...takeIf(
+          {
+            name: t('General.businessPartnerGroups'),
+            href: urls.businessPartnerGroups.listPage(),
+            icon: BriefcaseBusinessIcon,
+          },
+          config?.features.includes(
+            UiConfigFeature.BusinessPartnerGroupManagement,
+          ),
+        ),
       ],
     },
     ...(env.NEXT_PUBLIC_DEVTOOLS_ENABLED

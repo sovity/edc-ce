@@ -8,7 +8,6 @@
 'use client';
 
 import FormGroup from '@/components/form/form-group';
-import InputField from '@/components/form/input-field';
 import {Button} from '@/components/ui/button';
 import {Form} from '@/components/ui/form';
 import {useTranslations} from 'next-intl';

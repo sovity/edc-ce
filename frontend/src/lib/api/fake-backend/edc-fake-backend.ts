@@ -9,6 +9,9 @@ import {uiConfig} from '@/lib/api/fake-backend/connector-fake-impl/ui-config-fak
 import {
   AssetPageToJSON,
   BuildInfoToJSON,
+  BusinessPartnerGroupCreateSubmitFromJSON,
+  BusinessPartnerGroupEditSubmitFromJSON,
+  BusinessPartnerGroupQueryFromJSON,
   ConnectorLimitsToJSON,
   ContractAgreementPageQueryFromJSON,
   ContractAgreementPageToJSON,
@@ -92,6 +95,13 @@ import {
   editVaultSecretPage,
   listVaultSecretsPage,
 } from '@/lib/api/fake-backend/connector-fake-impl/secrets-fake-service';
+import {
+  businessPartnerGroupCreateSubmit,
+  businessPartnerGroupEditPage,
+  businessPartnerGroupEditSubmit,
+  deleteBusinessPartnerGroup,
+  listBusinessPartnerGroupsPage,
+} from './connector-fake-impl/business-group-fake-service';
 
 export const EDC_FAKE_BACKEND: FetchAPI = async (
   input: RequestInfo,
@@ -319,11 +329,47 @@ export const EDC_FAKE_BACKEND: FetchAPI = async (
     })
 
     .url('ui/pages/vault-secrets/*/edit-secret')
-    .on('POST', (key) => {
+    .on('PUT', (key) => {
       const response = editVaultSecret(
         key,
         VaultSecretEditSubmitFromJSON(body),
       );
+      return ok(response);
+    })
+
+    .url('ui/pages/business-partner-groups/list-page')
+    .on('GET', () => {
+      const query =
+        body !== undefined
+          ? BusinessPartnerGroupQueryFromJSON(body)
+          : undefined;
+      const response = listBusinessPartnerGroupsPage(query);
+      return ok(response);
+    })
+
+    .url('ui/pages/business-partner-groups/*/edit-page')
+    .on('GET', (groupId) => {
+      const response = businessPartnerGroupEditPage(groupId);
+      return ok(response);
+    })
+
+    .url('ui/pages/business-partner-groups/*/edit-group')
+    .on('PUT', (groupId) => {
+      const request = BusinessPartnerGroupEditSubmitFromJSON(body);
+      const response = businessPartnerGroupEditSubmit(groupId, request);
+      return ok(response);
+    })
+
+    .url('ui/pages/business-partner-groups/create')
+    .on('POST', () => {
+      const request = BusinessPartnerGroupCreateSubmitFromJSON(body);
+      const response = businessPartnerGroupCreateSubmit(request);
+      return ok(response);
+    })
+
+    .url('ui/pages/business-partner-groups/*')
+    .on('DELETE', (groupId) => {
+      const response = deleteBusinessPartnerGroup(groupId);
       return ok(response);
     })
 

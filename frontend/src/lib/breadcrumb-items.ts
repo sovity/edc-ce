@@ -47,6 +47,23 @@ export const useBreadcrumbItems = () => {
         href: urls.vaultSecrets.editPage(key),
       }),
     },
+    businessPartnerGroups: {
+      createPage: () => ({
+        label: t('General.create'),
+        href: urls.businessPartnerGroups.createPage(),
+      }),
+      listPage: () => ({
+        label: t('General.businessPartnerGroups'),
+        href: urls.businessPartnerGroups.listPage(),
+      }),
+      detailPage: (id: string) => ({
+        label: id,
+      }),
+      editPage: (id: string) => ({
+        label: t('General.edit'),
+        href: urls.businessPartnerGroups.editPage(id),
+      }),
+    },
     contracts: {
       listPage: () => ({
         label: t('Pages.ContractList.title'),

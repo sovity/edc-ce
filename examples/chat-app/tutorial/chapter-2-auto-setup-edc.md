@@ -1,11 +1,13 @@
 # Example Use Case App Tutorial - Chat App
 
-## Chapter 2: Automatically Setting Up the EDC on Startup
+## Chapter 2: Automatically Setting Up the sovity EDC on Startup
 
 ### Preparing the Data Source
 
-Requests from other participants will need to land somewhere in our application. For this we shall add an endpoint behind our reception asset that will be called via the Data Plane to receive messages.
+Requests from other participants need to land somewhere in our application.  
+To achieve this, we will add an endpoint behind our reception asset that will be called via the Data Plane to receive messages.
 
+```markdown
 ```kotlin
 // File:
 // backend/src/main/kotlin/de/sovity/chatapp/api/NotificationResource.kt
@@ -20,7 +22,9 @@ fun onReceiveMessage(
     messageService.onMessageReceived(edcBpn, notification)
 }
 ```
+```
 
+```markdown
 ```kotlin
 // File:
 // backend/src/main/kotlin/de/sovity/chatapp/api/NotificationCallbackUrls.kt
@@ -32,13 +36,15 @@ fun onReceiveMessage(
 fun getOnMessageReceivedUrl(): String =
     "$chatAppBackendUrl/api/notifications/receive-message"
 ```
+```
 
 ### Creating the Asset
 
-Part of creating the data offer is creating the asset. We will create the asset, but should it already exist, we shall only update the data source, ensuring it points at the right endpoint in our chat app backend.
+Creating the data offer requires creating the asset first. If the asset already exists, we will update its data source to ensure it points to the correct endpoint in our chat app backend.
 
-In this example we do not identify the Use Case Application's asset by any nested property, but by the asset's ID.
+In this example, we identify the Use Case Application's asset by its asset ID, not by any nested property.
 
+```markdown
 ```kotlin
 // File:
 // backend/src/main/kotlin/de/sovity/chatapp/ChatApplication.kt
@@ -50,7 +56,9 @@ In this example we do not identify the Use Case Application's asset by any neste
 // Recreate chat app relevant edc resources correctly
 edcService.configureAsset()
 ```
+```
 
+```markdown
 ```kotlin
 // File:
 // backend/src/main/kotlin/de/sovity/chatapp/services/edc/EdcService.kt
@@ -88,13 +96,15 @@ if (edcClient.uiApi().isAssetIdAvailable("chat-app").available!!) {
     )
 }
 ```
+```
 
 ### Publishing The Data Offer
 
-For our demo use-case, we can create an unrestricted policy for our data offering. 
+For this demo use case, we create an unrestricted policy for our data offering.
 
-> In practice, use case applications can either micro manage contract definitions on the fly to restrict visible data offers to certain participants and hide the use case participation, or also adopt an unrestricted data offer and decide to enforce access control in the app itself by differentiating the incoming requests.
+In real-world applications, use case apps can either manage contract definitions dynamically to restrict which participants see which data offers - effectively hiding use case participation - or they can adopt an unrestricted data offer and enforce access control within the app by differentiating incoming requests.
 
+```markdown
 ```kotlin
 // File:
 // backend/src/main/kotlin/de/sovity/chatapp/services/edc/EdcService.kt
@@ -130,11 +140,13 @@ if (edcClient.uiApi().isContractDefinitionIdAvailable("chat-app").available!!) {
     Log.info("Already existing contract definition 'chat-app'. Skipping creation")
 }
 ```
+```
 
-> In case the contract definition already exists, we don't override it, so custom changes to the contract definition, e.g. to limit it to certain participants or timespans can be done.
+If the contract definition already exists, we do **not** override it.
+This allows customizations, for example limiting the contract to certain participants or timeframes.
 
-> The policy "always-true" gets created on EDC startup to allow easily publishing unrestricted data offers.
+The policy named "always-true" is created when the sovity EDC starts, enabling easy publishing of unrestricted data offers.
 
 ### Recovering contracts
 
-> Coming soon. In practice, existing contracts, negotiations and transfer processes can be recovered on application startup to achieve more clean interactions between the EDCs.
+Coming soon: In practice, existing contracts, negotiations, and transfer processes can be recovered on application startup. This improves the cleanliness and reliability of interactions between sovity EDCs.

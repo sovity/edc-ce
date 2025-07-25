@@ -178,5 +178,4 @@ fun generateEnumerationFromInterfaceFields(
         .build()
 
     fileSpec.writeTo(outputDir)
-    fileSpec.writeTo(System.out)
 }

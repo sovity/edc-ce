@@ -7,7 +7,6 @@
  */
 import {type PolicyOperatorConfig} from '@/components/policy-editor/model/policy-operator-config';
 import {type PolicyVerbConfig} from '@/components/policy-editor/model/policy-verb-config';
-import {associateBy} from '@/lib/utils/map-utils';
 import {byFallback} from '@/lib/utils/translation-utils';
 
 export class PolicyVerbList {

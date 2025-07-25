@@ -40,6 +40,11 @@ import {
   stringAdapter,
   stringFormSchema,
 } from '@/components/policy-editor/value-types/string';
+import {
+  inBusinessPartnerGroupAdapter,
+  inBusinessPartnerGroupFormSchema,
+  PolicyEditorConstraintInBusinessPartnerGroup,
+} from './in-business-partner-group';
 
 export type PolicyValueType =
   | 'RAW_JSON'
@@ -47,7 +52,8 @@ export type PolicyValueType =
   | 'DATETIME_TRUNCATE_TO_DATE'
   | 'IN_FORCE_DATE'
   | 'STRING_LIST_WITH_COMMA_SUPPORT'
-  | 'STRING_LIST_CATENA_STYLE';
+  | 'STRING_LIST_CATENA_STYLE'
+  | 'IN_BUSINESS_PARTNER_GROUP';
 
 /**
  * All known policy value types
@@ -62,6 +68,7 @@ export const policyValueTypeAdaptersById: Record<
   IN_FORCE_DATE: inForceDateAdapter,
   STRING_LIST_WITH_COMMA_SUPPORT: stringListWithCommaSupportAdapter,
   STRING_LIST_CATENA_STYLE: stringListCatenaStyleAdapter,
+  IN_BUSINESS_PARTNER_GROUP: inBusinessPartnerGroupAdapter,
 };
 
 /**
@@ -74,6 +81,7 @@ export const policyEditorConstraintFormSchema = z.discriminatedUnion('type', [
   inForceDateSchema,
   stringListCatenaStyleFormSchema,
   stringListWithCommaSupportFormSchema,
+  inBusinessPartnerGroupFormSchema,
 ]);
 
 /**
@@ -117,6 +125,12 @@ export const PolicyEditorConstraintForm = ({
       {(treeNode.value.verb?.valueType === 'STRING_LIST_WITH_COMMA_SUPPORT' ||
         treeNode.value.verb?.valueType === 'STRING_LIST_CATENA_STYLE') && (
         <PolicyEditorConstraintStringList
+          policyEditor={policyEditor}
+          treeNode={treeNode}
+        />
+      )}
+      {treeNode.value.verb?.valueType === 'IN_BUSINESS_PARTNER_GROUP' && (
+        <PolicyEditorConstraintInBusinessPartnerGroup
           policyEditor={policyEditor}
           treeNode={treeNode}
         />

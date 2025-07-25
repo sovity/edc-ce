@@ -41,4 +41,7 @@ public enum UiConfigFeature {
 
     // Enables sovity Policies in the UI
     SOVITY_POLICIES,
+
+    // Enables management of Catena-X business partner groups
+    BUSINESS_PARTNER_GROUP_MANAGEMENT
 }

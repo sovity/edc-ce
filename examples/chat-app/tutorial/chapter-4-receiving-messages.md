@@ -4,10 +4,15 @@
 
 ### Saving the Message
 
-Previously, we already added the endpoint for receiving messages. In the EDC context, a use case application is itself responsible for saving the data. Thus, in context of the chat app, both participants will be saving their own versions of the chat history. The Connector is used only to transfer data.
+We have already added the endpoint to receive messages.  
+In the context of EDC, the use case application itself is responsible for saving the data.
 
-Saving each message in our in-memory storage is sufficient for tutorial purposes.
+For the Chat App, this means each participant saves their own version of the chat history.  
+The Connector’s role is only to transfer data between participants.
 
+For tutorial purposes, saving each message in our in-memory storage is sufficient.
+
+```markdown
 ```kotlin
 // File:
 // backend/src/main/kotlin/de/sovity/chatapp/services/MessageService.kt
@@ -31,14 +36,15 @@ counterpartyStore.update(participantId) {
     it.copy(lastUpdate = OffsetDateTime.now())
 }
 ```
+```
 
 ### Establishing the Counter-Connection
 
-Upon receiving the first message, a counter connection shall be established. 
+When the first message is received, a counter-connection will be established.
 
-> The reason why this happens now and not at the incoming contract negotiation success is that we do not listen to _all_ - and thus not to incoming - contract finalization events
-> 
+> Counter-connection happens earliest at message reception by the counterparty. Not earlier even if possible, e.g. when a contract negotiation is successfull completed by the counterparty beforehand.
 
+```markdown
 ```kotlin
 // File:
 // backend/src/main/kotlin/de/sovity/chatapp/services/MessageService.kt
@@ -57,7 +63,4 @@ if (counterpartyStore.findByIdOrNull(participantId) == null) {
     )
 }
 ```
-
-
-
-
+```

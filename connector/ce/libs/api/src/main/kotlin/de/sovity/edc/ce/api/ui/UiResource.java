@@ -28,6 +28,11 @@ import de.sovity.edc.ce.api.common.model.UiAssetCreateRequest;
 import de.sovity.edc.ce.api.common.model.UiAssetEditRequest;
 import de.sovity.edc.ce.api.common.model.UiInitiateTransferRequest;
 import de.sovity.edc.ce.api.ui.model.AssetPage;
+import de.sovity.edc.ce.api.ui.model.BusinessPartnerGroupCreateSubmit;
+import de.sovity.edc.ce.api.ui.model.BusinessPartnerGroupEditPage;
+import de.sovity.edc.ce.api.ui.model.BusinessPartnerGroupEditSubmit;
+import de.sovity.edc.ce.api.ui.model.BusinessPartnerGroupListPageEntry;
+import de.sovity.edc.ce.api.ui.model.BusinessPartnerGroupQuery;
 import de.sovity.edc.ce.api.ui.model.ContractAgreementCard;
 import de.sovity.edc.ce.api.ui.model.ContractAgreementPage;
 import de.sovity.edc.ce.api.ui.model.ContractAgreementPageQuery;
@@ -121,7 +126,7 @@ interface UiResource {
     @Operation(description = "Collect all data for the Edit Vault Secret Page")
     VaultSecretEditPage editVaultSecretPage(@PathParam("key") String key);
 
-    @POST
+    @PUT
     @Path("pages/vault-secrets/{key}/edit-secret")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -136,6 +141,39 @@ interface UiResource {
     List<VaultSecretListPageEntry> listVaultSecretsPage(
         @Nullable VaultSecretQuery vaultSecretQuery
     );
+
+    @GET
+    @Path("pages/business-partner-groups/list-page")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Operation(description = "Collect all data for the Business Partner Groups List Page")
+    List<BusinessPartnerGroupListPageEntry> businessPartnerGroupListPage(@Nullable BusinessPartnerGroupQuery businessPartnerGroupQuery);
+
+    @GET
+    @Path("pages/business-partner-groups/{id}/edit-page")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Collect all data for the Business Partner Group Edit Page")
+    BusinessPartnerGroupEditPage businessPartnerGroupEditPage(@PathParam("id") String id);
+
+    @PUT
+    @Path("pages/business-partner-groups/{id}/edit-group")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Operation(description = "Edit a Business Partner Group")
+    IdResponseDto businessPartnerGroupEditSubmit(@PathParam("id") String id, BusinessPartnerGroupEditSubmit submitRequest);
+
+    @POST
+    @Path("pages/business-partner-groups/create")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Operation(description = "Create a new Business Partner Group")
+    IdResponseDto businessPartnerGroupCreateSubmit(BusinessPartnerGroupCreateSubmit submitRequest);
+
+    @DELETE
+    @Path("pages/business-partner-groups/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Delete a Business Partner Group")
+    IdResponseDto deleteBusinessPartnerGroup(@PathParam("id") String id);
 
     @DELETE
     @Path("pages/vault-secrets/{key}")

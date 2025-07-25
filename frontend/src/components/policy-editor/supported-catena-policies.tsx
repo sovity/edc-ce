@@ -40,7 +40,7 @@ export function getCatenaPolicyVerbs(): PolicyVerbConfig[] {
         'IS_ANY_OF',
         'IS_NONE_OF',
       ],
-      valueType: 'STRING_LIST_CATENA_STYLE',
+      valueType: 'IN_BUSINESS_PARTNER_GROUP',
     },
     {
       operandLeftIds: [

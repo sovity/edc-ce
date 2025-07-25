@@ -4,14 +4,16 @@
 
 ### Negotiating a Contract
 
-To be able to exchange notifications, the EDCs must establish contracts with each other.
+To exchange notifications, the sovity EDCs need to establish contracts with each other.
 
-> While bi-directional contracts are underway, this tutorial currently works with one contract for each direction of connection.
+> While bi-directional contracts are planned, this tutorial currently uses one contract for each connection direction.
 
-Existing code in the backend already handles registering a counterparty upon API call in the In-Memory Storage. What we want to focus on is the direct interactions with the EDC.
+The backend already registers counterparties in in-memory storage upon API calls.
+Here, our focus is on the direct interaction with the EDC.
 
-We initiate a contract negotiation that will take place between the current EDC and the counterparty.
+We initiate contract negotiation between the current sovity EDC and the counterparty.
 
+```markdown
 ```kotlin
 // File:
 // backend/src/main/kotlin/de/sovity/chatapp/services/CounterpartyService.kt
@@ -27,7 +29,9 @@ edcService.negotiateContract(
     connectorEndpoint = dto.connectorEndpoint,
 )
 ```
+```
 
+```markdown
 ```kotlin
 // File:
 // backend/src/main/kotlin/de/sovity/chatapp/services/edc/EdcService.kt
@@ -69,13 +73,15 @@ fun negotiateContract(participantId: String, connectorEndpoint: String) {
     }
 }
 ```
+```
 
-The `negotiateAll` endpoint helps quick negotiate contracts:
-- It negotiates all matching data offers, in this case, the data offer with the ID `chat-app`
-- The negotiateAll endpoint is useful for use case applications that achieve access control in the use case application itself rather than relying on EDC policies.
+The `negotiateAll` endpoint helps to quickly negotiate contracts by:
+- Negotiating all matching data offers, e.g. the data offer with the ID `chat-app`
+- Being useful for use case applications that handle access control within the app rather than relying solely on EDC policies
 
-Also notice the two given callbacks, we want to be notified upon completion of the asynchronous process and not have to poll the EDC.
+Also, notice the two callbacks provided - these notify us when the asynchronous process is complete, so we don't have to poll the EDC.
 
+```markdown
 ```kotlin
 // File:
 // backend/src/main/kotlin/de/sovity/chatapp/api/NotificationResource.kt
@@ -98,15 +104,17 @@ fun onNegotiationTerminated(
     eventService.onContractNegotiationTerminated(event.payload)
 }
 ```
+```
 
 ### Initiating the Transfer
 
-Upon successful contract negotiation, we have a functioning contract agreement. To actually transfer data, we need to start a transfer process..
+Once the contract negotiation is successful, we have a valid contract agreement. To transfer data, we need to start a transfer process.
 
-To save resources, we ideally want to have one permanently running transfer process for every partner we exchange data with.
+To save resources, it's best to have one permanently running transfer process per partner we exchange data with.
 
-To initiate the transfer process, which will remain open in the status "STARTED" to allow us to authenticate against the other EDC, we call the `initiateTransfer` endpoint.
+We initiate the transfer process, which will stay in the "STARTED" status to allow authentication with the other EDC, by calling the `initiateTransfer` endpoint.
 
+```markdown
 ```kotlin
 // File:
 // backend/src/main/kotlin/de/sovity/chatapp/services/EventService.kt
@@ -117,7 +125,9 @@ To initiate the transfer process, which will remain open in the status "STARTED"
 // With:
 edcService.initiateTransfer(event.counterPartyId)
 ```
+```
 
+```markdown
 ```kotlin
 // File:
 // backend/src/main/kotlin/de/sovity/chatapp/services/edc/EdcService.kt
@@ -144,11 +154,13 @@ fun initiateTransfer(participantId: String) {
     )
 }
 ```
+```
 
 ### Ready to send
 
-We await the notification for the transfer to be ready:
+We wait for the notification indicating the transfer is ready:
 
+```markdown
 ```kotlin
 // File:
 // backend/src/main/kotlin/de/sovity/chatapp/api/NotificationResource.kt
@@ -162,9 +174,11 @@ fun onTransferStarted(
     eventService.onTransferStarted(event.payload)
 }
 ```
+```
 
-Now we mark the counterparty as online, our UI will update itself.
+Then we mark the counterparty as online, causing our UI to update automatically:
 
+```markdown
 ```kotlin
 // File:
 // backend/src/main/kotlin/de/sovity/chatapp/services/EventService.kt
@@ -183,9 +197,9 @@ fun onTransferStarted(event: EdcEventTransferProcessStarted) {
     }
 }
 ```
-
+```
 
 ### Notes
 
-- Currently, the counterparty will only establish a counter-connection when the first message is received. We will look at this in the next chapter.
-- Entering a Counterparty URL and a Participant ID is not exactly user-friendly - Expect proper integrations of look-up sources in the near future.
+- Currently, the counterparty only establishes a counter-connection after the first message is received. This will be addressed in the next chapter. 
+- Entering a Counterparty URL and Participant ID is not user-friendly yet - expect integrated lookup sources in the near future.
