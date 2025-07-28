@@ -1,8 +1,12 @@
 # Example Use Case App Tutorial - Chat App
 
-## Introduction
+Welcome to the **Chat App** tutorial!
 
-This tutorial takes you through the process of building the EDC interaction for the example Use Case Application "Chat App".
+In this guide, you'll learn step-by-step how to build the EDC interaction for the example Blueprint Use Case Application **Chat App**.
+
+Whether you're new to the sovity EDC or looking for practical implementation examples, this tutorial will walk you through key concepts and coding tasks.
+
+Let's get started!
 
 ## Prerequisites
 

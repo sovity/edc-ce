@@ -14,6 +14,7 @@ import {type SortingState} from '@tanstack/react-table';
 export const useUpdateTableSearchParamState = (
   globalFilter: string,
   sorting: SortingState,
+  disabled = false,
 ) => {
   const router = useRouter();
   const pathname = usePathname();
@@ -22,19 +23,21 @@ export const useUpdateTableSearchParamState = (
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
 
-    if (globalFilter) {
-      params.set('search', globalFilter);
-    } else {
-      params.delete('search');
-    }
+    if (!disabled) {
+      if (globalFilter) {
+        params.set('search', globalFilter);
+      } else {
+        params.delete('search');
+      }
 
-    params.delete('sort');
-    sorting.forEach((sort) => {
-      params.append('sort', JSON.stringify(sort));
-    });
+      params.delete('sort');
+      sorting.forEach((sort) => {
+        params.append('sort', JSON.stringify(sort));
+      });
 
-    if (params.toString() !== searchParams.toString()) {
-      router.replace(`${pathname}?${params.toString()}`, {scroll: false});
+      if (params.toString() !== searchParams.toString()) {
+        router.replace(`${pathname}?${params.toString()}`, {scroll: false});
+      }
     }
-  }, [globalFilter, pathname, router, searchParams, sorting]);
+  }, [globalFilter, pathname, router, searchParams, sorting, disabled]);
 };

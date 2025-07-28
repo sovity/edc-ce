@@ -8,3 +8,11 @@
 
 export const filterNonNull = <T>(array: (T | null | undefined)[]): T[] =>
   array.filter((it) => it != null) as T[];
+
+export const takeIf = <T>(value: T, condition?: boolean): T[] => {
+  if (condition) {
+    return [value];
+  } else {
+    return [];
+  }
+};

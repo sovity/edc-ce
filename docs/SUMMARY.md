@@ -18,6 +18,7 @@
   * [2. Initiating Transfers (HttpData-Push)](Frontend/Consuming/initiating-transfer.md)
   * [3. Transfer History](Frontend/Consuming/transfer-history.md)
 * [Contract Termination](Frontend/contract-termination.md)
+* [Vault Secrets](Frontend/vault-secrets.md)
    
 ## Backend
 

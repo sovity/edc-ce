@@ -41,7 +41,8 @@ export const UiConfigFeature = {
     OpenSourceMarketing: 'OPEN_SOURCE_MARKETING',
     EeBasicMarketing: 'EE_BASIC_MARKETING',
     CatenaPolicies: 'CATENA_POLICIES',
-    SovityPolicies: 'SOVITY_POLICIES'
+    SovityPolicies: 'SOVITY_POLICIES',
+    BusinessPartnerGroupManagement: 'BUSINESS_PARTNER_GROUP_MANAGEMENT'
 } as const;
 export type UiConfigFeature = typeof UiConfigFeature[keyof typeof UiConfigFeature];
 

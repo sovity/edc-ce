@@ -4,12 +4,15 @@
 
 ### About EDRs
 
-An EDR contains an authentication token that allows one to directly call the counterparty's data plane. A single EDR has a lifetime of minutes and can thus be re-used and reduce EDC interactions, allowing for higher throughput.
+An EDR (Endpoint Data Reference) contains an authentication token that allows direct calls to the counterparty's Data Plane.
+A single EDR is valid for a few minutes and can be reused during that time to reduce EDC interactions and increase throughput.
 
-An EDR is coined for a single transfer process, but due to its expiration time for security reasons, it will need to be re-fetched eventually.
+Each EDR is created for a single transfer process.
+Due to its limited lifetime for security reasons, it needs to be refreshed periodically.
 
-To handle this, we implement an EDR Cache:
+To manage this efficiently, we implement an EDR Cache:
 
+```markdown
 ```kotlin
 // File:
 // backend/src/main/kotlin/de/sovity/chatapp/services/edc/EdrCache.kt
@@ -47,9 +50,11 @@ fun getEdr(participantId: String): EdrDto {
     return newEdr
 }
 ```
+```
 
 ### Sending Messages
 
+```markdown
 ```kotlin
 // File:
 // backend/src/main/kotlin/de/sovity/chatapp/services/MessageService.kt
@@ -64,7 +69,9 @@ edcService.sendMessage(
     message = message
 )
 ```
+```
 
+```markdown
 ```kotlin
 // File:
 // backend/src/main/kotlin/de/sovity/chatapp/services/edc/EdcService.kt
@@ -78,13 +85,17 @@ fun sendMessage(participantId: String, message: String) {
     counterpartyNotificationApiClient.sendMessage(edr, messageNotificationDto)
 }
 ```
+```
 
-Because the use-case asset is configured to have _body parametrization_ enabled, we can send our messages in the HTTP body in a request to the Data Plane. The endpoint for that can be found in a freshly fetched EDR.
+Because the use-case asset is configured with _body parametrization_ enabled, we send messages in the HTTP body of requests to the Data Plane.  
+The endpoint URL can be found in the freshly fetched EDR.
 
-### Counterparty API Client implementation
+### Counterparty API Client Implementation
 
-We use Quarkus' Rest Client generation to help us build an API client from a JAX-RS interface. We need to be able to specify the base URL and the token for each call.
+We use Quarkus' Rest Client generation to build an API client from a JAX-RS interface.
+This allows us to specify the base URL and authentication token dynamically for each call.
 
+```markdown
 ```kotlin
 // File:
 // backend/src/main/kotlin/de/sovity/chatapp/api/CounterpartyNotificationApiClient.kt
@@ -127,8 +138,4 @@ private interface CounterpartyNotificationApi {
     )
 }
 ```
-
-
-
-
-
+```

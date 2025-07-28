@@ -78,6 +78,26 @@ export const queryKeys = {
       ]),
     editPage: (key: string) => [...queryKeys.vaultSecrets.id(key), 'editPage'],
   },
+  businessPartnerGroups: {
+    key: () => ['businessPartnerGroups'],
+    all: () => [...queryKeys.businessPartnerGroups.key(), 'all'],
+    id: (groupId: string) => [
+      ...queryKeys.businessPartnerGroups.key(),
+      groupId,
+    ],
+
+    listPage: (query?: string, limit?: number) =>
+      filterNonNull([
+        ...queryKeys.businessPartnerGroups.all(),
+        'listPage',
+        query,
+        limit,
+      ]),
+    editPage: (groupId: string) => [
+      ...queryKeys.businessPartnerGroups.id(groupId),
+      'editPage',
+    ],
+  },
   contractNegotiation: {
     key: () => ['contractNegotiation'],
   },

@@ -36,6 +36,11 @@ import * as runtime from '../runtime';
 import type {
   AssetPage,
   BuildInfo,
+  BusinessPartnerGroupCreateSubmit,
+  BusinessPartnerGroupEditPage,
+  BusinessPartnerGroupEditSubmit,
+  BusinessPartnerGroupListPageEntry,
+  BusinessPartnerGroupQuery,
   ContractAgreementCard,
   ContractAgreementPage,
   ContractAgreementPageQuery,
@@ -71,6 +76,16 @@ import {
     AssetPageToJSON,
     BuildInfoFromJSON,
     BuildInfoToJSON,
+    BusinessPartnerGroupCreateSubmitFromJSON,
+    BusinessPartnerGroupCreateSubmitToJSON,
+    BusinessPartnerGroupEditPageFromJSON,
+    BusinessPartnerGroupEditPageToJSON,
+    BusinessPartnerGroupEditSubmitFromJSON,
+    BusinessPartnerGroupEditSubmitToJSON,
+    BusinessPartnerGroupListPageEntryFromJSON,
+    BusinessPartnerGroupListPageEntryToJSON,
+    BusinessPartnerGroupQueryFromJSON,
+    BusinessPartnerGroupQueryToJSON,
     ContractAgreementCardFromJSON,
     ContractAgreementCardToJSON,
     ContractAgreementPageFromJSON,
@@ -131,6 +146,23 @@ import {
     VaultSecretQueryToJSON,
 } from '../models/index';
 
+export interface BusinessPartnerGroupCreateSubmitRequest {
+    businessPartnerGroupCreateSubmit?: BusinessPartnerGroupCreateSubmit;
+}
+
+export interface BusinessPartnerGroupEditPageRequest {
+    id: string;
+}
+
+export interface BusinessPartnerGroupEditSubmitRequest {
+    id: string;
+    businessPartnerGroupEditSubmit?: BusinessPartnerGroupEditSubmit;
+}
+
+export interface BusinessPartnerGroupListPageRequest {
+    businessPartnerGroupQuery?: BusinessPartnerGroupQuery;
+}
+
 export interface CreateAssetRequest {
     uiAssetCreateRequest?: UiAssetCreateRequest;
 }
@@ -157,6 +189,10 @@ export interface CreateVaultSecretRequest {
 
 export interface DeleteAssetRequest {
     assetId: string;
+}
+
+export interface DeleteBusinessPartnerGroupRequest {
+    id: string;
 }
 
 export interface DeleteContractDefinitionRequest {
@@ -277,6 +313,133 @@ export class UIApi extends runtime.BaseAPI {
      */
     async buildInfo(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<BuildInfo> {
         const response = await this.buildInfoRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Create a new Business Partner Group
+     */
+    async businessPartnerGroupCreateSubmitRaw(requestParameters: BusinessPartnerGroupCreateSubmitRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<IdResponseDto>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/wrapper/ui/pages/business-partner-groups/create`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: BusinessPartnerGroupCreateSubmitToJSON(requestParameters['businessPartnerGroupCreateSubmit']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => IdResponseDtoFromJSON(jsonValue));
+    }
+
+    /**
+     * Create a new Business Partner Group
+     */
+    async businessPartnerGroupCreateSubmit(requestParameters: BusinessPartnerGroupCreateSubmitRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<IdResponseDto> {
+        const response = await this.businessPartnerGroupCreateSubmitRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Collect all data for the Business Partner Group Edit Page
+     */
+    async businessPartnerGroupEditPageRaw(requestParameters: BusinessPartnerGroupEditPageRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<BusinessPartnerGroupEditPage>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling businessPartnerGroupEditPage().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/wrapper/ui/pages/business-partner-groups/{id}/edit-page`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => BusinessPartnerGroupEditPageFromJSON(jsonValue));
+    }
+
+    /**
+     * Collect all data for the Business Partner Group Edit Page
+     */
+    async businessPartnerGroupEditPage(requestParameters: BusinessPartnerGroupEditPageRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<BusinessPartnerGroupEditPage> {
+        const response = await this.businessPartnerGroupEditPageRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Edit a Business Partner Group
+     */
+    async businessPartnerGroupEditSubmitRaw(requestParameters: BusinessPartnerGroupEditSubmitRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<IdResponseDto>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling businessPartnerGroupEditSubmit().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/wrapper/ui/pages/business-partner-groups/{id}/edit-group`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: BusinessPartnerGroupEditSubmitToJSON(requestParameters['businessPartnerGroupEditSubmit']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => IdResponseDtoFromJSON(jsonValue));
+    }
+
+    /**
+     * Edit a Business Partner Group
+     */
+    async businessPartnerGroupEditSubmit(requestParameters: BusinessPartnerGroupEditSubmitRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<IdResponseDto> {
+        const response = await this.businessPartnerGroupEditSubmitRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Collect all data for the Business Partner Groups List Page
+     */
+    async businessPartnerGroupListPageRaw(requestParameters: BusinessPartnerGroupListPageRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<BusinessPartnerGroupListPageEntry>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/wrapper/ui/pages/business-partner-groups/list-page`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+            body: BusinessPartnerGroupQueryToJSON(requestParameters['businessPartnerGroupQuery']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(BusinessPartnerGroupListPageEntryFromJSON));
+    }
+
+    /**
+     * Collect all data for the Business Partner Groups List Page
+     */
+    async businessPartnerGroupListPage(requestParameters: BusinessPartnerGroupListPageRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<BusinessPartnerGroupListPageEntry>> {
+        const response = await this.businessPartnerGroupListPageRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -492,6 +655,39 @@ export class UIApi extends runtime.BaseAPI {
     }
 
     /**
+     * Delete a Business Partner Group
+     */
+    async deleteBusinessPartnerGroupRaw(requestParameters: DeleteBusinessPartnerGroupRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<IdResponseDto>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling deleteBusinessPartnerGroup().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/wrapper/ui/pages/business-partner-groups/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => IdResponseDtoFromJSON(jsonValue));
+    }
+
+    /**
+     * Delete a Business Partner Group
+     */
+    async deleteBusinessPartnerGroup(requestParameters: DeleteBusinessPartnerGroupRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<IdResponseDto> {
+        const response = await this.deleteBusinessPartnerGroupRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Delete a Contract Definition
      */
     async deleteContractDefinitionRaw(requestParameters: DeleteContractDefinitionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<IdResponseDto>> {
@@ -645,7 +841,7 @@ export class UIApi extends runtime.BaseAPI {
 
         const response = await this.request({
             path: `/wrapper/ui/pages/vault-secrets/{key}/edit-secret`.replace(`{${"key"}}`, encodeURIComponent(String(requestParameters['key']))),
-            method: 'POST',
+            method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
             body: VaultSecretEditSubmitToJSON(requestParameters['vaultSecretEditSubmit']),
