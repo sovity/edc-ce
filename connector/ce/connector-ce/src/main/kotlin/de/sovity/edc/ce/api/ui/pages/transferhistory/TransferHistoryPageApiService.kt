@@ -9,6 +9,7 @@ package de.sovity.edc.ce.api.ui.pages.transferhistory
 
 import de.sovity.edc.ce.api.ui.model.ContractAgreementDirection
 import de.sovity.edc.ce.api.ui.model.TransferHistoryEntry
+import de.sovity.edc.ce.api.ui.pages.asset.AssetRs
 import de.sovity.edc.ce.api.ui.pages.contract_agreements.services.ContractAgreementDirectionUtils
 import de.sovity.edc.ce.api.utils.EdcDateUtils
 import de.sovity.edc.ce.api.utils.ServiceException
@@ -19,15 +20,14 @@ import org.eclipse.edc.connector.controlplane.asset.spi.domain.Asset
 import org.eclipse.edc.connector.controlplane.contract.spi.negotiation.store.ContractNegotiationStore
 import org.eclipse.edc.connector.controlplane.contract.spi.types.agreement.ContractAgreement
 import org.eclipse.edc.connector.controlplane.contract.spi.types.negotiation.ContractNegotiation
-import org.eclipse.edc.connector.controlplane.services.spi.asset.AssetService
 import org.eclipse.edc.connector.controlplane.services.spi.contractagreement.ContractAgreementService
 import org.eclipse.edc.connector.controlplane.services.spi.transferprocess.TransferProcessService
 import org.eclipse.edc.connector.controlplane.transfer.spi.types.TransferProcess
 import org.eclipse.edc.spi.query.QuerySpec
+import org.jooq.DSLContext
 
 @Service
 class TransferHistoryPageApiService(
-    private val assetService: AssetService,
     private val contractAgreementService: ContractAgreementService,
     private val contractNegotiationStore: ContractNegotiationStore,
     private val transferProcessService: TransferProcessService,
@@ -39,18 +39,17 @@ class TransferHistoryPageApiService(
      *
      * @return [TransferHistoryEntry]s
      */
-    fun getTransferHistoryEntries(): List<TransferHistoryEntry> {
+    fun getTransferHistoryEntries(dsl: DSLContext): List<TransferHistoryEntry> {
         val negotiationsById = getAllContractNegotiations()
             .filter { it.contractAgreement != null }
             .associateBy { it.contractAgreement.id }
         val agreementsById = getAllContractAgreements().associateBy { it.id }
-        val assetsById = getAllAssets().associateBy { it.id }
         val transferProcesses = getAllTransferProcesses()
 
         return transferProcesses.map { process ->
             val agreement = agreementsById[process.contractId]
             val negotiation = negotiationsById[process.contractId]
-            val asset = assetLookup(assetsById, process)
+            val asset = assetLookup(dsl, process)
             val direction = negotiation?.type?.let { ContractAgreementDirectionUtils.fromType(it) }
             val transferHistoryEntry = TransferHistoryEntry()
             transferHistoryEntry.assetId = asset.id
@@ -93,9 +92,10 @@ class TransferHistoryPageApiService(
         }.sortedWith(compareByDescending { it.lastUpdatedDate })
     }
 
-    private fun assetLookup(assetsById: Map<String, Asset>, process: TransferProcess): Asset {
+    private fun assetLookup(dsl: DSLContext, process: TransferProcess): Asset {
         val assetId = process.assetId
-        val asset = assetsById[assetId] ?: return Asset.Builder.newInstance().id(assetId).build()
+        val asset =
+            AssetRs.fetchAsset(dsl, assetId)?.toAsset() ?: return Asset.Builder.newInstance().id(assetId).build()
         return asset
     }
 
@@ -108,7 +108,4 @@ class TransferHistoryPageApiService(
 
     private fun getAllTransferProcesses(): List<TransferProcess> =
         transferProcessService.search(QuerySpec.max()).orElseThrow { ServiceException(it) }.toList()
-
-    private fun getAllAssets(): List<Asset> =
-        assetService.search(QuerySpec.max()).orElseThrow { ServiceException(it) }.toList()
 }

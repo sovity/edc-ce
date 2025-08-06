@@ -8,7 +8,7 @@
 'use client';
 
 import {useState} from 'react';
-import {DataTable} from '@/components/data-table';
+import {ClientsideDataTable} from '@/components/clientside-data-table';
 import {Button} from '@/components/ui/button';
 import type {ContractAgreementCard} from '@/lib/api/client/generated';
 import {buildWordFilter} from '@/lib/utils/build-word-filter';
@@ -142,7 +142,7 @@ const ContractTable = ({data}: ContractListTableProps) => {
   );
 
   return (
-    <DataTable
+    <ClientsideDataTable
       columns={useContractTableColumns()}
       data={filterData()}
       wordFilter={wordFilter}

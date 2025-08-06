@@ -30,8 +30,10 @@ import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonObjectBuilder;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.val;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.Nullable;
@@ -40,10 +42,7 @@ import java.util.Objects;
 
 import static com.apicatalog.jsonld.StringUtils.isBlank;
 import static com.apicatalog.jsonld.StringUtils.isNotBlank;
-import static de.sovity.edc.ce.libs.mappers.asset.utils.JsonBuilderUtils.addNonNull;
-import static de.sovity.edc.ce.libs.mappers.asset.utils.JsonBuilderUtils.addNonNullJsonValue;
-import static de.sovity.edc.ce.libs.mappers.asset.utils.JsonBuilderUtils.addNotBlank;
-import static de.sovity.edc.ce.libs.mappers.asset.utils.JsonBuilderUtils.addNotBlankStringArray;
+import static de.sovity.edc.ce.libs.mappers.asset.utils.JsonBuilderUtils.*;
 
 @RequiredArgsConstructor
 @Service
@@ -52,27 +51,32 @@ public class AssetJsonLdBuilder {
     private final AssetJsonLdParser assetJsonLdParser;
     private final AssetEditRequestMapper assetEditRequestMapper;
 
-
-    @SneakyThrows
-    @Nullable
-    public JsonObject createAssetJsonLd(
-        UiAssetCreateRequest createRequest,
-        String organizationName
-    ) {
-        var dataSourceJsonLd = dataSourceMapper.buildDataSourceJsonLd(createRequest.getDataSource());
-        var properties = getAssetProperties(createRequest, dataSourceJsonLd, organizationName);
-        var privateProperties = getAssetPrivateProperties(createRequest);
-
-        return buildAssetJsonLd(
-            createRequest.getId(),
-            properties,
-            privateProperties,
-            dataSourceJsonLd
-        );
+    @Builder
+    @Getter
+    public static class CreateAssetJsonLds {
+        private JsonObject dataSource;
+        private JsonObject properties;
+        private JsonObject privateProperties;
     }
 
 
-    @SneakyThrows
+    @NonNull
+    public CreateAssetJsonLds buildCreateAssetJsonLds(
+        UiAssetCreateRequest createRequest,
+        String organizationName
+    ) {
+        var dataSource = dataSourceMapper.buildDataSourceJsonLd(createRequest.getDataSource());
+        var properties = getAssetProperties(createRequest, dataSource, organizationName);
+        var privateProperties = getAssetPrivateProperties(createRequest);
+
+        return CreateAssetJsonLds.builder()
+            .dataSource(dataSource)
+            .properties(properties)
+            .privateProperties(privateProperties)
+            .build();
+    }
+
+
     public JsonObject editAssetJsonLd(
         JsonObject assetJsonLd,
         UiAssetEditRequest editRequest
@@ -96,7 +100,7 @@ public class AssetJsonLdBuilder {
         );
     }
 
-    private JsonObject buildAssetJsonLd(
+    public JsonObject buildAssetJsonLd(
         String assetId,
         JsonObject properties,
         JsonObject privateProperties,

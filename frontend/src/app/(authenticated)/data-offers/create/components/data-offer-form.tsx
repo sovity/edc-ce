@@ -66,8 +66,8 @@ export const DataOfferForm = ({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmitFn)} className="space-y-10">
         <FormGroup
-          title={t('Pages.DataOfferCreate.data_offer_type')}
-          subTitle={t('Pages.DataOfferCreate.define_data_offer')}>
+          title={t('Pages.DataOfferCreate.data_source_type')}
+          subTitle={t('Pages.DataOfferCreate.define_data_source')}>
           {/* Data offer Type */}
           <RadioGroupField
             control={form.control}

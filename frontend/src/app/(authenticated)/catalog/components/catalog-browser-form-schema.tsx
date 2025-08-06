@@ -48,6 +48,8 @@ const useWithAutofillParticipantIdFromUrl = (
         connectorEndpoint.split('?participantId=');
       setValue('participantId', participantId!);
       setValue('connectorEndpoint', endpointWithoutParticipantId!);
+      void form.trigger('participantId');
+      void form.trigger('connectorEndpoint');
     }
-  }, [connectorEndpoint, setValue]);
+  }, [connectorEndpoint, setValue, form]);
 };

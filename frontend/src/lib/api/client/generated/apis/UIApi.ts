@@ -34,7 +34,8 @@
 
 import * as runtime from '../runtime';
 import type {
-  AssetPage,
+  AssetListPage,
+  AssetListPageFilter,
   BuildInfo,
   BusinessPartnerGroupCreateSubmit,
   BusinessPartnerGroupEditPage,
@@ -72,8 +73,10 @@ import type {
   VaultSecretQuery,
 } from '../models/index';
 import {
-    AssetPageFromJSON,
-    AssetPageToJSON,
+    AssetListPageFromJSON,
+    AssetListPageToJSON,
+    AssetListPageFilterFromJSON,
+    AssetListPageFilterToJSON,
     BuildInfoFromJSON,
     BuildInfoToJSON,
     BusinessPartnerGroupCreateSubmitFromJSON,
@@ -145,6 +148,14 @@ import {
     VaultSecretQueryFromJSON,
     VaultSecretQueryToJSON,
 } from '../models/index';
+
+export interface AssetDetailsPageRequest {
+    assetId: string;
+}
+
+export interface AssetListPageRequest {
+    assetListPageFilter?: AssetListPageFilter;
+}
 
 export interface BusinessPartnerGroupCreateSubmitRequest {
     businessPartnerGroupCreateSubmit?: BusinessPartnerGroupCreateSubmit;
@@ -222,9 +233,9 @@ export interface EditVaultSecretPageRequest {
 }
 
 export interface GetCatalogPageDataOfferRequest {
-    participantId: string;
-    connectorEndpoint: string;
     dataOfferId: string;
+    participantId?: string;
+    connectorEndpoint?: string;
 }
 
 export interface GetCatalogPageDataOffersRequest {
@@ -289,6 +300,68 @@ export interface TerminateContractAgreementRequest {
  * 
  */
 export class UIApi extends runtime.BaseAPI {
+
+    /**
+     * Get details for a specific Asset
+     */
+    async assetDetailsPageRaw(requestParameters: AssetDetailsPageRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UiAsset>> {
+        if (requestParameters['assetId'] == null) {
+            throw new runtime.RequiredError(
+                'assetId',
+                'Required parameter "assetId" was null or undefined when calling assetDetailsPage().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/wrapper/ui/pages/asset-page/assets/{assetId}`.replace(`{${"assetId"}}`, encodeURIComponent(String(requestParameters['assetId']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => UiAssetFromJSON(jsonValue));
+    }
+
+    /**
+     * Get details for a specific Asset
+     */
+    async assetDetailsPage(requestParameters: AssetDetailsPageRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UiAsset> {
+        const response = await this.assetDetailsPageRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Collect all data for Asset Page
+     */
+    async assetListPageRaw(requestParameters: AssetListPageRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AssetListPage>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/wrapper/ui/pages/asset-page`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: AssetListPageFilterToJSON(requestParameters['assetListPageFilter']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => AssetListPageFromJSON(jsonValue));
+    }
+
+    /**
+     * Collect all data for Asset Page
+     */
+    async assetListPage(requestParameters: AssetListPageRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AssetListPage> {
+        const response = await this.assetListPageRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
 
     /**
      * Get the build version info
@@ -892,49 +965,9 @@ export class UIApi extends runtime.BaseAPI {
     }
 
     /**
-     * Collect all data for Asset Page
-     */
-    async getAssetPageRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AssetPage>> {
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request({
-            path: `/wrapper/ui/pages/asset-page`,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => AssetPageFromJSON(jsonValue));
-    }
-
-    /**
-     * Collect all data for Asset Page
-     */
-    async getAssetPage(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AssetPage> {
-        const response = await this.getAssetPageRaw(initOverrides);
-        return await response.value();
-    }
-
-    /**
      * Fetch a specific data offer from a connector
      */
     async getCatalogPageDataOfferRaw(requestParameters: GetCatalogPageDataOfferRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UiDataOffer>> {
-        if (requestParameters['participantId'] == null) {
-            throw new runtime.RequiredError(
-                'participantId',
-                'Required parameter "participantId" was null or undefined when calling getCatalogPageDataOffer().'
-            );
-        }
-
-        if (requestParameters['connectorEndpoint'] == null) {
-            throw new runtime.RequiredError(
-                'connectorEndpoint',
-                'Required parameter "connectorEndpoint" was null or undefined when calling getCatalogPageDataOffer().'
-            );
-        }
-
         if (requestParameters['dataOfferId'] == null) {
             throw new runtime.RequiredError(
                 'dataOfferId',
@@ -944,10 +977,18 @@ export class UIApi extends runtime.BaseAPI {
 
         const queryParameters: any = {};
 
+        if (requestParameters['participantId'] != null) {
+            queryParameters['participantId'] = requestParameters['participantId'];
+        }
+
+        if (requestParameters['connectorEndpoint'] != null) {
+            queryParameters['connectorEndpoint'] = requestParameters['connectorEndpoint'];
+        }
+
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/wrapper/ui/pages/catalog-page/{connectorEndpoint}/{participantId}/data-offers/{dataOfferId}`.replace(`{${"participantId"}}`, encodeURIComponent(String(requestParameters['participantId']))).replace(`{${"connectorEndpoint"}}`, encodeURIComponent(String(requestParameters['connectorEndpoint']))).replace(`{${"dataOfferId"}}`, encodeURIComponent(String(requestParameters['dataOfferId']))),
+            path: `/wrapper/ui/pages/catalog-page/data-offers/{dataOfferId}`.replace(`{${"dataOfferId"}}`, encodeURIComponent(String(requestParameters['dataOfferId']))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,

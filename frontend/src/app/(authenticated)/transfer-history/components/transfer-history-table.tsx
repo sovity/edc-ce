@@ -7,7 +7,7 @@
  */
 'use client';
 
-import {DataTable} from '@/components/data-table';
+import {ClientsideDataTable} from '@/components/clientside-data-table';
 import type {TransferHistoryEntry} from '@/lib/api/client/generated';
 import {buildWordFilter} from '@/lib/utils/build-word-filter';
 import {useTransferHistoryTableColumns} from './transfer-history-table-columns';
@@ -39,7 +39,7 @@ const invisibleColumns = [
 
 const TransferHistoryTable = ({data}: TransferHistoryTableProps) => {
   return (
-    <DataTable
+    <ClientsideDataTable
       columns={useTransferHistoryTableColumns()}
       data={data}
       wordFilter={wordFilter}

@@ -49,14 +49,6 @@ public class AssetMapper {
     private final AssetJsonLdParser assetJsonLdParser;
     private final JsonLd jsonLd;
 
-    public Asset buildAsset(
-        @NonNull UiAssetCreateRequest createRequest,
-        @NonNull String organizationName
-    ) {
-        var assetJsonLd = assetJsonLdBuilder.createAssetJsonLd(createRequest, organizationName);
-        return buildAsset(assetJsonLd);
-    }
-
     public Asset editAsset(
         @NonNull Asset asset,
         @NonNull UiAssetEditRequest editRequest

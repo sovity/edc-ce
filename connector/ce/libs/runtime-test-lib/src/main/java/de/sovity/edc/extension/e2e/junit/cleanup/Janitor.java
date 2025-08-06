@@ -9,7 +9,6 @@ package de.sovity.edc.extension.e2e.junit.cleanup;
 
 import de.sovity.edc.client.EdcClient;
 import lombok.val;
-import org.eclipse.edc.connector.controlplane.services.spi.asset.AssetService;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,9 +40,5 @@ public class Janitor {
 
     public JanitorApiWrapper withClient(EdcClient client) {
         return new JanitorApiWrapper(this, client);
-    }
-
-    public JanitorServiceWrapper withAssetService(AssetService assetService) {
-        return new JanitorServiceWrapper(this, assetService);
     }
 }

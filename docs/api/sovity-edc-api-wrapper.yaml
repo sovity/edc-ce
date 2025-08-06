@@ -81,6 +81,84 @@ paths:
             application/json:
               schema:
                 type: string
+  /wrapper/ui/pages/asset-page/assets/{assetId}:
+    get:
+      tags:
+      - UI
+      description: Get details for a specific Asset
+      operationId: assetDetailsPage
+      parameters:
+      - name: assetId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UiAsset'
+    put:
+      tags:
+      - UI
+      description: Updates an Asset's metadata and optionally also the data source.
+      operationId: editAsset
+      parameters:
+      - name: assetId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UiAssetEditRequest'
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponseDto'
+    delete:
+      tags:
+      - UI
+      description: Delete an Asset
+      operationId: deleteAsset
+      parameters:
+      - name: assetId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponseDto'
+  /wrapper/ui/pages/asset-page:
+    post:
+      tags:
+      - UI
+      description: Collect all data for Asset Page
+      operationId: assetListPage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssetListPageFilter'
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetListPage'
   /wrapper/ui/build-info:
     get:
       tags:
@@ -289,48 +367,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IdResponseDto'
-  /wrapper/ui/pages/asset-page/assets/{assetId}:
-    put:
-      tags:
-      - UI
-      description: Updates an Asset's metadata and optionally also the data source.
-      operationId: editAsset
-      parameters:
-      - name: assetId
-        in: path
-        required: true
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UiAssetEditRequest'
-      responses:
-        default:
-          description: default response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/IdResponseDto'
-    delete:
-      tags:
-      - UI
-      description: Delete an Asset
-      operationId: deleteAsset
-      parameters:
-      - name: assetId
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        default:
-          description: default response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/IdResponseDto'
   /wrapper/ui/pages/business-partner-groups/{id}:
     delete:
       tags:
@@ -449,39 +485,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IdResponseDto'
-  /wrapper/ui/pages/asset-page:
-    get:
-      tags:
-      - UI
-      description: Collect all data for Asset Page
-      operationId: getAssetPage
-      responses:
-        default:
-          description: default response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AssetPage'
-  /wrapper/ui/pages/catalog-page/{connectorEndpoint}/{participantId}/data-offers/{dataOfferId}:
+  /wrapper/ui/pages/catalog-page/data-offers/{dataOfferId}:
     get:
       tags:
       - UI
       description: Fetch a specific data offer from a connector
       operationId: getCatalogPageDataOffer
       parameters:
-      - name: participantId
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: connectorEndpoint
-        in: path
-        required: true
-        schema:
-          type: string
       - name: dataOfferId
         in: path
         required: true
+        schema:
+          type: string
+      - name: participantId
+        in: query
+        schema:
+          type: string
+      - name: connectorEndpoint
+        in: query
         schema:
           type: string
       responses:
@@ -1347,6 +1368,248 @@ components:
       required:
       - clientId
       - clientSecretName
+    DataSourceAvailability:
+      type: string
+      description: Differentiate 'Live' Data Offers that have a real data source from
+        'On Request' Data Offers that contain only a contact email address for requesting
+        an individual data offer.
+      enum:
+      - LIVE
+      - ON_REQUEST
+    UiAsset:
+      type: object
+      description: Type-safe data offer metadata as supported by the sovity product
+        landscape. Contains extension points.
+      properties:
+        dataSourceAvailability:
+          $ref: '#/components/schemas/DataSourceAvailability'
+          description: '''Live'' vs ''On Request'''
+        assetId:
+          type: string
+          description: Asset Id
+        connectorEndpoint:
+          type: string
+          description: Providing Connector's Connector Endpoint
+        participantId:
+          type: string
+          description: Providing Connector's Participant ID
+        title:
+          type: string
+          description: Asset Title
+        creatorOrganizationName:
+          type: string
+          description: Asset Organization Name
+        onRequestContactEmail:
+          type: string
+          description: Contact E-Mail address. Only for dataSourceAvailability ON_REQUEST.
+          example: contact@my-org.com
+        onRequestContactEmailSubject:
+          type: string
+          description: Contact Preferred E-Mail Subject. Only for dataSourceAvailability
+            ON_REQUEST.
+          example: "Department XYZ Data Offer Request - My Product, My API"
+        language:
+          type: string
+          description: Asset Language
+        description:
+          type: string
+          description: Asset Description. Supports markdown.
+        descriptionShortText:
+          type: string
+          description: Asset Description Short Text generated from description. Contains
+            no markdown.
+        isOwnConnector:
+          type: boolean
+          description: Flag that indicates whether this asset is created by this connector.
+        publisherHomepage:
+          type: string
+          description: Asset Homepage
+        licenseUrl:
+          type: string
+          description: License URL
+        version:
+          type: string
+          description: Version
+        keywords:
+          type: array
+          description: Asset Keywords
+          items:
+            type: string
+        mediaType:
+          type: string
+          description: Asset MediaType
+        landingPageUrl:
+          type: string
+          description: Homepage URL associated with the Asset
+        httpDatasourceHintsProxyMethod:
+          type: boolean
+          description: "HTTP Datasource Hint: Proxy Method. Only for dataSourceAvailability\
+            \ LIVE with an underlying HTTP_DATA Data Source."
+        httpDatasourceHintsProxyPath:
+          type: boolean
+          description: "HTTP Datasource Hint: Proxy Path. Only for dataSourceAvailability\
+            \ LIVE with an underlying HTTP_DATA Data Source."
+        httpDatasourceHintsProxyQueryParams:
+          type: boolean
+          description: "HTTP Datasource Hint: Proxy Query Params. Only for dataSourceAvailability\
+            \ LIVE with an underlying HTTP_DATA Data Source."
+        httpDatasourceHintsProxyBody:
+          type: boolean
+          description: "HTTP Datasource Hint: Proxy Body. Only for dataSourceAvailability\
+            \ LIVE with an underlying HTTP_DATA Data Source."
+        dataModel:
+          type: string
+          description: Data Model
+        sovereignLegalName:
+          type: string
+          description: The sovereign is distinct from the publisher by being the legal
+            owner of the data.
+        dataSampleUrls:
+          type: array
+          description: Data sample URLs
+          items:
+            type: string
+        referenceFileUrls:
+          type: array
+          description: Reference file/schema URLs
+          items:
+            type: string
+        referenceFilesDescription:
+          type: string
+          description: Additional information on reference files/schemas
+        conditionsForUse:
+          type: string
+          description: Instructions for use that are not legally relevant e.g. information
+            on how to cite the dataset in papers
+        dataUpdateFrequency:
+          type: string
+          description: Data update frequency
+        temporalCoverageFrom:
+          type: string
+          format: date
+          description: Temporal coverage start date
+        temporalCoverageToInclusive:
+          type: string
+          format: date
+          description: Temporal coverage end date (inclusive)
+        assetJsonLd:
+          type: string
+          description: Contains the entire asset in the JSON-LD format
+        customJsonAsString:
+          type: string
+          description: Contains serialized custom properties in the JSON format.
+        customJsonLdAsString:
+          type: string
+          description: "Contains serialized custom properties in the JSON LD format.\
+            \ Contrary to the customJsonAsString field, this string must represent\
+            \ a JSON LD object and will be affected by JSON LD compaction and expansion.\
+            \ Due to a technical limitation, the properties can't be booleans."
+        privateCustomJsonAsString:
+          type: string
+          description: Same as customJsonAsString but the data will be stored in the
+            private properties.
+        privateCustomJsonLdAsString:
+          type: string
+          description: Same as customJsonLdAsString but the data will be stored in
+            the private properties. The same limitations apply.
+      required:
+      - assetId
+      - connectorEndpoint
+      - creatorOrganizationName
+      - dataSourceAvailability
+      - isOwnConnector
+      - participantId
+      - title
+    AssetListPage:
+      type: object
+      description: All data for the Asset Page
+      properties:
+        content:
+          type: array
+          description: Content of the current page.
+          items:
+            $ref: '#/components/schemas/UiAsset'
+        totalItems:
+          type: integer
+          format: int32
+          description: Number of items on all pages.
+        lastPage:
+          type: integer
+          format: int32
+          description: Index of the last page
+        previousPage:
+          type: integer
+          format: int32
+          description: Index of the previous page.
+        currentPage:
+          type: integer
+          format: int32
+          description: Index of the current page
+        nextPage:
+          type: integer
+          format: int32
+          description: Index of the next page.
+        pageStart:
+          type: integer
+          format: int32
+          description: Index of the item at the start of the current page
+        pageEnd:
+          type: integer
+          format: int32
+          description: Index of the item at the end of the current page
+        pageSize:
+          type: integer
+          format: int32
+          description: Index of the next page.
+      required:
+      - content
+      - currentPage
+      - lastPage
+      - pageEnd
+      - pageSize
+      - pageStart
+      - totalItems
+    AssetListPageFilter:
+      type: object
+      description: Properties to filter and sort the asset list page table
+      properties:
+        query:
+          type: string
+          description: "Query for filtering. If empty, show all entries"
+        page:
+          type: integer
+          format: int32
+          default: "0"
+          description: Page Index. Defaults to 0
+        pageSize:
+          type: integer
+          format: int32
+          description: "Size of each page. If left out, show all entries"
+        sort:
+          type: array
+          description: "Sort List by properties in order of appearance in the array.\
+            \ If empty, sort by creation date"
+          items:
+            $ref: '#/components/schemas/TableColumnSortAssetListSortProperty'
+    AssetListSortProperty:
+      type: string
+      description: "Properties, for which sorting in the asset list is enabled"
+      enum:
+      - TITLE
+      - DESCRIPTION_SHORT_TEXT
+    TableColumnSortAssetListSortProperty:
+      type: object
+      description: Sort a column by a given property
+      properties:
+        columnName:
+          $ref: '#/components/schemas/AssetListSortProperty'
+          description: Name of the column to sort for
+        descending:
+          type: boolean
+          default: "false"
+          description: "Flag whether to sort ascending. If left out, sort ascending"
+      required:
+      - columnName
     BuildInfo:
       type: object
       description: Build information about the connector backend.
@@ -1810,169 +2073,6 @@ components:
       required:
       - description
       - key
-    AssetPage:
-      type: object
-      description: All data for the Asset Page
-      properties:
-        assets:
-          type: array
-          description: Visible Assets
-          items:
-            $ref: '#/components/schemas/UiAsset'
-      required:
-      - assets
-    DataSourceAvailability:
-      type: string
-      description: Differentiate 'Live' Data Offers that have a real data source from
-        'On Request' Data Offers that contain only a contact email address for requesting
-        an individual data offer.
-      enum:
-      - LIVE
-      - ON_REQUEST
-    UiAsset:
-      type: object
-      description: Type-safe data offer metadata as supported by the sovity product
-        landscape. Contains extension points.
-      properties:
-        dataSourceAvailability:
-          $ref: '#/components/schemas/DataSourceAvailability'
-          description: '''Live'' vs ''On Request'''
-        assetId:
-          type: string
-          description: Asset Id
-        connectorEndpoint:
-          type: string
-          description: Providing Connector's Connector Endpoint
-        participantId:
-          type: string
-          description: Providing Connector's Participant ID
-        title:
-          type: string
-          description: Asset Title
-        creatorOrganizationName:
-          type: string
-          description: Asset Organization Name
-        onRequestContactEmail:
-          type: string
-          description: Contact E-Mail address. Only for dataSourceAvailability ON_REQUEST.
-          example: contact@my-org.com
-        onRequestContactEmailSubject:
-          type: string
-          description: Contact Preferred E-Mail Subject. Only for dataSourceAvailability
-            ON_REQUEST.
-          example: "Department XYZ Data Offer Request - My Product, My API"
-        language:
-          type: string
-          description: Asset Language
-        description:
-          type: string
-          description: Asset Description. Supports markdown.
-        descriptionShortText:
-          type: string
-          description: Asset Description Short Text generated from description. Contains
-            no markdown.
-        isOwnConnector:
-          type: boolean
-          description: Flag that indicates whether this asset is created by this connector.
-        publisherHomepage:
-          type: string
-          description: Asset Homepage
-        licenseUrl:
-          type: string
-          description: License URL
-        version:
-          type: string
-          description: Version
-        keywords:
-          type: array
-          description: Asset Keywords
-          items:
-            type: string
-        mediaType:
-          type: string
-          description: Asset MediaType
-        landingPageUrl:
-          type: string
-          description: Homepage URL associated with the Asset
-        httpDatasourceHintsProxyMethod:
-          type: boolean
-          description: "HTTP Datasource Hint: Proxy Method. Only for dataSourceAvailability\
-            \ LIVE with an underlying HTTP_DATA Data Source."
-        httpDatasourceHintsProxyPath:
-          type: boolean
-          description: "HTTP Datasource Hint: Proxy Path. Only for dataSourceAvailability\
-            \ LIVE with an underlying HTTP_DATA Data Source."
-        httpDatasourceHintsProxyQueryParams:
-          type: boolean
-          description: "HTTP Datasource Hint: Proxy Query Params. Only for dataSourceAvailability\
-            \ LIVE with an underlying HTTP_DATA Data Source."
-        httpDatasourceHintsProxyBody:
-          type: boolean
-          description: "HTTP Datasource Hint: Proxy Body. Only for dataSourceAvailability\
-            \ LIVE with an underlying HTTP_DATA Data Source."
-        dataModel:
-          type: string
-          description: Data Model
-        sovereignLegalName:
-          type: string
-          description: The sovereign is distinct from the publisher by being the legal
-            owner of the data.
-        dataSampleUrls:
-          type: array
-          description: Data sample URLs
-          items:
-            type: string
-        referenceFileUrls:
-          type: array
-          description: Reference file/schema URLs
-          items:
-            type: string
-        referenceFilesDescription:
-          type: string
-          description: Additional information on reference files/schemas
-        conditionsForUse:
-          type: string
-          description: Instructions for use that are not legally relevant e.g. information
-            on how to cite the dataset in papers
-        dataUpdateFrequency:
-          type: string
-          description: Data update frequency
-        temporalCoverageFrom:
-          type: string
-          format: date
-          description: Temporal coverage start date
-        temporalCoverageToInclusive:
-          type: string
-          format: date
-          description: Temporal coverage end date (inclusive)
-        assetJsonLd:
-          type: string
-          description: Contains the entire asset in the JSON-LD format
-        customJsonAsString:
-          type: string
-          description: Contains serialized custom properties in the JSON format.
-        customJsonLdAsString:
-          type: string
-          description: "Contains serialized custom properties in the JSON LD format.\
-            \ Contrary to the customJsonAsString field, this string must represent\
-            \ a JSON LD object and will be affected by JSON LD compaction and expansion.\
-            \ Due to a technical limitation, the properties can't be booleans."
-        privateCustomJsonAsString:
-          type: string
-          description: Same as customJsonAsString but the data will be stored in the
-            private properties.
-        privateCustomJsonLdAsString:
-          type: string
-          description: Same as customJsonLdAsString but the data will be stored in
-            the private properties. The same limitations apply.
-      required:
-      - assetId
-      - connectorEndpoint
-      - creatorOrganizationName
-      - dataSourceAvailability
-      - isOwnConnector
-      - participantId
-      - title
     UiContractOffer:
       type: object
       description: Catalog Data Offer's Contract Offer as required by the UI

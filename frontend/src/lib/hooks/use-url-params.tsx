@@ -16,5 +16,8 @@ export const useUrlParams = () => {
     sort: searchParams.getAll('sort'),
     callbackUrl: searchParams.get('callbackUrl') ?? undefined,
     page: searchParams.get('page') ? Number(searchParams.get('page')) : 0,
+    pageSize: searchParams.get('pageSize')
+      ? Number(searchParams.get('pageSize'))
+      : 10,
   };
 };

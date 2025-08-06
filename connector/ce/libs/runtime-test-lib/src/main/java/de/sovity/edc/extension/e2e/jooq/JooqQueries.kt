@@ -44,7 +44,7 @@ class JooqQueries(
             it.createdAt = asset.createdAt
             it.properties = toJson(asset.properties)
             it.privateProperties = toJson(asset.privateProperties)
-            it.dataAddress = toJson(asset.dataAddress)
+            it.dataAddress = toJson(asset.dataAddress.properties)
         }
         record.insert()
     }
@@ -61,6 +61,8 @@ class JooqQueries(
         }
         dsl.batchInsert(records).execute()
     }
+
+    fun removeAllAssets(dsl: DSLContext) = dsl.deleteFrom(Tables.EDC_ASSET).execute()
 
     fun removeAllVaultSecrets(dsl: DSLContext) = dsl.deleteFrom(Tables.SOVITY_VAULT_SECRET).execute()
 

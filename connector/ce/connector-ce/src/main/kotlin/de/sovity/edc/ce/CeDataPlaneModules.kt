@@ -89,6 +89,13 @@ object CeDataPlaneModules {
                 )
             }
         }
+
+        property(
+            ConfigPropCategory.OVERRIDES,
+            CeConfigProps.SOVITY_EDC_DATAPLANE_OAUTH2_CACHE_MINIMUM_TIME_TO_LIVE,
+        ) {
+            defaultValue("PT5s")
+        }
     }
 
     fun baseStandalone() = EdcModule(
