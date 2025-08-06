@@ -10,7 +10,6 @@
 import ComboboxField from '@/components/form/combobox-field';
 import FormGroup from '@/components/form/form-group';
 import InputField from '@/components/form/input-field';
-import MultiSelectComboboxField from '@/components/form/multi-select-combobox-field';
 import {Button} from '@/components/ui/button';
 import {Form} from '@/components/ui/form';
 import {useDataOfferPublishMutation} from '@/app/(authenticated)/data-offers/publish/components/use-data-offer-publish-mutation';
@@ -20,22 +19,20 @@ import {
 } from './use-publish-data-offer-form';
 import {
   type PolicyDefinitionDto,
-  type UiAsset,
   UiCriterionLiteralType,
   UiCriterionOperator,
 } from '@sovity.de/edc-client';
 import {useTranslations} from 'next-intl';
 import {ASSET_ID_PROPERTY_NAME} from '@/components/policy-editor/renderer/asset-selector-property-label';
+import {AsyncComboboxField} from '@/components/form/async-combobox-field';
+import {queryKeys} from '@/lib/queryKeys';
+import {api} from '@/lib/api/client';
 
 interface PublishDataOfferFormProps {
-  assets: UiAsset[];
   policies: PolicyDefinitionDto[];
 }
 
-const PublishDataOfferForm = ({
-  assets,
-  policies,
-}: PublishDataOfferFormProps) => {
+const PublishDataOfferForm = ({policies}: PublishDataOfferFormProps) => {
   const {form} = usePublishDataOfferForm();
   const t = useTranslations();
   const mutation = useDataOfferPublishMutation();
@@ -61,11 +58,6 @@ const PublishDataOfferForm = ({
       },
     });
   }
-
-  const assetOptions = assets.map((asset) => ({
-    id: asset.assetId,
-    label: asset.title,
-  }));
 
   const policyOptions = [
     {
@@ -94,13 +86,37 @@ const PublishDataOfferForm = ({
         <FormGroup
           title={t('Pages.PublishDataOffer.assetsTitle')}
           subTitle={t('Pages.PublishDataOffer.assetsDescription')}>
-          <MultiSelectComboboxField
+          <AsyncComboboxField
+            multiselect
             isRequired
-            control={form.control}
             name={'assetIdList'}
+            control={form.control}
             label={t('Pages.PublishDataOffer.assetsTitle')}
             selectPlaceholder={t('General.selectItems')}
-            options={assetOptions}
+            buildQueryKey={(query) =>
+              queryKeys.assets.listPage({
+                query,
+                page: 0,
+                pageSize: 0,
+                sorting: [],
+              })
+            }
+            loadItems={(query) =>
+              api.uiApi
+                .assetListPage({
+                  assetListPageFilter: {
+                    query,
+                  },
+                })
+                .then((data) =>
+                  data.content.map((asset) => ({
+                    id: asset.assetId,
+                    label: asset.title,
+                    description: asset.description,
+                  })),
+                )
+            }
+            searchPlaceholder={t('General.search')}
           />
         </FormGroup>
         <FormGroup

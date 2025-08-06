@@ -2,7 +2,7 @@
 sovityCeGroupName = "de.sovity.edc"
 
 # Eclipse EDC Version
-edc = "0.11.1.1"
+edc = "0.11.1.2"
 
 # Eclipse EDC Version for Modules not contained in our fork
 edcUniverse = "0.11.1"

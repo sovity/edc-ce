@@ -43,8 +43,19 @@ object JooqUtilsSovity {
         return this.likeIgnoreCase("%" + lowercaseWord.escapeForSqlLike() + "%")
     }
 
+    fun List<String>.toPostgresqlJsonArray(): JSON = JSON.json(objectMapper.writeValueAsString(this))
+
+    fun Map<String, Any>.toPostgresqlJson() = JSON.json(objectMapper.writeValueAsString(this))
+
     fun JSON.parseStringArray(): List<String> =
         objectMapper.readValue(this.data(), object : TypeReference<List<String>>() {})
 
-    fun List<String>.toPostgresqlJsonArray(): JSON = JSON.json(objectMapper.writeValueAsString(this))
+    fun JSON.parseMap(): Map<String, Any> =
+        objectMapper.readValue(this.data(), object : TypeReference<Map<String, Any>>() {})
+
+    @JvmStatic
+    fun jsonField(jsonField: Field<JSON>, property: String) = DSL.field(
+        "${jsonField.name} ->> '$property'",
+        String::class.java
+    )
 }

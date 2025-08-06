@@ -302,7 +302,10 @@ class AssetJsonLdParserTest {
 
 
         // act
-        var jsonLd = assetJsonLdBuilder.createAssetJsonLd(createRequest, ORG_NAME);
+        var createAssetJson = assetJsonLdBuilder.buildCreateAssetJsonLds(createRequest, ORG_NAME);
+        var jsonLd = assetJsonLdBuilder.buildAssetJsonLd(
+            ASSET_ID, createAssetJson.getProperties(), createAssetJson.getPrivateProperties(), createAssetJson.getDataSource()
+        );
         var actual = assetJsonLdParser.buildUiAsset(jsonLd, ENDPOINT, PARTICIPANT_ID);
 
         // assert
@@ -334,7 +337,10 @@ class AssetJsonLdParserTest {
             .build();
 
         // act
-        var jsonLd = assetJsonLdBuilder.createAssetJsonLd(createRequest, ORG_NAME);
+        var createAssetJson = assetJsonLdBuilder.buildCreateAssetJsonLds(createRequest, ORG_NAME);
+        var jsonLd = assetJsonLdBuilder.buildAssetJsonLd(
+            ASSET_ID, createAssetJson.getProperties(), createAssetJson.getPrivateProperties(), createAssetJson.getDataSource()
+        );
         var actual = assetJsonLdParser.buildUiAsset(jsonLd, ENDPOINT, PARTICIPANT_ID);
 
         // assert
@@ -366,7 +372,10 @@ class AssetJsonLdParserTest {
             .build();
 
         // act
-        var jsonLd = assetJsonLdBuilder.createAssetJsonLd(createRequest, ORG_NAME);
+        var createAssetJsonLds = assetJsonLdBuilder.buildCreateAssetJsonLds(createRequest, ORG_NAME);
+        var jsonLd = assetJsonLdBuilder.buildAssetJsonLd(
+            ASSET_ID, createAssetJsonLds.getProperties(), createAssetJsonLds.getPrivateProperties(), createAssetJsonLds.getDataSource()
+        );
         var actual = assetJsonLdParser.buildUiAsset(jsonLd, ENDPOINT, PARTICIPANT_ID);
 
         // assert
@@ -398,7 +407,10 @@ class AssetJsonLdParserTest {
             .build();
 
         // act
-        var jsonLd = assetJsonLdBuilder.createAssetJsonLd(createRequest, ORG_NAME);
+        var createAssetJsonLds = assetJsonLdBuilder.buildCreateAssetJsonLds(createRequest, ORG_NAME);
+        var jsonLd = assetJsonLdBuilder.buildAssetJsonLd(
+            ASSET_ID, createAssetJsonLds.getProperties(), createAssetJsonLds.getPrivateProperties(), createAssetJsonLds.getDataSource()
+        );
         var actual = assetJsonLdParser.buildUiAsset(jsonLd, ENDPOINT, PARTICIPANT_ID);
 
         // assert
@@ -436,7 +448,10 @@ class AssetJsonLdParserTest {
             .build();
 
         // act
-        var jsonLd = assetJsonLdBuilder.createAssetJsonLd(createRequest, ORG_NAME);
+        var createAssetJsonLds = assetJsonLdBuilder.buildCreateAssetJsonLds(createRequest, ORG_NAME);
+        var jsonLd = assetJsonLdBuilder.buildAssetJsonLd(
+            ASSET_ID, createAssetJsonLds.getProperties(), createAssetJsonLds.getPrivateProperties(), createAssetJsonLds.getDataSource()
+        );
         var actual = assetJsonLdParser.buildUiAsset(jsonLd, ENDPOINT, PARTICIPANT_ID);
 
         // assert

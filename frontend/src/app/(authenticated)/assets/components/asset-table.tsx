@@ -8,36 +8,40 @@
 'use client';
 
 import {DataTable} from '@/components/data-table';
-import type {UiAsset} from '@/lib/api/client/generated';
-import {buildWordFilter} from '@/lib/utils/build-word-filter';
+import {AssetListSortProperty} from '@/lib/api/client/generated';
 import {urls} from '@/lib/urls';
 import {useTranslations} from 'next-intl';
 import {useAssetTableColumns} from './asset-table-columns';
+import {queryKeys} from '@/lib/queryKeys';
+import {api} from '@/lib/api/client';
 
-interface AssetTableProps {
-  data: UiAsset[];
-}
-
-const wordFilter = buildWordFilter((row) => {
-  return [
-    row.getValue('title'),
-    row.getValue('assetId'),
-    row.getValue('descriptionShortText'),
-    row.getValue('dataSourceAvailability'),
-  ];
-});
-
-const invisibleColumns = ['assetId', 'dataSourceAvailability'];
-
-const AssetTable = ({data}: AssetTableProps) => {
+const AssetTable = () => {
   const t = useTranslations();
 
   return (
     <DataTable
       columns={useAssetTableColumns()}
-      data={data}
-      wordFilter={wordFilter}
-      invisibleColumns={invisibleColumns}
+      buildDataKey={(params) => queryKeys.assets.listPage(params)}
+      getData={({query, page, pageSize, sorting}) => {
+        return api.uiApi.assetListPage({
+          assetListPageFilter: {
+            page,
+            pageSize,
+            query,
+            sort: sorting?.map(({desc, id}) => ({
+              columnName: (() => {
+                switch (id) {
+                  case 'title':
+                    return AssetListSortProperty.Title;
+                  case 'descriptionShortText':
+                    return AssetListSortProperty.DescriptionShortText;
+                }
+              })()!,
+              descending: desc,
+            })),
+          },
+        });
+      }}
       headerButtonLink={urls.assets.createPage()}
       headerButtonText={t('Pages.AssetList.createAsset')}
       rowLink={(row) => urls.assets.detailPage(row.original.assetId)}

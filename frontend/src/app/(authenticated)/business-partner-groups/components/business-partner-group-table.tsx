@@ -7,7 +7,7 @@
  */
 'use client';
 
-import {DataTable} from '@/components/data-table';
+import {ClientsideDataTable} from '@/components/clientside-data-table';
 import {buildWordFilter} from '@/lib/utils/build-word-filter';
 import {useBusinessPartnerGroupTableColumns} from './business-partner-group-table-columns';
 import {useTranslations} from 'next-intl';
@@ -28,7 +28,7 @@ const wordFilter = buildWordFilter((row) => {
 const BusinessPartnerGroupTable = ({data}: BusinessPartnerGroupTableProps) => {
   const t = useTranslations();
   return (
-    <DataTable
+    <ClientsideDataTable
       columns={useBusinessPartnerGroupTableColumns()}
       data={data}
       wordFilter={wordFilter}

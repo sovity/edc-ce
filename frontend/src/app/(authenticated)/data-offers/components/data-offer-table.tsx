@@ -7,7 +7,7 @@
  */
 'use client';
 
-import {DataTable} from '@/components/data-table';
+import {ClientsideDataTable} from '@/components/clientside-data-table';
 import type {ContractDefinitionEntry} from '@/lib/api/client/generated';
 import {buildWordFilter} from '@/lib/utils/build-word-filter';
 import {urls} from '@/lib/urls';
@@ -31,7 +31,7 @@ const DataOfferTable = ({data}: DataOfferTableProps) => {
   const t = useTranslations();
 
   return (
-    <DataTable
+    <ClientsideDataTable
       columns={useDataOfferTableColumns()}
       data={data}
       wordFilter={wordFilter}

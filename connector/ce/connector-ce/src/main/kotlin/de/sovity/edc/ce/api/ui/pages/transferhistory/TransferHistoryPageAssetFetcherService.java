@@ -23,54 +23,53 @@
 package de.sovity.edc.ce.api.ui.pages.transferhistory;
 
 import de.sovity.edc.ce.api.common.model.UiAsset;
+import de.sovity.edc.ce.api.ui.pages.asset.AssetRs;
 import de.sovity.edc.ce.api.ui.pages.contract_agreements.services.ContractNegotiationUtils;
 import de.sovity.edc.ce.libs.mappers.AssetMapper;
 import de.sovity.edc.runtime.simple_di.Service;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.controlplane.asset.spi.domain.Asset;
-import org.eclipse.edc.connector.controlplane.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.controlplane.contract.spi.types.negotiation.ContractNegotiation;
-import org.eclipse.edc.connector.controlplane.services.spi.asset.AssetService;
 import org.eclipse.edc.connector.controlplane.services.spi.transferprocess.TransferProcessService;
 import org.eclipse.edc.connector.controlplane.transfer.spi.types.TransferProcess;
 import org.eclipse.edc.spi.EdcException;
 import org.jetbrains.annotations.NotNull;
+import org.jooq.DSLContext;
 
 @RequiredArgsConstructor
 @Service
 public class TransferHistoryPageAssetFetcherService {
-    private final AssetService assetService;
     private final TransferProcessService transferProcessService;
     private final AssetMapper assetMapper;
-    private final ContractNegotiationStore contractNegotiationStore;
     private final ContractNegotiationUtils contractNegotiationUtils;
 
 
-    public UiAsset getAssetForTransferHistoryPage(String transferProcessId) {
+    public UiAsset getAssetForTransferHistoryPage(DSLContext dsl, String transferProcessId) {
 
         var transferProcessById = transferProcessService.findById(transferProcessId);
         if (transferProcessById == null) {
             throw new EdcException("Could not find transfer process with ID %s.".formatted(transferProcessId));
         }
-        return getAssetFromTransferProcess(transferProcessById);
+        return getAssetFromTransferProcess(dsl, transferProcessById);
     }
 
     @NotNull
-    private UiAsset getAssetFromTransferProcess(TransferProcess process) {
-        var asset = getTransferProcessAsset(process);
+    private UiAsset getAssetFromTransferProcess(DSLContext dsl, TransferProcess process) {
+        var asset = getTransferProcessAsset(dsl, process);
         var negotiation = contractNegotiationUtils.findByContractAgreementIdOrThrow(process.getContractId());
 
         // Additional Asset Metadata required for UI
         return buildUiAsset(asset, negotiation);
     }
 
-    private Asset getTransferProcessAsset(TransferProcess process) {
+    private Asset getTransferProcessAsset(DSLContext dsl, TransferProcess process) {
         var assetId = process.getAssetId();
-        var asset = assetService.findById(process.getAssetId());
-        if (asset == null) {
-            asset = Asset.Builder.newInstance().id(assetId).build();
+        var assetRs = AssetRs.Companion.fetchAsset(dsl, process.getAssetId());
+        if (assetRs == null) {
+            return Asset.Builder.newInstance().id(assetId).build();
+        } else {
+            return assetRs.toAsset();
         }
-        return asset;
     }
 
     private UiAsset buildUiAsset(Asset asset, ContractNegotiation negotiation) {

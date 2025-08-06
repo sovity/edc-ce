@@ -21,16 +21,14 @@
 package de.sovity.edc.ce.libs.mappers.policy;
 
 import de.sovity.edc.runtime.simple_di.Service;
-
-import java.util.List;
-import java.util.Set;
-
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.edc.policy.model.Action;
 import org.eclipse.edc.policy.model.Permission;
 import org.eclipse.edc.policy.model.Policy;
+
+import java.util.List;
 
 import static org.apache.commons.collections4.CollectionUtils.isEmpty;
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;

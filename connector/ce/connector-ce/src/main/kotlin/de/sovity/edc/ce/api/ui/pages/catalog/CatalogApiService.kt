@@ -26,16 +26,16 @@ class CatalogApiService(
     }
 
     fun fetchDataOffer(
+        dataOfferId: String,
         participantId: String,
         connectorEndpoint: String,
-        assetId: String
     ): UiDataOffer {
         val querySpec = QuerySpec.max().toBuilder()
             .filter(
                 Criterion.criterion(
                     "'" + Prop.Edc.ID + "'",
                     "=",
-                    assetId
+                    dataOfferId
                 )
             )
             .build()

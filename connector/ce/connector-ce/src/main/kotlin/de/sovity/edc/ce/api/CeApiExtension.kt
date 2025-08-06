@@ -22,11 +22,9 @@ import de.sovity.edc.ce.modules.policy_utils.always_true.AlwaysTruePolicyDefinit
 import de.sovity.edc.runtime.config.ConfigUtils
 import de.sovity.edc.runtime.simple_di.SimpleDi
 import de.sovity.edc.runtime.simple_di.SimpleDiExt.onInstanceCreatedRegisterEdcService
-import org.eclipse.edc.connector.controlplane.asset.spi.index.AssetIndex
 import org.eclipse.edc.connector.controlplane.contract.spi.negotiation.store.ContractNegotiationStore
 import org.eclipse.edc.connector.controlplane.contract.spi.offer.store.ContractDefinitionStore
 import org.eclipse.edc.connector.controlplane.policy.spi.store.PolicyDefinitionStore
-import org.eclipse.edc.connector.controlplane.services.spi.asset.AssetService
 import org.eclipse.edc.connector.controlplane.services.spi.catalog.CatalogService
 import org.eclipse.edc.connector.controlplane.services.spi.contractagreement.ContractAgreementService
 import org.eclipse.edc.connector.controlplane.services.spi.contractdefinition.ContractDefinitionService
@@ -61,12 +59,6 @@ import org.eclipse.edc.web.spi.configuration.ApiContext
 class CeApiExtension : ServiceExtension {
     @Inject
     private lateinit var alwaysTruePolicyDefinitionService: AlwaysTruePolicyDefinitionService
-
-    @Inject
-    private lateinit var assetIndex: AssetIndex
-
-    @Inject
-    private lateinit var assetService: AssetService
 
     @Inject
     private lateinit var catalogService: CatalogService
@@ -157,8 +149,6 @@ class CeApiExtension : ServiceExtension {
                 context.config,
                 context.monitor,
                 alwaysTruePolicyDefinitionService,
-                assetIndex,
-                assetService,
                 catalogService,
                 configUtils,
                 contractAgreementTerminationService,

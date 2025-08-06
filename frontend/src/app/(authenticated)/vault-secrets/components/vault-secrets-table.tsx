@@ -7,7 +7,7 @@
  */
 'use client';
 
-import {DataTable} from '@/components/data-table';
+import {ClientsideDataTable} from '@/components/clientside-data-table';
 import type {VaultSecretListPageEntry} from '@/lib/api/client/generated';
 import {buildWordFilter} from '@/lib/utils/build-word-filter';
 import {urls} from '@/lib/urls';
@@ -26,7 +26,7 @@ const VaultSecretsTable = ({data}: VaultSecretsTableProps) => {
   const t = useTranslations();
 
   return (
-    <DataTable
+    <ClientsideDataTable
       columns={useVaultSecretsTableColumns()}
       data={data}
       wordFilter={wordFilter}

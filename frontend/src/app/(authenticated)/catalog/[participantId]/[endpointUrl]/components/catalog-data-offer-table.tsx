@@ -7,7 +7,7 @@
  */
 'use client';
 
-import {DataTable} from '@/components/data-table';
+import {ClientsideDataTable} from '@/components/clientside-data-table';
 import {useCatalogDataOfferTableColumns} from '@/app/(authenticated)/catalog/[participantId]/[endpointUrl]/components/catalog-data-offer-table-columns';
 import {buildWordFilter} from '@/lib/utils/build-word-filter';
 import {type UiDataOffer} from '@sovity.de/edc-client';
@@ -29,7 +29,7 @@ const invisibleColumns = ['assetId', 'dataSourceAvailability'];
 
 const CatalogDataOfferTable = ({data}: CatalogDataOfferTableProps) => {
   return (
-    <DataTable
+    <ClientsideDataTable
       columns={useCatalogDataOfferTableColumns()}
       data={data}
       wordFilter={wordFilter}

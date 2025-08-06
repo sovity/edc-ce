@@ -7,7 +7,8 @@
  */
 import {uiConfig} from '@/lib/api/fake-backend/connector-fake-impl/ui-config-fake-service';
 import {
-  AssetPageToJSON,
+  AssetListPageFilterFromJSON,
+  AssetListPageToJSON,
   BuildInfoToJSON,
   BusinessPartnerGroupCreateSubmitFromJSON,
   BusinessPartnerGroupEditSubmitFromJSON,
@@ -41,7 +42,7 @@ import {
 } from '@sovity.de/edc-client';
 import {
   assetIdAvailable,
-  assetPage,
+  assetListPage,
   createAsset,
   deleteAsset,
   editAsset,
@@ -130,9 +131,10 @@ export const EDC_FAKE_BACKEND: FetchAPI = async (
     })
 
     .url('ui/pages/asset-page')
-    .on('GET', () => {
-      const page = assetPage();
-      return ok(AssetPageToJSON(page));
+    .on('POST', () => {
+      const pageFilter = AssetListPageFilterFromJSON(body);
+      const page = assetListPage(pageFilter);
+      return ok(AssetListPageToJSON(page));
     })
 
     .url('ui/pages/asset-page/assets')
@@ -207,9 +209,10 @@ export const EDC_FAKE_BACKEND: FetchAPI = async (
       return ok(dataOffers.map(UiDataOfferToJSON));
     })
 
-    .url('ui/pages/catalog-page/*/*/data-offers/*')
-    .on('GET', (endpointUrl, _, assetId) => {
-      const dataOffer = getCatalogPageDataOffer(endpointUrl, assetId);
+    .url('ui/pages/catalog-page/data-offers/*')
+    .on('GET', (assetId) => {
+      const connectorEndpoint = params.get('connectorEndpoint')!;
+      const dataOffer = getCatalogPageDataOffer(connectorEndpoint, assetId);
       return ok(UiDataOfferToJSON(dataOffer));
     })
 

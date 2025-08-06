@@ -22,12 +22,13 @@
  */
 package de.sovity.edc.ce.api.ui;
 
+import de.sovity.edc.ce.api.common.model.AssetListPageFilter;
 import de.sovity.edc.ce.api.common.model.BuildInfo;
 import de.sovity.edc.ce.api.common.model.UiAsset;
 import de.sovity.edc.ce.api.common.model.UiAssetCreateRequest;
 import de.sovity.edc.ce.api.common.model.UiAssetEditRequest;
 import de.sovity.edc.ce.api.common.model.UiInitiateTransferRequest;
-import de.sovity.edc.ce.api.ui.model.AssetPage;
+import de.sovity.edc.ce.api.ui.model.AssetListPage;
 import de.sovity.edc.ce.api.ui.model.BusinessPartnerGroupCreateSubmit;
 import de.sovity.edc.ce.api.ui.model.BusinessPartnerGroupEditPage;
 import de.sovity.edc.ce.api.ui.model.BusinessPartnerGroupEditSubmit;
@@ -86,11 +87,18 @@ interface UiResource {
     @Operation(description = "Collect all data for the Dashboard Page")
     DashboardPage getDashboardPage();
 
-    @GET
+    @POST
     @Path("pages/asset-page")
     @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Operation(description = "Collect all data for Asset Page")
-    AssetPage getAssetPage();
+    AssetListPage assetListPage(AssetListPageFilter assetListPageFilter);
+
+    @GET
+    @Path("pages/asset-page/assets/{assetId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Get details for a specific Asset")
+    UiAsset assetDetailsPage(@PathParam("assetId") String assetId);
 
     @POST
     @Path("pages/asset-page/assets")
@@ -153,7 +161,7 @@ interface UiResource {
     @Path("pages/business-partner-groups/{id}/edit-page")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Collect all data for the Business Partner Group Edit Page")
-    BusinessPartnerGroupEditPage businessPartnerGroupEditPage(@PathParam("id") String id);
+    BusinessPartnerGroupEditPage businessPartnerGroupEditPage(@PathParam("id") String groupId);
 
     @PUT
     @Path("pages/business-partner-groups/{id}/edit-group")
@@ -252,13 +260,13 @@ interface UiResource {
     );
 
     @GET
-    @Path("pages/catalog-page/{connectorEndpoint}/{participantId}/data-offers/{dataOfferId}")
+    @Path("pages/catalog-page/data-offers/{dataOfferId}")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Fetch a specific data offer from a connector")
     UiDataOffer getCatalogPageDataOffer(
-        @PathParam("participantId") String participantId,
-        @PathParam("connectorEndpoint") String connectorEndpoint,
-        @PathParam("dataOfferId") String dataOfferId
+        @PathParam("dataOfferId") String dataOfferId,
+        @QueryParam("participantId") String participantId,
+        @QueryParam("connectorEndpoint") String connectorEndpoint
     );
 
     @POST

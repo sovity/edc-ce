@@ -28,7 +28,7 @@ import {queryKeys} from '@/lib/queryKeys';
 export const inBusinessPartnerGroupFormSchema = z.object({
   type: z.literal('IN_BUSINESS_PARTNER_GROUP' satisfies PolicyValueType),
   operator: z.nativeEnum(OperatorDto),
-  stringList: z.array(z.string()).min(1),
+  inBusinessPartnerGroup: z.array(z.string()).min(1),
 });
 
 export type InBusinessPartnerGroupFormValue = z.infer<
@@ -41,12 +41,12 @@ export const inBusinessPartnerGroupAdapter: PolicyValueTypeAdapter = {
     return {
       type: 'IN_BUSINESS_PARTNER_GROUP',
       operator,
-      stringList: filterNonNull(readArrayLiteral(literal)),
+      inBusinessPartnerGroup: filterNonNull(readArrayLiteral(literal)),
     };
   },
   buildValueFn: (valuePoly) => {
     const value = valuePoly as InBusinessPartnerGroupFormValue;
-    const items = value.stringList ?? [];
+    const items = value.inBusinessPartnerGroup ?? [];
 
     return {
       type: 'STRING_LIST',

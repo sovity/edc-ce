@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: Elastic-2.0
  */
 
+import {type TableFilterParams} from '@/components/data-table';
 import {filterNonNull} from './utils/array-utils';
 
 export const queryKeys = {
@@ -58,7 +59,11 @@ export const queryKeys = {
     all: () => [...queryKeys.assets.key(), 'all'],
     id: (assetId: string) => [...queryKeys.assets.key(), assetId],
 
-    listPage: () => [...queryKeys.assets.all(), 'listPage'],
+    listPage: (params: TableFilterParams) => [
+      ...queryKeys.assets.all(),
+      'listPage',
+      ...buildTableFilterKey(params),
+    ],
     detailsPage: (assetId: string) => [
       ...queryKeys.assets.id(assetId),
       'detailsPage',
@@ -128,4 +133,26 @@ export const queryKeys = {
       'dataOfferDetails',
     ],
   },
+};
+
+const buildTableFilterKey = ({
+  query,
+  page,
+  pageSize,
+  sorting,
+}: TableFilterParams) => {
+  const tableFilterKey = [];
+  if (query) {
+    tableFilterKey.push('query', query);
+  }
+  if (page !== undefined) {
+    tableFilterKey.push('page', page);
+  }
+  if (pageSize !== undefined) {
+    tableFilterKey.push('pageSize', pageSize);
+  }
+  if (sorting && sorting.length > 0) {
+    tableFilterKey.push('sorting', ...sorting.map((s) => `${s.id}:${s.desc}`));
+  }
+  return tableFilterKey;
 };

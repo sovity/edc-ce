@@ -9,7 +9,6 @@ package de.sovity.edc.ce.api.ui.pages.contract_agreements;
 
 import de.sovity.edc.ce.api.ui.model.ContractTerminationRequest;
 import de.sovity.edc.ce.api.ui.model.IdResponseDto;
-import de.sovity.edc.ce.api.utils.ValidatorUtils;
 import de.sovity.edc.ce.modules.messaging.contract_termination.ContractAgreementTerminationService;
 import de.sovity.edc.ce.modules.messaging.contract_termination.ContractTerminationParam;
 import de.sovity.edc.runtime.simple_di.Service;

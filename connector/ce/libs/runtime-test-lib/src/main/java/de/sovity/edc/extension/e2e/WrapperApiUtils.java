@@ -8,23 +8,25 @@
 package de.sovity.edc.extension.e2e;
 
 import de.sovity.edc.client.EdcClient;
+import de.sovity.edc.client.gen.ApiException;
 import de.sovity.edc.client.gen.model.ContractDefinitionEntry;
 import de.sovity.edc.client.gen.model.UiAsset;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import javax.annotation.Nullable;
 
 @UtilityClass
 public class WrapperApiUtils {
 
-    public static @NotNull List<UiAsset> getAssetsWithId(EdcClient providerClient, String assetId) {
-        return providerClient.uiApi()
-            .getAssetPage()
-            .getAssets()
-            .stream()
-            .filter(it -> it.getAssetId().equals(assetId))
-            .toList();
+    public static @Nullable UiAsset getAssetOrNull(EdcClient providerClient, String assetId) {
+        try {
+            return providerClient.uiApi()
+                .assetDetailsPage(assetId);
+        } catch (ApiException e) {
+            return null;
+        }
     }
 
     public static @NotNull List<ContractDefinitionEntry> getContractDefinitionWithAssetId(

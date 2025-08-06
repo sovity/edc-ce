@@ -25,11 +25,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.Nullable;
 
 @Data
-@Builder(toBuilder = true)
+@NoArgsConstructor
 @AllArgsConstructor
+@Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "Query for filtering Vault Secrets")
 public class VaultSecretQuery {

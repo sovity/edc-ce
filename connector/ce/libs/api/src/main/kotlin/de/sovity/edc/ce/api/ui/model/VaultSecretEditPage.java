@@ -27,8 +27,8 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
-@Builder(toBuilder = true)
 @AllArgsConstructor
+@Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "Data for the Edit Page for User Managed Vault Secrets")
 public class VaultSecretEditPage {
