@@ -13,7 +13,6 @@
     {"pattern": "^https?://provider-connector:"},
     {"pattern": "^https?://consumer-connector:"},
     {"pattern": "^https?://api\\.coincap\\.io/"},
-    {"pattern": "^https://github\\.com/.*" },
     {"pattern": "^https://github\\.com/sovity/edc-ee/security" },
 
     {"pattern": ".*edc/e2e/ApiWrapperDemoTest.java$" },

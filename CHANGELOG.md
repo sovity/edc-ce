@@ -2,6 +2,39 @@
 
 The versions of the sovity EDC CE are aligned with the sovity EDC EE.
 
+## [v15.0.0] - 2025-08-05
+
+### Overview
+
+OAuth token caching and bugfixes.
+
+#### Major Changes
+
+- Wrapper API breaking change.
+  - Check out the change for the operation with id `getCatalogPageDataOffer` with the open API specification.
+
+#### Minor Changes
+
+- Cache Dataplane OAuth tokens when they use the JWT format
+- Asset page performance improvements
+
+#### Patch Changes
+
+- Fix error with the vault and the BPN APIs
+- Fix error with connector-endpoint being part of URL path
+
+### Deployment Migration Notes
+
+_No special deployment migration steps required_
+
+#### Compatible Versions
+
+- EDC CE Backend: `ghcr.io/sovity/edc-ce:15.0.0`
+- EDC CE Frontend: `ghcr.io/sovity/edc-ce-ui:15.0.0`
+- PostgreSQL: `17`
+- Eclipse EDC Fork: [v0.11.1.2](https://github.com/sovity/core-edc/releases/tag/v0.11.1.2)
+- Tractus-X: `0.9.0`
+
 ## [v14.1.0] - 2025-07-25
 
 ### Overview
