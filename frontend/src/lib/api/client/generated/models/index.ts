@@ -21,7 +21,9 @@
 /* eslint-disable */
 export * from './AssetFilterConstraint';
 export * from './AssetFilterConstraintOperator';
-export * from './AssetPage';
+export * from './AssetListPage';
+export * from './AssetListPageFilter';
+export * from './AssetListSortProperty';
 export * from './BuildInfo';
 export * from './BusinessPartnerGroupCreateSubmit';
 export * from './BusinessPartnerGroupEditPage';
@@ -76,6 +78,7 @@ export * from './PolicyDefinitionCreateDto';
 export * from './PolicyDefinitionCreateRequest';
 export * from './PolicyDefinitionDto';
 export * from './PolicyDefinitionPage';
+export * from './TableColumnSortAssetListSortProperty';
 export * from './TransferHistoryEntry';
 export * from './TransferHistoryPage';
 export * from './TransferProcessSimplifiedState';

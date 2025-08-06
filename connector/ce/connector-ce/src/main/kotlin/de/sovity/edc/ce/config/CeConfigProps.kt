@@ -800,4 +800,10 @@ object CeConfigProps {
         property = "sovity.certificates.generator.method",
         defaultDocumentation = "The method to use to generate the certificates.",
     )
+
+    @JvmField
+    val SOVITY_EDC_DATAPLANE_OAUTH2_CACHE_MINIMUM_TIME_TO_LIVE = ConfigPropRef(
+        property = "sovity.edc.dataplane.oauth2.cache.minimum.time.to.live",
+        defaultDocumentation = "Format: ISO 8601 duration. The minimum duration between the token's age and the time at which it expires. If the token has a shorter remaining lifespan than this, it is renewed.",
+    )
 }

@@ -7,7 +7,7 @@
  */
 'use client';
 
-import {DataTable} from '@/components/data-table';
+import {ClientsideDataTable} from '@/components/clientside-data-table';
 import {type PolicyDefinitionMapped} from '@/app/(authenticated)/policies/components/policy-definition-mapped';
 import {buildWordFilter} from '@/lib/utils/build-word-filter';
 import {urls} from '@/lib/urls';
@@ -27,7 +27,7 @@ const invisibleColumns = ['jsonLd'];
 const PolicyDefinitionTable = ({data}: PolicyDefinitionsTableProps) => {
   const t = useTranslations();
   return (
-    <DataTable
+    <ClientsideDataTable
       columns={usePolicyDefinitionTableColumns()}
       data={data}
       invisibleColumns={invisibleColumns}

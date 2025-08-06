@@ -27,11 +27,13 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.Nullable;
 
 @Data
-@Builder(toBuilder = true)
+@NoArgsConstructor
 @AllArgsConstructor
+@Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "Submit Request for editing a User Managed Vault Secret")
 public class VaultSecretEditSubmit {

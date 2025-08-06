@@ -15,8 +15,6 @@ import {useQueryWrapper} from '@/lib/hooks/use-query-wrapper';
 import {useTitle} from '@/lib/hooks/use-title';
 
 import {queryKeys} from '@/lib/queryKeys';
-import {throwIfNull} from '@/lib/utils/throw-utils';
-import {useTranslations} from 'next-intl';
 import PageContainer from '@/components/page-container';
 import type {DataOfferCreateFormModel} from '@/app/(authenticated)/data-offers/create/components/data-offer-form-schema';
 import {DataOfferForm} from '@/app/(authenticated)/data-offers/create/components/data-offer-form';
@@ -28,14 +26,12 @@ import {decodeParams} from '@/lib/utils/http-utils';
 
 export default function AssetEditPage({params}: {params: {id: string}}) {
   const {id} = decodeParams(params);
-  const t = useTranslations();
   const breadcrumbItems = useBreadcrumbItems();
 
   const pageQuery = useQueryWrapper(queryKeys.assets.detailsPage(id), () =>
-    api.uiApi
-      .getAssetPage()
-      .then((data) => data.assets?.find((asset) => asset.assetId === id))
-      .then((asset) => throwIfNull(asset, t('Pages.AssetDetails.notFound'))),
+    api.uiApi.assetDetailsPage({
+      assetId: id,
+    }),
   );
 
   useTitle(pageQuery.data?.title ?? id);

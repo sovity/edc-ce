@@ -209,6 +209,18 @@ This is a short description text that should be fully rendered without being **c
       '{ "http://unknown/internal-id": "my-internal-id-123"}',
   };
 
+  export const dummyAsset = (id: number): UiAsset => ({
+    dataSourceAvailability: 'LIVE',
+    assetId: `dummy-asset-${id}`,
+    title: `Dummy Asset ${id}`,
+    description: `This is a dummy asset with id ${id}.`,
+    descriptionShortText: `Dummy Asset ${id}`,
+    connectorEndpoint: 'https://dummy-connector/api/dsp',
+    participantId: 'BPNL1234XX.DUMMY',
+    creatorOrganizationName: 'Dummy Org',
+    isOwnConnector: false,
+  });
+
   export function toDummyAsset(entry: UiAsset): UiAsset {
     return {
       assetId: entry.assetId,

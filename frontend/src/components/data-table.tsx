@@ -7,7 +7,7 @@
  */
 'use client';
 
-import {type ChangeEvent, useState} from 'react';
+import {useState} from 'react';
 import {useRouter} from 'next/navigation';
 import {Input} from '@/components/ui/input';
 import {
@@ -18,102 +18,98 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import {useUpdateTableSearchParamState} from '@/lib/hooks/use-update-table-search-param-state';
 import {useUrlParams} from '@/lib/hooks/use-url-params';
-import {unsafeCast} from '@/lib/utils/ts-utils';
 import {
   type ColumnDef,
   type ColumnSort,
-  type FilterFn,
   flexRender,
   getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
   type Row,
   type SortingState,
   useReactTable,
 } from '@tanstack/react-table';
 import {useTranslations} from 'next-intl';
-import {DataTablePagination} from './data-table-pagination';
 import ExactMatchTooltip from './exact-match-tooltip';
 import InternalLink from './links/internal-link';
+import {useUpdateTableSearchParamState} from '@/lib/hooks/use-update-table-search-param-state';
+import {unsafeCast} from '@/lib/utils/ts-utils';
+import {DataTablePagination} from './data-table-pagination';
+import {useQuery} from '@tanstack/react-query';
+import type {AssetListPage} from '@sovity.de/edc-client';
+
+export type TablePage<TData> = Omit<AssetListPage, 'content'> & {
+  content: TData[];
+};
+
+export type TableFilterParams = {
+  query?: string;
+  page?: number;
+  pageSize?: number;
+  sorting?: SortingState;
+};
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-  wordFilter: FilterFn<unknown>;
+  buildDataKey: (params: TableFilterParams) => (string | number)[];
+  getData: (params: TableFilterParams) => Promise<TablePage<TData>>;
   headerButtonText?: string;
   headerButtonLink?: string;
   headerButtonDataTestId?: string;
   searchInputDataTestId?: string;
-  invisibleColumns?: string[];
-  filterComponents?: React.ReactNode;
   rowLink?: (row: Row<TData>) => string;
   disableUpdateUrlParams?: boolean;
 }
 
-declare module '@tanstack/table-core' {
-  interface FilterFns {
-    wordFilter: FilterFn<unknown>;
-  }
-}
-
 export function DataTable<TData, TValue>({
   columns,
-  data,
-  wordFilter,
+  buildDataKey,
+  getData,
   headerButtonText,
   headerButtonLink,
   headerButtonDataTestId,
   searchInputDataTestId,
-  invisibleColumns,
-  filterComponents,
   rowLink,
   disableUpdateUrlParams,
 }: DataTableProps<TData, TValue>) {
-  const {search, sort} = useUrlParams();
-  const urlSorting = sort.map((s) => {
+  const urlParams = useUrlParams();
+  const urlSorting = urlParams.sort.map((s) => {
     return unsafeCast<ColumnSort>(JSON.parse(s));
   });
 
   const [sorting, setSorting] = useState<SortingState>(urlSorting ?? []);
-  const [globalFilter, setGlobalFilter] = useState(search ?? '');
+  const [query, setQuery] = useState(urlParams.search ?? '');
+  const [page, setPageIndex] = useState(urlParams.page);
+  const [pageSize, setPageSize] = useState(urlParams.pageSize);
 
-  useUpdateTableSearchParamState(globalFilter, sorting, disableUpdateUrlParams);
-
-  const columnVisibility: Record<string, boolean> | undefined =
-    invisibleColumns?.reduce(
-      (acc, column) => {
-        acc[column] = false;
-        return acc;
-      },
-      {} as Record<string, boolean>,
-    ) ?? undefined;
-
-  const onSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setGlobalFilter(value);
-  };
+  const {data} = useQuery(
+    buildDataKey({query, page, pageSize, sorting}),
+    () => getData({query, page, pageSize, sorting}),
+    {
+      keepPreviousData: true,
+    },
+  );
 
   const table = useReactTable({
-    data,
+    data: data?.content ?? [],
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    state: {sorting, globalFilter},
-    onGlobalFilterChange: setGlobalFilter,
+    state: {
+      globalFilter: query,
+      sorting,
+      pagination: {
+        pageIndex: page,
+        pageSize,
+      },
+    },
     filterFns: {
-      wordFilter,
+      wordFilter: () => false,
     },
-    globalFilterFn: 'wordFilter',
-    initialState: {
-      columnVisibility,
-    },
+    manualFiltering: true,
+    manualSorting: true,
+    manualPagination: true,
   });
+  useUpdateTableSearchParamState(table, disableUpdateUrlParams);
 
   const router = useRouter();
 
@@ -126,17 +122,14 @@ export function DataTable<TData, TValue>({
           <div className="relative w-1/2">
             <Input
               placeholder={t('General.searchPlaceholder')}
-              value={globalFilter}
-              onChange={onSearchChange}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
               dataTestId={searchInputDataTestId}
             />
             <div className="absolute inset-y-0 right-0 flex items-center pr-2">
               <ExactMatchTooltip />
             </div>
           </div>
-          {filterComponents && (
-            <div className="flex items-center gap-2">{filterComponents}</div>
-          )}
         </div>
         {headerButtonLink && (
           <InternalLink
@@ -197,7 +190,14 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
       <div className="mt-3"></div>
-      <DataTablePagination table={table} tableTestId={'tbl'} />
+      {data && (
+        <DataTablePagination
+          tablePage={data}
+          setPageIndex={(page) => setPageIndex(page)}
+          setPageSize={(pageSize) => setPageSize(pageSize)}
+          tableTestId={'tbl'}
+        />
+      )}
     </div>
   );
 }

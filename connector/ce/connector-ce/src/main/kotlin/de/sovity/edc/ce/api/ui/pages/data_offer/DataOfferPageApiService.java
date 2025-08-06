@@ -104,7 +104,7 @@ public class DataOfferPageApiService {
             alwaysTruePolicyDefinitionService.create();
         }
 
-        assetApiService.createAsset(dataOfferCreateRequest.getAsset());
+        assetApiService.createAsset(dsl, dataOfferCreateRequest.getAsset());
 
         return createContractDefinition(assetId, policyId, contractDefinitionId);
     }
@@ -122,7 +122,7 @@ public class DataOfferPageApiService {
         checkPolicyIdAvailable(dsl, policyId);
         checkContractDefinitionIdAvailable(dsl, contractDefinitionId);
 
-        assetApiService.createAsset(dataOfferCreateRequest.getAsset());
+        assetApiService.createAsset(dsl, dataOfferCreateRequest.getAsset());
 
         val policyExpression = Optional.ofNullable(dataOfferCreateRequest.getPolicyExpression())
             .orElseThrow(() -> new InvalidRequestException("Missing policy expression"));
@@ -139,7 +139,7 @@ public class DataOfferPageApiService {
         String commonId
     ) {
         checkAssetIdAvailable(dsl, commonId);
-        return assetApiService.createAsset(dataOfferCreateRequest.getAsset());
+        return assetApiService.createAsset(dsl, dataOfferCreateRequest.getAsset());
     }
 
     private void checkContractDefinitionIdAvailable(DSLContext dsl, String commonId) {

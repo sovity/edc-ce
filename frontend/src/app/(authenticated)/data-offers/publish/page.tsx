@@ -20,12 +20,9 @@ import {useTranslations} from 'next-intl';
 import PageContainer from '@/components/page-container';
 
 const PublishDataOfferPage = () => {
-  const pageQuery = useQueryWrapper(queryKeys.dataOffers.publish(), () => {
-    return Promise.all([
-      api.uiApi.getAssetPage(),
-      api.uiApi.getPolicyDefinitionPage(),
-    ]);
-  });
+  const pageQuery = useQueryWrapper(queryKeys.dataOffers.publish(), () =>
+    api.uiApi.getPolicyDefinitionPage(),
+  );
 
   const t = useTranslations();
   useTitle(t('Pages.PublishDataOffer.title'));
@@ -39,13 +36,10 @@ const PublishDataOfferPage = () => {
   return matchQueryState({
     query: pageQuery,
     loading: () => <CenteredLoadingSpinner />,
-    success: ([assets, policies]) => {
+    success: ({policies}) => {
       return (
         <PageContainer>
-          <PublishDataOfferForm
-            assets={assets.assets ?? []}
-            policies={policies.policies ?? []}
-          />
+          <PublishDataOfferForm policies={policies ?? []} />
         </PageContainer>
       );
     },

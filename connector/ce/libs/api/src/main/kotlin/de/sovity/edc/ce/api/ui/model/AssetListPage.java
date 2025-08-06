@@ -21,22 +21,19 @@
 package de.sovity.edc.ce.api.ui.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import de.sovity.edc.ce.api.common.model.TablePage;
 import de.sovity.edc.ce.api.common.model.UiAsset;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
-
-import java.util.List;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
-@AllArgsConstructor
-@RequiredArgsConstructor
-@Builder(toBuilder = true)
+@SuperBuilder
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "All data for the Asset Page")
-public class AssetPage {
-    @Schema(description = "Visible Assets", requiredMode = Schema.RequiredMode.REQUIRED)
-    private List<UiAsset> assets;
+public class AssetListPage extends TablePage<UiAsset> {
 }

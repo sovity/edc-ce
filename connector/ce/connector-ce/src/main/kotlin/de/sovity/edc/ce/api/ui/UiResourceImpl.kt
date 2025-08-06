@@ -7,12 +7,13 @@
  */
 package de.sovity.edc.ce.api.ui
 
+import de.sovity.edc.ce.api.common.model.AssetListPageFilter
 import de.sovity.edc.ce.api.common.model.BuildInfo
 import de.sovity.edc.ce.api.common.model.UiAsset
 import de.sovity.edc.ce.api.common.model.UiAssetCreateRequest
 import de.sovity.edc.ce.api.common.model.UiAssetEditRequest
 import de.sovity.edc.ce.api.common.model.UiInitiateTransferRequest
-import de.sovity.edc.ce.api.ui.model.AssetPage
+import de.sovity.edc.ce.api.ui.model.AssetListPage
 import de.sovity.edc.ce.api.ui.model.BusinessPartnerGroupCreateSubmit
 import de.sovity.edc.ce.api.ui.model.BusinessPartnerGroupEditSubmit
 import de.sovity.edc.ce.api.ui.model.BusinessPartnerGroupQuery
@@ -87,31 +88,36 @@ class UiResourceImpl(
             dashboardPageApiService.dashboardPage(it)
         }
 
-    override fun getAssetPage(): AssetPage =
-        dslContextFactory.transactionResult {
-            AssetPage(
-                assetApiService.assets
-            )
+    override fun assetListPage(assetListPageFilter: AssetListPageFilter): AssetListPage =
+        dslContextFactory.transactionResult { dsl ->
+            assetApiService.assetListPage(dsl, assetListPageFilter)
+        }
+
+    override fun assetDetailsPage(assetId: String): UiAsset =
+        dslContextFactory.transactionResult { dsl ->
+            assetApiService.assetDetailsPage(dsl, assetId)
         }
 
     override fun createAsset(uiAssetCreateRequest: UiAssetCreateRequest): IdResponseDto =
-        dslContextFactory.transactionResult {
+        dslContextFactory.transactionResult { dsl ->
             assetApiService.createAsset(
+                dsl,
                 uiAssetCreateRequest
             )
         }
 
     override fun editAsset(assetId: String, uiAssetEditRequest: UiAssetEditRequest): IdResponseDto =
-        dslContextFactory.transactionResult {
+        dslContextFactory.transactionResult { dsl ->
             assetApiService.editAsset(
+                dsl,
                 assetId,
                 uiAssetEditRequest
             )
         }
 
     override fun deleteAsset(assetId: String): IdResponseDto =
-        dslContextFactory.transactionResult {
-            assetApiService.deleteAsset(assetId)
+        dslContextFactory.transactionResult { dsl ->
+            assetApiService.deleteAsset(dsl, assetId)
         }
 
     override fun createVaultSecret(submitRequest: VaultSecretCreateSubmit) =
@@ -149,9 +155,9 @@ class UiResourceImpl(
             businessPartnerGroupApiService.listPage(dsl, businessPartnerGroupQuery)
         }
 
-    override fun businessPartnerGroupEditPage(id: String) =
+    override fun businessPartnerGroupEditPage(groupId: String) =
         dslContextFactory.transactionResult { dsl ->
-            businessPartnerGroupApiService.editPage(dsl, id)
+            businessPartnerGroupApiService.editPage(dsl, groupId)
         }
 
     override fun businessPartnerGroupEditSubmit(
@@ -243,15 +249,15 @@ class UiResourceImpl(
         }
 
     override fun getCatalogPageDataOffer(
+        dataOfferId: String,
         participantId: String,
-        connectorEndpoint: String,
-        assetId: String
+        connectorEndpoint: String
     ): UiDataOffer =
         dslContextFactory.transactionResult {
             catalogApiService.fetchDataOffer(
-                participantId,
-                connectorEndpoint,
-                assetId
+                dataOfferId = dataOfferId,
+                participantId = participantId,
+                connectorEndpoint = connectorEndpoint,
             )
         }
 
@@ -327,18 +333,16 @@ class UiResourceImpl(
     }
 
     override fun getTransferHistoryPage(): TransferHistoryPage {
-        return dslContextFactory.transactionResult {
+        return dslContextFactory.transactionResult { dsl ->
             TransferHistoryPage(
-                transferHistoryPageApiService.getTransferHistoryEntries()
+                transferHistoryPageApiService.getTransferHistoryEntries(dsl)
             )
         }
     }
 
     override fun getTransferProcessAsset(transferProcessId: String): UiAsset {
-        return dslContextFactory.transactionResult {
-            transferHistoryPageAssetFetcherService.getAssetForTransferHistoryPage(
-                transferProcessId
-            )
+        return dslContextFactory.transactionResult { dsl ->
+            transferHistoryPageAssetFetcherService.getAssetForTransferHistoryPage(dsl, transferProcessId)
         }
     }
 

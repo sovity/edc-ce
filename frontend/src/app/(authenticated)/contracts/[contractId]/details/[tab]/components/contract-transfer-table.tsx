@@ -7,7 +7,7 @@
  */
 'use client';
 
-import {DataTable} from '@/components/data-table';
+import {ClientsideDataTable} from '@/components/clientside-data-table';
 import type {ContractAgreementTransferProcess} from '@/lib/api/client/generated';
 import {buildWordFilter} from '@/lib/utils/build-word-filter';
 import {useContractTransferTableColumns} from './contract-transfer-table-columns';
@@ -26,7 +26,7 @@ const wordFilter = buildWordFilter((row) => {
 
 const ContractTransferTable = ({data}: ContractTransferHistoryTableProps) => {
   return (
-    <DataTable
+    <ClientsideDataTable
       columns={useContractTransferTableColumns()}
       data={data}
       wordFilter={wordFilter}

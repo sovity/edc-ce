@@ -58,12 +58,5 @@ export const useAssetTableColumns = (): ColumnType => {
         return <AssetActionMenu asset={row.original} />;
       },
     },
-    // invisible columns
-    {
-      accessorKey: 'dataSourceAvailability',
-    },
-    {
-      accessorKey: 'assetId',
-    },
   ];
 };

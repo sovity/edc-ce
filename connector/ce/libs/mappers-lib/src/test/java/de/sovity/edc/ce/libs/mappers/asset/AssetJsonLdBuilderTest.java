@@ -37,7 +37,6 @@ import de.sovity.edc.ce.api.common.model.UiHttpOauth2SharedSecretAuthorization;
 import de.sovity.edc.ce.libs.mappers.Factory;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.Json;
-import jakarta.json.JsonObject;
 import jakarta.json.JsonObjectBuilder;
 import org.eclipse.edc.iam.oauth2.spi.Oauth2DataAddressSchema;
 import org.junit.jupiter.api.BeforeEach;
@@ -73,10 +72,10 @@ class AssetJsonLdBuilderTest {
         var expectedProperties = Json.createObjectBuilder();
 
         // act
-        var actual = assetJsonLdBuilder.createAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
+        var actual = assetJsonLdBuilder.buildCreateAssetJsonLds(uiAssetCreateRequest, ORG_NAME);
 
         // assert
-        assertEqualJson(actual, dummyAssetJsonLd(expectedProperties));
+        assertCreateAssetJsonLdsEquals(actual, dummyBuildCreateAssetJsonLds(expectedProperties));
     }
 
     @Test
@@ -91,10 +90,10 @@ class AssetJsonLdBuilderTest {
         var expectedProperties = Json.createObjectBuilder();
 
         // act
-        var actual = assetJsonLdBuilder.createAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
+        var actual = assetJsonLdBuilder.buildCreateAssetJsonLds(uiAssetCreateRequest, ORG_NAME);
 
         // assert
-        assertEqualJson(actual, dummyAssetJsonLd(expectedProperties));
+        assertCreateAssetJsonLdsEquals(actual, dummyBuildCreateAssetJsonLds(expectedProperties));
     }
 
     @Test
@@ -109,10 +108,10 @@ class AssetJsonLdBuilderTest {
         var expectedProperties = Json.createObjectBuilder();
 
         // act
-        var actual = assetJsonLdBuilder.createAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
+        var actual = assetJsonLdBuilder.buildCreateAssetJsonLds(uiAssetCreateRequest, ORG_NAME);
 
         // assert
-        assertEqualJson(actual, dummyAssetJsonLd(expectedProperties));
+        assertCreateAssetJsonLdsEquals(actual, dummyBuildCreateAssetJsonLds(expectedProperties));
     }
 
     // The following functions test paths of buildDistribution
@@ -130,10 +129,10 @@ class AssetJsonLdBuilderTest {
                 .add(Prop.Dcat.MEDIATYPE, "B"));
 
         // act
-        var actual = assetJsonLdBuilder.createAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
+        var actual = assetJsonLdBuilder.buildCreateAssetJsonLds(uiAssetCreateRequest, ORG_NAME);
 
         // assert
-        assertEqualJson(actual, dummyAssetJsonLd(expectedProperties));
+        assertCreateAssetJsonLdsEquals(actual, dummyBuildCreateAssetJsonLds(expectedProperties));
     }
 
     @Test
@@ -151,10 +150,10 @@ class AssetJsonLdBuilderTest {
                     .add(Prop.Rdfs.LABEL, "B")));
 
         // act
-        var actual = assetJsonLdBuilder.createAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
+        var actual = assetJsonLdBuilder.buildCreateAssetJsonLds(uiAssetCreateRequest, ORG_NAME);
 
         // assert
-        assertEqualJson(actual, dummyAssetJsonLd(expectedProperties));
+        assertCreateAssetJsonLdsEquals(actual, dummyBuildCreateAssetJsonLds(expectedProperties));
     }
 
     @Test
@@ -172,10 +171,10 @@ class AssetJsonLdBuilderTest {
                     .add(Prop.ID, "B")));
 
         // act
-        var actual = assetJsonLdBuilder.createAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
+        var actual = assetJsonLdBuilder.buildCreateAssetJsonLds(uiAssetCreateRequest, ORG_NAME);
 
         // assert
-        assertEqualJson(actual, dummyAssetJsonLd(expectedProperties));
+        assertCreateAssetJsonLdsEquals(actual, dummyBuildCreateAssetJsonLds(expectedProperties));
     }
 
     @Test
@@ -194,10 +193,10 @@ class AssetJsonLdBuilderTest {
                         .add(Prop.Rdfs.LITERAL, "B"))));
 
         // act
-        var actual = assetJsonLdBuilder.createAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
+        var actual = assetJsonLdBuilder.buildCreateAssetJsonLds(uiAssetCreateRequest, ORG_NAME);
 
         // assert
-        assertEqualJson(actual, dummyAssetJsonLd(expectedProperties));
+        assertCreateAssetJsonLdsEquals(actual, dummyBuildCreateAssetJsonLds(expectedProperties));
     }
 
     @Test
@@ -209,13 +208,13 @@ class AssetJsonLdBuilderTest {
             .dataModel(null)
             .build();
 
-        var expected = dummyAssetJsonLd(Json.createObjectBuilder());
+        var expected = dummyBuildCreateAssetJsonLds(Json.createObjectBuilder());
 
         // act
-        var actual = assetJsonLdBuilder.createAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
+        var actual = assetJsonLdBuilder.buildCreateAssetJsonLds(uiAssetCreateRequest, ORG_NAME);
 
         // assert
-        assertEqualJson(actual, expected);
+        assertCreateAssetJsonLdsEquals(actual, expected);
     }
 
     @Test
@@ -227,13 +226,13 @@ class AssetJsonLdBuilderTest {
             .dataModel(" ")
             .build();
 
-        var expected = dummyAssetJsonLd(Json.createObjectBuilder());
+        var expected = dummyBuildCreateAssetJsonLds(Json.createObjectBuilder());
 
         // act
-        var actual = assetJsonLdBuilder.createAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
+        var actual = assetJsonLdBuilder.buildCreateAssetJsonLds(uiAssetCreateRequest, ORG_NAME);
 
         // assert
-        assertEqualJson(actual, expected);
+        assertCreateAssetJsonLdsEquals(actual, expected);
     }
 
     @Test
@@ -253,10 +252,10 @@ class AssetJsonLdBuilderTest {
                         .add(Prop.Rdfs.LITERAL, "test"))));
 
         // act
-        var actual = assetJsonLdBuilder.createAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
+        var actual = assetJsonLdBuilder.buildCreateAssetJsonLds(uiAssetCreateRequest, ORG_NAME);
 
         // assert
-        assertEqualJson(actual, dummyAssetJsonLd(expectedProperties));
+        assertCreateAssetJsonLdsEquals(actual, dummyBuildCreateAssetJsonLds(expectedProperties));
     }
 
     @Test
@@ -276,10 +275,10 @@ class AssetJsonLdBuilderTest {
                         .add(Prop.Dcat.DOWNLOAD_URL, Json.createArrayBuilder().add("http://test")))));
 
         // act
-        var actual = assetJsonLdBuilder.createAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
+        var actual = assetJsonLdBuilder.buildCreateAssetJsonLds(uiAssetCreateRequest, ORG_NAME);
 
         // assert
-        assertEqualJson(actual, dummyAssetJsonLd(expectedProperties));
+        assertCreateAssetJsonLdsEquals(actual, dummyBuildCreateAssetJsonLds(expectedProperties));
     }
 
     @Test
@@ -312,10 +311,10 @@ class AssetJsonLdBuilderTest {
         var expectedProperties = dummyAssetCommonProperties();
 
         // act
-        var actual = assetJsonLdBuilder.createAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
+        var actual = assetJsonLdBuilder.buildCreateAssetJsonLds(uiAssetCreateRequest, ORG_NAME);
 
         // assert
-        assertEqualJson(actual, dummyAssetJsonLd(dataAddress, expectedProperties));
+        assertCreateAssetJsonLdsEquals(actual, dummyBuildCreateAssetJsonLds(dataAddress, expectedProperties));
     }
 
     @Test
@@ -344,10 +343,10 @@ class AssetJsonLdBuilderTest {
             .add(Prop.SovityDcatExt.HttpDatasourceHints.METHOD, "true");
 
         // act
-        var actual = assetJsonLdBuilder.createAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
+        var actual = assetJsonLdBuilder.buildCreateAssetJsonLds(uiAssetCreateRequest, ORG_NAME);
 
         // assert
-        assertEqualJson(actual, dummyAssetJsonLd(dataAddress, expectedProperties));
+        assertCreateAssetJsonLdsEquals(actual, dummyBuildCreateAssetJsonLds(dataAddress, expectedProperties));
     }
 
     @Test
@@ -376,10 +375,10 @@ class AssetJsonLdBuilderTest {
             .add(Prop.SovityDcatExt.HttpDatasourceHints.PATH, "true");
 
         // act
-        var actual = assetJsonLdBuilder.createAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
+        var actual = assetJsonLdBuilder.buildCreateAssetJsonLds(uiAssetCreateRequest, ORG_NAME);
 
         // assert
-        assertEqualJson(actual, dummyAssetJsonLd(dataAddress, expectedProperties));
+        assertCreateAssetJsonLdsEquals(actual, dummyBuildCreateAssetJsonLds(dataAddress, expectedProperties));
     }
 
     @Test
@@ -408,10 +407,10 @@ class AssetJsonLdBuilderTest {
             .add(Prop.SovityDcatExt.HttpDatasourceHints.QUERY_PARAMS, "true");
 
         // act
-        var actual = assetJsonLdBuilder.createAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
+        var actual = assetJsonLdBuilder.buildCreateAssetJsonLds(uiAssetCreateRequest, ORG_NAME);
 
         // assert
-        assertEqualJson(actual, dummyAssetJsonLd(dataAddress, expectedProperties));
+        assertCreateAssetJsonLdsEquals(actual, dummyBuildCreateAssetJsonLds(dataAddress, expectedProperties));
     }
 
     @Test
@@ -440,10 +439,10 @@ class AssetJsonLdBuilderTest {
             .add(Prop.SovityDcatExt.HttpDatasourceHints.BODY, "true");
 
         // act
-        var actual = assetJsonLdBuilder.createAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
+        var actual = assetJsonLdBuilder.buildCreateAssetJsonLds(uiAssetCreateRequest, ORG_NAME);
 
         // assert
-        assertEqualJson(actual, dummyAssetJsonLd(dataAddress, expectedProperties));
+        assertCreateAssetJsonLdsEquals(actual, dummyBuildCreateAssetJsonLds(dataAddress, expectedProperties));
     }
 
     @Test
@@ -478,10 +477,10 @@ class AssetJsonLdBuilderTest {
         var expectedProperties = dummyAssetCommonProperties();
 
         // act
-        var actual = assetJsonLdBuilder.createAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
+        var actual = assetJsonLdBuilder.buildCreateAssetJsonLds(uiAssetCreateRequest, ORG_NAME);
 
         // assert
-        assertEqualJson(actual, dummyAssetJsonLd(dataAddress, expectedProperties));
+        assertCreateAssetJsonLdsEquals(actual, dummyBuildCreateAssetJsonLds(dataAddress, expectedProperties));
     }
 
     @Test
@@ -516,10 +515,10 @@ class AssetJsonLdBuilderTest {
         var expectedProperties = dummyAssetCommonProperties();
 
         // act
-        var actual = assetJsonLdBuilder.createAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
+        var actual = assetJsonLdBuilder.buildCreateAssetJsonLds(uiAssetCreateRequest, ORG_NAME);
 
         // assert
-        assertEqualJson(actual, dummyAssetJsonLd(dataAddress, expectedProperties));
+        assertCreateAssetJsonLdsEquals(actual, dummyBuildCreateAssetJsonLds(dataAddress, expectedProperties));
     }
 
     @Test
@@ -569,10 +568,10 @@ class AssetJsonLdBuilderTest {
         var expectedProperties = dummyAssetCommonProperties();
 
         // act
-        var actual = assetJsonLdBuilder.createAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
+        var actual = assetJsonLdBuilder.buildCreateAssetJsonLds(uiAssetCreateRequest, ORG_NAME);
 
         // assert
-        assertEqualJson(actual, dummyAssetJsonLd(dataAddress, expectedProperties));
+        assertCreateAssetJsonLdsEquals(actual, dummyBuildCreateAssetJsonLds(dataAddress, expectedProperties));
     }
 
     @Test
@@ -614,10 +613,10 @@ class AssetJsonLdBuilderTest {
         var expectedProperties = dummyAssetCommonProperties();
 
         // act
-        var actual = assetJsonLdBuilder.createAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
+        var actual = assetJsonLdBuilder.buildCreateAssetJsonLds(uiAssetCreateRequest, ORG_NAME);
 
         // assert
-        assertEqualJson(actual, dummyAssetJsonLd(dataAddress, expectedProperties));
+        assertCreateAssetJsonLdsEquals(actual, dummyBuildCreateAssetJsonLds(dataAddress, expectedProperties));
     }
 
     @Test
@@ -654,31 +653,28 @@ class AssetJsonLdBuilderTest {
             .remove(Prop.SovityDcatExt.HttpDatasourceHints.BODY);
 
         // act
-        var actual = assetJsonLdBuilder.createAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
+        var actual = assetJsonLdBuilder.buildCreateAssetJsonLds(uiAssetCreateRequest, ORG_NAME);
 
         // assert
-        assertEqualJson(actual, dummyAssetJsonLd(dataAddress, expectedProperties));
+        assertCreateAssetJsonLdsEquals(actual, dummyBuildCreateAssetJsonLds(dataAddress, expectedProperties));
     }
 
-    private JsonObject dummyAssetJsonLd(
+    private AssetJsonLdBuilder.CreateAssetJsonLds dummyBuildCreateAssetJsonLds(
         JsonObjectBuilder dataAddress,
         JsonObjectBuilder properties
     ) {
-        return Json.createObjectBuilder()
-            .add(Prop.TYPE, Prop.Edc.TYPE_ASSET)
-            .add(Prop.ID, ASSET_ID)
-            .add(Prop.Edc.DATA_ADDRESS, dataAddress)
-            .add(Prop.Edc.PROPERTIES, properties)
-            .add(Prop.Edc.PRIVATE_PROPERTIES, Json.createObjectBuilder())
-            .build();
+        return AssetJsonLdBuilder.CreateAssetJsonLds.builder()
+            .properties(properties.build())
+            .dataSource(dataAddress.build())
+            .privateProperties(Json.createObjectBuilder().build()).build();
     }
 
-    private JsonObject dummyAssetJsonLd(
+    private AssetJsonLdBuilder.CreateAssetJsonLds dummyBuildCreateAssetJsonLds(
         JsonObjectBuilder properties
     ) {
         var dataAddress = dummyDataAddressJsonLd();
         properties = properties.addAll(dummyAssetCommonProperties());
-        return dummyAssetJsonLd(dataAddress, properties);
+        return dummyBuildCreateAssetJsonLds(dataAddress, properties);
     }
 
     private JsonObjectBuilder dummyAssetCommonProperties() {
@@ -706,5 +702,11 @@ class AssetJsonLdBuilderTest {
             .add(Prop.TYPE, Prop.Edc.TYPE_DATA_ADDRESS)
             .add(Prop.Edc.TYPE, Prop.Edc.DATA_ADDRESS_TYPE_HTTP_DATA)
             .add(Prop.Edc.BASE_URL, "https://example.com");
+    }
+
+    private void assertCreateAssetJsonLdsEquals(AssetJsonLdBuilder.CreateAssetJsonLds actual, AssetJsonLdBuilder.CreateAssetJsonLds expected) {
+        assertEqualJson(actual.getDataSource(), expected.getDataSource());
+        assertEqualJson(actual.getProperties(), expected.getProperties());
+        assertEqualJson(actual.getPrivateProperties(), expected.getPrivateProperties());
     }
 }

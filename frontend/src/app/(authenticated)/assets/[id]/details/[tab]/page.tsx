@@ -15,8 +15,6 @@ import {useQueryWrapper} from '@/lib/hooks/use-query-wrapper';
 import {useTitle} from '@/lib/hooks/use-title';
 import {matchQueryState} from '@/lib/utils/match-query-state';
 import {queryKeys} from '@/lib/queryKeys';
-import {throwIfNull} from '@/lib/utils/throw-utils';
-import {useTranslations} from 'next-intl';
 import AssetDetailPageContent from './components/asset-detail-page-content';
 import PageContainer from '@/components/page-container';
 
@@ -26,13 +24,11 @@ export default function AssetDetailsPage({
   params: {id: string; tab: string};
 }) {
   const {id, tab} = params;
-  const t = useTranslations();
 
   const pageQuery = useQueryWrapper(queryKeys.assets.detailsPage(id), () =>
-    api.uiApi
-      .getAssetPage()
-      .then((data) => data.assets?.find((asset) => asset.assetId === id))
-      .then((asset) => throwIfNull(asset, t('Pages.AssetDetails.notFound'))),
+    api.uiApi.assetDetailsPage({
+      assetId: id,
+    }),
   );
 
   useTitle(pageQuery.data?.title ?? id);

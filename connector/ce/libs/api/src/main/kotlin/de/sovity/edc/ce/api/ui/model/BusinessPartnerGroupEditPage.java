@@ -25,12 +25,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
-@Builder(toBuilder = true)
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "Business Partner Group Edit Page")
 public class BusinessPartnerGroupEditPage {

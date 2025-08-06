@@ -31,7 +31,7 @@ interface AsyncComboboxField<
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > {
   multiselect?: boolean;
-  control: Control<TFieldValues>;
+  control: Control<any>;
   name: TName;
   label: string;
   disabled?: boolean;
@@ -133,9 +133,10 @@ export function AsyncComboboxField<
                   dataTestId="async-combobox-field-trigger"
                   variant="outline"
                   role="combobox"
-                  className="justify-between"
+                  className="justify-between overflow-hidden"
                   disabled={disabled}>
-                  {field.value
+                  {(multiselect && multiselectValue.length > 0) ||
+                  (!multiselect && singleValue)
                     ? multiselect
                       ? multiselectValue.join(', ')
                       : singleValue
