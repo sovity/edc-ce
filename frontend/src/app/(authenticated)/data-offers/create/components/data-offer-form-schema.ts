@@ -11,9 +11,12 @@ import {policyEditorFormSchema} from '@/components/policy-editor/editor/policy-e
 import {dataOfferTypeSchema} from '@/app/(authenticated)/data-offers/create/components/data-offer-type-schema';
 import {type DataOfferPublishType} from '@sovity.de/edc-client';
 import {z} from 'zod';
+import {allowedIdRegex, invalidIdError} from '@/lib/utils/id-utils';
 
 const dataOfferBasicFieldsSchema = z.object({
-  assetId: z.string().min(1).max(128),
+  assetId: z.string().min(1).max(128).regex(allowedIdRegex, {
+    message: invalidIdError,
+  }),
   title: z.string().min(1).max(128),
   description: z.string().optional(),
   keywords: z.array(z.string()).optional(),

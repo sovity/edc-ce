@@ -499,7 +499,7 @@ export class UIApi extends runtime.BaseAPI {
 
         const response = await this.request({
             path: `/wrapper/ui/pages/business-partner-groups/list-page`,
-            method: 'GET',
+            method: 'POST',
             headers: headerParameters,
             query: queryParameters,
             body: BusinessPartnerGroupQueryToJSON(requestParameters['businessPartnerGroupQuery']),
@@ -1502,7 +1502,7 @@ export class UIApi extends runtime.BaseAPI {
 
         const response = await this.request({
             path: `/wrapper/ui/pages/vault-secrets/list-page`,
-            method: 'GET',
+            method: 'POST',
             headers: headerParameters,
             query: queryParameters,
             body: VaultSecretQueryToJSON(requestParameters['vaultSecretQuery']),

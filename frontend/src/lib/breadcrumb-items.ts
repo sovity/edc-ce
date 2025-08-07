@@ -39,6 +39,10 @@ export const useBreadcrumbItems = () => {
         label: t('General.vaultSecrets'),
         href: urls.vaultSecrets.listPage(),
       }),
+      createPage: () => ({
+        label: t('General.create'),
+        href: urls.vaultSecrets.createPage(),
+      }),
       detailPage: (key: string) => ({
         label: key,
       }),

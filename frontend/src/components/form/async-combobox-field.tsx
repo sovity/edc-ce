@@ -15,7 +15,13 @@ import type {
 } from 'react-hook-form';
 import {useQuery} from '@tanstack/react-query';
 import {type ReactNode, useState} from 'react';
-import {Command, CommandInput, CommandItem, CommandList} from '../ui/command';
+import {
+  Command,
+  CommandEmpty,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '../ui/command';
 import {Popover, PopoverContent, PopoverTrigger} from '../ui/popover';
 import {Button} from '../ui/button';
 import {Check, ChevronsUpDown, PlusIcon} from 'lucide-react';
@@ -144,9 +150,7 @@ export function AsyncComboboxField<
                   <ChevronsUpDown className="opacity-50" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent
-                side="bottom"
-                className="side w-[--radix-popover-trigger-width] p-0">
+              <PopoverContent className="side w-[--radix-popover-trigger-width] p-0">
                 <Command shouldFilter={false}>
                   <CommandInput
                     value={searchQuery}
@@ -157,7 +161,9 @@ export function AsyncComboboxField<
                     {createDescription &&
                       renderCreateDialog &&
                       !hasExactMatch &&
-                      searchQuery && (
+                      searchQuery &&
+                      !isLoading &&
+                      !isError && (
                         <CommandItem
                           onSelect={() => onCreateVaultSecretClick(field)}>
                           <PlusIcon className="ml-auto" />
@@ -172,14 +178,18 @@ export function AsyncComboboxField<
                         </CommandItem>
                       )}
                     {isLoading && (
-                      <div className="py-6 text-center text-sm">
-                        {t('General.searching')}
-                      </div>
+                      <CommandItem className="p-0">
+                        <div className="w-full py-6 text-center text-sm">
+                          {t('General.searching')}
+                        </div>
+                      </CommandItem>
                     )}
                     {isError && (
-                      <div className="py-6 text-center text-sm">
-                        {t('General.somethingWentWrong')}
-                      </div>
+                      <CommandItem className="p-0">
+                        <div className="w-full py-6 text-center text-sm">
+                          {t('General.somethingWentWrong')}
+                        </div>
+                      </CommandItem>
                     )}
                     {data?.map((item) => (
                       <CommandItem
@@ -204,6 +214,7 @@ export function AsyncComboboxField<
                         </div>
                       </CommandItem>
                     ))}
+                    <CommandEmpty>{t('General.noItemsFound')}</CommandEmpty>
                   </CommandList>
                 </Command>
               </PopoverContent>

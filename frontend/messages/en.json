@@ -125,7 +125,6 @@
   "General.customTransferType": "Custom Transfer Type",
   "General.dataModel": "Data Model",
   "General.dataOffer": "Data Offer",
-  "General.dataOfferIdValidationWhitespacesColons": "Data Offer ID cannot contain whitespaces or colons.",
   "General.dataOfferPage": "Data Offer Page",
   "General.dataSamples": "Data Samples",
   "General.dataUpdateFrequency": "Data Update Frequency",

@@ -34,7 +34,10 @@ export const EditBusinessPartnerGroupForm = ({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10">
-        <BusinessPartnerGroupFormFields control={form.control} />
+        <BusinessPartnerGroupFormFields
+          control={form.control}
+          groupId={data.groupId}
+        />
 
         <div className="flex justify-end">
           <Button

@@ -141,7 +141,7 @@ interface UiResource {
     @Operation(description = "Edit an existing vault secret")
     IdResponseDto editVaultSecret(@PathParam("key") String key, VaultSecretEditSubmit submitRequest);
 
-    @GET
+    @POST
     @Path("pages/vault-secrets/list-page")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -150,7 +150,7 @@ interface UiResource {
         @Nullable VaultSecretQuery vaultSecretQuery
     );
 
-    @GET
+    @POST
     @Path("pages/business-partner-groups/list-page")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)

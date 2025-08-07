@@ -234,7 +234,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/IdResponseDto'
   /wrapper/ui/pages/business-partner-groups/list-page:
-    get:
+    post:
       tags:
       - UI
       description: Collect all data for the Business Partner Groups List Page
@@ -800,7 +800,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/IdAvailabilityResponse'
   /wrapper/ui/pages/vault-secrets/list-page:
-    get:
+    post:
       tags:
       - UI
       description: Collect all data for the Vault Secrets List Page

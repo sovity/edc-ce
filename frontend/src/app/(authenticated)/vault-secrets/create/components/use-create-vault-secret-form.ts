@@ -7,12 +7,15 @@
  */
 'use client';
 
+import {allowedIdRegex, invalidIdError} from '@/lib/utils/id-utils';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {useForm} from 'react-hook-form';
 import {z} from 'zod';
 
 export const createVaultSecretFormSchema = z.object({
-  key: z.string().min(1),
+  key: z.string().min(1).regex(allowedIdRegex, {
+    message: invalidIdError,
+  }),
   value: z.string().min(1),
   description: z.string().min(1),
 });
@@ -23,7 +26,9 @@ export const useCreateVaultSecretForm = (key?: string) => {
   const form = useForm<CreateVaultSecretForm>({
     mode: 'all',
     resolver: zodResolver(createVaultSecretFormSchema),
-    defaultValues: {key},
+    defaultValues: {
+      key,
+    },
   });
 
   return {
