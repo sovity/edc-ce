@@ -13,6 +13,7 @@ import {
   type CancellablePromise,
   useCancellablePromise,
 } from '@/lib/hooks/use-cancellable-promise';
+import {allowedIdRegex, invalidIdError} from '@/lib/utils/id-utils';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {useTranslations} from 'next-intl';
 import {useForm} from 'react-hook-form';
@@ -26,6 +27,9 @@ export const policyCreateForm = (
     policyDefinitionId: z
       .string()
       .min(1)
+      .regex(allowedIdRegex, {
+        message: invalidIdError,
+      })
       .refine(
         async (policyId) => {
           const {available} = await withCancellation(

@@ -53,6 +53,7 @@ const InputField = ({
   children,
   disabled,
   className,
+  value,
 }: TextFieldProps) => {
   return (
     <FormField
@@ -75,6 +76,7 @@ const InputField = ({
                 data-testid={`form-input-${name}`}
                 placeholder={placeholder}
                 {...field}
+                value={typeof field.value === 'string' ? field.value : value}
                 type={type ?? 'text'}
                 autoComplete={disableAutoComplete ? 'off' : undefined}
                 disabled={disabled}

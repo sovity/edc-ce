@@ -32,14 +32,14 @@ class AssetRs(
         private val a = Tables.EDC_ASSET
 
         private val idField = jsonField(a.PROPERTIES, Asset.PROPERTY_ID)
-        private val nameField = jsonField(a.PROPERTIES, Asset.PROPERTY_NAME)
+        private val titleField = jsonField(a.PROPERTIES, Prop.Dcterms.TITLE)
         private val descriptionField =
-            jsonField(a.PROPERTIES, Asset.PROPERTY_DESCRIPTION)
+            jsonField(a.PROPERTIES, Prop.Dcterms.DESCRIPTION)
         private val dataSourceAvailabilityField = jsonField(a.PROPERTIES, Prop.SovityDcatExt.DATA_SOURCE_AVAILABILITY)
 
         private val searchableFields = listOf(
             idField,
-            nameField,
+            titleField,
             descriptionField,
             dataSourceAvailabilityField
         )
@@ -50,7 +50,7 @@ class AssetRs(
                 searchableFields = searchableFields,
                 extractSortField = { name ->
                     when (name!!) {
-                        AssetListSortProperty.TITLE -> nameField
+                        AssetListSortProperty.TITLE -> titleField
                         AssetListSortProperty.DESCRIPTION_SHORT_TEXT -> descriptionField
                     }
                 },

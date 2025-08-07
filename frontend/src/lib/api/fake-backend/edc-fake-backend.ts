@@ -306,7 +306,7 @@ export const EDC_FAKE_BACKEND: FetchAPI = async (
     })
 
     .url('ui/pages/vault-secrets/list-page')
-    .on('GET', () => {
+    .on('POST', () => {
       const query =
         body !== undefined ? VaultSecretQueryFromJSON(body) : undefined;
       const response = listVaultSecretsPage(query);
@@ -341,7 +341,7 @@ export const EDC_FAKE_BACKEND: FetchAPI = async (
     })
 
     .url('ui/pages/business-partner-groups/list-page')
-    .on('GET', () => {
+    .on('POST', () => {
       const query =
         body !== undefined
           ? BusinessPartnerGroupQueryFromJSON(body)

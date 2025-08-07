@@ -18,10 +18,10 @@ import FormGroup from '@/components/form/form-group';
 export const BusinessPartnerGroupFormFields = <
   T extends CreateBusinessPartnerGroupForm | EditBusinessPartnerGroupForm,
 >({
-  createForm,
+  groupId,
   control,
 }: {
-  createForm?: boolean;
+  groupId?: string;
   control: Control<T>;
 }) => {
   const t = useTranslations();
@@ -33,12 +33,13 @@ export const BusinessPartnerGroupFormFields = <
           'Pages.BusinessPartnerGroupsForm.generalInformationSectionDescription',
         )}>
         <InputField
-          disabled={!createForm}
+          disabled={!!groupId}
           control={control}
           label={t('Pages.BusinessPartnerGroupsForm.groupId')}
           placeholder={'group-id'}
           name="groupId"
           isRequired
+          value={groupId}
         />
       </FormGroup>
       <FormGroup

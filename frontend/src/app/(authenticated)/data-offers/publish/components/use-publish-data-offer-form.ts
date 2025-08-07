@@ -15,6 +15,7 @@ import {
   type CancellablePromise,
   useCancellablePromise,
 } from '@/lib/hooks/use-cancellable-promise';
+import {allowedIdRegex, invalidIdError} from '@/lib/utils/id-utils';
 
 const publishDataOfferSchema = (
   t: TranslateFn,
@@ -25,8 +26,8 @@ const publishDataOfferSchema = (
       .string()
       .min(1)
       .max(128)
-      .regex(/^[^\s:]*$/, {
-        message: t('General.dataOfferIdValidationWhitespacesColons'),
+      .regex(allowedIdRegex, {
+        message: invalidIdError,
       })
       .refine(
         async (dataOfferId) => {

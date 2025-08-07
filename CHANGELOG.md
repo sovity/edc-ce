@@ -2,6 +2,30 @@
 
 The versions of the sovity EDC CE are aligned with the sovity EDC EE.
 
+## [v15.0.1] - 2025-08-07
+
+### Overview
+
+Patch release.
+
+#### Patch Changes
+
+- Only allow alphanumeric characters, underscores and hyphens in IDs
+- Fix vault listing and BPN listing in the UI
+- Fix sorting for the asset list page
+
+### Deployment Migration Notes
+
+_No special deployment migration steps required_
+
+#### Compatible Versions
+
+- EDC CE Backend: `ghcr.io/sovity/edc-ce:15.0.1`
+- EDC CE Frontend: `ghcr.io/sovity/edc-ce-ui:15.0.1`
+- PostgreSQL: `17`
+- Eclipse EDC Fork: [v0.11.1.2](https://github.com/sovity/core-edc/releases/tag/v0.11.1.2)
+- Tractus-X: `0.9.0`
+
 ## [v15.0.0] - 2025-08-05
 
 ### Overview

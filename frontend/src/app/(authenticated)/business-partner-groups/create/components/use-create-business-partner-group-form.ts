@@ -11,10 +11,13 @@ import {zodResolver} from '@hookform/resolvers/zod';
 import {useForm} from 'react-hook-form';
 import {z} from 'zod';
 import {editBusinessPartnerGroupFormSchema} from '../../[id]/edit/components/use-edit-business-partner-group-form';
+import {allowedIdRegex, invalidIdError} from '@/lib/utils/id-utils';
 
 export const createBusinessPartnerGroupFormSchema = z.intersection(
   z.object({
-    groupId: z.string().min(1, 'Group ID is required'),
+    groupId: z.string().min(1, 'Group ID is required').regex(allowedIdRegex, {
+      message: invalidIdError,
+    }),
   }),
   editBusinessPartnerGroupFormSchema,
 );

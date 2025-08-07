@@ -29,7 +29,7 @@ export const CreateBusinessPartnerGroupForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10">
-        <BusinessPartnerGroupFormFields createForm control={form.control} />
+        <BusinessPartnerGroupFormFields control={form.control} />
 
         <div className="flex justify-end">
           <Button

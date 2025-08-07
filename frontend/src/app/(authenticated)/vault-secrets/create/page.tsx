@@ -18,7 +18,10 @@ export default function VaultSecretCreatePage() {
   const t = useTranslations();
   useTitle(t('General.vaultSecrets'));
   const breadcrumbItems = useBreadcrumbItems();
-  useBreadcrumbs([breadcrumbItems.vaultSecrets.listPage()]);
+  useBreadcrumbs([
+    breadcrumbItems.vaultSecrets.listPage(),
+    breadcrumbItems.vaultSecrets.createPage(),
+  ]);
 
   return (
     <PageContainer>
