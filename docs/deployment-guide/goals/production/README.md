@@ -141,7 +141,7 @@ EDC_OAUTH_TOKEN_URL: 'https://daps.test.mobility-dataspace.eu/token'
 EDC_OAUTH_PROVIDER_JWKS_URL: 'https://daps.test.mobility-dataspace.eu/jwks.json'
 
 # DAPS Credentials
-EDC_OAUTH_CLIENT_ID: '_your SKI/AKI_'
+EDC_OAUTH_CLIENT_ID: 'MDSL1234XX.C1234XX'
 EDC_KEYSTORE: '_path to .jks file in container_'
 EDC_KEYSTORE_PASSWORD: '_your keystore password_'
 EDC_OAUTH_CERTIFICATE_ALIAS: 1
@@ -179,21 +179,15 @@ REMOTE_DEBUG_BIND: 127.0.0.1:5005 # default: 127.0.0.1:5005
 
 Example of a client-ID entry:
 
-`EDC_OAUTH_CLIENT_ID: 7X:7Y:...:B2:94:keyid:6A:2B:...:28:80`
+`EDC_OAUTH_CLIENT_ID: MDSL1234XX.C1234XX`
 
-### How do you get the SKI and AKI of a p12 and how do you convert it to a jks?
+### How do you convert the .p12 to a .jks?
 
-You can use a script (if you're on WSL or Linux) to generate the SKI, AKI and jks file.
+You can use the tool 'keytool' to convert the generated .p12 to a .jks file.
 
 1. Make sure you're on Linux or on a bash console (e.g. WSL or Git Bash) and have openssl and keytool installed
-2. Navigate in the console to the resources/docs directory
-3. Run the [script](./generate_ski_aki.sh) `./generate_ski_aki.sh [filepath].p12 [password]` and
-   substitute `[filepath]` to the p12 certificate
-   filepath and `[password]` to the certificate password
-4. The jks file will be generated in the same folder as your p12 file and the SKI/AKI combination is printed out in the
-   console.
-   Copy the SKI:AKI combination and use it to start the EDC (optionally also save it to your password manager).
-5. The generated `.jks` file needs to be mounted into your productive running container.
+2. keytool -importkeystore -srckeystore [filepath].p12 -srcstoretype pkcs12 -destkeystore [filepath].jks -deststoretype jks -deststorepass [password] -srcstorepass [password]
+3. The generated `.jks` file needs to be mounted into your productive running container.
 
 ### Can I run a connector locally and consume data from an online connector?
 
