@@ -12,7 +12,17 @@ import {type DataOfferLiveType} from '@/app/(authenticated)/data-offers/create/c
 import {jsonString} from '@/lib/utils/zod/schema-utils';
 import {useTranslations} from 'next-intl';
 import {type UseFormReturn} from 'react-hook-form';
+import {Button} from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle
+} from "@/components/ui/dialog";
 import {z} from 'zod';
+import {useEffect, useState} from "react";
+import AzureBlobSelector from "@/components/azure-blob-selector/azure-blob-selector";
 
 export const dataOfferLiveCustomSchema = z.object({
   offerLiveType: z.literal('CUSTOM_JSON' satisfies DataOfferLiveType),
@@ -32,6 +42,10 @@ export const DataOfferLiveCustomForm = ({
 }) => {
   const t = useTranslations();
 
+  const [isAzureOpen, setIsAzureOpen] = useState(false);
+  const [selectionAllowed, setSelectionAllowed] = useState(false);
+  const [azureDataAddress, setAzureDataAddress] = useState("");
+
   const fieldKey = (key: string): string =>
     formKeyDataOfferTypeLive === ''
       ? formKeyDataOfferTypeLive
@@ -40,6 +54,16 @@ export const DataOfferLiveCustomForm = ({
   const value = form.watch(
     formKeyDataOfferTypeLive,
   ) as DataOfferLiveCustomFormValue;
+
+  useEffect(() => {
+    console.log(`azureDataAddress: ${azureDataAddress}`);
+    if (azureDataAddress) {
+      form.setValue(fieldKey('dataAddressJson'), azureDataAddress);
+    }
+  }, [azureDataAddress]);
+
+  useEffect(() => {
+  }, [isAzureOpen]);
 
   return (
     value.offerLiveType === 'CUSTOM_JSON' && (
@@ -51,6 +75,28 @@ export const DataOfferLiveCustomForm = ({
           placeholder='{"https://w3id.org/edc/v0.0.1/ns/type": "HttpData", ...}'
           label={t('Pages.DataOfferCreate.dataSourceTypeCustom')}
         />
+        <Button
+          dataTestId={'btn-open-azure-blob-select'}
+          type="button"
+          onClick={() => setIsAzureOpen(true)}
+        >
+          Select Blob
+        </Button>
+        <Dialog open={isAzureOpen} onOpenChange={(open) => !open}>
+          <DialogContent className="w-auto">
+            <DialogHeader>
+              <DialogTitle>Select Blob</DialogTitle>
+              <DialogDescription>
+                <AzureBlobSelector
+                  setSelectionAllowed={setSelectionAllowed}
+                  setAzureDataAddress={setAzureDataAddress}
+                  selectionAllowed={selectionAllowed}
+                  setIsOpen={setIsAzureOpen}
+                />
+              </DialogDescription>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
       </>
     )
   );
