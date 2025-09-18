@@ -35,7 +35,8 @@ export const dashboardPage = (): DashboardPage => ({
   connectorEndpoint: 'https://edc.fake-backend/api/dsp',
   managementApiUrlShownInDashboard: 'https://edc.fake-backend/api/management',
   connectorCxDidConfig: {
-    myDid: 'your-did-long-number:1234567890:idk',
+    myDid:
+      'did:web:wallet-token.fake-backend:did:12345678-90ab-cdef-1234-567890abcdef',
     bdrsUrl: 'https://bdrs.fake-backend',
     dimUrl: 'https://dim.fake-backend',
     trustedVcIssuer: 'https://trusted-vc-issuer.fake-backend',

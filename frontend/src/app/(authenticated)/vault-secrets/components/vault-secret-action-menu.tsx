@@ -62,11 +62,14 @@ const VaultSecretActionMenu = ({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
         <DropdownMenuItem asChild>
-          <Link href={urls.vaultSecrets.editPage(vaultSecret.key)}>
+          <Link
+            data-testid="edit-vault-secret-link"
+            href={urls.vaultSecrets.editPage(vaultSecret.key)}>
             {t('General.edit')}
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem
+          data-testid="delete-vault-secret"
           onClick={(e) => {
             onDeleteVaultSecretClick();
             e.stopPropagation();

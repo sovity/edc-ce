@@ -142,7 +142,8 @@ const MultiSelectComboboxField = ({
                           <CommandItem
                             key={option.id}
                             value={option.id}
-                            onSelect={() => handleSelect(option.id, field)}>
+                            onSelect={() => handleSelect(option.id, field)}
+                            data-testid={`form-combobox-${name}-item-${option.id}`}>
                             <span className="flex-1">{option.label}</span>
                             {isSelected && (
                               <Check className="ml-2 h-4 w-4 text-primary" />

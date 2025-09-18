@@ -95,6 +95,18 @@ export interface UiConfig {
      * @memberof UiConfig
      */
     legalNoticeUrl?: string;
+    /**
+     * ICP Footer Link Text
+     * @type {string}
+     * @memberof UiConfig
+     */
+    icpFooterLinkText?: string;
+    /**
+     * ICP Footer Link URL
+     * @type {string}
+     * @memberof UiConfig
+     */
+    icpFooterLinkUrl?: string;
 }
 
 /**
@@ -123,6 +135,8 @@ export function UiConfigFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'supportUrl': json['supportUrl'] == null ? undefined : json['supportUrl'],
         'privacyPolicyUrl': json['privacyPolicyUrl'] == null ? undefined : json['privacyPolicyUrl'],
         'legalNoticeUrl': json['legalNoticeUrl'] == null ? undefined : json['legalNoticeUrl'],
+        'icpFooterLinkText': json['icpFooterLinkText'] == null ? undefined : json['icpFooterLinkText'],
+        'icpFooterLinkUrl': json['icpFooterLinkUrl'] == null ? undefined : json['icpFooterLinkUrl'],
     };
 }
 
@@ -144,6 +158,8 @@ export function UiConfigToJSONTyped(value?: UiConfig | null, ignoreDiscriminator
         'supportUrl': value['supportUrl'],
         'privacyPolicyUrl': value['privacyPolicyUrl'],
         'legalNoticeUrl': value['legalNoticeUrl'],
+        'icpFooterLinkText': value['icpFooterLinkText'],
+        'icpFooterLinkUrl': value['icpFooterLinkUrl'],
     };
 }
 

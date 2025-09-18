@@ -17,6 +17,7 @@ enum class CeDataspace(override val documentation: String) : DocumentedEnum {
     SOVITY_MOCK_IAM("Configures the connector with sovity dataspace features, but in demo mode, mocking all dataspace central component interaction and without Connector-to-Connector IAM"),
     SOVITY_DAPS("Configures the connector for use in sovity dataspaces that use the sovity DAPS"),
     SOVITY_DAPS_OMEJDN("Configures the connector for use in legacy self-hosted sovity dataspaces that use the now deprecated Omejdn DAPS"),
+    SPHIN_X("Configures the connector for use in Sphin-X."),
     CATENA_X("Configures the connector Catena-X compliant and Tractus-X compatible while further enhancing it with sovity features")
 }
 

@@ -7,83 +7,14 @@
  */
 package de.sovity.edc.ce
 
-import de.sovity.edc.ce.config.CeConfigProps
-import de.sovity.edc.ce.config.CeDataspace
-import de.sovity.edc.ce.modules.auth.ApiKeyAuthModule
-import de.sovity.edc.extension.e2e.junit.IntegrationTest2xCpDpExtension
-import de.sovity.edc.runtime.modules.RuntimeConfigProps
 import org.junit.jupiter.api.extension.RegisterExtension
-import java.util.UUID.randomUUID
 
 /**
  * This test is the CE because it is referenced from documentation
  */
 class ApiWrapperDemoTestIamMockCpDp : ApiWrapperDemoTestBase() {
     companion object {
-
         @RegisterExtension
-        val extension = IntegrationTest2xCpDpExtension(
-            rootModule = CeRootModule.ceRoot(),
-            providerControlPlaneConfig = mapOf(
-                RuntimeConfigProps.SOVITY_ENVIRONMENT to "UNIT_TEST",
-                CeConfigProps.SOVITY_DEPLOYMENT_KIND to CeControlPlaneModules.standalone().name,
-                RuntimeConfigProps.SOVITY_FIRST_PORT to "auto",
-                CeConfigProps.SOVITY_BASE_PATH to "/control",
-
-                // Mock IAM
-                CeConfigProps.SOVITY_DATASPACE_KIND to CeDataspace.SOVITY_MOCK_IAM.nameKebabCase,
-                CeConfigProps.EDC_PARTICIPANT_ID to "provider",
-
-                // Management API
-                CeConfigProps.SOVITY_MANAGEMENT_API_IAM_KIND to ApiKeyAuthModule.instance().name,
-                CeConfigProps.EDC_API_AUTH_KEY to randomUUID().toString(),
-            ),
-            providerDataPlaneConfig = { cpConfig, cpConfigUtils ->
-                mapOf(
-                    RuntimeConfigProps.SOVITY_ENVIRONMENT to "UNIT_TEST",
-                    CeConfigProps.SOVITY_DEPLOYMENT_KIND to CeDataPlaneModules.standalone().name,
-                    RuntimeConfigProps.SOVITY_FIRST_PORT to "auto",
-                    CeConfigProps.SOVITY_BASE_PATH to "/data",
-
-                    // Mock IAM
-                    CeConfigProps.SOVITY_DATASPACE_KIND to CeDataspace.SOVITY_MOCK_IAM.nameKebabCase,
-
-                    // Data Plane Registration
-                    CeConfigProps.SOVITY_INTERNAL_CP_FIRST_PORT to RuntimeConfigProps.SOVITY_FIRST_PORT
-                        .getStringOrThrow(cpConfig),
-                    CeConfigProps.SOVITY_INTERNAL_CP_BASE_PATH to "/control",
-                )
-            },
-            consumerControlPlaneConfig = mapOf(
-                RuntimeConfigProps.SOVITY_ENVIRONMENT to "UNIT_TEST",
-                CeConfigProps.SOVITY_DEPLOYMENT_KIND to CeControlPlaneModules.standalone().name,
-                RuntimeConfigProps.SOVITY_FIRST_PORT to "auto",
-                CeConfigProps.SOVITY_BASE_PATH to "/control",
-
-                // Mock IAM
-                CeConfigProps.SOVITY_DATASPACE_KIND to CeDataspace.SOVITY_MOCK_IAM.nameKebabCase,
-                CeConfigProps.EDC_PARTICIPANT_ID to "consumer",
-
-                // Management API
-                CeConfigProps.SOVITY_MANAGEMENT_API_IAM_KIND to ApiKeyAuthModule.instance().name,
-                CeConfigProps.EDC_API_AUTH_KEY to randomUUID().toString(),
-            ),
-            consumerDataPlaneConfig = { cpConfig, cpConfigUtils ->
-                mapOf(
-                    RuntimeConfigProps.SOVITY_ENVIRONMENT to "UNIT_TEST",
-                    CeConfigProps.SOVITY_DEPLOYMENT_KIND to CeDataPlaneModules.standalone().name,
-                    RuntimeConfigProps.SOVITY_FIRST_PORT to "auto",
-                    CeConfigProps.SOVITY_BASE_PATH to "/data",
-
-                    // Mock IAM
-                    CeConfigProps.SOVITY_DATASPACE_KIND to CeDataspace.SOVITY_MOCK_IAM.nameKebabCase,
-
-                    // Data Plane Registration
-                    CeConfigProps.SOVITY_INTERNAL_CP_FIRST_PORT to RuntimeConfigProps.SOVITY_FIRST_PORT
-                        .getStringOrThrow(cpConfig),
-                    CeConfigProps.SOVITY_INTERNAL_CP_BASE_PATH to "/control",
-                )
-            },
-        )
+        val extension = IntegrationTest2xSetupsCe.ceSovityIamMockCpDp()
     }
 }

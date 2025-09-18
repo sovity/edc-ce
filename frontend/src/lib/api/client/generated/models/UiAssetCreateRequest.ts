@@ -32,6 +32,13 @@
  */
 
 import { mapValues } from '../runtime';
+import type { UiAssetExtForSphinx } from './UiAssetExtForSphinx';
+import {
+    UiAssetExtForSphinxFromJSON,
+    UiAssetExtForSphinxFromJSONTyped,
+    UiAssetExtForSphinxToJSON,
+    UiAssetExtForSphinxToJSONTyped,
+} from './UiAssetExtForSphinx';
 import type { UiDataSource } from './UiDataSource';
 import {
     UiDataSourceFromJSON,
@@ -167,6 +174,12 @@ export interface UiAssetCreateRequest {
      */
     temporalCoverageToInclusive?: Date;
     /**
+     * sphin-x dataspace specific asset metadata fields
+     * @type {UiAssetExtForSphinx}
+     * @memberof UiAssetCreateRequest
+     */
+    sphinxFields?: UiAssetExtForSphinx;
+    /**
      * Contains serialized custom properties in the JSON format.
      * @type {string}
      * @memberof UiAssetCreateRequest
@@ -231,6 +244,7 @@ export function UiAssetCreateRequestFromJSONTyped(json: any, ignoreDiscriminator
         'dataUpdateFrequency': json['dataUpdateFrequency'] == null ? undefined : json['dataUpdateFrequency'],
         'temporalCoverageFrom': json['temporalCoverageFrom'] == null ? undefined : (new Date(json['temporalCoverageFrom'])),
         'temporalCoverageToInclusive': json['temporalCoverageToInclusive'] == null ? undefined : (new Date(json['temporalCoverageToInclusive'])),
+        'sphinxFields': json['sphinxFields'] == null ? undefined : UiAssetExtForSphinxFromJSON(json['sphinxFields']),
         'customJsonAsString': json['customJsonAsString'] == null ? undefined : json['customJsonAsString'],
         'customJsonLdAsString': json['customJsonLdAsString'] == null ? undefined : json['customJsonLdAsString'],
         'privateCustomJsonAsString': json['privateCustomJsonAsString'] == null ? undefined : json['privateCustomJsonAsString'],
@@ -269,6 +283,7 @@ export function UiAssetCreateRequestToJSONTyped(value?: UiAssetCreateRequest | n
         'dataUpdateFrequency': value['dataUpdateFrequency'],
         'temporalCoverageFrom': value['temporalCoverageFrom'] == null ? undefined : ((value['temporalCoverageFrom']).toISOString().substring(0,10)),
         'temporalCoverageToInclusive': value['temporalCoverageToInclusive'] == null ? undefined : ((value['temporalCoverageToInclusive']).toISOString().substring(0,10)),
+        'sphinxFields': UiAssetExtForSphinxToJSON(value['sphinxFields']),
         'customJsonAsString': value['customJsonAsString'],
         'customJsonLdAsString': value['customJsonLdAsString'],
         'privateCustomJsonAsString': value['privateCustomJsonAsString'],

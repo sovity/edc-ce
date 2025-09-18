@@ -107,9 +107,7 @@ export const useNavItems = (): NavItemGroup[] => {
             href: urls.businessPartnerGroups.listPage(),
             icon: BriefcaseBusinessIcon,
           },
-          config?.features.includes(
-            UiConfigFeature.BusinessPartnerGroupManagement,
-          ),
+          config?.features.includes('BUSINESS_PARTNER_GROUP_MANAGEMENT'),
         ),
       ],
     },

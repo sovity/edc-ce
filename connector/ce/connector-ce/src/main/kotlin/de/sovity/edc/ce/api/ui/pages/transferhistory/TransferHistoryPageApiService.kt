@@ -42,7 +42,7 @@ class TransferHistoryPageApiService(
     fun getTransferHistoryEntries(dsl: DSLContext): List<TransferHistoryEntry> {
         val negotiationsById = getAllContractNegotiations()
             .filter { it.contractAgreement != null }
-            .associateBy { it.contractAgreement.id }
+            .associateBy { it.contractAgreement!!.id }
         val agreementsById = getAllContractAgreements().associateBy { it.id }
         val transferProcesses = getAllTransferProcesses()
 

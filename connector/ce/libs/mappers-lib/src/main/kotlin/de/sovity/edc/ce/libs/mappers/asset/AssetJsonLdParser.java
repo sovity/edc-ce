@@ -22,6 +22,7 @@ package de.sovity.edc.ce.libs.mappers.asset;
 
 import de.sovity.edc.ce.api.common.model.DataSourceAvailability;
 import de.sovity.edc.ce.api.common.model.UiAsset;
+import de.sovity.edc.ce.api.common.model.UiAssetExtForSphinx;
 import de.sovity.edc.ce.libs.mappers.asset.utils.AssetJsonLdUtils;
 import de.sovity.edc.ce.libs.mappers.asset.utils.ShortDescriptionBuilder;
 import de.sovity.edc.runtime.simple_di.Service;
@@ -97,6 +98,8 @@ public class AssetJsonLdParser {
         uiAsset.setHttpDatasourceHintsProxyQueryParams(JsonLdUtils.bool(properties, HttpDatasourceHints.QUERY_PARAMS));
         uiAsset.setHttpDatasourceHintsProxyBody(JsonLdUtils.bool(properties, HttpDatasourceHints.BODY));
 
+        uiAsset.setSphinxFields(getSphinxFields(properties));
+
         var publisher = JsonLdUtils.object(properties, Prop.Dcterms.PUBLISHER);
         uiAsset.setPublisherHomepage(JsonLdUtils.string(publisher, Prop.Foaf.HOMEPAGE));
 
@@ -149,7 +152,9 @@ public class AssetJsonLdParser {
             Prop.SovityDcatExt.DATA_SOURCE_AVAILABILITY,
             Prop.SovityDcatExt.CONTACT_EMAIL,
             Prop.SovityDcatExt.CONTACT_PREFERRED_EMAIL_SUBJECT,
-            Prop.SovityDcatExt.DISTRIBUTION
+            Prop.SovityDcatExt.DISTRIBUTION,
+
+            Prop.Sphinx.DATA_MODEL_NAME
         ));
 
         // custom properties
@@ -203,6 +208,17 @@ public class AssetJsonLdParser {
         }
 
         return DataSourceAvailability.LIVE;
+    }
+
+    private UiAssetExtForSphinx getSphinxFields(JsonObject properties) {
+        var dataModelName = JsonLdUtils.string(properties, Prop.Sphinx.DATA_MODEL_NAME);
+        if (dataModelName == null) {
+            return null;
+        }
+
+        return UiAssetExtForSphinx.builder()
+            .dataModelName(dataModelName)
+            .build();
     }
 
     private String ifBlank(String value, String defaultValue) {

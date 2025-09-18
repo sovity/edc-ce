@@ -39,6 +39,13 @@ import {
     DataSourceAvailabilityToJSON,
     DataSourceAvailabilityToJSONTyped,
 } from './DataSourceAvailability';
+import type { UiAssetExtForSphinx } from './UiAssetExtForSphinx';
+import {
+    UiAssetExtForSphinxFromJSON,
+    UiAssetExtForSphinxFromJSONTyped,
+    UiAssetExtForSphinxToJSON,
+    UiAssetExtForSphinxToJSONTyped,
+} from './UiAssetExtForSphinx';
 
 /**
  * Type-safe data offer metadata as supported by the sovity product landscape. Contains extension points.
@@ -233,6 +240,12 @@ export interface UiAsset {
      */
     temporalCoverageToInclusive?: Date;
     /**
+     * sphin-x dataspace specific asset metadata fields
+     * @type {UiAssetExtForSphinx}
+     * @memberof UiAsset
+     */
+    sphinxFields?: UiAssetExtForSphinx;
+    /**
      * Contains the entire asset in the JSON-LD format
      * @type {string}
      * @memberof UiAsset
@@ -321,6 +334,7 @@ export function UiAssetFromJSONTyped(json: any, ignoreDiscriminator: boolean): U
         'dataUpdateFrequency': json['dataUpdateFrequency'] == null ? undefined : json['dataUpdateFrequency'],
         'temporalCoverageFrom': json['temporalCoverageFrom'] == null ? undefined : (new Date(json['temporalCoverageFrom'])),
         'temporalCoverageToInclusive': json['temporalCoverageToInclusive'] == null ? undefined : (new Date(json['temporalCoverageToInclusive'])),
+        'sphinxFields': json['sphinxFields'] == null ? undefined : UiAssetExtForSphinxFromJSON(json['sphinxFields']),
         'assetJsonLd': json['assetJsonLd'] == null ? undefined : json['assetJsonLd'],
         'customJsonAsString': json['customJsonAsString'] == null ? undefined : json['customJsonAsString'],
         'customJsonLdAsString': json['customJsonLdAsString'] == null ? undefined : json['customJsonLdAsString'],
@@ -371,6 +385,7 @@ export function UiAssetToJSONTyped(value?: UiAsset | null, ignoreDiscriminator: 
         'dataUpdateFrequency': value['dataUpdateFrequency'],
         'temporalCoverageFrom': value['temporalCoverageFrom'] == null ? undefined : ((value['temporalCoverageFrom']).toISOString().substring(0,10)),
         'temporalCoverageToInclusive': value['temporalCoverageToInclusive'] == null ? undefined : ((value['temporalCoverageToInclusive']).toISOString().substring(0,10)),
+        'sphinxFields': UiAssetExtForSphinxToJSON(value['sphinxFields']),
         'assetJsonLd': value['assetJsonLd'],
         'customJsonAsString': value['customJsonAsString'],
         'customJsonLdAsString': value['customJsonLdAsString'],

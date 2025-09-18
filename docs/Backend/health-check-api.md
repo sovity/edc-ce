@@ -18,4 +18,4 @@ To test the interaction with the Dataspace IAM (MIW, DAPS, DIM, ...), it is reco
 
 ## Conclusion
 
-By using these APIs, you can perform effective health checks and ensure the proper functionality and interaction of your connectors within the system. If you have further questions or need additional support, please refer to our documentation or contact our support team.
+By using these APIs, you can perform effective health checks and ensure the proper functionality and interaction of your connectors within the system. If you have further questions or need additional support, please refer to our documentation or contact our service desk team.

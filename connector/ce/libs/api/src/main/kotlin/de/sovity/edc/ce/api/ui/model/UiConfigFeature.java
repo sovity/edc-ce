@@ -42,6 +42,12 @@ public enum UiConfigFeature {
     // Enables sovity Policies in the UI
     SOVITY_POLICIES,
 
+    // Enables sphin-X Policies in the UI
+    SPHINX_POLICIES,
+
+    // Enables sphin-X Asset Metadata Fields in the UI
+    SPHINX_ASSET_METADATA,
+
     // Enables management of Catena-X business partner groups
     BUSINESS_PARTNER_GROUP_MANAGEMENT
 }

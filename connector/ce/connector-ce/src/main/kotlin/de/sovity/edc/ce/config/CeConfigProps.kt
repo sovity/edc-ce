@@ -704,6 +704,12 @@ object CeConfigProps {
     )
 
     @JvmStatic
+    val EDC_IAM_TRUSTED_ISSUER_SPHINX_ID = ConfigPropRef(
+        property = "edc.iam.trusted-issuer.sphinx.id",
+        defaultDocumentation = "DID of the issuer, starts with did:web:"
+    )
+
+    @JvmStatic
     val EDC_IAM_STS_OAUTH_CLIENT_SECRET_ALIAS = ConfigPropRef(
         property = "edc.iam.sts.oauth.client.secret.alias",
         defaultDocumentation = "Vault alias for the STS oauth client secret"
@@ -781,6 +787,18 @@ object CeConfigProps {
     val SOVITY_EDC_UI_PRECONFIGURED_COUNTERPARTIES = ConfigPropRef(
         property = "sovity.edc.ui.preconfigured.counterparties",
         defaultDocumentation = "Comma separated list of enabled preconfigured counterparties. format is https://connector/api/dsp?participantId=abc"
+    )
+
+    @JvmStatic
+    val SOVITY_EDC_UI_ICP_FOOTER_TEXT = ConfigPropRef(
+        property = "sovity.edc.ui.icp.footer.text",
+        defaultDocumentation = "ICP footer text"
+    )
+
+    @JvmStatic
+    val SOVITY_EDC_UI_ICP_FOOTER_URL = ConfigPropRef(
+        property = "sovity.edc.ui.icp.footer.url",
+        defaultDocumentation = "ICP footer URL"
     )
 
     @JvmStatic

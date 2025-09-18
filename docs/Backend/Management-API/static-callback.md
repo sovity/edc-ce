@@ -26,7 +26,7 @@ Instead of polling for status, external systems will be invoked automatically wi
 
 **Static Callback functionality is not enabled by default.**
 
-For CaaS users, please contact our support team to have the callback feature activated and properly configured for your environment.
+For CaaS users, please contact our service desk team to have the callback feature activated and properly configured for your environment.
 
 #### Additional Resources
 

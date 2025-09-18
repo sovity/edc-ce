@@ -15,6 +15,7 @@ import {byTranslation} from '@/lib/utils/translation-utils';
 import {useConfig} from '@/lib/hooks/use-config';
 import {getSovityPolicyVerbs} from '@/components/policy-editor/supported-sovity-policies';
 import {getCatenaPolicyVerbs} from '@/components/policy-editor/supported-catena-policies';
+import {getSphinxPolicyVerbs} from '@/components/policy-editor/supported-sphinx-policies';
 
 export const usePolicyContext = (): PolicyContext => {
   const config = useConfig();
@@ -23,6 +24,10 @@ export const usePolicyContext = (): PolicyContext => {
 
   if (config?.features?.includes('SOVITY_POLICIES')) {
     supportedPolicyVerbs.push(...getSovityPolicyVerbs());
+  }
+
+  if (config?.features?.includes('SPHINX_POLICIES')) {
+    supportedPolicyVerbs.push(...getSphinxPolicyVerbs());
   }
 
   if (config?.features?.includes('CATENA_POLICIES')) {

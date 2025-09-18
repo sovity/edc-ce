@@ -22,6 +22,7 @@ package de.sovity.edc.ce.libs.mappers.asset;
 
 import de.sovity.edc.ce.api.common.model.DataSourceType;
 import de.sovity.edc.ce.api.common.model.UiAssetCreateRequest;
+import de.sovity.edc.ce.api.common.model.UiAssetExtForSphinx;
 import de.sovity.edc.ce.api.common.model.UiDataSource;
 import de.sovity.edc.ce.api.common.model.UiDataSourceHttpData;
 import de.sovity.edc.ce.api.common.model.UiDataSourceHttpDataMethod;
@@ -106,6 +107,45 @@ class AssetJsonLdBuilderTest {
             .build();
 
         var expectedProperties = Json.createObjectBuilder();
+
+        // act
+        var actual = assetJsonLdBuilder.buildCreateAssetJsonLds(uiAssetCreateRequest, ORG_NAME);
+
+        // assert
+        assertCreateAssetJsonLdsEquals(actual, dummyBuildCreateAssetJsonLds(expectedProperties));
+    }
+
+    @Test
+    void test_empty_sphinx_fields() {
+        // arrange
+        var uiAssetCreateRequest = UiAssetCreateRequest.builder()
+            .dataSource(dummyDataSource())
+            .id(ASSET_ID)
+            .sphinxFields(UiAssetExtForSphinx.builder().build())
+            .build();
+
+        var expectedProperties = Json.createObjectBuilder();
+
+        // act
+        var actual = assetJsonLdBuilder.buildCreateAssetJsonLds(uiAssetCreateRequest, ORG_NAME);
+
+        // assert
+        assertCreateAssetJsonLdsEquals(actual, dummyBuildCreateAssetJsonLds(expectedProperties));
+    }
+
+    @Test
+    void test_sphinx_fields_data_model_name() {
+        // arrange
+        var uiAssetCreateRequest = UiAssetCreateRequest.builder()
+            .dataSource(dummyDataSource())
+            .id(ASSET_ID)
+            .sphinxFields(UiAssetExtForSphinx.builder()
+                .dataModelName("a")
+                .build())
+            .build();
+
+        var expectedProperties = Json.createObjectBuilder()
+            .add(Prop.Sphinx.DATA_MODEL_NAME, "a");
 
         // act
         var actual = assetJsonLdBuilder.buildCreateAssetJsonLds(uiAssetCreateRequest, ORG_NAME);

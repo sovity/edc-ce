@@ -197,6 +197,9 @@ This is a short description text that should be fully rendered without being **c
     dataUpdateFrequency: 'every month',
     temporalCoverageFrom: new Date('2024-01-01'),
     temporalCoverageToInclusive: new Date('2024-01-24'),
+    sphinxFields: {
+      dataModelName: 'example-data-model-01',
+    },
     httpDatasourceHintsProxyQueryParams: true,
     httpDatasourceHintsProxyPath: true,
     httpDatasourceHintsProxyMethod: true,
@@ -230,14 +233,6 @@ This is a short description text that should be fully rendered without being **c
       creatorOrganizationName: entry.participantId,
       isOwnConnector: entry.isOwnConnector,
       dataSourceAvailability: 'LIVE',
-    };
-  }
-
-  export function withSuffix(asset: UiAsset, suffix: string): UiAsset {
-    return {
-      ...asset,
-      assetId: `${asset.assetId}-${suffix}`,
-      title: `${asset.title} ${suffix}`,
     };
   }
 }

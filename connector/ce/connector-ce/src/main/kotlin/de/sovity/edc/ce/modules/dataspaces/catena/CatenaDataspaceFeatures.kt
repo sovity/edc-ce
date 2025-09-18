@@ -109,8 +109,13 @@ object CatenaDataspaceFeatures {
             ConfigPropCategory.OVERRIDES,
             CeConfigProps.EDC_IAM_STS_OAUTH_CLIENT_SECRET_ALIAS
         ) {
-            defaultValue("sts-client-secret")
+            defaultValue(CeVaultEntries.STS_CLIENT_SECRET.key)
         }
+        configureTxMembershipCredential()
+        configureTxGovernanceCredential()
+    }
+
+    private fun EdcModule.configureTxGovernanceCredential() {
         property(
             ConfigPropCategory.OVERRIDES,
             CeConfigProps.TX_EDC_IAM_IATP_DEFAULT_SCOPES_GOVERNANCE_ALIAS
@@ -129,6 +134,9 @@ object CatenaDataspaceFeatures {
         ) {
             defaultValue("read")
         }
+    }
+
+    fun EdcModule.configureTxMembershipCredential() {
         property(
             ConfigPropCategory.OVERRIDES,
             CeConfigProps.TX_EDC_IAM_IATP_DEFAULT_SCOPES_MEMBERSHIP_ALIAS

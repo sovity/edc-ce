@@ -13,8 +13,8 @@ import {useForm, type UseFormReturn} from 'react-hook-form';
 import z from 'zod';
 
 const catalogBrowserFormSchema = z.object({
-  connectorEndpoint: z.string().url().min(1).max(512),
-  participantId: z.string().min(1).max(50),
+  connectorEndpoint: z.string().url().min(1).max(1024),
+  participantId: z.string().min(1).max(1024),
 });
 
 export type CatalogFormValue = z.infer<typeof catalogBrowserFormSchema>;

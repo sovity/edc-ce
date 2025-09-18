@@ -51,7 +51,7 @@ const BusinessPartnerGroupActionMenu = ({id}: {id: string}) => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          dataTestId={`btn-dropdown-vault-secret-${id}`}
+          dataTestId={`btn-dropdown-business-partner-group-${id}`}
           variant="ghost"
           className="h-8 w-8 p-0">
           <MoreHorizontal className="h-4 w-4" />
@@ -59,11 +59,14 @@ const BusinessPartnerGroupActionMenu = ({id}: {id: string}) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
         <DropdownMenuItem asChild>
-          <Link href={urls.businessPartnerGroups.editPage(id)}>
+          <Link
+            data-testid="edit-business-partner-group-link"
+            href={urls.businessPartnerGroups.editPage(id)}>
             {t('General.edit')}
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem
+          data-testid="delete-business-partner-group"
           onClick={(e) => {
             onDeleteBusinessPartnerGroupClick();
             e.stopPropagation();

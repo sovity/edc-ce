@@ -56,4 +56,10 @@ public class UiConfig {
 
     @Schema(description = "Legal Notice URL", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String legalNoticeUrl;
+
+    @Schema(description = "ICP Footer Link Text", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private String icpFooterLinkText;
+
+    @Schema(description = "ICP Footer Link URL", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private String icpFooterLinkUrl;
 }

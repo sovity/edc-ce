@@ -29,6 +29,8 @@ export const dataOfferFormValueForEdit = (
       title: asset.title,
       description: asset.description,
       keywords: asset.keywords,
+
+      sphinxDataModelName: asset.sphinxFields?.dataModelName,
     },
     advanced: {
       ...empty.advanced,

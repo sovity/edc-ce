@@ -8,9 +8,9 @@
 package de.sovity.edc.ce.modules.dataspaces.sovity.policies.referring_connector
 
 import de.sovity.edc.ce.config.CeConfigProps
+import de.sovity.edc.ce.modules.policy_utils.creator.PolicyContextUtils
 import de.sovity.edc.ce.modules.policy_utils.creator.RightExpressionParsers
 import de.sovity.edc.ce.modules.policy_utils.creator.SimplePolicyCreator
-import org.eclipse.edc.participant.spi.ParticipantAgentPolicyContext
 import org.eclipse.edc.policy.engine.spi.PolicyContext
 import org.eclipse.edc.runtime.metamodel.annotation.Inject
 import org.eclipse.edc.spi.monitor.Monitor
@@ -25,6 +25,9 @@ class ReferringConnectorPolicyExtension : ServiceExtension {
     @Inject
     private lateinit var simplePolicyCreator: SimplePolicyCreator
 
+    @Inject
+    private lateinit var policyContextUtils: PolicyContextUtils
+
     override fun initialize(context: ServiceExtensionContext) {
         val config = context.config
         val claimName = CeConfigProps.EDC_AGENT_IDENTITY_KEY.getStringOrThrow(config)
@@ -34,30 +37,13 @@ class ReferringConnectorPolicyExtension : ServiceExtension {
             leftExpressionValueFn = { policyContext ->
                 requirePristinePolicyContext(policyContext, context.monitor)
 
-                val claims =
-                    if (policyContext is ParticipantAgentPolicyContext) {
-                        policyContext.participantAgent().claims
-                    } else {
-                        error("Unexpected policy context: $policyContext")
-                    }
-
-                val claim = getStringClaim(claims, claimName)
+                val claim = policyContextUtils.getStringClaim(policyContext, claimName)
 
                 claim?.let { ServiceResult.success(listOf(it)) }
                     ?: ServiceResult.unauthorized("String claim $claimName not found in ParticipantAgent claims.")
             },
             rightExpressionParser = RightExpressionParsers::stringValueCommaSeparated
         )
-    }
-
-    private fun getStringClaim(claims: Map<String, Any>, claimName: String): String? {
-        val claim = claims[claimName]
-
-        if (claim == null || claim !is String || claim.isBlank()) {
-            return null
-        }
-
-        return claim
     }
 
     private fun requirePristinePolicyContext(policyContext: PolicyContext, monitor: Monitor) {

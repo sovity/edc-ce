@@ -158,7 +158,7 @@ Example for a header `hello` with value `world` within the dataDestination towar
 {% endcode %}
 
 ### Note: HttpData-Pull
-Currently, with the HttpData-Pull EDR-flow and the use of API-keys, these API-keys cannot be added dynamically when initiating the transfer. For this, our infrastructure team must store the desired combination of target URL and API-key (auth-key and auth-code) for your Connector in our infrastructure. Please contact our support team to do this in advance.
+Currently, with the HttpData-Pull EDR-flow and the use of API-keys, these API-keys cannot be added dynamically when initiating the transfer. For this, our infrastructure team must store the desired combination of target URL and API-key (auth-key and auth-code) for your Connector in our infrastructure. Please contact our service desk team to do this in advance.
 
 {% hint style="info" %} 
 Link: <a href="https://sovity.zammad.com/#ticket/view/my_tickets">Service Desk</a>
