@@ -49,6 +49,7 @@
       "http://www.w3.org/ns/dcat#startDate": "2007-12-03",
       "http://www.w3.org/ns/dcat#endDate": "2024-01-22"
     },
+    "https://semantic.sphin-x.de/dcat-ext/dataModelName": "some-data-model",
     "https://semantic.sovity.io/dcat-ext#customJson": "{\"array\":[3,1,4,1,5],\"boolean\":false,\"null\":null,\"number\":116,\"object\":{\"key\":\"value\"},\"string\":\"value\"}",
     "http://unknown/some-custom-string": "some-string-value",
     "http://unknown/some-custom-obj": {

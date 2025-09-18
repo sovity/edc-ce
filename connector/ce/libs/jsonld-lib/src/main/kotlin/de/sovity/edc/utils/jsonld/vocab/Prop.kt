@@ -232,4 +232,10 @@ object Prop {
         const val LITERAL: String = CTX + "Literal"
         const val LABEL: String = CTX + "label"
     }
+
+    @UtilityClass
+    object Sphinx {
+        const val CTX: String = "https://semantic.sphin-x.de/dcat-ext/"
+        const val DATA_MODEL_NAME: String = CTX + "dataModelName"
+    }
 }

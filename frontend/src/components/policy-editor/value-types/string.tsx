@@ -70,7 +70,7 @@ export const PolicyEditorConstraintString = ({
       <OperatorSelect policyEditor={policyEditor} treeNode={treeNode} />
       <InputField
         className={'grow'}
-        name={policyEditor.formKeyForNode(treeNode, 'stringList')}
+        name={policyEditor.formKeyForNode(treeNode, 'string')}
         control={policyEditor.form.control}
         label={treeNode.value.verb?.operandRightTitle?.(t) ?? 'Unknown'}
         placeholder={treeNode.value.verb?.operandRightPlaceholder?.(t)}

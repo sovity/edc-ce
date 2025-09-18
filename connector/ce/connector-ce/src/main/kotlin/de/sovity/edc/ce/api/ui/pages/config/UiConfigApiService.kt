@@ -31,6 +31,8 @@ class UiConfigApiService(
     private val logoutUrl = CeConfigProps.SOVITY_EDC_UI_LOGOUT_URL.getStringOrNull(config)
     private val documentationUrl = CeConfigProps.SOVITY_EDC_UI_DOCUMENTATION_URL.getStringOrNull(config)
     private val supportUrl = CeConfigProps.SOVITY_EDC_UI_SUPPORT_URL.getStringOrNull(config)
+    private val icpFooterLinkText = CeConfigProps.SOVITY_EDC_UI_ICP_FOOTER_TEXT.getStringOrNull(config)
+    private val icpFooterLinkUrl = CeConfigProps.SOVITY_EDC_UI_ICP_FOOTER_URL.getStringOrNull(config)
 
     fun uiConfig(): UiConfig {
         return UiConfig.builder()
@@ -39,6 +41,8 @@ class UiConfigApiService(
             .logoutUrl(logoutUrl)
             .documentationUrl(documentationUrl)
             .supportUrl(supportUrl)
+            .icpFooterLinkText(icpFooterLinkText)
+            .icpFooterLinkUrl(icpFooterLinkUrl)
             .build()
     }
 

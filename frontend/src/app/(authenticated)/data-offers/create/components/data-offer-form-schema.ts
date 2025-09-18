@@ -20,6 +20,9 @@ const dataOfferBasicFieldsSchema = z.object({
   title: z.string().min(1).max(128),
   description: z.string().optional(),
   keywords: z.array(z.string()).optional(),
+
+  // Sphin-X Fields
+  sphinxDataModelName: z.string().optional(),
 });
 
 const dataOfferAdvancedFieldsSchema = z.discriminatedUnion(

@@ -17,6 +17,8 @@ import {urls} from '@/lib/urls';
 import {Bars3Icon} from '@heroicons/react/24/outline';
 import BreadcrumbComponent from './breadcrumb';
 import SidebarNavigationMenu from './sidebar-navigation-menu';
+import CertificationLinkFooter from '@/app/certification-link-footer';
+import {useConfig} from '@/lib/hooks/use-config';
 
 export interface SidebarLayoutProps {
   children?: React.ReactNode;
@@ -24,6 +26,7 @@ export interface SidebarLayoutProps {
 
 export default function SidebarLayout({children}: SidebarLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const config = useConfig();
 
   return (
     <div className="h-full">
@@ -92,6 +95,7 @@ export default function SidebarLayout({children}: SidebarLayoutProps) {
       <main className="h-full lg:pl-72">
         <div className="h-full px-4 pt-[4.5rem] sm:px-6 lg:px-8 lg:pt-14">
           {children}
+          <CertificationLinkFooter className="lg:hidden pb-2" config={config} />
         </div>
       </main>
     </div>

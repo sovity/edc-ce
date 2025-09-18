@@ -40,8 +40,10 @@ class SimplePolicyCreatorExtension : ServiceExtension {
             objectMapper,
             monitor
         )
+        val policyContextUtils = PolicyContextUtils()
 
         context.registerService(PolicyComparator::class.java, policyComparator)
+        context.registerService(PolicyContextUtils::class.java, policyContextUtils)
         context.registerService(SimplePolicyCreator::class.java, simplePolicyCreator)
     }
 }

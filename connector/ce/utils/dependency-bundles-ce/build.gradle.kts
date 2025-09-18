@@ -229,10 +229,36 @@ dependencyBundles.bundle(
 
 dependencyBundles.bundle(
     bundleName = "sovityControlPlane",
-    bundleDocumentation = "Sovity Control Plane"
+    bundleDocumentation = "sovity Control Plane"
 ) {
     // Vanilla EDRs
     api(libs.edc.edrCacheApi)
+}
+
+dependencyBundles.bundle(
+    bundleName = "sphinxControlPlane",
+    bundleDocumentation = "sphin-X Control Plane"
+) {
+    api(libs.edc.transferDataPlaneSignaling)
+    api(libs.edc.azure.provisionBlob)
+    api(libs.tractus.jsonLdCore)
+
+    // iatp
+    api(libs.edc.identityDidCore)
+    api(libs.edc.identityDidWeb)
+    api(libs.edc.identityTrustCore)
+    api(libs.edc.identityTrustIssuersConfiguration)
+    api(libs.edc.identityTrustTransform)
+
+    // iatp tx
+    api(libs.tractus.txDcp)
+    api(libs.tractus.txDcpStsDim)
+
+    // Vanilla EDRs
+    api(libs.edc.edrCacheApi)
+
+    // Adds headers Edc-Bpn and Edc-Contract-Agreement-Id to the http-push-transfer when invoking the target backend
+    api(libs.tractus.provisionAdditionalHeaders)
 }
 
 dependencyBundles.bundle(

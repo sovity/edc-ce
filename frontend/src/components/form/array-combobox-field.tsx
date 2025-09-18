@@ -95,6 +95,7 @@ const ArrayComboboxField = ({
                     value={query}
                     onValueChange={setQuery}
                     placeholder={searchPlaceholder}
+                    data-testid={`form-combobox-${name}-search`}
                   />
                   <CommandList>
                     {query.length > 0 && !value.includes(query) && (
@@ -106,7 +107,8 @@ const ArrayComboboxField = ({
                               query,
                             ]);
                             setQuery('');
-                          }}>
+                          }}
+                          data-testid={`form-combobox-${name}-item-add`}>
                           {addValueLabel} {query}
                         </CommandItem>
                       </CommandGroup>
@@ -119,7 +121,8 @@ const ArrayComboboxField = ({
                             value={item}
                             onSelect={() =>
                               field.onChange(value.filter((i) => i !== item))
-                            }>
+                            }
+                            data-testid={`form-combobox-${name}-item-${item}`}>
                             <Check className={cn('mr-2 h-4 w-4')} />
                             {item}
                           </CommandItem>

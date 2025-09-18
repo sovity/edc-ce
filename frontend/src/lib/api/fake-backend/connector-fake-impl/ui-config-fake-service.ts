@@ -21,6 +21,7 @@ export const UI_CONFIG_OPTIONS: UiConfigFakeBackendOption[] = [
         'CATENA_POLICIES',
         'BUSINESS_PARTNER_GROUP_MANAGEMENT',
       ],
+      documentationUrl: 'https://edc-ce.docs.sovity.de/',
       preconfiguredCounterparties: [
         {
           connectorEndpoint: 'https://existing-other-connector/api/dsp',
@@ -40,9 +41,37 @@ export const UI_CONFIG_OPTIONS: UiConfigFakeBackendOption[] = [
     },
   },
   {
-    name: 'CE Sovity',
+    name: 'CE sovity',
     config: {
       features: ['OPEN_SOURCE_MARKETING', 'SOVITY_POLICIES'],
+      documentationUrl: 'https://edc-ce.docs.sovity.de/',
+      preconfiguredCounterparties: [
+        {
+          connectorEndpoint: 'https://existing-other-connector/api/dsp',
+          participantId: 'BPNL1234XX.C1234XX',
+        },
+        {
+          connectorEndpoint:
+            'https://does-not-exist-but-is-super-long-so-we-can-test/api/dsp',
+          participantId: 'BPNL1234XX.C1235XX',
+        },
+        {
+          connectorEndpoint:
+            'https://how-wrapping-works-in-subtext-of-catalog-url-select/api/dsp',
+          participantId: 'BPNL1234XX.C1237XX',
+        },
+      ],
+    },
+  },
+  {
+    name: 'CE sphin-X',
+    config: {
+      features: [
+        'OPEN_SOURCE_MARKETING',
+        'SPHINX_ASSET_METADATA',
+        'SPHINX_POLICIES',
+      ],
+      documentationUrl: 'https://edc-ce.docs.sovity.de/',
       preconfiguredCounterparties: [
         {
           connectorEndpoint: 'https://existing-other-connector/api/dsp',

@@ -21,6 +21,7 @@ import de.sovity.edc.ce.modules.dataspaces.catena.CatenaDataspaceFeatures
 import de.sovity.edc.ce.modules.dataspaces.sovity.SovityDataspaceFeatures
 import de.sovity.edc.ce.modules.dataspaces.sovity.edrs.EdrTokenSecretAutogenerationExtension
 import de.sovity.edc.ce.modules.dataspaces.sovity.edrs.EdrTokenSecretModule
+import de.sovity.edc.ce.modules.dataspaces.sphinx.SphinxDataspaceFeatures
 import de.sovity.edc.ce.modules.db.DbModule
 import de.sovity.edc.ce.modules.messaging.contract_termination.ContractTerminationModule
 import de.sovity.edc.ce.modules.messaging.messenger.SovityMessengerModule
@@ -96,9 +97,21 @@ object CeControlPlaneModules {
             SovityDataspaceFeatures.sovityControlPlaneDapsOmejdn()
         )
         moduleIfCeDataspace(
+            CeDataspace.SPHIN_X,
+            SphinxDataspaceFeatures.sphinxControlPlane()
+        )
+        moduleIfCeDataspace(
             CeDataspace.CATENA_X,
             CatenaDataspaceFeatures.tractusControlPlane()
         )
+
+        property(
+            ConfigPropCategory.OPTIONAL,
+            CeConfigProps.SOVITY_EDC_UI_DOCUMENTATION_URL
+        ) {
+            // Set the CE Default Documentation URL for the CE
+            defaultValue("https://edc-ce.docs.sovity.de/")
+        }
     }
 
     fun base() = EdcModule(

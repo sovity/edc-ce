@@ -67,6 +67,7 @@ public class AssetEditRequestMapper {
             .dataUpdateFrequency(editRequest.getDataUpdateFrequency())
             .temporalCoverageFrom(editRequest.getTemporalCoverageFrom())
             .temporalCoverageToInclusive(editRequest.getTemporalCoverageToInclusive())
+            .sphinxFields(editRequest.getSphinxFields())
             .customJsonAsString(editRequest.getCustomJsonAsString())
             .customJsonLdAsString(editRequest.getCustomJsonLdAsString())
             .privateCustomJsonAsString(editRequest.getPrivateCustomJsonAsString())

@@ -46,6 +46,7 @@ import {
   createAsset,
   deleteAsset,
   editAsset,
+  getAssetById,
 } from './connector-fake-impl/asset-fake-service';
 import {buildInfo} from './connector-fake-impl/buildinfo-fake-service';
 import {
@@ -135,6 +136,12 @@ export const EDC_FAKE_BACKEND: FetchAPI = async (
       const pageFilter = AssetListPageFilterFromJSON(body);
       const page = assetListPage(pageFilter);
       return ok(AssetListPageToJSON(page));
+    })
+
+    .url('ui/pages/asset-page/assets/*')
+    .on('GET', (assetId) => {
+      const created = getAssetById(assetId);
+      return ok(UiAssetToJSON(created));
     })
 
     .url('ui/pages/asset-page/assets')

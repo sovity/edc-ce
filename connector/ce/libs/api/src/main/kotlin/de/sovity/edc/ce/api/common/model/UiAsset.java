@@ -156,6 +156,9 @@ public class UiAsset {
     @Schema(description = "Temporal coverage end date (inclusive)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private LocalDate temporalCoverageToInclusive;
 
+    @Schema(description = "sphin-x dataspace specific asset metadata fields", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private UiAssetExtForSphinx sphinxFields;
+
     @Schema(description = "Contains the entire asset in the JSON-LD format", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String assetJsonLd;
 

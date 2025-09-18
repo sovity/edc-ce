@@ -163,7 +163,7 @@ export interface DashboardPage {
      */
     connectorDapsConfig?: DashboardDapsConfig;
     /**
-     * Your Connector's Catena-X Web-DID Configuration (if present)
+     * Your Connector's Catena-X or Sphin-X Web-DID Configuration (if present)
      * @type {DashboardCxDidConfig}
      * @memberof DashboardPage
      */

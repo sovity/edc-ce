@@ -97,6 +97,12 @@ export const buildUiAssetCommonMetadata = (
       showAdvancedFields && formValue.advanced.temporalCoverage?.endDate
         ? toGmtZeroHourDate(formValue.advanced.temporalCoverage.endDate)
         : undefined,
+
+    sphinxFields: formValue.general.sphinxDataModelName
+      ? {
+          dataModelName: formValue.general.sphinxDataModelName,
+        }
+      : undefined,
   };
 };
 

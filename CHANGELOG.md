@@ -2,6 +2,42 @@
 
 The versions of the sovity EDC CE are aligned with the sovity EDC EE.
 
+## [v15.1.0] - 2025-09-18
+
+### Overview
+
+New variant for sphin-X dataspaces
+
+#### Minor Changes
+
+- Sphin-X Variant in Backend, API Wrapper and UI
+  - Sphin-X Asset Example Metadata Field "dataModelName"
+  - Sphin-X Policies: inForceDate, sphinxDid
+  - Spherity Wallet integration using DCP 0.8
+- Added configurable ICP number and link in footer
+
+#### Patch Changes
+
+- Fix an API Wrapper serialization error when creating an asset with OAuth2 credentials.
+- Fix a UI issue with policy input fields for type STRING
+- Fix some code-level null-safety issues in Java / Kotlin interop with the core-edc [PR sovity/core-edc#50](https://github.com/sovity/core-edc/pull/50)
+- Set default CE documentation URL to `https://edc-ce.docs.sovity.de/` [sovity/edc-ce#1190](https://github.com/sovity/edc-ce/issues/1190)
+- Reword documentation references to the `support team` by `service desk team`
+- Remove outdated documentation about public endpoints (`public-endpoints.yaml`)
+
+### Deployment Migration Notes
+
+- Added `sovity.edc.ui.icp.footer.text`: Text for the ICP Footer (optional)
+- Added `sovity.edc.ui.icp.footer.url`: URL for the ICP Footer (optional)
+
+#### Compatible Versions
+
+- EDC CE Backend: `ghcr.io/sovity/edc-ce:15.1.0`
+- EDC CE Frontend: `ghcr.io/sovity/edc-ce-ui:15.1.0`
+- PostgreSQL: `17`
+- Eclipse EDC Fork: [v0.11.1.3](https://github.com/sovity/core-edc/releases/tag/v0.11.1.3)
+- Tractus-X: `0.9.0`
+
 ## [v15.0.1] - 2025-08-07
 
 ### Overview

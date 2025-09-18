@@ -48,6 +48,7 @@ class DbExtension : ServiceExtension {
         pool = ConnectionPoolFactory.newInstance(config, monitor, jdbcCredentials, connectionFactory)
         dataSourceRegistry.register("default", ConnectionPoolDataSource(pool))
         val dataSource = dataSourceRegistry.resolve("default") // will be now wrapped with transaction handling
+        check(dataSource != null) { "Can't find any datasource" }
 
         val flyway = FlywayFactory.newFlyway(config, jdbcCredentials)
         context.registerService(Flyway::class.java, flyway)

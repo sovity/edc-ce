@@ -203,6 +203,14 @@ export const AssetDetailPropertiesCard = ({data}: UiAssetProps) => {
           label={t('General.contentType')}
           value={data.mediaType}
         />
+
+        {data.sphinxFields?.dataModelName && (
+          <AssetProperty
+            Icon={EclipseIcon}
+            label={t('General.sphinxDataModelNameTooltip')}
+            value={data.sphinxFields?.dataModelName}
+          />
+        )}
       </AssetPropertyCard>
 
       {showAdditionalProperties ? (

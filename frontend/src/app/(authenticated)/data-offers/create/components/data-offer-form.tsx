@@ -32,6 +32,7 @@ import {
 } from '@sovity.de/edc-client';
 import {useTranslations} from 'next-intl';
 import {type DataOfferFormMode} from './data-offer-form-mode';
+import {useConfig} from '@/lib/hooks/use-config';
 
 export const DataOfferForm = ({
   mode,
@@ -47,6 +48,8 @@ export const DataOfferForm = ({
 }) => {
   const {form} = useDataOfferCreateForm(initialFormValue, mode);
   const t = useTranslations();
+  const config = useConfig();
+  const showSphinxFields = config?.features?.includes('SPHINX_ASSET_METADATA');
 
   // Supported Policies
   const policyContext = usePolicyContext();
@@ -184,6 +187,21 @@ export const DataOfferForm = ({
             </>
           )}
         </FormGroup>
+
+        {showSphinxFields && (
+          <FormGroup
+            title={t('Pages.DataOfferCreate.sphinxFieldsTitle')}
+            subTitle={t('Pages.DataOfferCreate.sphinxFieldsDescription')}>
+            {/* Sphin-X Data Model Name */}
+            <InputField
+              control={form.control}
+              name="general.sphinxDataModelName"
+              placeholder={'example-data-model-1'}
+              label={t('General.sphinxDataModelNameTitle')}
+              tooltip={t('General.sphinxDataModelNameTooltip')}
+            />
+          </FormGroup>
+        )}
         {formValue.advanced.showAdvancedFields && (
           <>
             <FormGroup

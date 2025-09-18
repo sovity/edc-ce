@@ -10,6 +10,7 @@
 import {useConfig} from '@/lib/hooks/use-config';
 import ExternalLink from './links/external-link';
 import {useTranslations} from 'next-intl';
+import CertificationLinkFooter from '@/app/certification-link-footer';
 
 export const Footer = () => {
   const config = useConfig();
@@ -62,6 +63,7 @@ export const Footer = () => {
             )}
           </div>
         )}
+        <CertificationLinkFooter className="hidden lg:block" config={config} />
         <p>© {current_year} sovity GmbH</p>
       </div>
     </footer>

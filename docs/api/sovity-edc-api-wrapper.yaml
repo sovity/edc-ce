@@ -1136,6 +1136,9 @@ components:
           type: string
           format: date
           description: Temporal coverage end date (inclusive)
+        sphinxFields:
+          $ref: '#/components/schemas/UiAssetExtForSphinx'
+          description: sphin-x dataspace specific asset metadata fields
         customJsonAsString:
           type: string
           description: Contains serialized custom properties in the JSON format.
@@ -1156,6 +1159,15 @@ components:
       required:
       - dataSource
       - id
+    UiAssetExtForSphinx:
+      type: object
+      description: Type-safe extra fields for the sphin-x dataspace.
+      properties:
+        dataModelName:
+          type: string
+          description: Sphin-X Data Model Name
+      required:
+      - dataModelName
     UiDataSource:
       type: object
       description: Type-safe data source as supported by the sovity product landscape.
@@ -1492,6 +1504,9 @@ components:
           type: string
           format: date
           description: Temporal coverage end date (inclusive)
+        sphinxFields:
+          $ref: '#/components/schemas/UiAssetExtForSphinx'
+          description: sphin-x dataspace specific asset metadata fields
         assetJsonLd:
           type: string
           description: Contains the entire asset in the JSON-LD format
@@ -2030,6 +2045,9 @@ components:
           type: string
           format: date
           description: Temporal coverage end date (inclusive)
+        sphinxFields:
+          $ref: '#/components/schemas/UiAssetExtForSphinx'
+          description: sphin-x dataspace specific asset metadata fields
         customJsonAsString:
           type: string
           description: Contains serialized custom properties in the JSON format.
@@ -2478,7 +2496,8 @@ components:
           description: Your Connector's DAPS Configuration (if present)
         connectorCxDidConfig:
           $ref: '#/components/schemas/DashboardCxDidConfig'
-          description: Your Connector's Catena-X Web-DID Configuration (if present)
+          description: Your Connector's Catena-X or Sphin-X Web-DID Configuration
+            (if present)
       required:
       - connectorCuratorName
       - connectorCuratorUrl
@@ -2919,6 +2938,12 @@ components:
         legalNoticeUrl:
           type: string
           description: Legal Notice URL
+        icpFooterLinkText:
+          type: string
+          description: ICP Footer Link Text
+        icpFooterLinkUrl:
+          type: string
+          description: ICP Footer Link URL
       required:
       - features
       - preconfiguredCounterparties
@@ -2931,6 +2956,8 @@ components:
       - EE_BASIC_MARKETING
       - CATENA_POLICIES
       - SOVITY_POLICIES
+      - SPHINX_POLICIES
+      - SPHINX_ASSET_METADATA
       - BUSINESS_PARTNER_GROUP_MANAGEMENT
     UiConfigPreconfiguredCounterparty:
       type: object

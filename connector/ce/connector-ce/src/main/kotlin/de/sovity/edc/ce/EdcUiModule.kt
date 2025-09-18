@@ -80,5 +80,15 @@ object EdcUiModule {
             category,
             CeConfigProps.SOVITY_EDC_UI_PRIVACY_POLICY_URL
         )
+
+        property(
+            category,
+            CeConfigProps.SOVITY_EDC_UI_ICP_FOOTER_URL
+        )
+
+        property(
+            category,
+            CeConfigProps.SOVITY_EDC_UI_ICP_FOOTER_TEXT
+        )
     }
 }

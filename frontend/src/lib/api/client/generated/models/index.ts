@@ -88,6 +88,7 @@ export * from './TransferProcessStatesDto';
 export * from './UiAsset';
 export * from './UiAssetCreateRequest';
 export * from './UiAssetEditRequest';
+export * from './UiAssetExtForSphinx';
 export * from './UiConfig';
 export * from './UiConfigFeature';
 export * from './UiConfigPreconfiguredCounterparty';

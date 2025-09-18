@@ -42,6 +42,8 @@ export const UiConfigFeature = {
     EeBasicMarketing: 'EE_BASIC_MARKETING',
     CatenaPolicies: 'CATENA_POLICIES',
     SovityPolicies: 'SOVITY_POLICIES',
+    SphinxPolicies: 'SPHINX_POLICIES',
+    SphinxAssetMetadata: 'SPHINX_ASSET_METADATA',
     BusinessPartnerGroupManagement: 'BUSINESS_PARTNER_GROUP_MANAGEMENT'
 } as const;
 export type UiConfigFeature = typeof UiConfigFeature[keyof typeof UiConfigFeature];

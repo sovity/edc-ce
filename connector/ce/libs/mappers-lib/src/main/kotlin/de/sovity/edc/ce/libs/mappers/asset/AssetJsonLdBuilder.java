@@ -22,6 +22,7 @@ package de.sovity.edc.ce.libs.mappers.asset;
 
 import de.sovity.edc.ce.api.common.model.UiAssetCreateRequest;
 import de.sovity.edc.ce.api.common.model.UiAssetEditRequest;
+import de.sovity.edc.ce.api.common.model.UiAssetExtForSphinx;
 import de.sovity.edc.ce.libs.mappers.dataaddress.DataSourceMapper;
 import de.sovity.edc.runtime.simple_di.Service;
 import de.sovity.edc.utils.JsonUtils;
@@ -138,6 +139,7 @@ public class AssetJsonLdBuilder {
         addCreator(properties, organizationName);
         addDistribution(properties, request);
         addTemporal(properties, request);
+        addSphinxFields(properties, request);
 
         addCustomJsonLd(properties, request);
         addDataSourceHints(properties, dataAddressJsonLd);
@@ -192,6 +194,15 @@ public class AssetJsonLdBuilder {
         addNonNull(temporal, Prop.Dcat.START_DATE, from);
         addNonNull(temporal, Prop.Dcat.END_DATE, toInclusive);
         properties.add(Prop.Dcterms.TEMPORAL, temporal);
+    }
+
+    private void addSphinxFields(JsonObjectBuilder properties, UiAssetCreateRequest request) {
+        var sphinxFields = request.getSphinxFields();
+        if (sphinxFields == null) {
+            return;
+        }
+
+        addNonNull(properties, Prop.Sphinx.DATA_MODEL_NAME, sphinxFields.getDataModelName());
     }
 
     @Nullable
