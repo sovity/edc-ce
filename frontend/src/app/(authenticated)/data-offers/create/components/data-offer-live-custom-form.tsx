@@ -62,9 +62,6 @@ export const DataOfferLiveCustomForm = ({
     }
   }, [azureDataAddress]);
 
-  useEffect(() => {
-  }, [isAzureOpen]);
-
   return (
     value.offerLiveType === 'CUSTOM_JSON' && (
       <>
