@@ -8,15 +8,15 @@ body:
       label: 1. What section or topic needs to be updated?
       description: Use sovity product names or component names.
       options:
-        - label: Connector as a Service (CaaS)
-        - label: DAPS
-        - label: Data Space Portal (DSPortal)
-        - label: Digital Twin Registry
-        - label: EDC
-        - label: ECU App
-        - label: Traceability App (TA)
-        - label: sovity Hub
-        - label: Other
+         - label: Connector as a Service (CaaS)
+         - label: DAPS
+         - label: Data Space Portal (DSPortal)
+         - label: Digital Twin Registry
+         - label: EDC
+         - label: ECU App
+         - label: Traceability App (TA)
+         - label: sovity Hub
+         - label: Other
   - type: input
     id: other_specification
     attributes:
@@ -43,14 +43,14 @@ body:
   - type: textarea
     id: proposed_changes
     attributes:
-      label: 4. Describe the changes that need to be made.
+      label: 4. Describe the changes that need to be made. 
       description: Please be as specific as possible.
     validations:
       required: true
   - type: textarea
     id: additional_context
     attributes:
-      label: 5. Additional Context
+      label: 5. Additional Context 
       description: Include any additional context, screenshots, examples, or references that might help in understanding the update request.
   - type: input
     id: deadline
