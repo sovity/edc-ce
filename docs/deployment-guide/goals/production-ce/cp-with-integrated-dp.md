@@ -25,7 +25,7 @@ In general:
   - Management API URL for UI users. Use this route for the UI to access the Management API via the Auth Proxy's Cookie:
     - `https://${MY_EDC_FQDN}/ui/api/management` -> **[Auth Proxy]** -> `edc:11002/api/management`
   - Protocol API URL
-    - `https://${MY_EDC_FQDN}/api/dsp` -> `edc:11003/api/dsp`
+    - `https://${MY_EDC_FQDN}/api/v1/dsp` -> `edc:11003/api/v1/dsp`
   - Data Plane Public API URL:
     - `https://${MY_EDC_FQDN}/api/public` -> `edc:11005/api/public`
   - Proxy API (originally only for Catena-X):
@@ -60,7 +60,7 @@ flowchart TD
 
   counterparty -- :443/api/public --> edc-11005
   counterparty -- :443/api/proxy --> edc-11006
-  counterparty -- :443/api/dsp --> edc-11003
+  counterparty -- :443/api/v1/dsp --> edc-11003
   api-user -- :443/api/management --> auth-proxy
   ui-user -- :443/** --> auth-proxy
   auth-proxy -- /** --> ui

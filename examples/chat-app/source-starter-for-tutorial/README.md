@@ -67,7 +67,7 @@ This starts a docker-compose:
   - Management API Key: `SomeOtherApiKey`
 - Dataspace Identity:
   - Participant ID: `provider`
-  - Connector Endpoint: http://provider/api/dsp
+  - Connector Endpoint: http://provider/api/v1/dsp
 
 </td>
 <td>
@@ -77,7 +77,7 @@ This starts a docker-compose:
   - Management API URL: http://localhost:22000/api/management
   - Management API Key: `SomeOtherApiKey`
 - Dataspace Identity:
-  - Connector Endpoint: http://consumer/api/dsp
+  - Connector Endpoint: http://consumer/api/v1/dsp
   - Participant ID: `consumer`
 
 </td>

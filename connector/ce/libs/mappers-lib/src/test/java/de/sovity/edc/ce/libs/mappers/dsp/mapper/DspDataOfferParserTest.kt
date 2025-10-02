@@ -36,7 +36,7 @@ class DspDataOfferParserTest {
 
         // act
         val parsed = DspDataOfferParser(TitaniumJsonLd(mock()))
-            .parseDataOffers("http://localhost:16100/api/dsp", json)
+            .parseDataOffers("http://localhost:16100/api/v1/dsp", json)
 
         // assert
         assertThat(parsed)
@@ -52,7 +52,7 @@ class DspDataOfferParserTest {
 
         // act
         val parsed = DspDataOfferParser(TitaniumJsonLd(mock()))
-            .parseDataOffers("http://localhost:16100/api/dsp", json)
+            .parseDataOffers("http://localhost:16100/api/v1/dsp", json)
 
         // assert
         assertThat(parsed)

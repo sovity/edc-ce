@@ -7,7 +7,7 @@ services:
       - "18080:8080"
     environment:
       "chat-app.backend-url-as-reachable-by-own-edc": "http://provider-chat-app-backend:8080"
-      "chat-app.edc.connector-endpoint": "http://provider/api/dsp"
+      "chat-app.edc.connector-endpoint": "http://provider/api/v1/dsp"
       "chat-app.edc.management-api.url": "http://provider/api/management"
       "chat-app.edc.management-api.key": "SomeOtherApiKey"
 
@@ -29,7 +29,7 @@ services:
       - "28080:8080"
     environment:
       "chat-app.backend-url-as-reachable-by-own-edc": "http://consumer-chat-app-backend:8080"
-      "chat-app.edc.connector-endpoint": "http://consumer/api/dsp"
+      "chat-app.edc.connector-endpoint": "http://consumer/api/v1/dsp"
       "chat-app.edc.management-api.url": "http://consumer/api/management"
       "chat-app.edc.management-api.key": "SomeOtherApiKey"
 

@@ -119,7 +119,7 @@ POST `to /v3/transferprocesses`
   "@type": "https://w3id.org/edc/v0.0.1/ns/TransferRequest",
   "https://w3id.org/edc/v0.0.1/ns/assetId": "{{ASSET_ID}}",
   "https://w3id.org/edc/v0.0.1/ns/contractId": "{{CONTRACT_ID}}",
-  "https://w3id.org/edc/v0.0.1/ns/connectorAddress": "https://{{PROVIDER_EDC_FQDN}}/api/dsp",
+  "https://w3id.org/edc/v0.0.1/ns/connectorAddress": "https://{{PROVIDER_EDC_FQDN}}/api/v1/dsp",
   "https://w3id.org/edc/v0.0.1/ns/connectorId": "{{PROVIDER_EDC_PARTICIPANT_ID}}",
   "https://w3id.org/edc/v0.0.1/ns/dataDestination": {
     "https://w3id.org/edc/v0.0.1/ns/type": "HttpData",

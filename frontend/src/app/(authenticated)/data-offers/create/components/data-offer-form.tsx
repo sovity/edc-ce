@@ -379,7 +379,7 @@ export const DataOfferForm = ({
           <Button
             dataTestId={'btn-submit'}
             type="submit"
-            disabled={form.formState.isSubmitting || !form.formState.isValid}
+            disabled={form.formState.isSubmitting}
             isLoading={form.formState.isSubmitting}>
             {mode === 'EDIT'
               ? t('General.edit')

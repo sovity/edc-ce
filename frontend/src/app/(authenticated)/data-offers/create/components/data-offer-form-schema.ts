@@ -12,6 +12,11 @@ import {dataOfferTypeSchema} from '@/app/(authenticated)/data-offers/create/comp
 import {type DataOfferPublishType} from '@sovity.de/edc-client';
 import {z} from 'zod';
 import {allowedIdRegex, invalidIdError} from '@/lib/utils/id-utils';
+import {validateAssetId} from './use-async-id-validation';
+import {type DataOfferFormMode} from './data-offer-form-mode';
+import {type useTranslations} from 'next-intl';
+
+const debounceValidateAssetId = validateAssetId();
 
 const dataOfferBasicFieldsSchema = z.object({
   assetId: z.string().min(1).max(128).regex(allowedIdRegex, {
@@ -69,22 +74,43 @@ const dataOfferAdvancedFieldsSchema = z.discriminatedUnion(
   ],
 );
 
-export const dataOfferFormSchema = z.object({
-  type: dataOfferTypeSchema,
-  general: dataOfferBasicFieldsSchema,
-  advanced: dataOfferAdvancedFieldsSchema,
-  publishing: z.discriminatedUnion('mode', [
-    z.object({
-      mode: z.literal('PUBLISH_UNRESTRICTED' satisfies DataOfferPublishType),
-    }),
-    z.object({
-      mode: z.literal('PUBLISH_RESTRICTED' satisfies DataOfferPublishType),
-      policy: policyEditorFormSchema,
-    }),
-    z.object({
-      mode: z.literal('DONT_PUBLISH' satisfies DataOfferPublishType),
-    }),
-  ]),
-});
+export const dataOfferFormSchema = (
+  formMode: DataOfferFormMode,
+  t: ReturnType<typeof useTranslations>,
+) =>
+  z
+    .object({
+      type: dataOfferTypeSchema,
+      general: dataOfferBasicFieldsSchema,
+      advanced: dataOfferAdvancedFieldsSchema,
+      publishing: z.discriminatedUnion('mode', [
+        z.object({
+          mode: z.literal(
+            'PUBLISH_UNRESTRICTED' satisfies DataOfferPublishType,
+          ),
+        }),
+        z.object({
+          mode: z.literal('PUBLISH_RESTRICTED' satisfies DataOfferPublishType),
+          policy: policyEditorFormSchema,
+        }),
+        z.object({
+          mode: z.literal('DONT_PUBLISH' satisfies DataOfferPublishType),
+        }),
+      ]),
+    })
+    .refine(
+      (formData) =>
+        debounceValidateAssetId(
+          formData.general.assetId,
+          formMode,
+          formData.publishing.mode,
+        ),
+      {
+        message: t('General.Validators.assetIdTaken'),
+        path: ['general', 'assetId'],
+      },
+    );
 
-export type DataOfferCreateFormModel = z.infer<typeof dataOfferFormSchema>;
+export type DataOfferCreateFormModel = z.infer<
+  ReturnType<typeof dataOfferFormSchema>
+>;

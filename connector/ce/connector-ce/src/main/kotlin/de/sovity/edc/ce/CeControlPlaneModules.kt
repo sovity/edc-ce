@@ -147,9 +147,9 @@ object CeControlPlaneModules {
             ConfigPropCategory.OVERRIDES,
             CeConfigProps.WEB_HTTP_PROTOCOL_PATH
         ) {
-            defaultValueFn = DocumentedFn("Defaults to `[base/]api/dsp`") { config ->
+            defaultValueFn = DocumentedFn("Defaults to `[base/]api/v1/dsp`") { config ->
                 val basePath = CeConfigProps.SOVITY_BASE_PATH.getStringOrThrow(config)
-                UrlPathUtils.urlPathJoin(basePath, "api/dsp")
+                UrlPathUtils.urlPathJoin(basePath, "api/v1/dsp")
             }
             warnIfOverridden = true
         }

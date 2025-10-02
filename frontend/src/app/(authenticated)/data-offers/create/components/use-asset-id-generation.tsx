@@ -10,7 +10,6 @@
 import {useEffect, useState} from 'react';
 import {type UseFormReturn} from 'react-hook-form';
 import {type DataOfferFormMode} from './data-offer-form-mode';
-import {useAsyncIdValidation} from './use-async-id-validation';
 
 export const useAssetIdGeneration = ({
   form,
@@ -26,13 +25,6 @@ export const useAssetIdGeneration = ({
   const [oldAssetName, setOldAssetName] = useState<string>('');
   const assetId = form.watch(assetIdFieldName) as string;
   const assetName = form.watch(assetNameFieldName) as string;
-
-  useAsyncIdValidation({
-    form,
-    assetIdFieldName,
-    assetId,
-    formMode,
-  });
 
   useEffect(() => {
     if (assetName == oldAssetName) {
