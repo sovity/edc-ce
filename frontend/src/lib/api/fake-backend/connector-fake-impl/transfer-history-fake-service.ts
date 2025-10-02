@@ -111,7 +111,7 @@ export const transferProcessAsset = (transferProcessId: string): UiAsset => {
     dataSourceAvailability: 'LIVE',
     title: assetId,
     participantId: 'unknown',
-    connectorEndpoint: 'https://unknown/api/dsp',
+    connectorEndpoint: 'https://unknown/api/v1/dsp',
     isOwnConnector: false,
     creatorOrganizationName: 'unknown',
   };

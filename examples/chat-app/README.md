@@ -54,7 +54,7 @@ This should start a Docker Compose with two Chat Apps. Relevant URLs are:
     - Management API Key: `SomeOtherApiKey`
   - Connector Dataspace Identity:
     - Participant ID: `provider`
-    - Connector Endpoint: http://provider/api/dsp
+    - Connector Endpoint: http://provider/api/v1/dsp
 - Second Chat App + EDC: "Consumer"
   - **Chat App UI**: http://localhost:23000
   - **Chat App Backend**: http://localhost:28080
@@ -64,16 +64,16 @@ This should start a Docker Compose with two Chat Apps. Relevant URLs are:
     - Management API Key: `SomeOtherApiKey`
   - Connector Dataspace Identity:
     - Participant ID: `consumer`
-    - Connector Endpoint: http://consumer/api/dsp
+    - Connector Endpoint: http://consumer/api/v1/dsp
 
 ### Establish a channel
 
 - Open http://localhost:13000/
 - Click `New Chat`
   - Participant ID: `consumer`
-  - Connection endpoint: `http://consumer/api/dsp`
+  - Connection endpoint: `http://consumer/api/v1/dsp`
 - Open http://localhost:23000/
 - Click `New Chat`
   - Participant ID: `provider`
-  - Connection endpoint: `http://provider/api/dsp`
+  - Connection endpoint: `http://provider/api/v1/dsp`
 - Write a message and check the counterparty's chat page.

@@ -786,7 +786,7 @@ object CeConfigProps {
     @JvmStatic
     val SOVITY_EDC_UI_PRECONFIGURED_COUNTERPARTIES = ConfigPropRef(
         property = "sovity.edc.ui.preconfigured.counterparties",
-        defaultDocumentation = "Comma separated list of enabled preconfigured counterparties. format is https://connector/api/dsp?participantId=abc"
+        defaultDocumentation = "Comma separated list of enabled preconfigured counterparties. format is https://connector/api/v1/dsp?participantId=abc"
     )
 
     @JvmStatic

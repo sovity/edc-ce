@@ -862,7 +862,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"@context\": {\r\n        \"@vocab\": \"https://w3id.org/edc/v0.0.1/ns/\"\r\n    },\r\n    \"@type\": \"CatalogRequest\",\r\n    \"protocol\": \"dataspace-protocol-http\",\r\n    \"edc:counterPartyAddress\": \"http://provider/api/dsp\",\r\n    \"edc:counterPartyId\": \"provider\",\r\n    \"querySpec\": {\r\n        \"@type\": \"QuerySpecDto\",\r\n        \"offset\": 0,\r\n        \"limit\": 100\r\n    }\r\n}",
+									"raw": "{\r\n    \"@context\": {\r\n        \"@vocab\": \"https://w3id.org/edc/v0.0.1/ns/\"\r\n    },\r\n    \"@type\": \"CatalogRequest\",\r\n    \"protocol\": \"dataspace-protocol-http\",\r\n    \"edc:counterPartyAddress\": \"http://provider/api/v1/dsp\",\r\n    \"edc:counterPartyId\": \"provider\",\r\n    \"querySpec\": {\r\n        \"@type\": \"QuerySpecDto\",\r\n        \"offset\": 0,\r\n        \"limit\": 100\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2008,7 +2008,7 @@
 										{
 											"key": "connectorEndpoint",
 											"value": "{{REQUESTING_DSP_ENDPOINT}}",
-											"description": "The full URL to the connector's DSP endpoint as seen by the connector. Example for the default docker compose setup (within the docker network): http://edc2:11003/api/dsp. You can also find this value in the dashboard's UI."
+											"description": "The full URL to the connector's DSP endpoint as seen by the connector. Example for the default docker compose setup (within the docker network): http://edc2:11003/api/v1/dsp. You can also find this value in the dashboard's UI."
 										}
 									]
 								}
@@ -2027,7 +2027,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"counterPartyAddress\": \"http://edc:11003/api/dsp\",\r\n    \"counterPartyParticipantId\": \"my-edc\",\r\n    \"contractOfferId\": \"{{CONTRACT_OFFER_ID}}\",\r\n    \"policyJsonLd\": \"{{POLICY_JSON_LD}}\",\r\n    \"assetId\": \"{{ASSET_ID}}\"\r\n}",
+									"raw": "{\r\n    \"counterPartyAddress\": \"http://edc:11003/api/v1/dsp\",\r\n    \"counterPartyParticipantId\": \"my-edc\",\r\n    \"contractOfferId\": \"{{CONTRACT_OFFER_ID}}\",\r\n    \"policyJsonLd\": \"{{POLICY_JSON_LD}}\",\r\n    \"assetId\": \"{{ASSET_ID}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"

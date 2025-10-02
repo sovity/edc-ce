@@ -32,7 +32,7 @@ export const dashboardPage = (): DashboardPage => ({
   connectorMaintainerUrl: 'https://sovity.de',
   connectorCuratorName: 'Example GmbH',
   connectorCuratorUrl: 'https://example.com',
-  connectorEndpoint: 'https://edc.fake-backend/api/dsp',
+  connectorEndpoint: 'https://edc.fake-backend/api/v1/dsp',
   managementApiUrlShownInDashboard: 'https://edc.fake-backend/api/management',
   connectorCxDidConfig: {
     myDid:

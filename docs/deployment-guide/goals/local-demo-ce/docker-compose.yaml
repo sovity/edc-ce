@@ -10,13 +10,13 @@ services:
       CONNECTOR_UPSTREAM_HOST: 'consumer-connector'
       FRONTEND_UPSTREAM_HOST: 'consumer-ui'
   consumer-ui:
-    image: 'ghcr.io/sovity/edc-ce-ui:15.1.0'
+    image: 'ghcr.io/sovity/edc-ce-ui:16.0.0'
     restart: 'unless-stopped'
     environment:
       NEXT_PUBLIC_MANAGEMENT_API_URL: '/api/management'
       NEXT_PUBLIC_MANAGEMENT_API_KEY: 'SomeOtherApiKey'
   consumer-connector:
-    image: 'ghcr.io/sovity/edc-ce:15.1.0'
+    image: 'ghcr.io/sovity/edc-ce:16.0.0'
     restart: 'unless-stopped'
     depends_on:
       consumer-connector-db:
@@ -36,7 +36,7 @@ services:
       sovity.edc.maintainer.url: 'https://consumer/maintainer'
       sovity.edc.curator.name: 'consumer Curator'
       sovity.edc.curator.url: 'https://consumer/curator'
-      sovity.edc.ui.preconfigured.counterparties: 'http://provider/api/dsp?participantId=provider'
+      sovity.edc.ui.preconfigured.counterparties: 'http://provider/api/v1/dsp?participantId=provider'
       sovity.dataspace.kind: 'sovity-mock-iam'
       edc.participant.id: 'consumer'
       sovity.http.protocol: 'http://'
@@ -69,13 +69,13 @@ services:
       CONNECTOR_UPSTREAM_HOST: 'provider-connector'
       FRONTEND_UPSTREAM_HOST: 'provider-ui'
   provider-ui:
-    image: 'ghcr.io/sovity/edc-ce-ui:15.1.0'
+    image: 'ghcr.io/sovity/edc-ce-ui:16.0.0'
     restart: 'unless-stopped'
     environment:
       NEXT_PUBLIC_MANAGEMENT_API_URL: '/api/management'
       NEXT_PUBLIC_MANAGEMENT_API_KEY: 'SomeOtherApiKey'
   provider-connector:
-    image: 'ghcr.io/sovity/edc-ce:15.1.0'
+    image: 'ghcr.io/sovity/edc-ce:16.0.0'
     restart: 'unless-stopped'
     depends_on:
       provider-connector-db:
@@ -95,7 +95,7 @@ services:
       sovity.edc.maintainer.url: 'https://provider/maintainer'
       sovity.edc.curator.name: 'provider Curator'
       sovity.edc.curator.url: 'https://provider/curator'
-      sovity.edc.ui.preconfigured.counterparties: 'http://consumer/api/dsp?participantId=consumer'
+      sovity.edc.ui.preconfigured.counterparties: 'http://consumer/api/v1/dsp?participantId=consumer'
       sovity.dataspace.kind: 'sovity-mock-iam'
       edc.participant.id: 'provider'
       sovity.http.protocol: 'http://'

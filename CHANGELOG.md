@@ -2,6 +2,35 @@
 
 The versions of the sovity EDC CE are aligned with the sovity EDC EE.
 
+## [v16.0.0] - 2025-10-02
+
+### Overview
+
+Default protocol path changed to `api/v1/dsp` to align with Tractus-X.
+
+#### Major Changes
+
+- Default protocol path has been changed to `api/v1/dsp` to align with Tractus-X
+
+#### Patch Changes
+
+- Debounced asset ID validation in UI to once a second
+- Changed default of `edc.http.client.https.enforce` to `false` to prevent failing fetching of some JSON-LD documents.
+
+### Deployment Migration Notes
+
+- Default protocol path has been changed to `api/v1/dsp` to align with Tractus-X.
+  - Backward compatibility can be enabled by adding a redirect from the old path to the new.
+  - This will break existing contracts. This change can be avoided by setting `web.http.protocol.path` to `api/dsp`
+
+#### Compatible Versions
+
+- EDC CE Backend: `ghcr.io/sovity/edc-ce:16.0.0`
+- EDC CE Frontend: `ghcr.io/sovity/edc-ce-ui:16.0.0`
+- PostgreSQL: `17`
+- Eclipse EDC Fork: [v0.11.1.3](https://github.com/sovity/core-edc/releases/tag/v0.11.1.3)
+- Tractus-X: `0.9.0`
+
 ## [v15.1.0] - 2025-09-18
 
 ### Overview

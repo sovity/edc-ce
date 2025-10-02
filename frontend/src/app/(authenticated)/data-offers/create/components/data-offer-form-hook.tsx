@@ -15,14 +15,16 @@ import {zodResolver} from '@hookform/resolvers/zod';
 import {useForm} from 'react-hook-form';
 import {useAssetIdGeneration} from '@/app/(authenticated)/data-offers/create/components/use-asset-id-generation';
 import {type DataOfferFormMode} from './data-offer-form-mode';
+import {useTranslations} from 'next-intl';
 
 export const useDataOfferCreateForm = (
   initialFormValue: DataOfferCreateFormModel,
   formMode: DataOfferFormMode,
 ) => {
+  const t = useTranslations();
   const form = useForm<DataOfferCreateFormModel>({
     mode: 'all',
-    resolver: zodResolver(dataOfferFormSchema),
+    resolver: zodResolver(dataOfferFormSchema(formMode, t)),
     defaultValues: initialFormValue,
   });
 
@@ -35,6 +37,6 @@ export const useDataOfferCreateForm = (
 
   return {
     form,
-    schema: dataOfferFormSchema,
+    schema: dataOfferFormSchema(formMode, t),
   };
 };

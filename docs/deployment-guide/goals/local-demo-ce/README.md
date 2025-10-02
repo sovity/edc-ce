@@ -34,4 +34,4 @@ The default configuration launches two local EDC Connectors with the following c
 | Connector Dashboard | http://localhost:11000                                           | http://localhost:22000                                           |
 | Management-API Endpoint | http://localhost:11000/api/management                            | http://localhost:22000/api/management                            |
 | Management-API API-Key  | `SomeOtherApiKey`                                                | `SomeOtherApiKey`                                                |
-| Connector DSP Endpoint  | http://provider:11003/api/dsp<br>Requires Docker Compose Network | http://consumer:11003/api/dsp<br>Requires Docker Compose Network |
+| Connector DSP Endpoint  | http://provider:11003/api/v1/dsp<br>Requires Docker Compose Network | http://consumer:11003/api/v1/dsp<br>Requires Docker Compose Network |

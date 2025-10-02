@@ -272,7 +272,7 @@ class AssetJsonLdParserTest {
             .build();
 
         // Act
-        var uiAsset = assetJsonLdParser.buildUiAsset(assetJsonLd, "https://other-connector/api/dsp", PARTICIPANT_ID);
+        var uiAsset = assetJsonLdParser.buildUiAsset(assetJsonLd, "https://other-connector/api/v1/dsp", PARTICIPANT_ID);
 
         // Assert
         assertThat(uiAsset).isNotNull();

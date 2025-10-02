@@ -28,7 +28,7 @@ In general:
   - Management API URL for UI users. Use this route for the UI to access the Management API via the Auth Proxy's Cookie:
     - `https://${MY_EDC_FQDN}/ui/api/management` -> **[Auth Proxy]** -> `control-plane:11002/control/api/management`
   - Protocol API URL
-    - `https://${MY_EDC_FQDN}/control/api/dsp` -> `control-plane:11003/control/api/dsp`
+    - `https://${MY_EDC_FQDN}/control/api/v1/dsp` -> `control-plane:11003/control/api/v1/dsp`
 - Standalone Data Plane:
   - Assuming a base path `/data`
   - Assuming default first port of `12000` for standalone data planes
@@ -73,7 +73,7 @@ flowchart TD
   dp-12004 -- control-plane:11004/control/api/control --> cp-11004
   counterparty -- :443/data/api/public --> dp-12005
   counterparty -- :443/data/api/proxy --> dp-12006
-  counterparty -- :443/control/api/dsp --> cp-11003
+  counterparty -- :443/control/api/v1/dsp --> cp-11003
   api-user -- :443/control/api/management --> auth-proxy
   ui-user -- :443/** --> auth-proxy
   auth-proxy -- /** --> ui

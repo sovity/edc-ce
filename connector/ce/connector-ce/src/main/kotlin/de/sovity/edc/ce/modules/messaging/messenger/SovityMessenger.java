@@ -45,7 +45,7 @@ public class SovityMessenger {
      * Sends a message to the counterparty address and returns a future result.
      *
      * @param resultType The result's class.
-     * @param counterPartyAddress The base DSP URL where to send the message. e.g. https://server:port/api/dsp
+     * @param counterPartyAddress The base DSP URL where to send the message. e.g. https://server:port/api/v1/dsp
      * @param counterPartyId The Participant ID of the counterparty EDC. e.g. BPNL1234XX.C1234XX
      * @param payload The message to send.
      * @param <T> The outgoing message type.

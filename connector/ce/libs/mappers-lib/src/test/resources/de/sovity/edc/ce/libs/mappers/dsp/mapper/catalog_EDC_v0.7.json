@@ -49,9 +49,9 @@
           "@id": "01962431-8581-7522-ae4f-f3b8a99247f5",
           "@type": "dcat:DataService",
           "dcat:endpointDescription": "dspace:connector",
-          "dcat:endpointUrl": "http://localhost:20801/api/dsp",
+          "dcat:endpointUrl": "http://localhost:20801/api/v1/dsp",
           "dct:terms": "dspace:connector",
-          "dct:endpointUrl": "http://localhost:20801/api/dsp"
+          "dct:endpointUrl": "http://localhost:20801/api/v1/dsp"
         }
       },
       {
@@ -63,9 +63,9 @@
           "@id": "01962431-8581-7522-ae4f-f3b8a99247f5",
           "@type": "dcat:DataService",
           "dcat:endpointDescription": "dspace:connector",
-          "dcat:endpointUrl": "http://localhost:20801/api/dsp",
+          "dcat:endpointUrl": "http://localhost:20801/api/v1/dsp",
           "dct:terms": "dspace:connector",
-          "dct:endpointUrl": "http://localhost:20801/api/dsp"
+          "dct:endpointUrl": "http://localhost:20801/api/v1/dsp"
         }
       },
       {
@@ -77,9 +77,9 @@
           "@id": "01962431-8581-7522-ae4f-f3b8a99247f5",
           "@type": "dcat:DataService",
           "dcat:endpointDescription": "dspace:connector",
-          "dcat:endpointUrl": "http://localhost:20801/api/dsp",
+          "dcat:endpointUrl": "http://localhost:20801/api/v1/dsp",
           "dct:terms": "dspace:connector",
-          "dct:endpointUrl": "http://localhost:20801/api/dsp"
+          "dct:endpointUrl": "http://localhost:20801/api/v1/dsp"
         }
       }
     ],
@@ -104,9 +104,9 @@
     "@id": "01962431-8581-7522-ae4f-f3b8a99247f5",
     "@type": "dcat:DataService",
     "dcat:endpointDescription": "dspace:connector",
-    "dcat:endpointUrl": "http://localhost:20801/api/dsp",
+    "dcat:endpointUrl": "http://localhost:20801/api/v1/dsp",
     "dct:terms": "dspace:connector",
-    "dct:endpointUrl": "http://localhost:20801/api/dsp"
+    "dct:endpointUrl": "http://localhost:20801/api/v1/dsp"
   },
   "participantId": "theParticipantId",
   "@context": {

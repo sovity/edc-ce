@@ -11,7 +11,7 @@ import {TestPolicies} from './data/test-policies';
 
 const dataOffers: UiDataOffer[] = [
   {
-    endpoint: 'https://existing-other-connector/api/dsp',
+    endpoint: 'https://existing-other-connector/api/v1/dsp',
     participantId: 'BPNL1234XX.C1234XX',
     asset: TestAssets.full,
     contractOffers: [
@@ -28,7 +28,7 @@ const dataOffers: UiDataOffer[] = [
     ],
   },
   {
-    endpoint: 'https://existing-other-connector/api/dsp',
+    endpoint: 'https://existing-other-connector/api/v1/dsp',
     participantId: 'BPNL1234XX.C1234XX',
     asset: TestAssets.onRequestAsset,
     contractOffers: [
@@ -39,7 +39,7 @@ const dataOffers: UiDataOffer[] = [
     ],
   },
   {
-    endpoint: 'https://existing-other-connector/api/dsp',
+    endpoint: 'https://existing-other-connector/api/v1/dsp',
     asset: TestAssets.boring,
     participantId: 'BPNL1234XX.C1234XX',
     contractOffers: [
@@ -50,7 +50,7 @@ const dataOffers: UiDataOffer[] = [
     ],
   },
   {
-    endpoint: 'https://existing-other-connector/api/dsp',
+    endpoint: 'https://existing-other-connector/api/v1/dsp',
     asset: TestAssets.short,
     participantId: 'BPNL1234XX.C1234XX',
     contractOffers: [

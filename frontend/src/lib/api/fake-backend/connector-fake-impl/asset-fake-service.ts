@@ -109,7 +109,7 @@ export const createAsset = (asset: UiAssetCreateRequest): IdResponseDto => {
   assets.push({
     assetId,
     ...createAssetMetadata(assetId, asset),
-    connectorEndpoint: 'https://my-connector/api/dsp',
+    connectorEndpoint: 'https://my-connector/api/v1/dsp',
     participantId: 'BPNL1234XX.C1234XX',
     isOwnConnector: false,
     creatorOrganizationName: 'My Org',

@@ -198,8 +198,10 @@ object CeRootModule {
             CeConfigProps.EDC_HTTP_CLIENT_HTTPS_ENFORCE
         ) {
             defaultValueFn = DocumentedFn(
-                "Defaults to `true`. Set to `false` if `${CeConfigProps.SOVITY_HTTP_PROTOCOL.property}`=`http://`"
-            ) { (CeConfigProps.SOVITY_HTTP_PROTOCOL.getStringOrThrow(it) != "http://").toString() }
+                "Defaults to `false`. Because JSON-LD documents are on `http://` domains often. Especially set to `false` if `${CeConfigProps.SOVITY_HTTP_PROTOCOL.property}`=`http://`"
+            ) {
+                "false"
+            }
         }
     }
 }

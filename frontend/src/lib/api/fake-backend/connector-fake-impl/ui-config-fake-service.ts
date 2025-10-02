@@ -24,17 +24,17 @@ export const UI_CONFIG_OPTIONS: UiConfigFakeBackendOption[] = [
       documentationUrl: 'https://edc-ce.docs.sovity.de/',
       preconfiguredCounterparties: [
         {
-          connectorEndpoint: 'https://existing-other-connector/api/dsp',
+          connectorEndpoint: 'https://existing-other-connector/api/v1/dsp',
           participantId: 'BPNL1234XX.C1234XX',
         },
         {
           connectorEndpoint:
-            'https://does-not-exist-but-is-super-long-so-we-can-test/api/dsp',
+            'https://does-not-exist-but-is-super-long-so-we-can-test/api/v1/dsp',
           participantId: 'BPNL1234XX.C1235XX',
         },
         {
           connectorEndpoint:
-            'https://how-wrapping-works-in-subtext-of-catalog-url-select/api/dsp',
+            'https://how-wrapping-works-in-subtext-of-catalog-url-select/api/v1/dsp',
           participantId: 'BPNL1234XX.C1237XX',
         },
       ],
@@ -47,17 +47,17 @@ export const UI_CONFIG_OPTIONS: UiConfigFakeBackendOption[] = [
       documentationUrl: 'https://edc-ce.docs.sovity.de/',
       preconfiguredCounterparties: [
         {
-          connectorEndpoint: 'https://existing-other-connector/api/dsp',
+          connectorEndpoint: 'https://existing-other-connector/api/v1/dsp',
           participantId: 'BPNL1234XX.C1234XX',
         },
         {
           connectorEndpoint:
-            'https://does-not-exist-but-is-super-long-so-we-can-test/api/dsp',
+            'https://does-not-exist-but-is-super-long-so-we-can-test/api/v1/dsp',
           participantId: 'BPNL1234XX.C1235XX',
         },
         {
           connectorEndpoint:
-            'https://how-wrapping-works-in-subtext-of-catalog-url-select/api/dsp',
+            'https://how-wrapping-works-in-subtext-of-catalog-url-select/api/v1/dsp',
           participantId: 'BPNL1234XX.C1237XX',
         },
       ],
@@ -74,17 +74,17 @@ export const UI_CONFIG_OPTIONS: UiConfigFakeBackendOption[] = [
       documentationUrl: 'https://edc-ce.docs.sovity.de/',
       preconfiguredCounterparties: [
         {
-          connectorEndpoint: 'https://existing-other-connector/api/dsp',
+          connectorEndpoint: 'https://existing-other-connector/api/v1/dsp',
           participantId: 'BPNL1234XX.C1234XX',
         },
         {
           connectorEndpoint:
-            'https://does-not-exist-but-is-super-long-so-we-can-test/api/dsp',
+            'https://does-not-exist-but-is-super-long-so-we-can-test/api/v1/dsp',
           participantId: 'BPNL1234XX.C1235XX',
         },
         {
           connectorEndpoint:
-            'https://how-wrapping-works-in-subtext-of-catalog-url-select/api/dsp',
+            'https://how-wrapping-works-in-subtext-of-catalog-url-select/api/v1/dsp',
           participantId: 'BPNL1234XX.C1237XX',
         },
       ],
