@@ -7,17 +7,22 @@
  */
 import {type Patcher, patchObj} from '@/lib/utils/object-utils';
 import {
-  type ContractAgreementCard,
-  type ContractAgreementPage,
+  type ConnectorLimits,
   type ContractAgreementTransferProcess,
-  type ContractTerminationStatus,
+  type ContractDetailPageResult,
+  type ContractsPageEntry,
+  type ContractsPageRequest,
+  type ContractsPageResult,
+  ContractsPageSortProperty,
   type IdResponseDto,
   type InitiateTransferRequest,
+  SortByDirection,
 } from '@sovity.de/edc-client';
 import {TestAssets} from './data/test-assets';
 import {TestPolicies} from './data/test-policies';
+import {filterListPage} from '../utils/list-page-filter-utils';
 
-let contractAgreements: ContractAgreementCard[] = [
+let contractAgreements: ContractDetailPageResult[] = [
   {
     contractAgreementId: 'my-own-asset-cd:f52a5d30-6356-4a55-a75a-3c45d7a88c3a',
     contractNegotiationId:
@@ -197,20 +202,82 @@ let contractAgreements: ContractAgreementCard[] = [
     ],
   },
 ];
-export const contractAgreementPage = (
-  terminationStatus?: ContractTerminationStatus,
-): ContractAgreementPage => {
-  return {
-    contractAgreements: terminationStatus
-      ? contractAgreements.filter(
-          (x) => x.terminationStatus === terminationStatus,
-        )
-      : contractAgreements,
-  };
+export const contractsPage = (
+  request: ContractsPageRequest | null,
+): ContractsPageResult => {
+  const agreements = contractAgreements.map(
+    (item): ContractsPageEntry => ({
+      ...item,
+      assetId: item.asset.assetId,
+      assetTitle: item.asset.title,
+      transferProcessesCount: item.transferProcesses.length,
+      terminatedAt: item.terminationInformation?.terminatedAt,
+    }),
+  );
+  const {pagination, content} = filterListPage(
+    request?.searchText,
+    request?.pagination,
+    agreements,
+    (content, query) =>
+      content.filter(
+        (contract) =>
+          contract.assetId.toLowerCase().includes(query.toLowerCase()) ||
+          contract.contractAgreementId
+            .toLowerCase()
+            .includes(query.toLowerCase()) ||
+          contract.counterPartyId.toLowerCase().includes(query.toLowerCase()),
+      ),
+    (content) => {
+      request?.sortBy?.forEach(({field, direction}) => {
+        content.sort((a, b) => {
+          const extractor = (v: ContractsPageEntry) => {
+            switch (field) {
+              case ContractsPageSortProperty.ContractName:
+                return v.contractAgreementId;
+              case ContractsPageSortProperty.SignedAt:
+                return v.contractSigningDate;
+              case ContractsPageSortProperty.TerminatedAt:
+                return v.terminatedAt;
+              case ContractsPageSortProperty.Transfers:
+                return v.transferProcessesCount;
+            }
+          };
+          const aValue = extractor(a) ?? '';
+          const bValue = extractor(b) ?? '';
+          if (aValue < bValue) {
+            return direction === SortByDirection.Descending
+              ? 1
+              : -1;
+          } else if (aValue > bValue) {
+            return direction === SortByDirection.Descending
+              ? -1
+              : 1;
+          } else {
+            return 0;
+          }
+        });
+      });
+      return content;
+    },
+  );
+
+  return {pagination, contracts: content};
 };
 
+export const contractAgreementPage = (contractAgreementId: string) =>
+  contractAgreements.find(
+    (it) => it.contractAgreementId === contractAgreementId,
+  );
+
+export const connectorLimits = (): ConnectorLimits => ({
+  numActiveConsumingContractAgreements: contractAgreements.filter(
+    (it) => it.direction === 'CONSUMING' && it.terminationStatus === 'ONGOING',
+  ).length,
+  maxActiveConsumingContractAgreements: 1,
+});
+
 export const addContractAgreement = (
-  contractAgreement: ContractAgreementCard,
+  contractAgreement: ContractDetailPageResult,
 ) => {
   contractAgreements = [contractAgreement, ...contractAgreements];
 };
@@ -241,7 +308,7 @@ export const contractAgreementInitiateTransfer = (
 
 export const updateAgreement = (
   contractAgreementId: string,
-  patcher: Patcher<ContractAgreementCard>,
+  patcher: Patcher<ContractDetailPageResult>,
 ) => {
   contractAgreements = contractAgreements.map((agreement) =>
     agreement.contractAgreementId === contractAgreementId

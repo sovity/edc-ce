@@ -7,23 +7,23 @@
  */
 package de.sovity.edc.ce.api.ui
 
-import de.sovity.edc.ce.api.common.model.AssetListPageFilter
 import de.sovity.edc.ce.api.common.model.BuildInfo
 import de.sovity.edc.ce.api.common.model.UiAsset
 import de.sovity.edc.ce.api.common.model.UiAssetCreateRequest
 import de.sovity.edc.ce.api.common.model.UiAssetEditRequest
 import de.sovity.edc.ce.api.common.model.UiInitiateTransferRequest
-import de.sovity.edc.ce.api.ui.model.AssetListPage
+import de.sovity.edc.ce.api.ui.model.AssetsPageRequest
+import de.sovity.edc.ce.api.ui.model.AssetsPageResult
 import de.sovity.edc.ce.api.ui.model.BusinessPartnerGroupCreateSubmit
 import de.sovity.edc.ce.api.ui.model.BusinessPartnerGroupEditSubmit
 import de.sovity.edc.ce.api.ui.model.BusinessPartnerGroupQuery
-import de.sovity.edc.ce.api.ui.model.ContractAgreementCard
-import de.sovity.edc.ce.api.ui.model.ContractAgreementPage
-import de.sovity.edc.ce.api.ui.model.ContractAgreementPageQuery
 import de.sovity.edc.ce.api.ui.model.ContractDefinitionPage
 import de.sovity.edc.ce.api.ui.model.ContractDefinitionRequest
+import de.sovity.edc.ce.api.ui.model.ContractDetailPageResult
 import de.sovity.edc.ce.api.ui.model.ContractNegotiationRequest
 import de.sovity.edc.ce.api.ui.model.ContractTerminationRequest
+import de.sovity.edc.ce.api.ui.model.ContractsPageRequest
+import de.sovity.edc.ce.api.ui.model.ContractsPageResult
 import de.sovity.edc.ce.api.ui.model.DashboardPage
 import de.sovity.edc.ce.api.ui.model.DataOfferCreateRequest
 import de.sovity.edc.ce.api.ui.model.IdAvailabilityResponse
@@ -41,14 +41,17 @@ import de.sovity.edc.ce.api.ui.model.VaultSecretCreateSubmit
 import de.sovity.edc.ce.api.ui.model.VaultSecretEditSubmit
 import de.sovity.edc.ce.api.ui.model.VaultSecretQuery
 import de.sovity.edc.ce.api.ui.pages.asset.AssetApiService
+import de.sovity.edc.ce.api.ui.pages.asset_detail_page.AssetDetailPageApiService
+import de.sovity.edc.ce.api.ui.pages.assets_page.AssetsPageApiService
 import de.sovity.edc.ce.api.ui.pages.business_partner_group.BusinessPartnerGroupApiService
 import de.sovity.edc.ce.api.ui.pages.catalog.CatalogApiService
 import de.sovity.edc.ce.api.ui.pages.config.UiConfigApiService
-import de.sovity.edc.ce.api.ui.pages.contract_agreements.ContractAgreementPageApiService
-import de.sovity.edc.ce.api.ui.pages.contract_agreements.ContractAgreementTerminationApiService
-import de.sovity.edc.ce.api.ui.pages.contract_agreements.ContractAgreementTransferApiService
+import de.sovity.edc.ce.api.ui.pages.contract_agreements.InitiateTransferApiService
+import de.sovity.edc.ce.api.ui.pages.contract_agreements.TerminateContractApiService
 import de.sovity.edc.ce.api.ui.pages.contract_definitions.ContractDefinitionApiService
+import de.sovity.edc.ce.api.ui.pages.contract_detail_page.ContractDetailPageApiService
 import de.sovity.edc.ce.api.ui.pages.contract_negotiations.ContractNegotiationApiService
+import de.sovity.edc.ce.api.ui.pages.contracts_page.ContractsPageApiService
 import de.sovity.edc.ce.api.ui.pages.dashboard.DashboardPageApiService
 import de.sovity.edc.ce.api.ui.pages.dashboard.services.VersionsService
 import de.sovity.edc.ce.api.ui.pages.data_offer.DataOfferPageApiService
@@ -65,22 +68,25 @@ import de.sovity.edc.runtime.simple_di.Service
 @Suppress("LongParameterList")
 class UiResourceImpl(
     private val assetApiService: AssetApiService,
+    private val businessPartnerGroupApiService: BusinessPartnerGroupApiService,
     private val catalogApiService: CatalogApiService,
-    private val contractAgreementApiService: ContractAgreementPageApiService,
-    private val contractAgreementTerminationApiService: ContractAgreementTerminationApiService,
-    private val contractAgreementTransferApiService: ContractAgreementTransferApiService,
     private val contractDefinitionApiService: ContractDefinitionApiService,
+    private val contractDetailPageApiService: ContractDetailPageApiService,
     private val contractNegotiationApiService: ContractNegotiationApiService,
+    private val contractsPageApiService: ContractsPageApiService,
     private val dashboardPageApiService: DashboardPageApiService,
     private val dataOfferPageApiService: DataOfferPageApiService,
     private val dslContextFactory: DslContextFactory,
-    private val uiConfigApiService: UiConfigApiService,
-    private val versionsService: VersionsService,
+    private val initiateTransferApiService: InitiateTransferApiService,
     private val policyDefinitionApiService: PolicyDefinitionApiService,
+    private val terminateContractApiService: TerminateContractApiService,
     private val transferHistoryPageApiService: TransferHistoryPageApiService,
     private val transferHistoryPageAssetFetcherService: TransferHistoryPageAssetFetcherService,
+    private val uiConfigApiService: UiConfigApiService,
     private val vaultSecretApiService: VaultSecretApiService,
-    private val businessPartnerGroupApiService: BusinessPartnerGroupApiService
+    private val versionsService: VersionsService,
+    private val assetsPageApiService: AssetsPageApiService,
+    private val assetDetailPageApiService: AssetDetailPageApiService,
 ) : UiResource {
 
     override fun getDashboardPage(): DashboardPage =
@@ -88,14 +94,14 @@ class UiResourceImpl(
             dashboardPageApiService.dashboardPage(it)
         }
 
-    override fun assetListPage(assetListPageFilter: AssetListPageFilter): AssetListPage =
+    override fun assetsPage(assetsPageRequest: AssetsPageRequest): AssetsPageResult =
         dslContextFactory.transactionResult { dsl ->
-            assetApiService.assetListPage(dsl, assetListPageFilter)
+            assetsPageApiService.assetsPage(dsl, assetsPageRequest)
         }
 
-    override fun assetDetailsPage(assetId: String): UiAsset =
+    override fun assetDetailPage(assetId: String): UiAsset =
         dslContextFactory.transactionResult { dsl ->
-            assetApiService.assetDetailsPage(dsl, assetId)
+            assetDetailPageApiService.assetDetailPage(dsl, assetId)
         }
 
     override fun createAsset(uiAssetCreateRequest: UiAssetCreateRequest): IdResponseDto =
@@ -277,19 +283,19 @@ class UiResourceImpl(
             )
         }
 
-    override fun getContractAgreementPage(
-        contractAgreementPageQuery: ContractAgreementPageQuery?
-    ): ContractAgreementPage =
+    override fun contractsPage(
+        contractsPageRequest: ContractsPageRequest
+    ): ContractsPageResult =
         dslContextFactory.transactionResult { dsl ->
-            contractAgreementApiService.contractAgreementPage(
+            contractsPageApiService.contractsPage(
                 dsl,
-                contractAgreementPageQuery
+                contractsPageRequest
             )
         }
 
-    override fun getContractAgreementCard(contractAgreementId: String): ContractAgreementCard =
+    override fun contractDetailPage(contractAgreementId: String): ContractDetailPageResult =
         dslContextFactory.transactionResult { dsl ->
-            contractAgreementApiService.contractAgreement(
+            contractDetailPageApiService.contractDetailPage(
                 dsl,
                 contractAgreementId
             )
@@ -297,16 +303,16 @@ class UiResourceImpl(
 
     @Deprecated("Use [initiateTransferV2] instead")
     override fun initiateTransfer(request: InitiateTransferRequest): IdResponseDto {
-        return dslContextFactory.transactionResult { dsl ->
-            contractAgreementTransferApiService.initiateTransfer(
+        return dslContextFactory.transactionResult {
+            initiateTransferApiService.initiateTransfer(
                 request
             )
         }
     }
 
     override fun initiateTransferV2(request: UiInitiateTransferRequest): IdResponseDto {
-        return dslContextFactory.transactionResult { dsl ->
-            contractAgreementTransferApiService.initiateTransferV2(
+        return dslContextFactory.transactionResult {
+            initiateTransferApiService.initiateTransferV2(
                 request
             )
         }
@@ -314,7 +320,7 @@ class UiResourceImpl(
 
     override fun initiateCustomTransfer(request: InitiateCustomTransferRequest): IdResponseDto {
         return dslContextFactory.transactionResult { dsl ->
-            contractAgreementTransferApiService.initiateCustomTransfer(request)
+            initiateTransferApiService.initiateCustomTransfer(dsl, request)
         }
     }
 
@@ -324,7 +330,7 @@ class UiResourceImpl(
     ): IdResponseDto {
         return dslContextFactory.transactionResult { dsl ->
             ValidatorUtils.validate(contractTerminationRequest)
-            contractAgreementTerminationApiService.terminate(
+            terminateContractApiService.terminate(
                 dsl,
                 contractAgreementId,
                 contractTerminationRequest

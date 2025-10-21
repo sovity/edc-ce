@@ -37,7 +37,7 @@ export const useUpdateTableSearchParamState = <TData,>(
         params.append('sort', JSON.stringify(sort));
       });
       if (pagination.pageIndex !== 0) {
-        params.set('page', String(pagination.pageIndex));
+        params.set('page', String(pagination.pageIndex + 1));
       } else {
         params.delete('page');
       }

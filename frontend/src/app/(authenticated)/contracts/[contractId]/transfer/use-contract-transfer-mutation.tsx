@@ -15,7 +15,6 @@ import {useInvalidateId} from '@/lib/hooks/use-invalidate-id';
 import {queryKeys} from '@/lib/queryKeys';
 import {urls} from '@/lib/urls';
 import type {
-  ContractAgreementCard,
   IdResponseDto,
   UiDataSinkHttpDataPush,
   UiDataSinkHttpDataPushMethod,
@@ -28,7 +27,7 @@ import {type InitiateTransferHttpFormValue} from '@/app/(authenticated)/contract
 import {buildHttpHeaders} from '@/app/(authenticated)/data-offers/create/components/ui-data-source-mapper';
 
 export interface InitiateTransferParams {
-  contractAgreement: ContractAgreementCard;
+  contractAgreementId: string;
   formValue: InitiateTransferFormValue;
 }
 
@@ -40,28 +39,23 @@ export const useContractTransferMutation = () => {
 
   return useMutation({
     mutationFn: async ({
-      contractAgreement,
+      contractAgreementId,
       formValue,
     }: InitiateTransferParams): Promise<IdResponseDto> => {
       return await api.uiApi.initiateTransferV2({
         uiInitiateTransferRequest: buildTransferRequest({
-          contractAgreement,
+          contractAgreementId,
           formValue,
         }),
       });
     },
-    onSuccess: async ({}, {contractAgreement}) => {
+    onSuccess: async ({}, {contractAgreementId}) => {
       toast({
         title: t('General.success'),
         description: t('Pages.InitiateTransfer.submitSuccess'),
       });
-      await invalidateContract(contractAgreement.contractAgreementId);
-      router.push(
-        urls.contracts.detailPage(
-          contractAgreement.contractAgreementId,
-          'transfers',
-        ),
-      );
+      await invalidateContract(contractAgreementId);
+      router.push(urls.contracts.detailPage(contractAgreementId, 'transfers'));
     },
     onError: (error: {message: string}) => {
       toast({
@@ -73,10 +67,9 @@ export const useContractTransferMutation = () => {
 };
 
 const buildTransferRequest = ({
-  contractAgreement,
+  contractAgreementId,
   formValue,
 }: InitiateTransferParams): UiInitiateTransferRequest => {
-  const contractAgreementId = contractAgreement.contractAgreementId;
   const transferType = formValue.transferType;
   if (transferType === 'CUSTOM_JSON') {
     return {

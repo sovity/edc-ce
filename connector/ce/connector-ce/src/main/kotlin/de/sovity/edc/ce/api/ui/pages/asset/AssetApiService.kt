@@ -7,15 +7,13 @@
  */
 package de.sovity.edc.ce.api.ui.pages.asset
 
-import de.sovity.edc.ce.api.common.model.AssetListPageFilter
-import de.sovity.edc.ce.api.common.model.UiAsset
 import de.sovity.edc.ce.api.common.model.UiAssetCreateRequest
 import de.sovity.edc.ce.api.common.model.UiAssetEditRequest
-import de.sovity.edc.ce.api.ui.model.AssetListPage
 import de.sovity.edc.ce.api.ui.model.IdResponseDto
+import de.sovity.edc.ce.api.ui.pages.asset_detail_page.services.AssetDetailPageBuilder
+import de.sovity.edc.ce.api.ui.pages.asset_detail_page.services.AssetDetailPageQueryService
 import de.sovity.edc.ce.api.ui.pages.dashboard.services.SelfDescriptionService
-import de.sovity.edc.ce.api.utils.buildTablePage
-import de.sovity.edc.ce.api.utils.jooq.JooqUtilsSovity.toPostgresqlJson
+import de.sovity.edc.ce.api.utils.jooq.EdcJsonUtils
 import de.sovity.edc.ce.api.utils.notFoundError
 import de.sovity.edc.ce.db.jooq.Tables
 import de.sovity.edc.ce.libs.mappers.AssetMapper
@@ -30,30 +28,10 @@ class AssetApiService(
     private val assetIdValidator: AssetIdValidator,
     private val selfDescriptionService: SelfDescriptionService,
     private val assetJsonLdBuilder: AssetJsonLdBuilder,
+    private val assetDetailPageBuilder: AssetDetailPageBuilder,
+    private val assetDetailPageQueryService: AssetDetailPageQueryService,
+    private val jsonUtils: EdcJsonUtils
 ) {
-
-    fun assetListPage(dsl: DSLContext, filter: AssetListPageFilter): AssetListPage {
-        val connectorEndpoint = selfDescriptionService.connectorEndpoint
-        val participantId = selfDescriptionService.participantId
-        val assets = AssetRs.listAssets(dsl, filter).map {
-            assetMapper.buildUiAsset(it.toAsset(), connectorEndpoint, participantId)
-        }
-        return buildTablePage(
-            clazz = AssetListPage::class.java,
-            content = assets,
-            totalItems = AssetRs.countAssets(dsl, filter),
-            currentPage = filter.page,
-            optionalPageSize = filter.pageSize
-        )
-    }
-
-    fun assetDetailsPage(dsl: DSLContext, assetId: String): UiAsset {
-        val connectorEndpoint = selfDescriptionService.connectorEndpoint
-        val participantId = selfDescriptionService.participantId
-        return AssetRs.fetchAsset(dsl, assetId)?.let {
-            assetMapper.buildUiAsset(it.toAsset(), connectorEndpoint, participantId)
-        } ?: notFoundError("Asset with ID $assetId not found")
-    }
 
     fun createAsset(dsl: DSLContext, request: UiAssetCreateRequest): IdResponseDto {
         assetIdValidator.assertValid(request.id)
@@ -73,12 +51,15 @@ class AssetApiService(
 
     fun editAsset(dsl: DSLContext, assetId: String, request: UiAssetEditRequest): IdResponseDto {
         val a = Tables.EDC_ASSET
-        val foundAsset = AssetRs.fetchAsset(dsl, assetId) ?: notFoundError("Asset with ID $assetId not found")
-        val editedAsset = assetMapper.editAsset(foundAsset.toAsset(), request)
+        val foundAsset =
+            assetDetailPageQueryService.fetchAssetDetailPage(dsl, assetId)
+                ?.let { assetDetailPageBuilder.buildAsset(it) }
+                ?: notFoundError("Asset with ID $assetId not found")
+        val editedAsset = assetMapper.editAsset(foundAsset, request)
         dsl.fetchOne(a, a.ASSET_ID.eq(assetId))?.also {
-            it.dataAddress = editedAsset.dataAddress.properties.toPostgresqlJson()
-            it.properties = editedAsset.properties.toPostgresqlJson()
-            it.privateProperties = editedAsset.privateProperties.toPostgresqlJson()
+            it.dataAddress = jsonUtils.toPostgresqlJson(editedAsset.dataAddress.properties)
+            it.properties = jsonUtils.toPostgresqlJson(editedAsset.properties)
+            it.privateProperties = jsonUtils.toPostgresqlJson(editedAsset.privateProperties)
             it.update()
         }
         return IdResponseDto(assetId)

@@ -9,231 +9,315 @@
 package de.sovity.edc.ce.modules.dataspaces.sphinx
 
 import de.sovity.edc.client.EdcClient
-import de.sovity.edc.client.gen.model.DataOfferCreateRequest
-import de.sovity.edc.client.gen.model.DataOfferPublishType
-import de.sovity.edc.client.gen.model.DataSourceType
 import de.sovity.edc.client.gen.model.OperatorDto
-import de.sovity.edc.client.gen.model.UiAssetCreateRequest
-import de.sovity.edc.client.gen.model.UiDataSource
-import de.sovity.edc.client.gen.model.UiDataSourceHttpData
-import de.sovity.edc.client.gen.model.UiPolicyConstraint
-import de.sovity.edc.client.gen.model.UiPolicyExpression
-import de.sovity.edc.client.gen.model.UiPolicyExpressionType
-import de.sovity.edc.client.gen.model.UiPolicyLiteral
-import de.sovity.edc.client.gen.model.UiPolicyLiteralType
-import de.sovity.edc.extension.e2e.connector.remotes.test_backend_controller.TestBackendRemote
+import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.PolicyTestUtils
 import de.sovity.edc.extension.e2e.junit.utils.Consumer
 import de.sovity.edc.extension.e2e.junit.utils.ControlPlane
 import de.sovity.edc.extension.e2e.junit.utils.Provider
 import de.sovity.edc.runtime.config.ConfigUtils
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockserver.integration.ClientAndServer
 import java.time.OffsetDateTime
+import java.util.UUID
 
 abstract class SphinxPoliciesTestBase {
-    private lateinit var dataAddress: TestBackendRemote
-    private lateinit var consumerClient: EdcClient
-    private lateinit var providerClient: EdcClient
+    private lateinit var policyTestUtils: PolicyTestUtils
     private lateinit var consumerConfig: ConfigUtils
     private lateinit var providerConfig: ConfigUtils
 
+    private val yesterday = OffsetDateTime.now().minusDays(1).toString()
+    private val tomorrow = OffsetDateTime.now().plusDays(1).toString()
+    private lateinit var testId: String
+
     @BeforeEach
     fun setup(
-        dataAddress: TestBackendRemote,
+        clientAndServer: ClientAndServer,
         @Consumer @ControlPlane consumerClient: EdcClient,
         @Consumer @ControlPlane consumerConfig: ConfigUtils,
         @Provider @ControlPlane providerClient: EdcClient,
         @Provider @ControlPlane providerConfig: ConfigUtils
     ) {
-        this.dataAddress = dataAddress
-        this.consumerClient = consumerClient
-        this.consumerConfig = consumerConfig
-        this.providerClient = providerClient
+        this.testId = UUID.randomUUID().toString()
         this.providerConfig = providerConfig
+        this.consumerConfig = consumerConfig
+        this.policyTestUtils = PolicyTestUtils(
+            consumerClient = consumerClient,
+            providerClient = providerClient,
+            consumerConfig = consumerConfig,
+            providerConfig = providerConfig,
+            clientAndServer = clientAndServer
+        )
     }
 
-    @Test
-    fun testPolicies() {
-        val yesterday = OffsetDateTime.now().minusDays(1).toString()
-        val tomorrow = OffsetDateTime.now().plusDays(1).toString()
 
-        // Time Restriction
-        createDataOffer(
-            "time-restricted-gt-yesterday",
-            "inForceDate",
+    @Test
+    fun `given POLICY_EVALUATION_TIME, when gt yesterday, expect allowed`() {
+        // arrange
+        val assetId = "time-restricted-gt-yesterday-$testId"
+        policyTestUtils.createDataOffer(
+            assetId,
+            "POLICY_EVALUATION_TIME",
             OperatorDto.GT,
             yesterday
         )
-        createDataOffer(
-            "time-restricted-geq-yesterday",
-            "inForceDate",
+
+        // act
+        val dataOffer = policyTestUtils.checkCatalogWorks(assetId)
+        policyTestUtils.checkPushTransferWorks(dataOffer)
+    }
+
+    @Test
+    fun `given POLICY_EVALUATION_TIME, when geq yesterday, expect allowed`() {
+        // arrange
+        val assetId = "time-restricted-geq-yesterday-$testId"
+        policyTestUtils.createDataOffer(
+            assetId,
+            "POLICY_EVALUATION_TIME",
             OperatorDto.GEQ,
             yesterday
         )
-        createDataOffer(
-            "time-restricted-lt-tomorrow",
-            "inForceDate",
+
+        // act
+        val dataOffer = policyTestUtils.checkCatalogWorks(assetId)
+        policyTestUtils.checkPushTransferWorks(dataOffer)
+    }
+
+
+    @Test
+    fun `given POLICY_EVALUATION_TIME, when lt yesterday, expect unallowed`() {
+        // arrange
+        val assetId = "time-restricted-lt-yesterday-$testId"
+        policyTestUtils.createDataOffer(
+            assetId,
+            "POLICY_EVALUATION_TIME",
+            OperatorDto.LT,
+            yesterday
+        )
+
+        // act
+        policyTestUtils.checkUnavailable(assetId)
+    }
+
+    @Test
+    fun `given POLICY_EVALUATION_TIME, when leq yesterday, expect unallowed`() {
+        // arrange
+        val assetId = "time-restricted-leq-yesterday-$testId"
+        policyTestUtils.createDataOffer(
+            assetId,
+            "POLICY_EVALUATION_TIME",
+            OperatorDto.LEQ,
+            yesterday
+        )
+
+        // act
+        policyTestUtils.checkUnavailable(assetId)
+    }
+
+    @Test
+    fun `given POLICY_EVALUATION_TIME, when lt tomorrow, expect allowed`() {
+        // arrange
+        val assetId = "time-restricted-lt-tomorrow-$testId"
+        policyTestUtils.createDataOffer(
+            assetId,
+            "POLICY_EVALUATION_TIME",
             OperatorDto.LT,
             tomorrow
         )
-        createDataOffer(
-            "time-restricted-leq-tomorrow",
-            "inForceDate",
+
+        // act
+        val dataOffer = policyTestUtils.checkCatalogWorks(assetId)
+        policyTestUtils.checkPushTransferWorks(dataOffer)
+    }
+
+    @Test
+    fun `given POLICY_EVALUATION_TIME, when leq tomorrow, expect allowed`() {
+        // arrange
+        val assetId = "time-restricted-leq-tomorrow-$testId"
+        policyTestUtils.createDataOffer(
+            assetId,
+            "POLICY_EVALUATION_TIME",
             OperatorDto.LEQ,
             tomorrow
         )
 
-        // Referring Connector
-        // EQ
-        createDataOffer(
-            "referring-connector-eq-self",
+        // act
+        val dataOffer = policyTestUtils.checkCatalogWorks(assetId)
+        policyTestUtils.checkPushTransferWorks(dataOffer)
+    }
+
+    @Test
+    fun `given POLICY_EVALUATION_TIME, when gt tomorrow, expect unallowed`() {
+        // arrange
+        val assetId = "time-restricted-gt-tomorrow-$testId"
+        policyTestUtils.createDataOffer(
+            assetId,
+            "POLICY_EVALUATION_TIME",
+            OperatorDto.GT,
+            tomorrow
+        )
+
+        // act
+        policyTestUtils.checkUnavailable(assetId)
+    }
+
+    @Test
+    fun `given POLICY_EVALUATION_TIME, when geq tomorrow, expect unallowed`() {
+        // arrange
+        val assetId = "time-restricted-geq-tomorrow-$testId"
+        policyTestUtils.createDataOffer(
+            assetId,
+            "POLICY_EVALUATION_TIME",
+            OperatorDto.GEQ,
+            tomorrow
+        )
+
+        // act
+        policyTestUtils.checkUnavailable(assetId)
+    }
+
+
+    @Test
+    fun `given sphinxDid, when eq-self, expect disallowed`() {
+        // arrange
+        val assetId = "referring-connector-eq-self-$testId"
+        policyTestUtils.createDataOffer(
+            assetId,
             "sphinxDid",
             OperatorDto.EQ,
             providerConfig.participantId
         )
-        createDataOffer(
-            "referring-connector-eq-counterparty",
+
+        // act & assert
+        policyTestUtils.checkUnavailable(assetId)
+    }
+
+    @Test
+    fun `given sphinxDid, when eq-counterparty, expect allowed`() {
+        // arrange
+        val assetId = "referring-connector-eq-counterparty-$testId"
+        policyTestUtils.createDataOffer(
+            assetId,
             "sphinxDid",
             OperatorDto.EQ,
             consumerConfig.participantId
         )
-        createDataOffer(
-            "referring-connector-eq-random",
+
+        // act & assert
+        val dataOffer = policyTestUtils.checkCatalogWorks(assetId)
+        policyTestUtils.checkPushTransferWorks(dataOffer)
+    }
+
+
+    @Test
+    fun `given sphinxDid, when eq-doesnotexist, expect disallowed`() {
+        // arrange
+        val assetId = "referring-connector-eq-doesnotexist-$testId"
+        policyTestUtils.createDataOffer(
+            assetId,
             "sphinxDid",
             OperatorDto.EQ,
-            "random"
+            "doesnotexist"
         )
-        createDataOffer(
-            "referring-connector-eq-empty",
+
+        // act & assert
+        policyTestUtils.checkUnavailable(assetId)
+    }
+
+
+    @Test
+    fun `given sphinxDid, when eq-empty, expect disallowed`() {
+        // arrange
+        val assetId = "referring-connector-eq-empty-$testId"
+        policyTestUtils.createDataOffer(
+            assetId,
             "sphinxDid",
             OperatorDto.EQ,
             ""
         )
-        createDataOffer(
-            "referring-connector-eq-random-comma-counterparty",
+
+        // act & assert
+        policyTestUtils.checkUnavailable(assetId)
+    }
+
+
+    @Test
+    fun `given sphinxDid, when eq-doesnotexist-comma-counterparty with space, expect allowed`() {
+        // arrange
+        val assetId = "referring-connector-eq-doesnotexist-comma-counterparty-$testId"
+        policyTestUtils.createDataOffer(
+            assetId,
             "sphinxDid",
             OperatorDto.EQ,
-            "random, ${consumerConfig.participantId}"
+            "doesnotexist, ${consumerConfig.participantId}"
         )
 
-        // IN
-        createDataOffer(
-            "referring-connector-in-random-comma-counterparty",
+        // act & assert
+        val dataOffer = policyTestUtils.checkCatalogWorks(assetId)
+        policyTestUtils.checkPushTransferWorks(dataOffer)
+    }
+
+
+    @Test
+    fun `given sphinxDid, when in-doesnotexist-comma-counterparty, expect allowed`() {
+        // arrange
+        val assetId = "referring-connector-in-doesnotexist-comma-counterparty-$testId"
+        policyTestUtils.createDataOffer(
+            assetId,
             "sphinxDid",
             OperatorDto.IN,
-            "random, ${consumerConfig.participantId}"
+            "doesnotexist, ${consumerConfig.participantId}"
         )
-        createDataOffer(
-            "referring-connector-in-empty",
+
+        // act & assert
+        val dataOffer = policyTestUtils.checkCatalogWorks(assetId)
+        policyTestUtils.checkPushTransferWorks(dataOffer)
+    }
+
+    @Test
+    fun `given sphinxDid, when in-empty, expect disallowed`() {
+        // arrange
+        val assetId = "referring-connector-in-empty-$testId"
+        policyTestUtils.createDataOffer(
+            assetId,
             "sphinxDid",
             OperatorDto.IN,
             ""
         )
-        createDataOfferList(
-            "referring-connector-in-list-random-and-counterparty",
+
+        // act & assert
+        policyTestUtils.checkUnavailable(assetId)
+    }
+
+    @Test
+    fun `given sphinxDid, when in-list-doesnotexist-and-counterparty, expect allowed`() {
+        // arrange
+        val assetId = "referring-connector-in-list-doesnotexist-and-counterparty-$testId"
+        policyTestUtils.createDataOfferList(
+            assetId,
             "sphinxDid",
             OperatorDto.IN,
-            listOf("random", consumerConfig.participantId)
+            listOf("doesnotexist", consumerConfig.participantId)
         )
-        createDataOfferList(
-            "referring-connector-in-list-random",
+
+        // act & assert
+        val dataOffer = policyTestUtils.checkCatalogWorks(assetId)
+        policyTestUtils.checkPushTransferWorks(dataOffer)
+    }
+
+    @Test
+    fun `given sphinxDid, when in-list-doesnotexist, expect disallowed`() {
+        // arrange
+        val assetId = "referring-connector-in-list-doesnotexist-$testId"
+        policyTestUtils.createDataOfferList(
+            assetId,
             "sphinxDid",
             OperatorDto.IN,
-            listOf("random")
+            listOf("doesnotexist")
         )
 
-        // act
-        val dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(
-            providerConfig.participantId,
-            providerConfig.protocolApiUrl
-        )
-
-        // assert
-        val ids = dataOffers.map { it.asset.assetId }
-        assertThat(ids).containsExactlyInAnyOrder(
-            "time-restricted-gt-yesterday",
-            "time-restricted-geq-yesterday",
-            "time-restricted-lt-tomorrow",
-            "time-restricted-leq-tomorrow",
-            "referring-connector-eq-counterparty",
-            "referring-connector-in-random-comma-counterparty",
-            "referring-connector-in-list-random-and-counterparty"
-        )
-    }
-
-    private fun createDataOffer(
-        dataOfferId: String,
-        leftExpression: String,
-        operator: OperatorDto,
-        rightExpression: String
-    ) {
-        createDataOfferInternal(
-            dataOfferId,
-            leftExpression,
-            operator,
-            UiPolicyLiteral.builder()
-                .type(UiPolicyLiteralType.STRING)
-                .value(rightExpression)
-                .build()
-        )
-    }
-
-    private fun createDataOfferList(
-        dataOfferId: String,
-        leftExpression: String,
-        operator: OperatorDto,
-        rightExpression: List<String?>?
-    ) {
-        createDataOfferInternal(
-            dataOfferId,
-            leftExpression,
-            operator,
-            UiPolicyLiteral.builder()
-                .type(UiPolicyLiteralType.STRING_LIST)
-                .valueList(rightExpression)
-                .build()
-        )
-    }
-
-    private fun createDataOfferInternal(
-        dataOfferId: String,
-        leftExpression: String,
-        operator: OperatorDto,
-        rightExpression: UiPolicyLiteral
-    ) {
-        val dataSource: UiDataSource = UiDataSource.builder()
-            .type(DataSourceType.HTTP_DATA)
-            .httpData(
-                UiDataSourceHttpData.builder()
-                    .baseUrl("http://0.0.0.0")
-                    .build()
-            )
-            .build()
-
-        val asset: UiAssetCreateRequest = UiAssetCreateRequest.builder()
-            .id(dataOfferId)
-            .dataSource(dataSource)
-            .build()
-
-        val expression: UiPolicyExpression = UiPolicyExpression.builder()
-            .type(UiPolicyExpressionType.CONSTRAINT)
-            .constraint(
-                UiPolicyConstraint.builder()
-                    .left(leftExpression)
-                    .operator(operator)
-                    .right(rightExpression)
-                    .build()
-            )
-            .build()
-
-        val request = DataOfferCreateRequest.builder()
-            .asset(asset)
-            .publishType(DataOfferPublishType.PUBLISH_RESTRICTED)
-            .policyExpression(expression)
-            .build()
-
-        providerClient.uiApi().createDataOffer(request)
+        // act & assert
+        policyTestUtils.checkUnavailable(assetId)
     }
 }
 

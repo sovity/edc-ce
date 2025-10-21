@@ -22,25 +22,25 @@
  */
 package de.sovity.edc.ce.api.ui;
 
-import de.sovity.edc.ce.api.common.model.AssetListPageFilter;
 import de.sovity.edc.ce.api.common.model.BuildInfo;
 import de.sovity.edc.ce.api.common.model.UiAsset;
 import de.sovity.edc.ce.api.common.model.UiAssetCreateRequest;
 import de.sovity.edc.ce.api.common.model.UiAssetEditRequest;
 import de.sovity.edc.ce.api.common.model.UiInitiateTransferRequest;
-import de.sovity.edc.ce.api.ui.model.AssetListPage;
+import de.sovity.edc.ce.api.ui.model.AssetsPageRequest;
+import de.sovity.edc.ce.api.ui.model.AssetsPageResult;
 import de.sovity.edc.ce.api.ui.model.BusinessPartnerGroupCreateSubmit;
 import de.sovity.edc.ce.api.ui.model.BusinessPartnerGroupEditPage;
 import de.sovity.edc.ce.api.ui.model.BusinessPartnerGroupEditSubmit;
 import de.sovity.edc.ce.api.ui.model.BusinessPartnerGroupListPageEntry;
 import de.sovity.edc.ce.api.ui.model.BusinessPartnerGroupQuery;
-import de.sovity.edc.ce.api.ui.model.ContractAgreementCard;
-import de.sovity.edc.ce.api.ui.model.ContractAgreementPage;
-import de.sovity.edc.ce.api.ui.model.ContractAgreementPageQuery;
 import de.sovity.edc.ce.api.ui.model.ContractDefinitionPage;
 import de.sovity.edc.ce.api.ui.model.ContractDefinitionRequest;
+import de.sovity.edc.ce.api.ui.model.ContractDetailPageResult;
 import de.sovity.edc.ce.api.ui.model.ContractNegotiationRequest;
 import de.sovity.edc.ce.api.ui.model.ContractTerminationRequest;
+import de.sovity.edc.ce.api.ui.model.ContractsPageRequest;
+import de.sovity.edc.ce.api.ui.model.ContractsPageResult;
 import de.sovity.edc.ce.api.ui.model.DashboardPage;
 import de.sovity.edc.ce.api.ui.model.DataOfferCreateRequest;
 import de.sovity.edc.ce.api.ui.model.IdAvailabilityResponse;
@@ -60,7 +60,6 @@ import de.sovity.edc.ce.api.ui.model.VaultSecretEditSubmit;
 import de.sovity.edc.ce.api.ui.model.VaultSecretListPageEntry;
 import de.sovity.edc.ce.api.ui.model.VaultSecretQuery;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ws.rs.Consumes;
@@ -88,17 +87,17 @@ interface UiResource {
     DashboardPage getDashboardPage();
 
     @POST
-    @Path("pages/asset-page")
+    @Path("pages/assets-page")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @Operation(description = "Collect all data for Asset Page")
-    AssetListPage assetListPage(AssetListPageFilter assetListPageFilter);
+    @Operation(description = "Collect all data for the Assets Page")
+    AssetsPageResult assetsPage(AssetsPageRequest assetsPageRequest);
 
     @GET
-    @Path("pages/asset-page/assets/{assetId}")
+    @Path("pages/asset-detail-page/{assetId}")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Get details for a specific Asset")
-    UiAsset assetDetailsPage(@PathParam("assetId") String assetId);
+    UiAsset assetDetailPage(@PathParam("assetId") String assetId);
 
     @POST
     @Path("pages/asset-page/assets")
@@ -283,21 +282,20 @@ interface UiResource {
     UiContractNegotiation getContractNegotiation(@PathParam("contractNegotiationId") String contractNegotiationId);
 
     @POST
-    @Path("pages/contract-agreement-page")
+    @Path("pages/contracts-page")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Collect filtered data for the Contract Agreement Page")
-    ContractAgreementPage getContractAgreementPage(
-        @RequestBody(description = "If null, returns all the contract agreements.")
-        @Nullable ContractAgreementPageQuery contractAgreementPageQuery
+    @Operation(description = "Collect filtered data for the Contract Agreement Table Page")
+    ContractsPageResult contractsPage(
+        ContractsPageRequest contractsPageRequest
     );
 
     @GET
-    @Path("pages/contract-agreement-page/{contractAgreementId}")
+    @Path("pages/contract-detail-page/{contractAgreementId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Get a single contract agreement card by its identifier")
-    ContractAgreementCard getContractAgreementCard(@PathParam("contractAgreementId") String contractAgreementId);
+    ContractDetailPageResult contractDetailPage(@PathParam("contractAgreementId") String contractAgreementId);
 
     @POST
     @Path("pages/contract-agreement-page/transfers")

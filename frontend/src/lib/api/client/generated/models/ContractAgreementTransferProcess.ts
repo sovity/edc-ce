@@ -41,7 +41,7 @@ import {
 } from './TransferProcessState';
 
 /**
- * A Contract Agreement's Transfer Process
+ * A Contract Agreement's Transfer Process for the Contract Agreement Details Page
  * @export
  * @interface ContractAgreementTransferProcess
  */

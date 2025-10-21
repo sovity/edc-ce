@@ -14,7 +14,6 @@ import de.sovity.edc.runtime.simple_di.Service
 import lombok.RequiredArgsConstructor
 import org.eclipse.edc.connector.controlplane.contract.spi.types.negotiation.ContractNegotiationStates
 import org.jooq.Condition
-import org.jooq.impl.DSL
 
 @RequiredArgsConstructor
 @Service
@@ -39,13 +38,10 @@ class ContractNegotiationStateService {
      * @param code [ContractNegotiation.getState], see `ContractNegotiationState#code`
      * @return if running
      */
-    fun isRunning(code: Int): Boolean =
+    private fun isRunning(code: Int): Boolean =
     // After this there are still states about de-provisioning of resources,
         // but we don't really care much about them
         !isError(code) && code < ContractNegotiationStates.FINALIZED.code()
-
-    fun isRunningDb(n: EdcContractNegotiation): Condition =
-        DSL.and(isErrorDb(n).not(), n.STATE.lt(ContractNegotiationStates.FINALIZED.code()))
 
     fun isOkDb(n: EdcContractNegotiation): Condition =
         n.STATE.eq(ContractNegotiationStates.FINALIZED.code())
@@ -56,15 +52,9 @@ class ContractNegotiationStateService {
      * @param code [ContractNegotiation.getState], see [ContractNegotiationStates.code]
      * @return if running
      */
-    fun isError(code: Int): Boolean =
+    private fun isError(code: Int): Boolean =
         ContractNegotiationStates.TERMINATING.code() == code ||
             ContractNegotiationStates.TERMINATED.code() == code
-
-    fun isErrorDb(n: EdcContractNegotiation): Condition =
-        DSL.or(
-            n.STATE.eq(ContractNegotiationStates.TERMINATING.code()),
-            n.STATE.eq(ContractNegotiationStates.TERMINATED.code()),
-        )
 
     private fun getName(code: Int): String {
         val state = ContractNegotiationStates.from(code)

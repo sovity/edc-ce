@@ -18,15 +18,15 @@ import {queryKeys} from '@/lib/queryKeys';
 import AssetDetailPageContent from './components/asset-detail-page-content';
 import PageContainer from '@/components/page-container';
 
-export default function AssetDetailsPage({
+export default function AssetDetailPage({
   params,
 }: {
   params: {id: string; tab: string};
 }) {
   const {id, tab} = params;
 
-  const pageQuery = useQueryWrapper(queryKeys.assets.detailsPage(id), () =>
-    api.uiApi.assetDetailsPage({
+  const pageQuery = useQueryWrapper(queryKeys.assets.detailPage(id), () =>
+    api.uiApi.assetDetailPage({
       assetId: id,
     }),
   );

@@ -30,7 +30,7 @@ export default function ContractTransferPage({
   const {contractId} = decodeParams(params);
 
   const pageQuery = useQueryWrapper(queryKeys.contracts.id(contractId), () =>
-    api.uiApi.getContractAgreementCard({contractAgreementId: contractId}),
+    api.uiApi.contractDetailPage({contractAgreementId: contractId}),
   );
 
   useTitle(t('Pages.InitiateTransfer.title'));

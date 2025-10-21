@@ -118,6 +118,13 @@ public class AssetJsonLdParser {
         return uiAsset;
     }
 
+    public DataSourceAvailability getDataSourceAvailability(String typeValue) {
+        if (Prop.SovityDcatExt.DATA_SOURCE_AVAILABILITY_ON_REQUEST.equalsIgnoreCase(typeValue)) {
+            return DataSourceAvailability.ON_REQUEST;
+        }
+        return DataSourceAvailability.LIVE;
+    }
+
     private String getCustomJsonLd(JsonObject properties) {
         // TODO: diff nested objects
         val remaining = removeHandledProperties(properties, List.of(
@@ -203,11 +210,7 @@ public class AssetJsonLdParser {
 
     private DataSourceAvailability getDataSourceAvailability(JsonObject properties) {
         var typeValue = JsonLdUtils.string(properties, Prop.SovityDcatExt.DATA_SOURCE_AVAILABILITY);
-        if (Prop.SovityDcatExt.DATA_SOURCE_AVAILABILITY_ON_REQUEST.equalsIgnoreCase(typeValue)) {
-            return DataSourceAvailability.ON_REQUEST;
-        }
-
-        return DataSourceAvailability.LIVE;
+        return getDataSourceAvailability(typeValue);
     }
 
     private UiAssetExtForSphinx getSphinxFields(JsonObject properties) {

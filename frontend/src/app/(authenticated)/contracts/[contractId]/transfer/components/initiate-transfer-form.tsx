@@ -19,7 +19,10 @@ import {
 } from '@/app/(authenticated)/contracts/[contractId]/transfer/components/initiate-transfer-form-schema';
 import {InitiateTransferHttpForm} from '@/app/(authenticated)/contracts/[contractId]/transfer/components/initiate-transfer-http-form';
 import {useContractTransferMutation} from '@/app/(authenticated)/contracts/[contractId]/transfer/use-contract-transfer-mutation';
-import {type ContractAgreementCard} from '@sovity.de/edc-client';
+import type {
+  ContractAgreementDirection,
+  ContractTerminationStatus,
+} from '@sovity.de/edc-client';
 import {useTranslations} from 'next-intl';
 import ContractAgreementHeaderStack from '@/components/stacks/contract-agreement-header-stack';
 import InternalLink from '@/components/links/internal-link';
@@ -28,7 +31,13 @@ import {urls} from '@/lib/urls';
 export const InitiateTransferForm = ({
   contractAgreement,
 }: {
-  contractAgreement: ContractAgreementCard;
+  contractAgreement: {
+    contractAgreementId: string;
+    counterPartyId: string;
+    terminationStatus: ContractTerminationStatus;
+    direction: ContractAgreementDirection;
+    asset: {title: string};
+  };
 }) => {
   const {form} = useInitiateTransferForm();
   const mutation = useContractTransferMutation();
@@ -37,7 +46,7 @@ export const InitiateTransferForm = ({
   async function onSubmit(values: InitiateTransferFormValue) {
     await mutation.mutateAsync({
       formValue: values,
-      contractAgreement,
+      contractAgreementId: contractAgreement.contractAgreementId,
     });
   }
 

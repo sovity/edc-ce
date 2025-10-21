@@ -15,27 +15,27 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {type PaginationResult} from '@sovity.de/edc-client';
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
   ChevronsLeftIcon,
   ChevronsRightIcon,
 } from 'lucide-react';
-import {type TablePage} from './data-table';
 import {useEffect} from 'react';
 
-interface DataTablePaginationProps<TData> {
+interface DataTablePaginationProps {
   setPageIndex: (page: number) => unknown;
   setPageSize: (pageSize: number) => unknown;
 
-  tablePage: TablePage<TData>;
+  pagination: PaginationResult;
 }
 
-export function DataTablePagination<TData>({
+export function DataTablePagination({
   setPageIndex,
   setPageSize,
   tableTestId,
-  tablePage: {
+  pagination: {
     totalItems,
     lastPage,
     nextPage,
@@ -45,7 +45,7 @@ export function DataTablePagination<TData>({
     pageEnd,
     pageSize,
   },
-}: DataTablePaginationProps<TData> & {tableTestId: string}) {
+}: DataTablePaginationProps & {tableTestId: string}) {
   useEffect(() => {
     if (currentPage > lastPage) {
       setPageIndex(lastPage);
@@ -81,8 +81,8 @@ export function DataTablePagination<TData>({
             dataTestId={`btn-first-${tableTestId}`}
             variant="outline"
             className="hidden h-8 w-8 p-0 lg:flex"
-            onClick={() => setPageIndex(0)}
-            disabled={currentPage === 0}>
+            onClick={() => setPageIndex(1)}
+            disabled={currentPage === 1}>
             <span className="sr-only">Go to first page</span>
             <ChevronsLeftIcon className="h-4 w-4" />
           </Button>

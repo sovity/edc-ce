@@ -43,6 +43,7 @@ import type {
   NegotiateAllQuery,
   NegotiateAllResult,
   TransferProcessStateResult,
+  UiAsset,
   UiDataOffer,
 } from '../models/index';
 import {
@@ -64,6 +65,8 @@ import {
     NegotiateAllResultToJSON,
     TransferProcessStateResultFromJSON,
     TransferProcessStateResultToJSON,
+    UiAssetFromJSON,
+    UiAssetToJSON,
     UiDataOfferFromJSON,
     UiDataOfferToJSON,
 } from '../models/index';
@@ -100,6 +103,32 @@ export interface TerminateTransferProcessRequest {
  * 
  */
 export class UseCaseApi extends runtime.BaseAPI {
+
+    /**
+     * List all assets in the connector.
+     */
+    async getAssetsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<UiAsset>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/wrapper/use-case-api/assets`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(UiAssetFromJSON));
+    }
+
+    /**
+     * List all assets in the connector.
+     */
+    async getAssets(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<UiAsset>> {
+        const response = await this.getAssetsRaw(initOverrides);
+        return await response.value();
+    }
 
     /**
      * Fetch contract negotiation states as batch

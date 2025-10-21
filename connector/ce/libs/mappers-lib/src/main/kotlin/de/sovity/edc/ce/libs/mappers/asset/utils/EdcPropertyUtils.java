@@ -21,7 +21,6 @@
 package de.sovity.edc.ce.libs.mappers.asset.utils;
 
 import de.sovity.edc.runtime.simple_di.Service;
-import org.eclipse.edc.spi.types.domain.DataAddress;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -72,11 +71,5 @@ public class EdcPropertyUtils {
             return Map.of();
         }
         return new HashMap<>((Map<String, Object>) (Map) map);
-    }
-
-    public DataAddress buildDataAddress(Map<String, String> properties) {
-        return DataAddress.Builder.newInstance()
-            .properties(toMapOfObject(properties))
-            .build();
     }
 }

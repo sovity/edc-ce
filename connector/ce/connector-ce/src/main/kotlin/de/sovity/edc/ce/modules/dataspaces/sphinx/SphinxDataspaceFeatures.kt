@@ -13,6 +13,7 @@ import de.sovity.edc.ce.config.CeVaultEntries
 import de.sovity.edc.ce.dependency_bundles.CeDependencyBundles
 import de.sovity.edc.ce.modules.dataspaces.catena.CatenaDataspaceFeatures.configureTxMembershipCredential
 import de.sovity.edc.ce.modules.dataspaces.sovity.edrs.EdrApiServiceV3GenericExtension
+import de.sovity.edc.ce.modules.dataspaces.sovity.policies.evaluation_time.EvaluationTimePolicyExtension
 import de.sovity.edc.runtime.modules.model.ConfigPropCategory
 import de.sovity.edc.runtime.modules.model.EdcModule
 import org.eclipse.tractusx.edc.iam.iatp.IatpIdentityExtension
@@ -25,6 +26,7 @@ object SphinxDataspaceFeatures {
     ).apply {
         dependencyBundles(CeDependencyBundles.sphinxControlPlane)
         serviceExtensions(SphinxDidPolicyExtension::class.java)
+        serviceExtensions(EvaluationTimePolicyExtension::class.java)
 
         configureIatp()
         serviceExtensions(EdrApiServiceV3GenericExtension::class.java)

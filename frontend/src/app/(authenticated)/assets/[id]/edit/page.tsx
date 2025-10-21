@@ -28,8 +28,8 @@ export default function AssetEditPage({params}: {params: {id: string}}) {
   const {id} = decodeParams(params);
   const breadcrumbItems = useBreadcrumbItems();
 
-  const pageQuery = useQueryWrapper(queryKeys.assets.detailsPage(id), () =>
-    api.uiApi.assetDetailsPage({
+  const pageQuery = useQueryWrapper(queryKeys.assets.detailPage(id), () =>
+    api.uiApi.assetDetailPage({
       assetId: id,
     }),
   );

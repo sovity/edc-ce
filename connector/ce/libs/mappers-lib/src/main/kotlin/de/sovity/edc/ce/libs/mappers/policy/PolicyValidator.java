@@ -38,9 +38,9 @@ import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 public class PolicyValidator {
 
     public static final List<String> ALLOWED_ACTION_VALUES = List.of(
+        "http://www.w3.org/ns/odrl/2/use",
         "USE",
-        "use",
-        "http://www.w3.org/ns/odrl/2/use"
+        "use"
     );
 
     public void validateOtherPolicyFieldsUnset(Policy policy, MappingErrors errors) {
@@ -63,10 +63,6 @@ public class PolicyValidator {
 
         if (StringUtils.isNotBlank(policy.getInheritsFrom())) {
             errors.add("Warning: Policy has inheritsFrom, which is currently unsupported.");
-        }
-
-        if (StringUtils.isNotBlank(policy.getAssignee())) {
-            errors.add("Warning: Policy has an assignee, which is currently unsupported.");
         }
 
         if (policy.getExtensibleProperties() != null && !policy.getExtensibleProperties().isEmpty()) {

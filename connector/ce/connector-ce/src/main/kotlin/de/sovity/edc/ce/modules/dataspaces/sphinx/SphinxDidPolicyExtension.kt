@@ -8,6 +8,7 @@
 package de.sovity.edc.ce.modules.dataspaces.sphinx
 
 import de.sovity.edc.ce.config.CeConfigProps
+import de.sovity.edc.ce.modules.policy_utils.creator.PolicyComparator
 import de.sovity.edc.ce.modules.policy_utils.creator.PolicyContextUtils
 import de.sovity.edc.ce.modules.policy_utils.creator.RightExpressionParsers
 import de.sovity.edc.ce.modules.policy_utils.creator.SimplePolicyCreator
@@ -26,6 +27,9 @@ class SphinxDidPolicyExtension : ServiceExtension {
     @Inject
     private lateinit var policyContextUtils: PolicyContextUtils
 
+    @Inject
+    private lateinit var policyComparator: PolicyComparator
+
     override fun initialize(context: ServiceExtensionContext) {
         val issuerDid = CeConfigProps.EDC_IAM_TRUSTED_ISSUER_SPHINX_ID.getStringOrEmpty(context.config)
 
@@ -36,7 +40,8 @@ class SphinxDidPolicyExtension : ServiceExtension {
                 val did = vc.name
                 ServiceResult.success(listOf(did))
             },
-            rightExpressionParser = RightExpressionParsers::stringValueCommaSeparated
+            rightExpressionParser = RightExpressionParsers::stringValueCommaSeparated,
+            comparator = policyComparator::compareWithEqWorkingLikeIn
         )
     }
 }

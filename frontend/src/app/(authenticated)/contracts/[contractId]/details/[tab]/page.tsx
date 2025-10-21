@@ -29,8 +29,9 @@ export default function ContractDetailsPage({
   const t = useTranslations();
 
   const pageQuery = useQueryWrapper(
-    queryKeys.contracts.detailsPage(contractId),
-    () => api.uiApi.getContractAgreementCard({contractAgreementId: contractId}),
+    queryKeys.contracts.detailPage(contractId),
+    () =>
+      api.uiApi.contractDetailPage({contractAgreementId: contractId}),
     {refetchInterval: 5000},
   );
 

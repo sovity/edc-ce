@@ -13,7 +13,11 @@ import {usePolicyContext} from '@/components/policy-editor/use-policy-context';
 import {Card, CardContent} from '@/components/ui/card';
 import {AssetProperty} from '@/app/(authenticated)/assets/[id]/details/[tab]/components/asset-property';
 import {canTerminate} from '@/app/(authenticated)/contracts/components/contract-agreement-capabilities';
-import {type ContractAgreementCard} from '@/lib/api/client/generated';
+import type {
+  ContractAgreementDirection,
+  ContractTerminationStatus,
+  UiPolicy,
+} from '@/lib/api/client/generated';
 import {getLocalDateTimeString} from '@/lib/utils/dates';
 import {FingerPrintIcon} from '@heroicons/react/24/outline';
 import {ArrowDownUpIcon, CalendarIcon, LinkIcon, UserIcon} from 'lucide-react';
@@ -22,12 +26,21 @@ import TerminateButton from '@/app/(authenticated)/contracts/[contractId]/detail
 import PolicyJsonLdButton from '@/app/(authenticated)/contracts/[contractId]/details/[tab]/components/policy-jsonld-button';
 
 export interface ContractAgreementDetailsProps {
-  contract: ContractAgreementCard;
+  contract: {
+    contractAgreementId: string;
+    contractSigningDate: Date;
+    direction: ContractAgreementDirection;
+    counterPartyId: string;
+    counterPartyAddress: string;
+    terminationStatus: ContractTerminationStatus;
+    contractPolicy: UiPolicy;
+  };
 }
 
-export const ContractDetailCard = (props: ContractAgreementDetailsProps) => {
+export const ContractDetailCard = ({
+  contract,
+}: ContractAgreementDetailsProps) => {
   const t = useTranslations();
-  const {contract} = props;
 
   const policyContext = usePolicyContext();
 

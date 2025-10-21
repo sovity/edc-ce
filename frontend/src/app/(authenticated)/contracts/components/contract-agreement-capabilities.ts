@@ -5,11 +5,15 @@
  *
  * SPDX-License-Identifier: Elastic-2.0
  */
-import {type ContractAgreementCard} from '@sovity.de/edc-client';
+import {type ContractAgreementDirection, type ContractTerminationStatus} from '@sovity.de/edc-client';
 
-export const canTransfer = (contract: ContractAgreementCard): boolean =>
+export const canTransfer = (contract: {
+  terminationStatus: ContractTerminationStatus;
+  direction: ContractAgreementDirection;
+}): boolean =>
   contract.terminationStatus === 'ONGOING' &&
   contract.direction === 'CONSUMING';
 
-export const canTerminate = (contract: ContractAgreementCard): boolean =>
-  contract.terminationStatus === 'ONGOING';
+export const canTerminate = (contract: {
+  terminationStatus: ContractTerminationStatus;
+}): boolean => contract.terminationStatus === 'ONGOING';

@@ -8,31 +8,32 @@
 'use client';
 
 import {useState} from 'react';
-import {ClientsideDataTable} from '@/components/clientside-data-table';
 import {Button} from '@/components/ui/button';
-import type {ContractAgreementCard} from '@/lib/api/client/generated';
-import {buildWordFilter} from '@/lib/utils/build-word-filter';
+import {
+  type ContractsPageEntry,
+  ContractsPageSortProperty,
+  SortByDirection,
+} from '@/lib/api/client/generated';
 import {cn} from '@/lib/utils/css-utils';
 import {useTranslations} from 'next-intl';
 import {useContractTableColumns} from './contract-table-columns';
 import {urls} from '@/lib/urls';
-
-interface ContractListTableProps {
-  data: ContractAgreementCard[];
-}
+import {DataTable} from '@/components/data-table';
+import {queryKeys} from '@/lib/queryKeys';
+import {api} from '@/lib/api/client';
 
 type TerminationFilterValues = 'TERMINATED' | 'ONGOING' | 'ALL';
 type DirectionFilterValues = 'PROVIDING' | 'CONSUMING' | 'ALL';
 
-const ContractTable = ({data}: ContractListTableProps) => {
+const ContractTable = () => {
   const t = useTranslations();
   const [terminationFilter, setTerminationFilter] =
     useState<TerminationFilterValues>('ONGOING');
   const [directionFilter, setDirectionFilter] =
     useState<DirectionFilterValues>('ALL');
 
-  const filterData = () => {
-    return data.filter((card) => {
+  const filterContent = (content: ContractsPageEntry[]) => {
+    return content.filter((card) => {
       if (
         terminationFilter === 'TERMINATED' &&
         card.terminationStatus !== 'TERMINATED'
@@ -56,17 +57,6 @@ const ContractTable = ({data}: ContractListTableProps) => {
       return true;
     });
   };
-
-  const wordFilter = buildWordFilter((row) => {
-    return [
-      row.getValue('assetId'),
-      row.getValue('contractAgreementId'),
-      row.getValue('counterPartyAddress'),
-      row.getValue('creatorOrganizationName'),
-    ];
-  });
-
-  const invisibleColumns = ['contractAgreementId', 'creatorOrganizationName'];
 
   const terminationFilterButtons = () => {
     const options: {value: TerminationFilterValues; label: string}[] = [
@@ -142,15 +132,40 @@ const ContractTable = ({data}: ContractListTableProps) => {
   );
 
   return (
-    <ClientsideDataTable
+    <DataTable
       columns={useContractTableColumns()}
-      data={filterData()}
-      wordFilter={wordFilter}
+      buildDataKey={(params) => queryKeys.contracts.contractsPage(params)}
+      getData={async ({searchText, pageOneBased, pageSize, sorting}) => {
+        const {contracts, pagination} = await api.uiApi.contractsPage({
+          contractsPageRequest: {
+            pagination: {pageOneBased, pageSize},
+            searchText,
+            sortBy: sorting?.map(({desc, id}) => ({
+              field: (() => {
+                switch (id) {
+                  case 'assetId':
+                    return ContractsPageSortProperty.ContractName;
+                  case 'contractSigningDate':
+                    return ContractsPageSortProperty.SignedAt;
+                  case 'terminatedAt':
+                    return ContractsPageSortProperty.TerminatedAt;
+                  case 'transfers':
+                    return ContractsPageSortProperty.Transfers;
+                }
+              })()!,
+              direction: desc
+                ? SortByDirection.Descending
+                : SortByDirection.Ascending,
+            })),
+          },
+        });
+        return {pagination, content: contracts};
+      }}
       filterComponents={combinedFilterComponents}
-      invisibleColumns={invisibleColumns}
       rowLink={(row) =>
         urls.contracts.detailPage(row.original.contractAgreementId)
       }
+      clientsideFilter={filterContent}
     />
   );
 };

@@ -34,7 +34,7 @@ import java.time.OffsetDateTime;
 @RequiredArgsConstructor
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Schema(description = "A Contract Agreement's Transfer Process")
+@Schema(description = "A Contract Agreement's Transfer Process for the Contract Agreement Details Page")
 public class ContractAgreementTransferProcess {
     @Schema(description = "Transfer Process ID", requiredMode = Schema.RequiredMode.REQUIRED)
     private String transferProcessId;
@@ -42,6 +42,6 @@ public class ContractAgreementTransferProcess {
     private OffsetDateTime lastUpdatedDate;
     @Schema(description = "Current State", requiredMode = Schema.RequiredMode.REQUIRED)
     private TransferProcessState state;
-    @Schema(description = "Error Message")
+    @Schema(description = "Error Message", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String errorMessage;
 }

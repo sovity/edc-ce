@@ -23,7 +23,8 @@
 package de.sovity.edc.ce.api.ui.pages.transferhistory;
 
 import de.sovity.edc.ce.api.common.model.UiAsset;
-import de.sovity.edc.ce.api.ui.pages.asset.AssetRs;
+import de.sovity.edc.ce.api.ui.pages.asset_detail_page.services.AssetDetailPageBuilder;
+import de.sovity.edc.ce.api.ui.pages.asset_detail_page.services.AssetDetailPageQueryService;
 import de.sovity.edc.ce.api.ui.pages.contract_agreements.services.ContractNegotiationUtils;
 import de.sovity.edc.ce.libs.mappers.AssetMapper;
 import de.sovity.edc.runtime.simple_di.Service;
@@ -42,6 +43,8 @@ public class TransferHistoryPageAssetFetcherService {
     private final TransferProcessService transferProcessService;
     private final AssetMapper assetMapper;
     private final ContractNegotiationUtils contractNegotiationUtils;
+    private final AssetDetailPageBuilder assetDetailPageBuilder;
+    private final AssetDetailPageQueryService assetDetailPageQueryService;
 
 
     public UiAsset getAssetForTransferHistoryPage(DSLContext dsl, String transferProcessId) {
@@ -64,17 +67,17 @@ public class TransferHistoryPageAssetFetcherService {
 
     private Asset getTransferProcessAsset(DSLContext dsl, TransferProcess process) {
         var assetId = process.getAssetId();
-        var assetRs = AssetRs.Companion.fetchAsset(dsl, process.getAssetId());
-        if (assetRs == null) {
+        var asset = assetDetailPageQueryService.fetchAssetDetailPage(dsl, assetId);
+        if (asset == null) {
             return Asset.Builder.newInstance().id(assetId).build();
         } else {
-            return assetRs.toAsset();
+            return assetDetailPageBuilder.buildAsset(asset);
         }
     }
 
     private UiAsset buildUiAsset(Asset asset, ContractNegotiation negotiation) {
-        var connectorEndpoint = contractNegotiationUtils.getProviderConnectorEndpoint(negotiation);
-        var participantId = contractNegotiationUtils.getProviderParticipantId(negotiation);
+        var connectorEndpoint = contractNegotiationUtils.getProviderConnectorEndpoint(negotiation.getType(), negotiation.getCounterPartyAddress());
+        var participantId = contractNegotiationUtils.getProviderParticipantId(negotiation.getType(), negotiation.getCounterPartyId());
         return assetMapper.buildUiAsset(asset, connectorEndpoint, participantId);
     }
 }

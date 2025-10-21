@@ -81,12 +81,12 @@ paths:
             application/json:
               schema:
                 type: string
-  /wrapper/ui/pages/asset-page/assets/{assetId}:
+  /wrapper/ui/pages/asset-detail-page/{assetId}:
     get:
       tags:
       - UI
       description: Get details for a specific Asset
-      operationId: assetDetailsPage
+      operationId: assetDetailPage
       parameters:
       - name: assetId
         in: path
@@ -100,65 +100,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UiAsset'
-    put:
-      tags:
-      - UI
-      description: Updates an Asset's metadata and optionally also the data source.
-      operationId: editAsset
-      parameters:
-      - name: assetId
-        in: path
-        required: true
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UiAssetEditRequest'
-      responses:
-        default:
-          description: default response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/IdResponseDto'
-    delete:
-      tags:
-      - UI
-      description: Delete an Asset
-      operationId: deleteAsset
-      parameters:
-      - name: assetId
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        default:
-          description: default response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/IdResponseDto'
-  /wrapper/ui/pages/asset-page:
+  /wrapper/ui/pages/assets-page:
     post:
       tags:
       - UI
-      description: Collect all data for Asset Page
-      operationId: assetListPage
+      description: Collect all data for the Assets Page
+      operationId: assetsPage
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AssetListPageFilter'
+              $ref: '#/components/schemas/AssetsPageRequest'
       responses:
         default:
           description: default response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AssetListPage'
+                $ref: '#/components/schemas/AssetsPageResult'
   /wrapper/ui/build-info:
     get:
       tags:
@@ -253,6 +212,43 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/BusinessPartnerGroupListPageEntry'
+  /wrapper/ui/pages/contract-detail-page/{contractAgreementId}:
+    get:
+      tags:
+      - UI
+      description: Get a single contract agreement card by its identifier
+      operationId: contractDetailPage
+      parameters:
+      - name: contractAgreementId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractDetailPageResult'
+  /wrapper/ui/pages/contracts-page:
+    post:
+      tags:
+      - UI
+      description: Collect filtered data for the Contract Agreement Table Page
+      operationId: contractsPage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContractsPageRequest'
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractsPageResult'
   /wrapper/ui/pages/asset-page/assets:
     post:
       tags:
@@ -360,6 +356,48 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/VaultSecretCreateSubmit'
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponseDto'
+  /wrapper/ui/pages/asset-page/assets/{assetId}:
+    put:
+      tags:
+      - UI
+      description: Updates an Asset's metadata and optionally also the data source.
+      operationId: editAsset
+      parameters:
+      - name: assetId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UiAssetEditRequest'
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponseDto'
+    delete:
+      tags:
+      - UI
+      description: Delete an Asset
+      operationId: deleteAsset
+      parameters:
+      - name: assetId
+        in: path
+        required: true
+        schema:
+          type: string
       responses:
         default:
           description: default response
@@ -536,44 +574,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/UiDataOffer'
-  /wrapper/ui/pages/contract-agreement-page/{contractAgreementId}:
-    get:
-      tags:
-      - UI
-      description: Get a single contract agreement card by its identifier
-      operationId: getContractAgreementCard
-      parameters:
-      - name: contractAgreementId
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        default:
-          description: default response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ContractAgreementCard'
-  /wrapper/ui/pages/contract-agreement-page:
-    post:
-      tags:
-      - UI
-      description: Collect filtered data for the Contract Agreement Page
-      operationId: getContractAgreementPage
-      requestBody:
-        description: "If null, returns all the contract agreements."
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ContractAgreementPageQuery'
-      responses:
-        default:
-          description: default response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ContractAgreementPage'
   /wrapper/ui/pages/contract-definition-page:
     get:
       tags:
@@ -857,6 +857,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UiConfig'
+  /wrapper/use-case-api/assets:
+    get:
+      tags:
+      - Use Case
+      description: List all assets in the connector.
+      operationId: getAssets
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UiAsset'
   /wrapper/use-case-api/contract-negotiations/states:
     post:
       tags:
@@ -1535,15 +1550,46 @@ components:
       - isOwnConnector
       - participantId
       - title
-    AssetListPage:
+    AssetsPageEntry:
       type: object
-      description: All data for the Asset Page
+      description: Assets Page Entry
       properties:
-        content:
+        assetId:
+          type: string
+          description: Asset ID
+        title:
+          type: string
+          description: Asset Title
+        descriptionShortText:
+          type: string
+          description: Asset Description Short Text generated from description. Contains
+            no markdown.
+        dataSourceAvailability:
+          $ref: '#/components/schemas/DataSourceAvailability'
+          description: '''Live'' vs ''On Request'''
+      required:
+      - assetId
+      - dataSourceAvailability
+      - title
+    AssetsPageResult:
+      type: object
+      description: Assets Page Result
+      properties:
+        assets:
           type: array
-          description: Content of the current page.
+          description: List of assets
           items:
-            $ref: '#/components/schemas/UiAsset'
+            $ref: '#/components/schemas/AssetsPageEntry'
+        pagination:
+          $ref: '#/components/schemas/PaginationResult'
+          description: Pagination Information
+      required:
+      - assets
+      - pagination
+    PaginationResult:
+      type: object
+      description: Pagination Info for Table Pages
+      properties:
         totalItems:
           type: integer
           format: int32
@@ -1551,80 +1597,93 @@ components:
         lastPage:
           type: integer
           format: int32
-          description: Index of the last page
+          description: Index of the last page. 1 Based
         previousPage:
           type: integer
           format: int32
-          description: Index of the previous page.
+          description: Index of the previous page. 1 Based
         currentPage:
           type: integer
           format: int32
-          description: Index of the current page
+          description: Index of the current page. 1 Based
         nextPage:
           type: integer
           format: int32
-          description: Index of the next page.
+          description: Index of the next page. 1 Based
         pageStart:
           type: integer
           format: int32
-          description: Index of the item at the start of the current page
+          description: Index of the item at the start of the current page. 1 Based.
+            0 if empty page
         pageEnd:
           type: integer
           format: int32
-          description: Index of the item at the end of the current page
+          description: Index of the item at the end of the current page. 1 Based.
+            0 if empty page
         pageSize:
           type: integer
           format: int32
-          description: Index of the next page.
+          description: Size of the current page.
       required:
-      - content
       - currentPage
       - lastPage
       - pageEnd
       - pageSize
       - pageStart
       - totalItems
-    AssetListPageFilter:
+    AssetsPageRequest:
       type: object
-      description: Properties to filter and sort the asset list page table
+      description: Properties to filter and sort the assets page
       properties:
-        query:
+        pagination:
+          $ref: '#/components/schemas/PaginationRequest'
+          description: Pagination
+        searchText:
           type: string
           description: "Query for filtering. If empty, show all entries"
-        page:
+        sortBy:
+          type: array
+          description: Sort List by properties in order of appearance in the array.
+          items:
+            $ref: '#/components/schemas/SortByRequestAssetsPageSortProperty'
+    AssetsPageSortProperty:
+      type: string
+      description: "Properties, for which sorting in the assets page is enabled"
+      enum:
+      - TITLE
+      - DESCRIPTION
+    PaginationRequest:
+      type: object
+      description: Specify pagination for list pages
+      properties:
+        pageOneBased:
           type: integer
           format: int32
-          default: "0"
-          description: Page Index. Defaults to 0
+          default: "1"
+          description: Page Index. Defaults to 1
         pageSize:
           type: integer
           format: int32
           description: "Size of each page. If left out, show all entries"
-        sort:
-          type: array
-          description: "Sort List by properties in order of appearance in the array.\
-            \ If empty, sort by creation date"
-          items:
-            $ref: '#/components/schemas/TableColumnSortAssetListSortProperty'
-    AssetListSortProperty:
+    SortByDirection:
       type: string
-      description: "Properties, for which sorting in the asset list is enabled"
+      description: Direction of sort in list pages
       enum:
-      - TITLE
-      - DESCRIPTION_SHORT_TEXT
-    TableColumnSortAssetListSortProperty:
+      - DESCENDING
+      - ASCENDING
+    SortByRequestAssetsPageSortProperty:
       type: object
-      description: Sort a column by a given property
+      description: Sort a column of list pages by a given property
       properties:
-        columnName:
-          $ref: '#/components/schemas/AssetListSortProperty'
+        field:
+          $ref: '#/components/schemas/AssetsPageSortProperty'
           description: Name of the column to sort for
-        descending:
-          type: boolean
-          default: "false"
-          description: "Flag whether to sort ascending. If left out, sort ascending"
+        direction:
+          $ref: '#/components/schemas/SortByDirection'
+          description: sort direction
       required:
-      - columnName
+      - direction
+      - field
     BuildInfo:
       type: object
       description: Build information about the connector backend.
@@ -1726,6 +1785,361 @@ components:
           type: integer
           format: int32
           description: Number of items to display
+    ContractAgreementDirection:
+      type: string
+      description: Whether the contract agreement is incoming or outgoing
+      enum:
+      - CONSUMING
+      - PROVIDING
+    ContractAgreementTerminationInfo:
+      type: object
+      description: Contract's agreement metadata
+      properties:
+        terminatedAt:
+          type: string
+          format: date-time
+          description: Termination's date and time
+        reason:
+          type: string
+          description: The termination's nature e.g. User Termination
+          title: Termination's reason
+        detail:
+          type: string
+          description: Detailed message from the terminating party about why the contract
+            was terminated.
+        terminatedBy:
+          $ref: '#/components/schemas/ContractTerminatedBy'
+          description: Indicates whether the termination comes from this EDC or the
+            counterparty EDC.
+      required:
+      - detail
+      - reason
+      - terminatedAt
+      - terminatedBy
+    ContractAgreementTransferProcess:
+      type: object
+      description: A Contract Agreement's Transfer Process for the Contract Agreement
+        Details Page
+      properties:
+        transferProcessId:
+          type: string
+          description: Transfer Process ID
+        lastUpdatedDate:
+          type: string
+          format: date-time
+          description: Last Change Date
+        state:
+          $ref: '#/components/schemas/TransferProcessState'
+          description: Current State
+        errorMessage:
+          type: string
+          description: Error Message
+      required:
+      - lastUpdatedDate
+      - state
+      - transferProcessId
+    ContractDetailPageResult:
+      type: object
+      description: Contract Agreement Details Page
+      properties:
+        contractAgreementId:
+          type: string
+          description: Contract Agreement ID
+        contractNegotiationId:
+          type: string
+          description: Contract Negotiation ID
+        direction:
+          $ref: '#/components/schemas/ContractAgreementDirection'
+          description: Incoming vs Outgoing
+        counterPartyAddress:
+          type: string
+          description: Other Connector's Endpoint
+        counterPartyId:
+          type: string
+          description: Other Connector's ID
+        contractSigningDate:
+          type: string
+          format: date-time
+          description: Contract Agreements Signing Date
+        asset:
+          $ref: '#/components/schemas/UiAsset'
+          description: Asset details
+        contractPolicy:
+          $ref: '#/components/schemas/UiPolicy'
+          description: Contract Policy
+        transferProcesses:
+          type: array
+          description: Contract Agreement's Transfer Processes
+          items:
+            $ref: '#/components/schemas/ContractAgreementTransferProcess'
+        terminationStatus:
+          $ref: '#/components/schemas/ContractTerminationStatus'
+          description: Contract Agreement's Termination Status
+        terminationInformation:
+          $ref: '#/components/schemas/ContractAgreementTerminationInfo'
+          description: Contract Agreement's Metadata
+      required:
+      - asset
+      - contractAgreementId
+      - contractNegotiationId
+      - contractPolicy
+      - contractSigningDate
+      - counterPartyAddress
+      - counterPartyId
+      - direction
+      - terminationStatus
+      - transferProcesses
+    ContractTerminatedBy:
+      type: string
+      description: Whether the contract termination was initiated by this EDC or a
+        counterparty EDC.
+      enum:
+      - SELF
+      - COUNTERPARTY
+    ContractTerminationStatus:
+      type: string
+      description: The contract termination status
+      enum:
+      - ONGOING
+      - TERMINATED
+    OperatorDto:
+      type: string
+      description: Type-Safe ODRL Policy Operator as supported by the sovity product
+        landscape
+      enum:
+      - EQ
+      - NEQ
+      - GT
+      - GEQ
+      - LT
+      - LEQ
+      - IN
+      - HAS_PART
+      - IS_A
+      - IS_ALL_OF
+      - IS_ANY_OF
+      - IS_NONE_OF
+    TransferProcessSimplifiedState:
+      type: string
+      description: Simplified Transfer Process State to be used in UI
+      enum:
+      - RUNNING
+      - OK
+      - ERROR
+    TransferProcessState:
+      type: object
+      description: Transfer Process State interpreted
+      properties:
+        name:
+          type: string
+          description: State name or 'CUSTOM'. State names only exist for original
+            EDC Transfer Process States.
+        code:
+          type: integer
+          format: int32
+          description: State code
+        simplifiedState:
+          $ref: '#/components/schemas/TransferProcessSimplifiedState'
+          description: "Whether we are running, in an error state or done."
+      required:
+      - code
+      - name
+      - simplifiedState
+    UiPolicy:
+      type: object
+      description: Type-Safe OpenAPI generator friendly ODLR policy subset as endorsed
+        by sovity.
+      properties:
+        policyJsonLd:
+          type: string
+          description: EDC Policy JSON-LD. This is required because the EDC requires
+            the full policy when initiating contract negotiations.
+        expression:
+          $ref: '#/components/schemas/UiPolicyExpression'
+          description: Policy expression
+        errors:
+          type: array
+          description: "When trying to reduce the policy JSON-LD to our opinionated\
+            \ subset of functionalities, many fields and functionalities are unsupported.\
+            \ Should any discrepancies occur during the mapping process, we'll collect\
+            \ them here."
+          items:
+            type: string
+      required:
+      - errors
+      - policyJsonLd
+    UiPolicyConstraint:
+      type: object
+      description: "ODRL AtomicConstraint as supported by the sovity product landscape.\
+        \ For example 'a EQ b', 'c IN [d, e, f]'"
+      properties:
+        left:
+          type: string
+          description: Left side of the expression.
+        operator:
+          $ref: '#/components/schemas/OperatorDto'
+          description: "Operator, e.g. EQ"
+        right:
+          $ref: '#/components/schemas/UiPolicyLiteral'
+          description: Right side of the expression
+      required:
+      - left
+      - operator
+      - right
+    UiPolicyExpression:
+      type: object
+      description: ODRL constraint as supported by the sovity product landscape
+      properties:
+        type:
+          $ref: '#/components/schemas/UiPolicyExpressionType'
+          description: Expression type
+        expressions:
+          type: array
+          description: "Only for types AND, OR, XONE. List of sub-expressions to be\
+            \ evaluated according to the expressionType."
+          items:
+            $ref: '#/components/schemas/UiPolicyExpression'
+        constraint:
+          $ref: '#/components/schemas/UiPolicyConstraint'
+          description: Only for type CONSTRAINT. A single constraint.
+      required:
+      - type
+    UiPolicyExpressionType:
+      type: string
+      description: |
+        Ui Policy Expression types:
+        * `CONSTRAINT` - Expression 'a=b'
+        * `AND` - Conjunction of several expressions. Evaluates to true iff all child expressions are true.
+        * `OR` - Disjunction of several expressions. Evaluates to true iff at least one child expression is true.
+        * `XONE` - XONE operation. Evaluates to true iff exactly one child expression is true.
+      enum:
+      - EMPTY
+      - CONSTRAINT
+      - AND
+      - OR
+      - XONE
+    UiPolicyLiteral:
+      type: object
+      description: "Sum type: A String, a list of Strings or a generic JSON value."
+      properties:
+        type:
+          $ref: '#/components/schemas/UiPolicyLiteralType'
+          description: Value Type
+        value:
+          type: string
+          description: Only for types STRING and JSON
+        valueList:
+          type: array
+          description: Only for type STRING_LIST
+          items:
+            type: string
+      required:
+      - type
+    UiPolicyLiteralType:
+      type: string
+      description: Supported Types of values for the right hand side of an expression
+      enum:
+      - STRING
+      - STRING_LIST
+      - JSON
+    ContractsPageEntry:
+      type: object
+      description: Contracts Page Entry
+      properties:
+        contractAgreementId:
+          type: string
+          description: Contract Agreement ID
+        direction:
+          $ref: '#/components/schemas/ContractAgreementDirection'
+          description: Incoming vs Outgoing
+        counterPartyId:
+          type: string
+          description: Other Connector's ID
+        contractSigningDate:
+          type: string
+          format: date-time
+          description: Contract Agreements Signing Date
+        assetId:
+          type: string
+          description: Asset ID
+        assetTitle:
+          type: string
+          description: Asset title
+        transferProcessesCount:
+          type: integer
+          format: int32
+          description: Number of transfer processes
+        terminationStatus:
+          $ref: '#/components/schemas/ContractTerminationStatus'
+          description: Contract Agreement's Termination Status
+        terminatedAt:
+          type: string
+          format: date-time
+          description: Contract Terminated At
+      required:
+      - assetId
+      - assetTitle
+      - contractAgreementId
+      - contractSigningDate
+      - counterPartyId
+      - direction
+      - terminationStatus
+      - transferProcessesCount
+    ContractsPageResult:
+      type: object
+      description: Contracts Page Result
+      properties:
+        contracts:
+          type: array
+          description: List of contract agreements
+          items:
+            $ref: '#/components/schemas/ContractsPageEntry'
+        pagination:
+          $ref: '#/components/schemas/PaginationResult'
+          description: Pagination Information
+      required:
+      - contracts
+      - pagination
+    ContractsPageRequest:
+      type: object
+      description: Properties to filter and sort the contracts page
+      properties:
+        terminationStatus:
+          $ref: '#/components/schemas/ContractTerminationStatus'
+          description: Filter for the termination-status of the contract
+        pagination:
+          $ref: '#/components/schemas/PaginationRequest'
+          description: Pagination
+        searchText:
+          type: string
+          description: "Query for filtering. If empty, show all entries"
+        sortBy:
+          type: array
+          description: Sort List by properties in order of appearance in the array.
+          items:
+            $ref: '#/components/schemas/SortByRequestContractsPageSortProperty'
+    ContractsPageSortProperty:
+      type: string
+      description: "Properties, for which sorting in the contract agreement list page\
+        \ is enabled"
+      enum:
+      - CONTRACT_NAME
+      - SIGNED_AT
+      - TERMINATED_AT
+      - TRANSFERS
+    SortByRequestContractsPageSortProperty:
+      type: object
+      description: Sort a column of list pages by a given property
+      properties:
+        field:
+          $ref: '#/components/schemas/ContractsPageSortProperty'
+          description: Name of the column to sort for
+        direction:
+          $ref: '#/components/schemas/SortByDirection'
+          description: sort direction
+      required:
+      - direction
+      - field
     ContractDefinitionRequest:
       type: object
       deprecated: true
@@ -1826,97 +2240,6 @@ components:
       - DONT_PUBLISH
       - PUBLISH_UNRESTRICTED
       - PUBLISH_RESTRICTED
-    OperatorDto:
-      type: string
-      description: Type-Safe ODRL Policy Operator as supported by the sovity product
-        landscape
-      enum:
-      - EQ
-      - NEQ
-      - GT
-      - GEQ
-      - LT
-      - LEQ
-      - IN
-      - HAS_PART
-      - IS_A
-      - IS_ALL_OF
-      - IS_ANY_OF
-      - IS_NONE_OF
-    UiPolicyConstraint:
-      type: object
-      description: "ODRL AtomicConstraint as supported by the sovity product landscape.\
-        \ For example 'a EQ b', 'c IN [d, e, f]'"
-      properties:
-        left:
-          type: string
-          description: Left side of the expression.
-        operator:
-          $ref: '#/components/schemas/OperatorDto'
-          description: "Operator, e.g. EQ"
-        right:
-          $ref: '#/components/schemas/UiPolicyLiteral'
-          description: Right side of the expression
-      required:
-      - left
-      - operator
-      - right
-    UiPolicyExpression:
-      type: object
-      description: ODRL constraint as supported by the sovity product landscape
-      properties:
-        type:
-          $ref: '#/components/schemas/UiPolicyExpressionType'
-          description: Expression type
-        expressions:
-          type: array
-          description: "Only for types AND, OR, XONE. List of sub-expressions to be\
-            \ evaluated according to the expressionType."
-          items:
-            $ref: '#/components/schemas/UiPolicyExpression'
-        constraint:
-          $ref: '#/components/schemas/UiPolicyConstraint'
-          description: Only for type CONSTRAINT. A single constraint.
-      required:
-      - type
-    UiPolicyExpressionType:
-      type: string
-      description: |
-        Ui Policy Expression types:
-        * `CONSTRAINT` - Expression 'a=b'
-        * `AND` - Conjunction of several expressions. Evaluates to true iff all child expressions are true.
-        * `OR` - Disjunction of several expressions. Evaluates to true iff at least one child expression is true.
-        * `XONE` - XONE operation. Evaluates to true iff exactly one child expression is true.
-      enum:
-      - EMPTY
-      - CONSTRAINT
-      - AND
-      - OR
-      - XONE
-    UiPolicyLiteral:
-      type: object
-      description: "Sum type: A String, a list of Strings or a generic JSON value."
-      properties:
-        type:
-          $ref: '#/components/schemas/UiPolicyLiteralType'
-          description: Value Type
-        value:
-          type: string
-          description: Only for types STRING and JSON
-        valueList:
-          type: array
-          description: Only for type STRING_LIST
-          items:
-            type: string
-      required:
-      - type
-    UiPolicyLiteralType:
-      type: string
-      description: Supported Types of values for the right hand side of an expression
-      enum:
-      - STRING
-      - STRING_LIST
-      - JSON
     PolicyDefinitionCreateRequest:
       type: object
       deprecated: true
@@ -2127,190 +2450,6 @@ components:
       - contractOffers
       - endpoint
       - participantId
-    UiPolicy:
-      type: object
-      description: Type-Safe OpenAPI generator friendly ODLR policy subset as endorsed
-        by sovity.
-      properties:
-        policyJsonLd:
-          type: string
-          description: EDC Policy JSON-LD. This is required because the EDC requires
-            the full policy when initiating contract negotiations.
-        expression:
-          $ref: '#/components/schemas/UiPolicyExpression'
-          description: Policy expression
-        errors:
-          type: array
-          description: "When trying to reduce the policy JSON-LD to our opinionated\
-            \ subset of functionalities, many fields and functionalities are unsupported.\
-            \ Should any discrepancies occur during the mapping process, we'll collect\
-            \ them here."
-          items:
-            type: string
-      required:
-      - errors
-      - policyJsonLd
-    ContractAgreementCard:
-      type: object
-      description: Contract Agreement for Contract Agreement Page
-      properties:
-        contractAgreementId:
-          type: string
-          description: Contract Agreement ID
-        contractNegotiationId:
-          type: string
-          description: Contract Negotiation ID
-        direction:
-          $ref: '#/components/schemas/ContractAgreementDirection'
-          description: Incoming vs Outgoing
-        counterPartyAddress:
-          type: string
-          description: Other Connector's Endpoint
-        counterPartyId:
-          type: string
-          description: Other Connector's ID
-        contractSigningDate:
-          type: string
-          format: date-time
-          description: Contract Agreements Signing Date
-        asset:
-          $ref: '#/components/schemas/UiAsset'
-          description: Asset details
-        contractPolicy:
-          $ref: '#/components/schemas/UiPolicy'
-          description: Contract Policy
-        transferProcesses:
-          type: array
-          description: Contract Agreement's Transfer Processes
-          items:
-            $ref: '#/components/schemas/ContractAgreementTransferProcess'
-        terminationStatus:
-          $ref: '#/components/schemas/ContractTerminationStatus'
-          description: Contract Agreement's Termination Status
-        terminationInformation:
-          $ref: '#/components/schemas/ContractAgreementTerminationInfo'
-          description: Contract Agreement's Metadata
-      required:
-      - asset
-      - contractAgreementId
-      - contractNegotiationId
-      - contractPolicy
-      - contractSigningDate
-      - counterPartyAddress
-      - counterPartyId
-      - direction
-      - terminationStatus
-      - transferProcesses
-    ContractAgreementDirection:
-      type: string
-      description: Whether the contract agreement is incoming or outgoing
-      enum:
-      - CONSUMING
-      - PROVIDING
-    ContractAgreementTerminationInfo:
-      type: object
-      description: Contract's agreement metadata
-      properties:
-        terminatedAt:
-          type: string
-          format: date-time
-          description: Termination's date and time
-        reason:
-          type: string
-          description: The termination's nature e.g. User Termination
-          title: Termination's reason
-        detail:
-          type: string
-          description: Detailed message from the terminating party about why the contract
-            was terminated.
-        terminatedBy:
-          $ref: '#/components/schemas/ContractTerminatedBy'
-          description: Indicates whether the termination comes from this EDC or the
-            counterparty EDC.
-      required:
-      - detail
-      - reason
-      - terminatedAt
-      - terminatedBy
-    ContractAgreementTransferProcess:
-      type: object
-      description: A Contract Agreement's Transfer Process
-      properties:
-        transferProcessId:
-          type: string
-          description: Transfer Process ID
-        lastUpdatedDate:
-          type: string
-          format: date-time
-          description: Last Change Date
-        state:
-          $ref: '#/components/schemas/TransferProcessState'
-          description: Current State
-        errorMessage:
-          type: string
-          description: Error Message
-      required:
-      - lastUpdatedDate
-      - state
-      - transferProcessId
-    ContractTerminatedBy:
-      type: string
-      description: Whether the contract termination was initiated by this EDC or a
-        counterparty EDC.
-      enum:
-      - SELF
-      - COUNTERPARTY
-    ContractTerminationStatus:
-      type: string
-      description: The contract termination status
-      enum:
-      - ONGOING
-      - TERMINATED
-    TransferProcessSimplifiedState:
-      type: string
-      description: Simplified Transfer Process State to be used in UI
-      enum:
-      - RUNNING
-      - OK
-      - ERROR
-    TransferProcessState:
-      type: object
-      description: Transfer Process State interpreted
-      properties:
-        name:
-          type: string
-          description: State name or 'CUSTOM'. State names only exist for original
-            EDC Transfer Process States.
-        code:
-          type: integer
-          format: int32
-          description: State code
-        simplifiedState:
-          $ref: '#/components/schemas/TransferProcessSimplifiedState'
-          description: "Whether we are running, in an error state or done."
-      required:
-      - code
-      - name
-      - simplifiedState
-    ContractAgreementPage:
-      type: object
-      description: Data as required by the UI's Contract Agreement Page
-      properties:
-        contractAgreements:
-          type: array
-          description: Contract Agreement Cards
-          items:
-            $ref: '#/components/schemas/ContractAgreementCard'
-      required:
-      - contractAgreements
-    ContractAgreementPageQuery:
-      type: object
-      description: Filters for querying a Contract Contract Agreement Page
-      properties:
-        terminationStatus:
-          $ref: '#/components/schemas/ContractTerminationStatus'
-          description: Optionally filter the resulting contract agreements by their
-            termination status.
     ContractDefinitionEntry:
       type: object
       deprecated: true

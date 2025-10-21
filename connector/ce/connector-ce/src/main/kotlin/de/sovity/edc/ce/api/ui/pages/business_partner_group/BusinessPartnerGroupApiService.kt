@@ -13,10 +13,9 @@ import de.sovity.edc.ce.api.ui.model.BusinessPartnerGroupEditSubmit
 import de.sovity.edc.ce.api.ui.model.BusinessPartnerGroupListPageEntry
 import de.sovity.edc.ce.api.ui.model.BusinessPartnerGroupQuery
 import de.sovity.edc.ce.api.ui.model.IdResponseDto
+import de.sovity.edc.ce.api.utils.jooq.EdcJsonUtils
 import de.sovity.edc.ce.api.utils.jooq.JooqUtilsSovity.from
 import de.sovity.edc.ce.api.utils.jooq.JooqUtilsSovity.fromArray
-import de.sovity.edc.ce.api.utils.jooq.JooqUtilsSovity.parseStringArray
-import de.sovity.edc.ce.api.utils.jooq.JooqUtilsSovity.toPostgresqlJsonArray
 import de.sovity.edc.ce.api.utils.jooq.SearchUtils
 import de.sovity.edc.ce.api.utils.notFoundError
 import de.sovity.edc.ce.db.jooq.Tables
@@ -26,7 +25,7 @@ import org.jooq.JSON
 import org.jooq.impl.DSL
 
 @Service
-class BusinessPartnerGroupApiService {
+class BusinessPartnerGroupApiService(private val jsonUtils: EdcJsonUtils) {
     fun editPage(dsl: DSLContext, groupId: String): BusinessPartnerGroupEditPage {
         val bpg = Tables.EDC_BUSINESS_PARTNER_GROUP
         val members = dsl.select(bpg.BPN).from(bpg).where(bpg.GROUPS.contains(JSON.json(groupId)))
@@ -98,7 +97,7 @@ class BusinessPartnerGroupApiService {
             )
 
         toUpdate.forEach {
-            var groups = it.groups.parseStringArray()
+            var groups = jsonUtils.parseStringArray(it.groups)
 
             if (members.contains(it.bpn)) {
                 groups = (groups + groupId)
@@ -109,7 +108,7 @@ class BusinessPartnerGroupApiService {
             if (groups.isEmpty()) {
                 it.delete()
             } else {
-                it.groups = groups.distinct().toPostgresqlJsonArray()
+                it.groups = jsonUtils.toPostgresqlJsonArray(groups.distinct())
                 it.update()
             }
         }
@@ -119,7 +118,7 @@ class BusinessPartnerGroupApiService {
         toAdd.forEach {
             dsl.newRecord(bpg).also { record ->
                 record.bpn = it
-                record.groups = listOf(groupId).toPostgresqlJsonArray()
+                record.groups = jsonUtils.toPostgresqlJsonArray(listOf(groupId))
                 record.insert()
             }
         }

@@ -39,26 +39,22 @@ export function getSphinxPolicyVerbs(): PolicyVerbConfig[] {
       valueType: 'STRING_LIST_WITH_COMMA_SUPPORT',
     },
     {
-      operandLeftIds: [
-        'inForceDate',
-        'https://w3id.org/edc/v0.0.1/ns/inForceDate',
-      ],
+      operandLeftIds: ['POLICY_EVALUATION_TIME'],
       operandLeftTitle: byTranslation(
-        'General.Policies.Verbs.inForceDateOperandLeftTitle',
+        'General.Policies.Verbs.evaluationTimeOperandLeftTitle',
       ),
       operandLeftDescription: byTranslation(
-        'General.Policies.Verbs.inForceDateOperandLeftDescription',
+        'General.Policies.Verbs.evaluationTimeOperandLeftDescription',
       ),
 
       operandRightTitle: byTranslation(
-        'General.Policies.Verbs.inForceDateOperandRightTitle',
+        'General.Policies.Verbs.evaluationTimeOperandRightTitle',
       ),
       operandRightPlaceholder: byTranslation(
-        'General.Policies.Verbs.inForceDateOperandRightPlaceholder',
+        'General.Policies.Verbs.evaluationTimeOperandRightPlaceholder',
       ),
-
       supportedOperators: ['GEQ', 'LEQ', 'GT', 'LT'],
-      valueType: 'IN_FORCE_DATE',
+      valueType: 'DATETIME_TRUNCATE_TO_DATE',
     },
   ];
 }

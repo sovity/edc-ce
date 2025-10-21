@@ -22,7 +22,6 @@ package de.sovity.edc.ce.libs.mappers.asset;
 
 import de.sovity.edc.ce.api.common.model.UiAssetCreateRequest;
 import de.sovity.edc.ce.api.common.model.UiAssetEditRequest;
-import de.sovity.edc.ce.api.common.model.UiAssetExtForSphinx;
 import de.sovity.edc.ce.libs.mappers.dataaddress.DataSourceMapper;
 import de.sovity.edc.runtime.simple_di.Service;
 import de.sovity.edc.utils.JsonUtils;
@@ -43,7 +42,10 @@ import java.util.Objects;
 
 import static com.apicatalog.jsonld.StringUtils.isBlank;
 import static com.apicatalog.jsonld.StringUtils.isNotBlank;
-import static de.sovity.edc.ce.libs.mappers.asset.utils.JsonBuilderUtils.*;
+import static de.sovity.edc.ce.libs.mappers.asset.utils.JsonBuilderUtils.addNonNull;
+import static de.sovity.edc.ce.libs.mappers.asset.utils.JsonBuilderUtils.addNonNullJsonValue;
+import static de.sovity.edc.ce.libs.mappers.asset.utils.JsonBuilderUtils.addNotBlank;
+import static de.sovity.edc.ce.libs.mappers.asset.utils.JsonBuilderUtils.addNotBlankStringArray;
 
 @RequiredArgsConstructor
 @Service

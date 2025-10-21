@@ -18,12 +18,11 @@ import {
 import {useDialogsStore} from '@/lib/stores/dialog-store';
 import {MoreHorizontal} from 'lucide-react';
 import {useTranslations} from 'next-intl';
-import {type UiAsset} from '@sovity.de/edc-client';
 import {useAssetDeleteMutation} from '@/app/(authenticated)/assets/[id]/details/[tab]/components/use-asset-delete-mutation';
 import Link from 'next/link';
 import {urls} from '@/lib/urls';
 
-const AssetActionMenu = ({asset}: {asset: UiAsset}) => {
+const AssetActionMenu = ({asset}: {asset: {assetId: string}}) => {
   const t = useTranslations();
 
   const {showDialog, dismissDialog} = useDialogsStore();
