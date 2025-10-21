@@ -22,12 +22,19 @@ import {
 } from '@/app/(authenticated)/contracts/components/contract-agreement-capabilities';
 import {urls} from '@/lib/urls';
 import {useDialogsStore} from '@/lib/stores/dialog-store';
-import {type ContractAgreementCard} from '@sovity.de/edc-client';
+import type {
+  ContractAgreementDirection,
+  ContractTerminationStatus,
+} from '@sovity.de/edc-client';
 import {MoreHorizontal} from 'lucide-react';
 import {useTranslations} from 'next-intl';
 
 interface ContractActionsMenuProps {
-  contractAgreement: ContractAgreementCard;
+  contractAgreement: {
+    contractAgreementId: string;
+    terminationStatus: ContractTerminationStatus;
+    direction: ContractAgreementDirection;
+  };
 }
 
 const ContractActionMenu = ({contractAgreement}: ContractActionsMenuProps) => {

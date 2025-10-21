@@ -121,6 +121,7 @@ edc-identityTrustCore = { module = "org.eclipse.edc:identity-trust-core", versio
 edc-identityTrustIssuersConfiguration = { module = "org.eclipse.edc:identity-trust-issuers-configuration", version.ref = "edc" }
 edc-identityTrustTransform = { module = "org.eclipse.edc:identity-trust-transform", version.ref = "edc" }
 edc-jerseyMicrometer = { module = "org.eclipse.edc:jersey-micrometer", version.ref = "edc" }
+edc-jerseyProviders = { module = "org.eclipse.edc:jersey-providers-lib", version.ref = "edc" }
 edc-jettyCore = { module = "org.eclipse.edc:jetty-core", version.ref = "edc" }
 edc-jettyMicrometer = { module = "org.eclipse.edc:jetty-micrometer", version.ref = "edc" }
 edc-jsonLd = { module = "org.eclipse.edc:json-ld", version.ref = "edc" }

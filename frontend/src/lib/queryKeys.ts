@@ -37,11 +37,15 @@ export const queryKeys = {
     id: (contractId: string) => [...queryKeys.contracts.key(), contractId],
     all: () => [...queryKeys.contracts.key(), 'all'],
 
-    listPage: () => [...queryKeys.contracts.all(), 'listPage'],
+    contractsPage: (params: TableFilterParams) => [
+      ...queryKeys.contracts.all(),
+      'contractsPage',
+      ...buildTableFilterKey(params),
+    ],
 
-    detailsPage: (contractId: string) => [
+    detailPage: (contractId: string) => [
       ...queryKeys.contracts.id(contractId),
-      'detailsPage',
+      'detailPage',
     ],
   },
   policies: {
@@ -59,14 +63,14 @@ export const queryKeys = {
     all: () => [...queryKeys.assets.key(), 'all'],
     id: (assetId: string) => [...queryKeys.assets.key(), assetId],
 
-    listPage: (params: TableFilterParams) => [
+    assetsPage: (params: TableFilterParams) => [
       ...queryKeys.assets.all(),
-      'listPage',
+      'assetsPage',
       ...buildTableFilterKey(params),
     ],
-    detailsPage: (assetId: string) => [
+    detailPage: (assetId: string) => [
       ...queryKeys.assets.id(assetId),
-      'detailsPage',
+      'detailPage',
     ],
   },
   vaultSecrets: {
@@ -136,8 +140,8 @@ export const queryKeys = {
 };
 
 const buildTableFilterKey = ({
-  query,
-  page,
+  searchText: query,
+  pageOneBased,
   pageSize,
   sorting,
 }: TableFilterParams) => {
@@ -145,8 +149,8 @@ const buildTableFilterKey = ({
   if (query) {
     tableFilterKey.push('query', query);
   }
-  if (page !== undefined) {
-    tableFilterKey.push('page', page);
+  if (pageOneBased !== undefined) {
+    tableFilterKey.push('page', pageOneBased);
   }
   if (pageSize !== undefined) {
     tableFilterKey.push('pageSize', pageSize);

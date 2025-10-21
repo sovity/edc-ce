@@ -15,7 +15,6 @@ import {Tabs, TabsContent, TabsList} from '@/components/ui/tabs';
 import {AssetDetailOverviewCard} from '@/app/(authenticated)/assets/[id]/details/[tab]/components/asset-detail-overview-card';
 import {AssetDetailPropertiesCard} from '@/app/(authenticated)/assets/[id]/details/[tab]/components/asset-detail-properties-card';
 import {canTransfer} from '@/app/(authenticated)/contracts/components/contract-agreement-capabilities';
-import {type ContractAgreementCard} from '@/lib/api/client/generated';
 import {useTab} from '@/lib/hooks/use-tab';
 import {urls} from '@/lib/urls';
 import {
@@ -29,10 +28,11 @@ import ContractTransferTable from './components/contract-transfer-table';
 import {ContractDetailCard} from './components/contract-detail-card';
 import ContractAgreementHeaderStack from '@/components/stacks/contract-agreement-header-stack';
 import {DocumentTextIcon} from '@heroicons/react/24/outline';
+import {type ContractDetailPageResult} from '@sovity.de/edc-client';
 
 export interface ContractDetailsPageContentProps {
   initialTab: string;
-  contract: ContractAgreementCard;
+  contract: ContractDetailPageResult;
 }
 
 export default function ContractDetailPage({

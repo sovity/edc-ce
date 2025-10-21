@@ -7,14 +7,9 @@
  */
 'use client';
 
-import {CenteredLoadingSpinner} from '@/components/loading-spinner';
-import {api} from '@/lib/api/client';
 import {useBreadcrumbItems} from '@/lib/breadcrumb-items';
 import {useBreadcrumbs} from '@/lib/hooks/use-breadcrumbs';
-import {useQueryWrapper} from '@/lib/hooks/use-query-wrapper';
 import {useTitle} from '@/lib/hooks/use-title';
-import {matchQueryState} from '@/lib/utils/match-query-state';
-import {queryKeys} from '@/lib/queryKeys';
 import {useTranslations} from 'next-intl';
 import ContractTable from './components/contract-table';
 import PageContainer from '@/components/page-container';
@@ -22,20 +17,12 @@ import PageContainer from '@/components/page-container';
 export default function ContractListPage() {
   const breadcrumbItems = useBreadcrumbItems();
   const t = useTranslations();
-  const pageQuery = useQueryWrapper(queryKeys.contracts.listPage(), () =>
-    api.uiApi.getContractAgreementPage(),
-  );
-
   useTitle(t('Pages.ContractList.title'));
   useBreadcrumbs([breadcrumbItems.contracts.listPage()]);
 
-  return matchQueryState({
-    query: pageQuery,
-    loading: () => <CenteredLoadingSpinner />,
-    success: (data) => (
-      <PageContainer>
-        <ContractTable data={data.contractAgreements} />
-      </PageContainer>
-    ),
-  });
+  return (
+    <PageContainer>
+      <ContractTable />
+    </PageContainer>
+  );
 }

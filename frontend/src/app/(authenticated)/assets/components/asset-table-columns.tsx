@@ -8,13 +8,13 @@
 'use client';
 
 import {DataTableColumnHeader} from '@/components/data-column-header';
-import {type UiAsset} from '@/lib/api/client/generated';
+import {type AssetsPageEntry} from '@/lib/api/client/generated';
 import {type ColumnDef} from '@tanstack/react-table';
 import {useTranslations} from 'next-intl';
 import AssetHeaderStack from '@/components/stacks/asset-header-stack';
 import AssetActionMenu from '@/app/(authenticated)/assets/components/asset-action-menu';
 
-type ColumnType = ColumnDef<UiAsset>[];
+type ColumnType = ColumnDef<AssetsPageEntry>[];
 
 export const useAssetTableColumns = (): ColumnType => {
   const t = useTranslations();

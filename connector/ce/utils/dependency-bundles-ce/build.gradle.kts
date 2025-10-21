@@ -224,6 +224,7 @@ dependencyBundles.bundle(
     // micrometer
     api(libs.edc.micrometerCore)
     api(libs.edc.jerseyMicrometer)
+    api(libs.edc.jerseyProviders)
     api(libs.edc.jettyMicrometer)
 }
 

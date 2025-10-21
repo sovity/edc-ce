@@ -107,7 +107,6 @@ class PolicyValidatorTest {
             "$: Warning: Policy has prohibitions, which are currently unsupported.",
             "$: Warning: Policy has obligations, which are currently unsupported.",
             "$: Warning: Policy has inheritsFrom, which is currently unsupported.",
-            "$: Warning: Policy has an assignee, which is currently unsupported.",
             "$: Warning: Policy has extensible properties."
         );
     }
@@ -176,7 +175,7 @@ class PolicyValidatorTest {
         // assert
         assertThat(errors.getErrors()).containsExactlyInAnyOrder(
             "$: Permission has duties, which is currently unsupported.",
-            "$.action: Action has a type that is not '[USE, use, http://www.w3.org/ns/odrl/2/use]', but 'idk'.",
+            "$.action: Action has a type that is not '[http://www.w3.org/ns/odrl/2/use, USE, use]', but 'idk'.",
             "$.action: Action has a value for includedIn, which is currently unsupported.",
             "$.action: Action has a constraint, which is currently unsupported."
         );

@@ -11,7 +11,12 @@ import type {FilterFn, Table} from '@tanstack/react-table';
 import {DataTablePagination} from './data-table-pagination';
 
 interface ClientsideDataTableProps<TData> {
-  table: Table<TData>;
+  table: Pick<
+    Table<TData>,
+    'getFilteredRowModel' | 'getState' | 'getCanNextPage' | 'getCanPreviousPage'
+  >;
+  setPageIndex: (page: number) => void;
+  setPageSize: (pageSize: number) => void;
 }
 
 declare module '@tanstack/table-core' {
@@ -25,6 +30,8 @@ declare module '@tanstack/table-core' {
  */
 export function ClientsideDataTablePagination<TData>({
   table,
+  setPageIndex,
+  setPageSize,
 }: ClientsideDataTableProps<TData>) {
   const totalItems = table.getFilteredRowModel().rows.length;
   const {pageSize, pageIndex} = table.getState().pagination;
@@ -40,8 +47,7 @@ export function ClientsideDataTablePagination<TData>({
 
   return (
     <DataTablePagination
-      tablePage={{
-        content: table.getRowModel().rows,
+      pagination={{
         currentPage: pageIndex,
         pageStart,
         pageEnd,
@@ -51,8 +57,8 @@ export function ClientsideDataTablePagination<TData>({
         pageSize,
         lastPage,
       }}
-      setPageIndex={(page) => table.setPageIndex(page)}
-      setPageSize={(pageSize) => table.setPageSize(pageSize)}
+      setPageIndex={(page) => setPageIndex(page)}
+      setPageSize={(pageSize) => setPageSize(pageSize)}
       tableTestId={'tbl'}
     />
   );

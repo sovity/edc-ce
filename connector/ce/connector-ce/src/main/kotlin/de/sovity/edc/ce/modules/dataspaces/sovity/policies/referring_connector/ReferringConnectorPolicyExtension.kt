@@ -8,6 +8,7 @@
 package de.sovity.edc.ce.modules.dataspaces.sovity.policies.referring_connector
 
 import de.sovity.edc.ce.config.CeConfigProps
+import de.sovity.edc.ce.modules.policy_utils.creator.PolicyComparator
 import de.sovity.edc.ce.modules.policy_utils.creator.PolicyContextUtils
 import de.sovity.edc.ce.modules.policy_utils.creator.RightExpressionParsers
 import de.sovity.edc.ce.modules.policy_utils.creator.SimplePolicyCreator
@@ -28,6 +29,9 @@ class ReferringConnectorPolicyExtension : ServiceExtension {
     @Inject
     private lateinit var policyContextUtils: PolicyContextUtils
 
+    @Inject
+    private lateinit var policyComparator: PolicyComparator
+
     override fun initialize(context: ServiceExtensionContext) {
         val config = context.config
         val claimName = CeConfigProps.EDC_AGENT_IDENTITY_KEY.getStringOrThrow(config)
@@ -42,7 +46,8 @@ class ReferringConnectorPolicyExtension : ServiceExtension {
                 claim?.let { ServiceResult.success(listOf(it)) }
                     ?: ServiceResult.unauthorized("String claim $claimName not found in ParticipantAgent claims.")
             },
-            rightExpressionParser = RightExpressionParsers::stringValueCommaSeparated
+            rightExpressionParser = RightExpressionParsers::stringValueCommaSeparated,
+            comparator = policyComparator::compareWithEqWorkingLikeIn
         )
     }
 

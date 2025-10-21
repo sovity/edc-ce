@@ -82,7 +82,7 @@ public class PolicyMapper {
     public Policy buildPolicy(UiPolicyExpression expression) {
         var constraints = expressionMapper.buildConstraint(expression);
 
-        var actionType = PolicyValidator.ALLOWED_ACTION_VALUES.iterator().next();
+        var actionType = "USE"; // For some reason this needs to be that, expecting it to become irrelevant in Saturn
         var action = Action.Builder.newInstance().type(actionType).build();
 
         var permission = Permission.Builder.newInstance()

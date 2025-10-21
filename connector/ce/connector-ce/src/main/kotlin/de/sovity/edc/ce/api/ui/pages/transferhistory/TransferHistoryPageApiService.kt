@@ -9,8 +9,9 @@ package de.sovity.edc.ce.api.ui.pages.transferhistory
 
 import de.sovity.edc.ce.api.ui.model.ContractAgreementDirection
 import de.sovity.edc.ce.api.ui.model.TransferHistoryEntry
-import de.sovity.edc.ce.api.ui.pages.asset.AssetRs
-import de.sovity.edc.ce.api.ui.pages.contract_agreements.services.ContractAgreementDirectionUtils
+import de.sovity.edc.ce.api.ui.pages.asset_detail_page.services.AssetDetailPageBuilder
+import de.sovity.edc.ce.api.ui.pages.asset_detail_page.services.AssetDetailPageQueryService
+import de.sovity.edc.ce.api.ui.pages.contract_agreements.services.getDirection
 import de.sovity.edc.ce.api.utils.EdcDateUtils
 import de.sovity.edc.ce.api.utils.ServiceException
 import de.sovity.edc.runtime.simple_di.Service
@@ -32,6 +33,8 @@ class TransferHistoryPageApiService(
     private val contractNegotiationStore: ContractNegotiationStore,
     private val transferProcessService: TransferProcessService,
     private val transferProcessStateService: TransferProcessStateService,
+    private val assetDetailPageQueryService: AssetDetailPageQueryService,
+    private val assetDetailPageBuilder: AssetDetailPageBuilder,
 ) {
 
     /**
@@ -50,7 +53,7 @@ class TransferHistoryPageApiService(
             val agreement = agreementsById[process.contractId]
             val negotiation = negotiationsById[process.contractId]
             val asset = assetLookup(dsl, process)
-            val direction = negotiation?.type?.let { ContractAgreementDirectionUtils.fromType(it) }
+            val direction = negotiation?.type?.getDirection()
             val transferHistoryEntry = TransferHistoryEntry()
             transferHistoryEntry.assetId = asset.id
 
@@ -94,9 +97,8 @@ class TransferHistoryPageApiService(
 
     private fun assetLookup(dsl: DSLContext, process: TransferProcess): Asset {
         val assetId = process.assetId
-        val asset =
-            AssetRs.fetchAsset(dsl, assetId)?.toAsset() ?: return Asset.Builder.newInstance().id(assetId).build()
-        return asset
+        return assetDetailPageQueryService.fetchAssetDetailPage(dsl, assetId)?.let { assetDetailPageBuilder.buildAsset(it) }
+            ?: Asset.Builder.newInstance().id(assetId).build()
     }
 
     private fun getAllContractNegotiations(): List<ContractNegotiation> =

@@ -13,7 +13,6 @@ import de.sovity.edc.ce.config.CeDataspace
 import de.sovity.edc.ce.config.CeVaultEntries
 import de.sovity.edc.ce.modules.auth.ApiKeyAuthModule
 import de.sovity.edc.ce.modules.vault.inmemory.toConfigPropRef
-import de.sovity.edc.runtime.config.ConfigUtils
 import de.sovity.edc.runtime.modules.RuntimeConfigProps
 import de.sovity.edc.runtime.modules.model.ConfigPropRef
 import org.eclipse.edc.spi.system.configuration.Config
@@ -23,7 +22,7 @@ object ConfigPresetsCe {
     @JvmOverloads
     @JvmStatic
     fun sovityIamMock(
-        participantId: String,
+        participantId: String = "edc",
         overrides: Map<ConfigPropRef, String> = emptyMap(),
     ) = defaultControlPlane("control-plane-with-integrated-data-plane") + mapOf(
         // Mock IAM
@@ -33,21 +32,22 @@ object ConfigPresetsCe {
 
     @JvmStatic
     fun sovityIamMockCp(
-        participantId: String,
+        participantId: String = "edc-control-plane",
+        overrides: Map<ConfigPropRef, String> = emptyMap(),
     ) = defaultControlPlane("control-plane-standalone") + mapOf(
         // Mock IAM
         CeConfigProps.SOVITY_DATASPACE_KIND to CeDataspace.SOVITY_MOCK_IAM.nameKebabCase,
         CeConfigProps.EDC_PARTICIPANT_ID to participantId,
-    )
+    ) + overrides
 
     @JvmStatic
     fun sovityIamMockDp(
         cpConfig: Config,
-        cpConfigUtils: ConfigUtils
+        overrides: Map<ConfigPropRef, String> = emptyMap(),
     ) = defaultDataPlane(cpConfig) + mapOf(
         // Mock IAM
         CeConfigProps.SOVITY_DATASPACE_KIND to CeDataspace.SOVITY_MOCK_IAM.nameKebabCase,
-    )
+    ) + overrides
 
     fun sphinxConnector(
         uri: String,

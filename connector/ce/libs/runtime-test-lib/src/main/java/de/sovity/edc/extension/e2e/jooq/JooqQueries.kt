@@ -10,6 +10,12 @@ package de.sovity.edc.extension.e2e.jooq
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import de.sovity.edc.ce.db.jooq.Tables
+import de.sovity.edc.ce.db.jooq.enums.ContractTerminatedBy
+import de.sovity.edc.ce.db.jooq.tables.records.EdcAssetRecord
+import de.sovity.edc.ce.db.jooq.tables.records.EdcContractAgreementRecord
+import de.sovity.edc.ce.db.jooq.tables.records.EdcContractNegotiationRecord
+import de.sovity.edc.ce.db.jooq.tables.records.EdcTransferProcessRecord
+import de.sovity.edc.ce.db.jooq.tables.records.SovityContractTerminationRecord
 import de.sovity.edc.ce.db.jooq.tables.records.SovityVaultSecretRecord
 import org.eclipse.edc.connector.controlplane.asset.spi.domain.Asset
 import org.eclipse.edc.connector.controlplane.contract.spi.types.agreement.ContractAgreement
@@ -38,15 +44,94 @@ class JooqQueries(
             }
         )
 
-    fun insertAsset(dsl: DSLContext, asset: Asset) {
-        val record = dsl.newRecord(Tables.EDC_ASSET).also {
-            it.assetId = asset.id
-            it.createdAt = asset.createdAt
-            it.properties = toJson(asset.properties)
-            it.privateProperties = toJson(asset.privateProperties)
-            it.dataAddress = toJson(asset.dataAddress.properties)
+    fun insertAsset(
+        dsl: DSLContext,
+        assetId: String,
+        properties: Map<String, Any> = emptyMap(),
+        privateProperties: Map<String, Any> = emptyMap(),
+        dataAddress: Map<String, Any> = emptyMap(),
+        addMore: (EdcAssetRecord) -> Unit = {}
+    ) {
+        dsl.newRecord(Tables.EDC_ASSET).also {
+            it.assetId = assetId
+            it.createdAt = OffsetDateTime.now().toEpochSecond()
+            it.properties = toJson(properties)
+            it.privateProperties = toJson(privateProperties)
+            it.dataAddress = toJson(dataAddress)
+            addMore(it)
+            it.insert()
         }
-        record.insert()
+    }
+
+    fun insertContractAgreement(
+        dsl: DSLContext,
+        contractAgreementId: String,
+        assetId: String,
+        policy: Map<String, Any> = emptyMap(),
+        addMore: (EdcContractAgreementRecord) -> Unit = {}
+    ) {
+        dsl.newRecord(Tables.EDC_CONTRACT_AGREEMENT).also {
+            it.agrId = contractAgreementId
+            it.assetId = assetId
+            it.signingDate = OffsetDateTime.now().toEpochSecond()
+            it.policy = toJson(policy)
+            addMore(it)
+            it.insert()
+        }
+    }
+
+    fun insertContractNegotiation(
+        dsl: DSLContext,
+        contractNegotiationId: String,
+        agreementId: String,
+        type: ContractNegotiation.Type = ContractNegotiation.Type.PROVIDER,
+        addMore: (EdcContractNegotiationRecord) -> Unit = {}
+    ) {
+        dsl.newRecord(Tables.EDC_CONTRACT_NEGOTIATION).also {
+            it.id = contractNegotiationId
+            it.agreementId = agreementId
+            it.createdAt = OffsetDateTime.now().toEpochSecond()
+            it.updatedAt = OffsetDateTime.now().toEpochSecond()
+            it.counterpartyId = "counterpartyId"
+            it.counterpartyAddress = "counterpartyAddress"
+            it.protocol = "protocol"
+            it.type = type.toString()
+            addMore(it)
+            it.insert()
+        }
+    }
+
+    fun insertContractTermination(
+        dsl: DSLContext,
+        contractAgreementId: String,
+        addMore: (SovityContractTerminationRecord) -> Unit = {}
+    ) {
+        dsl.newRecord(Tables.SOVITY_CONTRACT_TERMINATION).also {
+            it.contractAgreementId = contractAgreementId
+            it.terminatedAt = OffsetDateTime.now()
+            it.terminatedBy = ContractTerminatedBy.SELF
+            it.reason = "reason"
+            it.detail = "detail"
+            addMore(it)
+            it.insert()
+        }
+    }
+
+    fun insertTransferProcess(
+        dsl: DSLContext,
+        transferprocessId: String,
+        type: TransferProcess.Type = TransferProcess.Type.PROVIDER,
+        addMore: (EdcTransferProcessRecord) -> Unit = {}
+    ) {
+        dsl.newRecord(Tables.EDC_TRANSFER_PROCESS).also {
+            it.transferprocessId = transferprocessId
+            it.type = type.name
+            it.state = 0
+            it.createdAt = OffsetDateTime.now().toEpochSecond()
+            it.updatedAt = OffsetDateTime.now().toEpochSecond()
+            addMore(it)
+            it.insert()
+        }
     }
 
     fun insertAssets(dsl: DSLContext, assets: List<Asset>) {
@@ -64,7 +149,15 @@ class JooqQueries(
 
     fun removeAllAssets(dsl: DSLContext) = dsl.deleteFrom(Tables.EDC_ASSET).execute()
 
+    fun removeAllContractAgreements(dsl: DSLContext) = dsl.deleteFrom(Tables.EDC_CONTRACT_AGREEMENT).execute()
+
+    fun removeAllContractNegotiations(dsl: DSLContext) = dsl.deleteFrom(Tables.EDC_CONTRACT_NEGOTIATION).execute()
+
+    fun removeAllContractTerminations(dsl: DSLContext) = dsl.deleteFrom(Tables.SOVITY_CONTRACT_TERMINATION).execute()
+
     fun removeAllVaultSecrets(dsl: DSLContext) = dsl.deleteFrom(Tables.SOVITY_VAULT_SECRET).execute()
+
+    fun removeAllTransferProcesses(dsl: DSLContext) = dsl.deleteFrom(Tables.EDC_TRANSFER_PROCESS).execute()
 
     fun insertVaultSecret(dsl: DSLContext, key: String, addMore: (SovityVaultSecretRecord) -> Unit = {}) {
         dsl.newRecord(Tables.SOVITY_VAULT_SECRET).also {
@@ -84,7 +177,8 @@ class JooqQueries(
         }
     }
 
-    fun removeAllEdcBusinessPartners(dsl: DSLContext) = dsl.deleteFrom(Tables.EDC_BUSINESS_PARTNER_GROUP).execute()
+    fun removeAllEdcBusinessPartners(dsl: DSLContext) =
+        dsl.deleteFrom(Tables.EDC_BUSINESS_PARTNER_GROUP).execute()
 
     fun insertPolicies(dsl: DSLContext, policyDefinitions: List<PolicyDefinition>) {
         val records = policyDefinitions.map { policyDef ->

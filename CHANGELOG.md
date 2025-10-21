@@ -2,6 +2,41 @@
 
 The versions of the sovity EDC CE are aligned with the sovity EDC EE.
 
+## [v16.1.0] - 2025-10-21
+
+### Overview
+
+Multiple bugfixes, slight UI API improvements.
+
+#### Minor Changes
+
+- Changed UI contract page to use server-side filtering and pagination
+- Changed UI asset page to use server-side filtering and pagination
+  - The scope of returned data on the asset list page endpoint has been reduced to what the UI needs.
+  - An alternative endpoint has been provided on the Use Case API to otherwise get all asset data including metadata: `getAssets`
+
+#### Patch Changes
+
+- Fix sovity `REFERRING_CONNECTOR` policy incorrectly blocking transfer processes and the comma separation of values with `EQ` not working properly
+- Fix sphin-X `sphinxDid` policy incorrectly blocking transfer processes and the comma separation of values with `EQ` not working properly
+- Fix jumping back to first page for client-side data tables
+- Fix transfers not working due to EDC using the wrong Control API URL internally
+- Fix sphin-X time restricted policy by switching it from `inForceDate` to `POLICY_EVALUATION_TIME`
+- Fix policy errors regarding `assignee`.
+
+### Deployment Migration Notes
+
+- For use case applications that depended on the UI asset page endpoint to list all assets including metadata, an alternative Use Case API endpoint has been provided on the Use Case API `getAssets`
+- For sphin-X variant connectors, time restriction policies will have to be re-created.
+
+#### Compatible Versions
+
+- EDC CE Frontend: `ghcr.io/sovity/edc-ce-ui:16.1.0`
+- EDC CE Backend: `ghcr.io/sovity/edc-ce:16.1.0`
+- PostgreSQL: `17`
+- Eclipse EDC Fork: [v0.11.1.3](https://github.com/sovity/core-edc/releases/tag/v0.11.1.3)
+- Tractus-X: `0.9.0`
+
 ## [v16.0.0] - 2025-10-02
 
 ### Overview
@@ -429,7 +464,7 @@ Known issues to be fixed in upcoming releases.
 - Please re-deploy all connectors using our reworked [Productive Deployment Guide](docs/deployment-guide/goals/production-ce/README.md)
   - The configuration of our connectors has been reworked for better documentation and flexibility.
   - Database migration histories are not compatible. Migrating was unfortunately not possible due to missing information in the DB, that would have to be amended on both provider and consumer sides.
-  - Note that the sovity EDC CE UI image is now  named `edc-ce-ui` instead of ~~`edc-ui`~~.
+  - Note that the sovity EDC CE UI image is now named `edc-ce-ui` instead of ~~`edc-ui`~~.
 - Preconfigured Catalog URLs now require a suffix of `?particpantId=...` as they are no longer pure `Connector Endpoints` but a list of `Connector Endpoint + Participant ID`
 - Base Paths for the Connector Backends are no longer opinionated. If you continue to want to have given base paths `/control` / `/data`,
   you need to configure them using the recommended properties.

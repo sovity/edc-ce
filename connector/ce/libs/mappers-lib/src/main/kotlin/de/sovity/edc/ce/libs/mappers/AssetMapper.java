@@ -21,7 +21,6 @@
 package de.sovity.edc.ce.libs.mappers;
 
 import de.sovity.edc.ce.api.common.model.UiAsset;
-import de.sovity.edc.ce.api.common.model.UiAssetCreateRequest;
 import de.sovity.edc.ce.api.common.model.UiAssetEditRequest;
 import de.sovity.edc.ce.libs.mappers.asset.AssetJsonLdBuilder;
 import de.sovity.edc.ce.libs.mappers.asset.AssetJsonLdParser;

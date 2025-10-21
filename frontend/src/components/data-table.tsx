@@ -35,15 +35,16 @@ import {useUpdateTableSearchParamState} from '@/lib/hooks/use-update-table-searc
 import {unsafeCast} from '@/lib/utils/ts-utils';
 import {DataTablePagination} from './data-table-pagination';
 import {useQuery} from '@tanstack/react-query';
-import type {AssetListPage} from '@sovity.de/edc-client';
+import {type PaginationResult} from '@sovity.de/edc-client';
 
-export type TablePage<TData> = Omit<AssetListPage, 'content'> & {
+export type TablePage<TData> = {
+  pagination: PaginationResult;
   content: TData[];
 };
 
 export type TableFilterParams = {
-  query?: string;
-  page?: number;
+  searchText?: string;
+  pageOneBased?: number;
   pageSize?: number;
   sorting?: SortingState;
 };
@@ -58,6 +59,9 @@ interface DataTableProps<TData, TValue> {
   searchInputDataTestId?: string;
   rowLink?: (row: Row<TData>) => string;
   disableUpdateUrlParams?: boolean;
+
+  filterComponents?: React.ReactNode;
+  clientsideFilter?: (content: TData[]) => TData[];
 }
 
 export function DataTable<TData, TValue>({
@@ -70,6 +74,9 @@ export function DataTable<TData, TValue>({
   searchInputDataTestId,
   rowLink,
   disableUpdateUrlParams,
+
+  filterComponents,
+  clientsideFilter,
 }: DataTableProps<TData, TValue>) {
   const urlParams = useUrlParams();
   const urlSorting = urlParams.sort.map((s) => {
@@ -77,28 +84,30 @@ export function DataTable<TData, TValue>({
   });
 
   const [sorting, setSorting] = useState<SortingState>(urlSorting ?? []);
-  const [query, setQuery] = useState(urlParams.search ?? '');
-  const [page, setPageIndex] = useState(urlParams.page);
+  const [searchText, setSearchText] = useState(urlParams.search ?? '');
+  const [pageOneBased, setPageIndex] = useState(urlParams.page);
   const [pageSize, setPageSize] = useState(urlParams.pageSize);
 
   const {data} = useQuery(
-    buildDataKey({query, page, pageSize, sorting}),
-    () => getData({query, page, pageSize, sorting}),
+    buildDataKey({searchText, pageOneBased, pageSize, sorting}),
+    () => getData({searchText, pageOneBased, pageSize, sorting}),
     {
       keepPreviousData: true,
     },
   );
 
   const table = useReactTable({
-    data: data?.content ?? [],
+    data: clientsideFilter
+      ? clientsideFilter(data?.content ?? [])
+      : (data?.content ?? []),
     columns,
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
     state: {
-      globalFilter: query,
+      globalFilter: searchText,
       sorting,
       pagination: {
-        pageIndex: page,
+        pageIndex: pageOneBased - 1,
         pageSize,
       },
     },
@@ -122,14 +131,17 @@ export function DataTable<TData, TValue>({
           <div className="relative w-1/2">
             <Input
               placeholder={t('General.searchPlaceholder')}
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
               dataTestId={searchInputDataTestId}
             />
             <div className="absolute inset-y-0 right-0 flex items-center pr-2">
               <ExactMatchTooltip />
             </div>
           </div>
+          {filterComponents && (
+            <div className="flex items-center gap-2">{filterComponents}</div>
+          )}
         </div>
         {headerButtonLink && (
           <InternalLink
@@ -192,7 +204,7 @@ export function DataTable<TData, TValue>({
       <div className="mt-3"></div>
       {data && (
         <DataTablePagination
-          tablePage={data}
+          pagination={data.pagination}
           setPageIndex={(page) => setPageIndex(page)}
           setPageSize={(pageSize) => setPageSize(pageSize)}
           tableTestId={'tbl'}

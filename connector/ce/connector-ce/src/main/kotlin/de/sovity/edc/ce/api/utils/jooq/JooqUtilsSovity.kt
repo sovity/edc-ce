@@ -7,19 +7,18 @@
  */
 package de.sovity.edc.ce.api.utils.jooq
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectMapper
 import de.sovity.edc.ce.utils.escapeForSqlLike
 import org.apache.commons.lang3.StringUtils
 import org.jooq.Condition
 import org.jooq.Field
 import org.jooq.JSON
+import org.jooq.TableLike
 import org.jooq.impl.DSL
+import org.jooq.impl.SQLDataType
+import java.time.OffsetDateTime
 import kotlin.reflect.KProperty1
 
 object JooqUtilsSovity {
-    private val objectMapper = ObjectMapper()
-
     /**
      * Select a field "as" the property name of the given Kotlin Class (Infix Style)
      */
@@ -43,19 +42,19 @@ object JooqUtilsSovity {
         return this.likeIgnoreCase("%" + lowercaseWord.escapeForSqlLike() + "%")
     }
 
-    fun List<String>.toPostgresqlJsonArray(): JSON = JSON.json(objectMapper.writeValueAsString(this))
-
-    fun Map<String, Any>.toPostgresqlJson() = JSON.json(objectMapper.writeValueAsString(this))
-
-    fun JSON.parseStringArray(): List<String> =
-        objectMapper.readValue(this.data(), object : TypeReference<List<String>>() {})
-
-    fun JSON.parseMap(): Map<String, Any> =
-        objectMapper.readValue(this.data(), object : TypeReference<Map<String, Any>>() {})
-
     @JvmStatic
     fun jsonField(jsonField: Field<JSON>, property: String) = DSL.field(
         "${jsonField.name} ->> '$property'",
         String::class.java
     )
+
+    inline fun <reified R> multiset(table: TableLike<*>): Field<List<R>> =
+        DSL.multiset(table).convertFrom { it.into(R::class.java) }
+
+    fun Field<Long>.toOffsetDateTimeFromUtcSeconds(): Field<OffsetDateTime> {
+        return DSL.field(
+            "to_timestamp({0})", SQLDataType.OFFSETDATETIME,
+            this
+        )
+    }
 }

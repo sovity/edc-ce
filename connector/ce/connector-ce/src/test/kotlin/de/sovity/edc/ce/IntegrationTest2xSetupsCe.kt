@@ -38,8 +38,8 @@ object IntegrationTest2xSetupsCe {
         providerControlPlaneConfig = ConfigPresetsCe.sovityIamMockCp("provider") + mapOf(
             CeConfigProps.SOVITY_BASE_PATH to "/control",
         ) + debugConfig,
-        providerDataPlaneConfig = { cpConfig, cpConfigUtils ->
-            ConfigPresetsCe.sovityIamMockDp(cpConfig, cpConfigUtils) + mapOf(
+        providerDataPlaneConfig = { cpConfig, _ ->
+            ConfigPresetsCe.sovityIamMockDp(cpConfig) + mapOf(
                 CeConfigProps.SOVITY_BASE_PATH to "/data",
                 CeConfigProps.SOVITY_INTERNAL_CP_BASE_PATH to
                     CeConfigProps.SOVITY_BASE_PATH.getStringOrThrow(cpConfig),
@@ -48,8 +48,8 @@ object IntegrationTest2xSetupsCe {
         consumerControlPlaneConfig = ConfigPresetsCe.sovityIamMockCp("consumer") + mapOf(
             CeConfigProps.SOVITY_BASE_PATH to "/control",
         ) + debugConfig,
-        consumerDataPlaneConfig = { cpConfig, cpConfigUtils ->
-            ConfigPresetsCe.sovityIamMockDp(cpConfig, cpConfigUtils) + mapOf(
+        consumerDataPlaneConfig = { cpConfig, _ ->
+            ConfigPresetsCe.sovityIamMockDp(cpConfig) + mapOf(
                 CeConfigProps.SOVITY_BASE_PATH to "/data",
                 CeConfigProps.SOVITY_INTERNAL_CP_BASE_PATH to
                     CeConfigProps.SOVITY_BASE_PATH.getStringOrThrow(cpConfig),
@@ -65,7 +65,7 @@ object IntegrationTest2xSetupsCe {
     ): IntegrationTest2xExtension {
         fun env(name: String): String {
             val value = System.getenv(name) ?: ""
-            require (System.getenv("CI_SPHINX_ENABLED") != "true" || value.isNotBlank()) {
+            require(System.getenv("CI_SPHINX_ENABLED") != "true" || value.isNotBlank()) {
                 "Missing environment variable $name"
             }
             return value

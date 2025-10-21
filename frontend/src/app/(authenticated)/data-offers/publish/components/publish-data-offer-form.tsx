@@ -93,26 +93,23 @@ const PublishDataOfferForm = ({policies}: PublishDataOfferFormProps) => {
             control={form.control}
             label={t('Pages.PublishDataOffer.assetsTitle')}
             selectPlaceholder={t('General.selectItems')}
-            buildQueryKey={(query) =>
-              queryKeys.assets.listPage({
-                query,
-                page: 0,
-                pageSize: 0,
-                sorting: [],
+            buildQueryKey={(searchText) =>
+              queryKeys.assets.assetsPage({
+                searchText
               })
             }
-            loadItems={(query) =>
+            loadItems={(searchText) =>
               api.uiApi
-                .assetListPage({
-                  assetListPageFilter: {
-                    query,
+                .assetsPage({
+                  assetsPageRequest: {
+                    searchText,
                   },
                 })
                 .then((data) =>
-                  data.content.map((asset) => ({
+                  data.assets.map((asset) => ({
                     id: asset.assetId,
                     label: asset.title,
-                    description: asset.description,
+                    description: asset.descriptionShortText,
                   })),
                 )
             }

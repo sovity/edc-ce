@@ -24,6 +24,7 @@ package de.sovity.edc.ce.api.usecase;
 
 import de.sovity.edc.ce.api.common.model.CatalogQueryV2;
 import de.sovity.edc.ce.api.common.model.EdrDto;
+import de.sovity.edc.ce.api.common.model.UiAsset;
 import de.sovity.edc.ce.api.ui.model.IdResponseDto;
 import de.sovity.edc.ce.api.ui.model.UiDataOffer;
 import de.sovity.edc.ce.api.usecase.model.CatalogQuery;
@@ -135,4 +136,10 @@ public interface UseCaseResource {
         @PathParam("transferId")
         String transferId
     );
+
+    @GET
+    @Path("assets")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "List all assets in the connector.")
+    List<UiAsset> getAssets();
 }

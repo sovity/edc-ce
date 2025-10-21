@@ -34,21 +34,21 @@
 
 import * as runtime from '../runtime';
 import type {
-  AssetListPage,
-  AssetListPageFilter,
+  AssetsPageRequest,
+  AssetsPageResult,
   BuildInfo,
   BusinessPartnerGroupCreateSubmit,
   BusinessPartnerGroupEditPage,
   BusinessPartnerGroupEditSubmit,
   BusinessPartnerGroupListPageEntry,
   BusinessPartnerGroupQuery,
-  ContractAgreementCard,
-  ContractAgreementPage,
-  ContractAgreementPageQuery,
   ContractDefinitionPage,
   ContractDefinitionRequest,
+  ContractDetailPageResult,
   ContractNegotiationRequest,
   ContractTerminationRequest,
+  ContractsPageRequest,
+  ContractsPageResult,
   DashboardPage,
   DataOfferCreateRequest,
   IdAvailabilityResponse,
@@ -73,10 +73,10 @@ import type {
   VaultSecretQuery,
 } from '../models/index';
 import {
-    AssetListPageFromJSON,
-    AssetListPageToJSON,
-    AssetListPageFilterFromJSON,
-    AssetListPageFilterToJSON,
+    AssetsPageRequestFromJSON,
+    AssetsPageRequestToJSON,
+    AssetsPageResultFromJSON,
+    AssetsPageResultToJSON,
     BuildInfoFromJSON,
     BuildInfoToJSON,
     BusinessPartnerGroupCreateSubmitFromJSON,
@@ -89,20 +89,20 @@ import {
     BusinessPartnerGroupListPageEntryToJSON,
     BusinessPartnerGroupQueryFromJSON,
     BusinessPartnerGroupQueryToJSON,
-    ContractAgreementCardFromJSON,
-    ContractAgreementCardToJSON,
-    ContractAgreementPageFromJSON,
-    ContractAgreementPageToJSON,
-    ContractAgreementPageQueryFromJSON,
-    ContractAgreementPageQueryToJSON,
     ContractDefinitionPageFromJSON,
     ContractDefinitionPageToJSON,
     ContractDefinitionRequestFromJSON,
     ContractDefinitionRequestToJSON,
+    ContractDetailPageResultFromJSON,
+    ContractDetailPageResultToJSON,
     ContractNegotiationRequestFromJSON,
     ContractNegotiationRequestToJSON,
     ContractTerminationRequestFromJSON,
     ContractTerminationRequestToJSON,
+    ContractsPageRequestFromJSON,
+    ContractsPageRequestToJSON,
+    ContractsPageResultFromJSON,
+    ContractsPageResultToJSON,
     DashboardPageFromJSON,
     DashboardPageToJSON,
     DataOfferCreateRequestFromJSON,
@@ -149,12 +149,12 @@ import {
     VaultSecretQueryToJSON,
 } from '../models/index';
 
-export interface AssetDetailsPageRequest {
+export interface AssetDetailPageRequest {
     assetId: string;
 }
 
-export interface AssetListPageRequest {
-    assetListPageFilter?: AssetListPageFilter;
+export interface AssetsPageOperationRequest {
+    assetsPageRequest?: AssetsPageRequest;
 }
 
 export interface BusinessPartnerGroupCreateSubmitRequest {
@@ -172,6 +172,14 @@ export interface BusinessPartnerGroupEditSubmitRequest {
 
 export interface BusinessPartnerGroupListPageRequest {
     businessPartnerGroupQuery?: BusinessPartnerGroupQuery;
+}
+
+export interface ContractDetailPageRequest {
+    contractAgreementId: string;
+}
+
+export interface ContractsPageOperationRequest {
+    contractsPageRequest?: ContractsPageRequest;
 }
 
 export interface CreateAssetRequest {
@@ -243,14 +251,6 @@ export interface GetCatalogPageDataOffersRequest {
     connectorEndpoint?: string;
 }
 
-export interface GetContractAgreementCardRequest {
-    contractAgreementId: string;
-}
-
-export interface GetContractAgreementPageRequest {
-    contractAgreementPageQuery?: ContractAgreementPageQuery;
-}
-
 export interface GetContractNegotiationRequest {
     contractNegotiationId: string;
 }
@@ -304,11 +304,11 @@ export class UIApi extends runtime.BaseAPI {
     /**
      * Get details for a specific Asset
      */
-    async assetDetailsPageRaw(requestParameters: AssetDetailsPageRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UiAsset>> {
+    async assetDetailPageRaw(requestParameters: AssetDetailPageRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UiAsset>> {
         if (requestParameters['assetId'] == null) {
             throw new runtime.RequiredError(
                 'assetId',
-                'Required parameter "assetId" was null or undefined when calling assetDetailsPage().'
+                'Required parameter "assetId" was null or undefined when calling assetDetailPage().'
             );
         }
 
@@ -317,7 +317,7 @@ export class UIApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/wrapper/ui/pages/asset-page/assets/{assetId}`.replace(`{${"assetId"}}`, encodeURIComponent(String(requestParameters['assetId']))),
+            path: `/wrapper/ui/pages/asset-detail-page/{assetId}`.replace(`{${"assetId"}}`, encodeURIComponent(String(requestParameters['assetId']))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -329,15 +329,15 @@ export class UIApi extends runtime.BaseAPI {
     /**
      * Get details for a specific Asset
      */
-    async assetDetailsPage(requestParameters: AssetDetailsPageRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UiAsset> {
-        const response = await this.assetDetailsPageRaw(requestParameters, initOverrides);
+    async assetDetailPage(requestParameters: AssetDetailPageRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UiAsset> {
+        const response = await this.assetDetailPageRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * Collect all data for Asset Page
+     * Collect all data for the Assets Page
      */
-    async assetListPageRaw(requestParameters: AssetListPageRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AssetListPage>> {
+    async assetsPageRaw(requestParameters: AssetsPageOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AssetsPageResult>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -345,21 +345,21 @@ export class UIApi extends runtime.BaseAPI {
         headerParameters['Content-Type'] = 'application/json';
 
         const response = await this.request({
-            path: `/wrapper/ui/pages/asset-page`,
+            path: `/wrapper/ui/pages/assets-page`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: AssetListPageFilterToJSON(requestParameters['assetListPageFilter']),
+            body: AssetsPageRequestToJSON(requestParameters['assetsPageRequest']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => AssetListPageFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => AssetsPageResultFromJSON(jsonValue));
     }
 
     /**
-     * Collect all data for Asset Page
+     * Collect all data for the Assets Page
      */
-    async assetListPage(requestParameters: AssetListPageRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AssetListPage> {
-        const response = await this.assetListPageRaw(requestParameters, initOverrides);
+    async assetsPage(requestParameters: AssetsPageOperationRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AssetsPageResult> {
+        const response = await this.assetsPageRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -513,6 +513,68 @@ export class UIApi extends runtime.BaseAPI {
      */
     async businessPartnerGroupListPage(requestParameters: BusinessPartnerGroupListPageRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<BusinessPartnerGroupListPageEntry>> {
         const response = await this.businessPartnerGroupListPageRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Get a single contract agreement card by its identifier
+     */
+    async contractDetailPageRaw(requestParameters: ContractDetailPageRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ContractDetailPageResult>> {
+        if (requestParameters['contractAgreementId'] == null) {
+            throw new runtime.RequiredError(
+                'contractAgreementId',
+                'Required parameter "contractAgreementId" was null or undefined when calling contractDetailPage().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/wrapper/ui/pages/contract-detail-page/{contractAgreementId}`.replace(`{${"contractAgreementId"}}`, encodeURIComponent(String(requestParameters['contractAgreementId']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ContractDetailPageResultFromJSON(jsonValue));
+    }
+
+    /**
+     * Get a single contract agreement card by its identifier
+     */
+    async contractDetailPage(requestParameters: ContractDetailPageRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ContractDetailPageResult> {
+        const response = await this.contractDetailPageRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Collect filtered data for the Contract Agreement Table Page
+     */
+    async contractsPageRaw(requestParameters: ContractsPageOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ContractsPageResult>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/wrapper/ui/pages/contracts-page`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: ContractsPageRequestToJSON(requestParameters['contractsPageRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ContractsPageResultFromJSON(jsonValue));
+    }
+
+    /**
+     * Collect filtered data for the Contract Agreement Table Page
+     */
+    async contractsPage(requestParameters: ContractsPageOperationRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ContractsPageResult> {
+        const response = await this.contractsPageRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -1036,68 +1098,6 @@ export class UIApi extends runtime.BaseAPI {
      */
     async getCatalogPageDataOffers(requestParameters: GetCatalogPageDataOffersRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<UiDataOffer>> {
         const response = await this.getCatalogPageDataOffersRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * Get a single contract agreement card by its identifier
-     */
-    async getContractAgreementCardRaw(requestParameters: GetContractAgreementCardRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ContractAgreementCard>> {
-        if (requestParameters['contractAgreementId'] == null) {
-            throw new runtime.RequiredError(
-                'contractAgreementId',
-                'Required parameter "contractAgreementId" was null or undefined when calling getContractAgreementCard().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request({
-            path: `/wrapper/ui/pages/contract-agreement-page/{contractAgreementId}`.replace(`{${"contractAgreementId"}}`, encodeURIComponent(String(requestParameters['contractAgreementId']))),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => ContractAgreementCardFromJSON(jsonValue));
-    }
-
-    /**
-     * Get a single contract agreement card by its identifier
-     */
-    async getContractAgreementCard(requestParameters: GetContractAgreementCardRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ContractAgreementCard> {
-        const response = await this.getContractAgreementCardRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * Collect filtered data for the Contract Agreement Page
-     */
-    async getContractAgreementPageRaw(requestParameters: GetContractAgreementPageRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ContractAgreementPage>> {
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        const response = await this.request({
-            path: `/wrapper/ui/pages/contract-agreement-page`,
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-            body: ContractAgreementPageQueryToJSON(requestParameters['contractAgreementPageQuery']),
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => ContractAgreementPageFromJSON(jsonValue));
-    }
-
-    /**
-     * Collect filtered data for the Contract Agreement Page
-     */
-    async getContractAgreementPage(requestParameters: GetContractAgreementPageRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ContractAgreementPage> {
-        const response = await this.getContractAgreementPageRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

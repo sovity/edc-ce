@@ -10,12 +10,15 @@
 import {TerminateContractAgreementDialog} from '@/components/terminate-contract-agreement-dialog/terminate-contract-agreement-dialog';
 import {Button} from '@/components/ui/button';
 import {canTerminate} from '@/app/(authenticated)/contracts/components/contract-agreement-capabilities';
-import {type ContractAgreementCard} from '@/lib/api/client/generated';
+import {type ContractTerminationStatus} from '@/lib/api/client/generated';
 import {useDialogsStore} from '@/lib/stores/dialog-store';
 import {useTranslations} from 'next-intl';
 
 export interface TerminateButtonProps {
-  contract: ContractAgreementCard;
+  contract: {
+    contractAgreementId: string;
+    terminationStatus: ContractTerminationStatus;
+  };
 }
 
 export default function TerminateButton({contract}: TerminateButtonProps) {

@@ -33,7 +33,10 @@ class PolicyContextUtils {
         val vcClaimsForIssuer = vcClaims
             .filterIsInstance<VerifiableCredential>()
             .filter { it.issuer.id == issuerDid }
-        require(vcClaims.size == 1) { "Missing a claim 'vc' of type ${VerifiableCredential::class.java.name} with the issuer ${issuerDid}. Found ${vcClaims.size} elements instead of 1." }
+        require(vcClaims.size == 1) {
+            "Missing a claim 'vc' of type ${VerifiableCredential::class.java.name} " +
+                "with the issuer ${issuerDid}. Found ${vcClaims.size} elements instead of 1."
+        }
 
         return vcClaimsForIssuer.single() as VerifiableCredential
     }

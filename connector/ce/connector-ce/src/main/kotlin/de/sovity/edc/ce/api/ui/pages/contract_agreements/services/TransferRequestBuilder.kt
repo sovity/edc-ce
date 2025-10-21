@@ -11,6 +11,7 @@ import de.sovity.edc.ce.api.common.model.UiInitiateTransferRequest
 import de.sovity.edc.ce.api.common.model.UiInitiateTransferType
 import de.sovity.edc.ce.api.ui.model.InitiateCustomTransferRequest
 import de.sovity.edc.ce.api.ui.model.InitiateTransferRequest
+import de.sovity.edc.ce.api.ui.pages.asset.DataAddressBuilder
 import de.sovity.edc.ce.api.utils.ServiceException
 import de.sovity.edc.ce.libs.mappers.asset.utils.EdcPropertyUtils
 import de.sovity.edc.ce.libs.mappers.dataaddress.InitiateTransferRequestMapper
@@ -23,15 +24,17 @@ import org.eclipse.edc.connector.controlplane.contract.spi.types.negotiation.Con
 import org.eclipse.edc.connector.controlplane.transfer.spi.types.TransferRequest
 import org.eclipse.edc.protocol.dsp.http.spi.types.HttpMessageProtocol
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry
+import org.jooq.DSLContext
 
 @Service
 class TransferRequestBuilder(
     private val initiateTransferRequestMapper: InitiateTransferRequestMapper,
-    private val contractAgreementUtils: ContractAgreementUtils,
-    private val contractNegotiationUtils: ContractNegotiationUtils,
     private val edcPropertyUtils: EdcPropertyUtils,
     private val typeTransformerRegistry: TypeTransformerRegistry,
-    private val callbackAddressMapper: CallbackAddressMapper
+    private val callbackAddressMapper: CallbackAddressMapper,
+    private val contractNegotiationUtils: ContractNegotiationUtils,
+    private val contractAgreementAssetFetcher: ContractAgreementAssetFetcher,
+    private val dataAddressBuilder: DataAddressBuilder,
 ) {
 
     fun buildTransferRequestV2(
@@ -43,7 +46,7 @@ class TransferRequestBuilder(
         val negotiation = contractNegotiationUtils.findByContractAgreementIdOrThrow(request.contractAgreementId)
         assertIsConsuming(negotiation)
 
-        val dataAddress = edcPropertyUtils.buildDataAddress(params.dataSinkProperties)
+        val dataAddress = dataAddressBuilder.buildDataAddress(params.dataSinkProperties)
         val transferProcessProperties = edcPropertyUtils.toMapOfObject(params.transferPrivateProperties)
         val callbackAddresses = callbackAddressMapper.buildCallbackAddresses(request.callbackAddresses)
 
@@ -63,22 +66,24 @@ class TransferRequestBuilder(
     fun buildTransferRequest(
         request: InitiateTransferRequest
     ): TransferRequest {
-        return buildTransferRequestV2(UiInitiateTransferRequest.builder()
-            .type(UiInitiateTransferType.CUSTOM)
-            .contractAgreementId(request.contractAgreementId)
-            .customTransferType(request.transferType)
-            .customTransferPrivateProperties(request.transferProcessProperties)
-            .customDataSinkProperties(request.dataSinkProperties)
-            .build()
+        return buildTransferRequestV2(
+            UiInitiateTransferRequest.builder()
+                .type(UiInitiateTransferType.CUSTOM)
+                .contractAgreementId(request.contractAgreementId)
+                .customTransferType(request.transferType)
+                .customTransferPrivateProperties(request.transferProcessProperties)
+                .customDataSinkProperties(request.dataSinkProperties)
+                .build()
         )
     }
 
     fun buildCustomTransferRequest(
+        dsl: DSLContext,
         request: InitiateCustomTransferRequest
     ): TransferRequest {
         val contractId = request.contractAgreementId
-        val agreement = contractAgreementUtils.findByIdOrThrow(contractId)
-        val negotiation = contractNegotiationUtils.findByContractAgreementIdOrThrow(contractId)
+        val agreementAssetId = contractAgreementAssetFetcher.fetchAssetId(dsl, contractId)
+        val negotiation = contractNegotiationUtils.findByContractAgreementIdOrThrow(request.contractAgreementId)
         assertIsConsuming(negotiation)
 
         // Parse Transfer Process JSON-LD
@@ -97,8 +102,8 @@ class TransferRequestBuilder(
         // Add missing properties
         requestJsonLd = Json.createObjectBuilder(requestJsonLd)
             .add(Prop.TYPE, Prop.Edc.TYPE_TRANSFER_REQUEST)
-            .add(Prop.Edc.ASSET_ID, agreement.assetId)
-            .add(Prop.Edc.CONTRACT_ID, agreement.id)
+            .add(Prop.Edc.ASSET_ID, agreementAssetId)
+            .add(Prop.Edc.CONTRACT_ID, contractId)
             .add(Prop.Edc.CONNECTOR_ID, negotiation.counterPartyId)
             .add(Prop.Edc.COUNTER_PARTY_ADDRESS, negotiation.counterPartyAddress)
             .build()

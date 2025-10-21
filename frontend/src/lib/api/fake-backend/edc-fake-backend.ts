@@ -7,15 +7,11 @@
  */
 import {uiConfig} from '@/lib/api/fake-backend/connector-fake-impl/ui-config-fake-service';
 import {
-  AssetListPageFilterFromJSON,
-  AssetListPageToJSON,
   BuildInfoToJSON,
   BusinessPartnerGroupCreateSubmitFromJSON,
   BusinessPartnerGroupEditSubmitFromJSON,
   BusinessPartnerGroupQueryFromJSON,
   ConnectorLimitsToJSON,
-  ContractAgreementPageQueryFromJSON,
-  ContractAgreementPageToJSON,
   ContractDefinitionPageToJSON,
   ContractDefinitionRequestFromJSON,
   ContractNegotiationRequestFromJSON,
@@ -39,10 +35,14 @@ import {
   VaultSecretCreateSubmitFromJSON,
   VaultSecretEditSubmitFromJSON,
   VaultSecretQueryFromJSON,
+  ContractsPageRequestFromJSON,
+  ContractsPageResultToJSON,
+  AssetsPageRequestFromJSON,
+  AssetsPageResultToJSON,
 } from '@sovity.de/edc-client';
 import {
   assetIdAvailable,
-  assetListPage,
+  assetsPage,
   createAsset,
   deleteAsset,
   editAsset,
@@ -54,7 +54,9 @@ import {
   getCatalogPageDataOffers,
 } from './connector-fake-impl/catalog-fake-service';
 import {
+  connectorLimits,
   contractAgreementInitiateTransfer,
+  contractsPage,
   contractAgreementPage,
 } from './connector-fake-impl/contract-agreement-fake-service';
 import {
@@ -70,7 +72,6 @@ import {
 import {initiateContractTermination} from './connector-fake-impl/contract-termination-fake-service';
 import {dashboardPage} from './connector-fake-impl/dashboard-fake-service';
 import {createDataOffer} from './connector-fake-impl/data-offer-fake-service';
-import {connectorLimits} from './connector-fake-impl/ee-fake-service';
 import {
   createPolicyDefinition,
   createPolicyDefinitionV2,
@@ -131,11 +132,17 @@ export const EDC_FAKE_BACKEND: FetchAPI = async (
       return ok(DashboardPageToJSON(page));
     })
 
-    .url('ui/pages/asset-page')
+        .url('ui/pages/asset-detail-page/*')
+    .on('GET', (assetId) => {
+      const page = getAssetById(assetId);
+      return ok(UiAssetToJSON(page));
+    })
+
+    .url('ui/pages/assets-page')
     .on('POST', () => {
-      const pageFilter = AssetListPageFilterFromJSON(body);
-      const page = assetListPage(pageFilter);
-      return ok(AssetListPageToJSON(page));
+      const pageFilter = AssetsPageRequestFromJSON(body);
+      const page = assetsPage(pageFilter);
+      return ok(AssetsPageResultToJSON(page));
     })
 
     .url('ui/pages/asset-page/assets/*')
@@ -238,19 +245,14 @@ export const EDC_FAKE_BACKEND: FetchAPI = async (
 
     .url('ui/pages/contract-agreement-page')
     .on('POST', () => {
-      const pageQuery = body ? ContractAgreementPageQueryFromJSON(body) : null;
-      const page = contractAgreementPage(pageQuery?.terminationStatus);
-      return ok(ContractAgreementPageToJSON(page));
+      const pageQuery = body ? ContractsPageRequestFromJSON(body) : null;
+      const page = contractsPage(pageQuery);
+      return ok(ContractsPageResultToJSON(page));
     })
 
     .url('ui/pages/contract-agreement-page/*')
     .on('GET', (contractAgreementId: string) => {
-      return ok(
-        contractAgreementPage().contractAgreements.find(
-          (contractAgreement) =>
-            contractAgreement.contractAgreementId === contractAgreementId,
-        ),
-      );
+      return ok(contractAgreementPage(contractAgreementId));
     })
 
     .url('ui/pages/content-agreement-page/*/terminate')

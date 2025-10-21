@@ -9,6 +9,7 @@ package de.sovity.edc.ce.api.usecase
 
 import de.sovity.edc.ce.api.common.model.CatalogQueryV2
 import de.sovity.edc.ce.api.common.model.EdrDto
+import de.sovity.edc.ce.api.common.model.UiAsset
 import de.sovity.edc.ce.api.ui.model.IdResponseDto
 import de.sovity.edc.ce.api.ui.model.UiDataOffer
 import de.sovity.edc.ce.api.usecase.model.CatalogQuery
@@ -19,6 +20,7 @@ import de.sovity.edc.ce.api.usecase.model.NegotiateAllResult
 import de.sovity.edc.ce.api.usecase.model.TransferProcessStateResult
 import de.sovity.edc.ce.api.usecase.services.KpiApiService
 import de.sovity.edc.ce.api.usecase.services.SupportedPolicyApiService
+import de.sovity.edc.ce.api.usecase.services.assets.UseCaseAssetApiService
 import de.sovity.edc.ce.api.usecase.services.catalog.UseCaseCatalogV1ApiService
 import de.sovity.edc.ce.api.usecase.services.catalog.UseCaseCatalogV2ApiService
 import de.sovity.edc.ce.api.usecase.services.negotiation.UseCaseNegotiateAllApiService
@@ -41,7 +43,8 @@ class UseCaseResourceImpl(
     private val useCaseNegotiationStateApiService: UseCaseNegotiationStateApiService,
     private val useCaseTransferStateApiService: UseCaseTransferStateApiService,
     private val useCaseNegotiateAllApiService: UseCaseNegotiateAllApiService,
-    private val catalogV2ApiService: UseCaseCatalogV2ApiService
+    private val catalogV2ApiService: UseCaseCatalogV2ApiService,
+    private val useCaseAssetApiService: UseCaseAssetApiService
 ) : UseCaseResource {
 
     override fun getKpis(): KpiResult =
@@ -89,5 +92,10 @@ class UseCaseResourceImpl(
     override fun terminateTransferProcess(transferId: String): IdResponseDto =
         dslContextFactory.transactionResult { dsl ->
             edrApiService.terminateTransferProcess(transferId)
+        }
+
+    override fun getAssets(): List<UiAsset> =
+        dslContextFactory.transactionResult { dsl ->
+            useCaseAssetApiService.getAssets(dsl)
         }
 }

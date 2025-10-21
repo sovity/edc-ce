@@ -23,7 +23,7 @@ public class WrapperApiUtils {
     public static @Nullable UiAsset getAssetOrNull(EdcClient providerClient, String assetId) {
         try {
             return providerClient.uiApi()
-                .assetDetailsPage(assetId);
+                .assetDetailPage(assetId);
         } catch (ApiException e) {
             return null;
         }

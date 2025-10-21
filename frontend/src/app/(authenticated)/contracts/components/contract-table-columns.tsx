@@ -9,13 +9,13 @@
 
 import {DataTableColumnHeader} from '@/components/data-column-header';
 import LocalTimeAgo from '@/components/local-time-ago';
-import {type ContractAgreementCard} from '@/lib/api/client/generated';
+import {type ContractsPageEntry} from '@/lib/api/client/generated';
 import {type ColumnDef} from '@tanstack/react-table';
 import {useTranslations} from 'next-intl';
 import ContractActionMenu from './contract-action-menu';
 import ContractAgreementHeaderStack from '@/components/stacks/contract-agreement-header-stack';
 
-type ColumnType = ColumnDef<ContractAgreementCard>[];
+type ColumnType = ColumnDef<ContractsPageEntry>[];
 
 export const useContractTableColumns = (): ColumnType => {
   const t = useTranslations();
@@ -23,7 +23,7 @@ export const useContractTableColumns = (): ColumnType => {
   return [
     {
       id: 'assetId',
-      accessorFn: (row: ContractAgreementCard) => row.asset.assetId,
+      accessorFn: (row) => row.assetId,
       header: ({column}) => (
         <DataTableColumnHeader column={column} title={t('General.contract')} />
       ),
@@ -34,7 +34,7 @@ export const useContractTableColumns = (): ColumnType => {
           counterpartyParticipantId={row.original.counterPartyId}
           terminationStatus={row.original.terminationStatus}
           direction={row.original.direction}
-          assetName={row.original.asset.title}
+          assetName={row.original.assetTitle}
         />
       ),
     },
@@ -71,28 +71,19 @@ export const useContractTableColumns = (): ColumnType => {
     },
     {
       id: 'transfers',
-      accessorFn: (row: ContractAgreementCard) => row.transferProcesses.length,
+      accessorFn: (row) => row.transferProcessesCount,
       header: ({column}) => (
         <DataTableColumnHeader column={column} title={t('General.transfers')} />
       ),
       cell: ({row}) => (
         <span className="flex justify-center">
-          {row.original.transferProcesses.length}
+          {row.original.transferProcessesCount}
         </span>
       ),
     },
     {
       id: 'actions',
       cell: ({row}) => <ContractActionMenu contractAgreement={row.original} />,
-    },
-    // Invisible columns
-    {
-      accessorKey: 'contractAgreementId',
-    },
-    {
-      id: 'creatorOrganizationName',
-      accessorFn: (row: ContractAgreementCard) =>
-        row.asset.creatorOrganizationName,
     },
   ];
 };

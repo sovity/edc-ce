@@ -75,13 +75,15 @@ export function ClientsideDataTable<TData, TValue>({
   rowLink,
   disableUpdateUrlParams,
 }: ClientsideDataTableProps<TData, TValue>) {
-  const {search, sort, page, pageSize} = useUrlParams();
-  const urlSorting = sort.map((s) => {
+  const urlParams = useUrlParams();
+  const urlSorting = urlParams.sort.map((s) => {
     return unsafeCast<ColumnSort>(JSON.parse(s));
   });
 
+  const [pageIndex, setPageIndex] = useState(urlParams.page - 1);
+  const [pageSize, setPageSize] = useState(urlParams.pageSize);
   const [sorting, setSorting] = useState<SortingState>(urlSorting ?? []);
-  const [globalFilter, setGlobalFilter] = useState(search ?? '');
+  const [globalFilter, setGlobalFilter] = useState(urlParams.search ?? '');
 
   const columnVisibility: Record<string, boolean> | undefined =
     invisibleColumns?.reduce(
@@ -105,19 +107,20 @@ export function ClientsideDataTable<TData, TValue>({
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    state: {sorting, globalFilter},
+    state: {
+      sorting,
+      globalFilter,
+      columnVisibility,
+      pagination: {
+        pageIndex,
+        pageSize,
+      },
+    },
     onGlobalFilterChange: setGlobalFilter,
     filterFns: {
       wordFilter,
     },
     globalFilterFn: 'wordFilter',
-    initialState: {
-      columnVisibility,
-      pagination: {
-        pageIndex: page,
-        pageSize: pageSize,
-      },
-    },
   });
 
   useUpdateTableSearchParamState(table, disableUpdateUrlParams);
@@ -204,7 +207,11 @@ export function ClientsideDataTable<TData, TValue>({
         </Table>
       </div>
       <div className="mt-3">
-        <ClientsideDataTablePagination table={table} />
+        <ClientsideDataTablePagination
+          table={table}
+          setPageIndex={setPageIndex}
+          setPageSize={setPageSize}
+        />
       </div>
     </>
   );

@@ -7,17 +7,19 @@
  */
 import {type Patcher, patchObj} from '@/lib/utils/object-utils';
 import {
-  type AssetListPageFilter,
-  AssetListSortProperty,
-  type AssetListPage,
   type IdAvailabilityResponse,
   type IdResponseDto,
   type UiAsset,
   type UiAssetCreateRequest,
   type UiAssetEditRequest,
   type UiDataSource,
+  SortByDirection,
+  type AssetsPageResult,
+  type AssetsPageRequest,
+  AssetsPageSortProperty,
 } from '@sovity.de/edc-client';
 import {TestAssets} from './data/test-assets';
+import {filterListPage} from '../utils/list-page-filter-utils';
 
 let assets: UiAsset[] = [
   TestAssets.full,
@@ -28,63 +30,48 @@ let assets: UiAsset[] = [
   ...Array.from({length: 10}).map((_, idx) => TestAssets.dummyAsset(idx)),
 ];
 
-export const assetListPage = (filter: AssetListPageFilter): AssetListPage => {
-  let filteredAssets = assets;
-  const {query, pageSize: optionalPageSize, sort} = filter;
-  if (query) {
-    filteredAssets = filteredAssets.filter(
-      (asset) =>
-        asset.title.toLowerCase().includes(query.toLowerCase()) ||
-        asset.description?.toLowerCase().includes(query.toLowerCase()),
-    );
-  }
-  const totalItems = filteredAssets.length;
-  const currentPage = filter.page ?? 0;
-  const pageSize = optionalPageSize ?? filteredAssets.length;
-  const totalPages = Math.ceil(totalItems / pageSize);
-  const pageStart =
-    filteredAssets.length === 0 ? 0 : currentPage * pageSize + 1;
-  const pageEnd =
-    pageSize === 0
-      ? 0
-      : Math.min(pageStart + pageSize - 1, filteredAssets.length);
-  sort?.forEach(({columnName, descending}) => {
-    filteredAssets.sort((a, b) => {
-      const propertyName = (() => {
-        switch (columnName) {
-          case AssetListSortProperty.Title:
-            return 'title';
-          case AssetListSortProperty.DescriptionShortText:
-            return 'descriptionShortText';
-        }
-      })();
-      const aValue = a[propertyName] ?? '';
-      const bValue = b[propertyName] ?? '';
-      if (aValue < bValue) {
-        return descending ? 1 : -1;
-      } else if (aValue > bValue) {
-        return descending ? -1 : 1;
-      } else {
-        return 0;
-      }
-    });
-  });
-  const content = filteredAssets.slice(pageStart - 1, pageEnd);
-  const lastPage = Math.max(totalPages - 1, 0);
-  const previousPage = currentPage > 0 ? currentPage - 1 : undefined;
-  const nextPage = currentPage < lastPage ? currentPage + 1 : undefined;
+export const assetsPage = (request: AssetsPageRequest): AssetsPageResult => {
+  const {content, pagination} = filterListPage(
+    request.searchText,
+    request.pagination,
+    assets,
+    (content, query) =>
+      content.filter(
+        (asset) =>
+          asset.title.toLowerCase().includes(query.toLowerCase()) ||
+          asset.description?.toLowerCase().includes(query.toLowerCase()),
+      ),
+    (content) => {
+      request.sortBy?.forEach(({direction, field}) => {
+        content.sort((a, b) => {
+          const propertyName = (() => {
+            switch (field) {
+              case AssetsPageSortProperty.Title:
+                return 'title';
+              case AssetsPageSortProperty.Description:
+                return 'description';
+            }
+          })();
+          const aValue = a[propertyName] ?? '';
+          const bValue = b[propertyName] ?? '';
+          if (aValue < bValue) {
+            return direction === SortByDirection.Descending
+              ? 1
+              : -1;
+          } else if (aValue > bValue) {
+            return direction === SortByDirection.Descending
+              ? -1
+              : 1;
+          } else {
+            return 0;
+          }
+        });
+      });
+      return content;
+    },
+  );
 
-  return {
-    content,
-    currentPage,
-    totalItems,
-    nextPage,
-    previousPage,
-    pageStart,
-    pageEnd,
-    pageSize,
-    lastPage,
-  };
+  return {assets: content, pagination};
 };
 
 export const assetIdAvailable = (assetId: string): IdAvailabilityResponse => {

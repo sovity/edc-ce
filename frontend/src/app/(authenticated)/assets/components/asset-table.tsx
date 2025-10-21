@@ -8,12 +8,12 @@
 'use client';
 
 import {DataTable} from '@/components/data-table';
-import {AssetListSortProperty} from '@/lib/api/client/generated';
 import {urls} from '@/lib/urls';
 import {useTranslations} from 'next-intl';
 import {useAssetTableColumns} from './asset-table-columns';
 import {queryKeys} from '@/lib/queryKeys';
 import {api} from '@/lib/api/client';
+import {AssetsPageSortProperty, SortByDirection} from '@sovity.de/edc-client';
 
 const AssetTable = () => {
   const t = useTranslations();
@@ -21,26 +21,28 @@ const AssetTable = () => {
   return (
     <DataTable
       columns={useAssetTableColumns()}
-      buildDataKey={(params) => queryKeys.assets.listPage(params)}
-      getData={({query, page, pageSize, sorting}) => {
-        return api.uiApi.assetListPage({
-          assetListPageFilter: {
-            page,
-            pageSize,
-            query,
-            sort: sorting?.map(({desc, id}) => ({
-              columnName: (() => {
+      buildDataKey={(params) => queryKeys.assets.assetsPage(params)}
+      getData={async ({searchText, pageOneBased, pageSize, sorting}) => {
+        const {assets, pagination} = await api.uiApi.assetsPage({
+          assetsPageRequest: {
+            pagination: {pageOneBased, pageSize},
+            searchText,
+            sortBy: sorting?.map(({desc, id}) => ({
+              field: (() => {
                 switch (id) {
                   case 'title':
-                    return AssetListSortProperty.Title;
+                    return AssetsPageSortProperty.Title;
                   case 'descriptionShortText':
-                    return AssetListSortProperty.DescriptionShortText;
+                    return AssetsPageSortProperty.Description;
                 }
               })()!,
-              descending: desc,
+              direction: desc
+                ? SortByDirection.Descending
+                : SortByDirection.Ascending,
             })),
           },
         });
+        return {content: assets, pagination};
       }}
       headerButtonLink={urls.assets.createPage()}
       headerButtonText={t('Pages.AssetList.createAsset')}

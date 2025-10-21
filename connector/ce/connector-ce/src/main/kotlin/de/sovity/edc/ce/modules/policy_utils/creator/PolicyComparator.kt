@@ -33,8 +33,16 @@ class PolicyComparator(
                 left != right
             }
 
-            Operator.IN -> {
+            Operator.IN, Operator.IS_ANY_OF -> {
                 right.toSet().containsAll(left.toSet())
+            }
+
+            Operator.IS_NONE_OF -> {
+                right.toSet().intersect(left.toSet()).isEmpty()
+            }
+
+            Operator.IS_ALL_OF -> {
+                left.toSet().containsAll(right.toSet())
             }
 
             Operator.LT -> {
@@ -57,8 +65,6 @@ class PolicyComparator(
                 left.all { it >= max }
             }
 
-            // TODO: Implement IS_ALL_OF, IS_ANY_OF, IS_NONE_OF, IS_ONE_OF
-
             else -> {
                 monitor.warning("Unsupported operator: $operator")
                 false
@@ -66,4 +72,16 @@ class PolicyComparator(
         }
     }
 
+
+
+    /**
+     * See [compare], but treats EQ like IN. This is useful for policy functions that support comma-separated
+     * lists of values, where EQ should match any of the given values.
+     */
+    fun <T : Comparable<T>> compareWithEqWorkingLikeIn(left: List<T>, operator: Operator, right: List<T>): Boolean =
+        if (operator == Operator.EQ) {
+            compare(left, Operator.IN, right)
+        } else {
+            compare(left, operator, right)
+        }
 }
