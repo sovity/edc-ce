@@ -24,6 +24,9 @@ import {useTranslations} from 'next-intl';
 import ContractAgreementHeaderStack from '@/components/stacks/contract-agreement-header-stack';
 import InternalLink from '@/components/links/internal-link';
 import {urls} from '@/lib/urls';
+import {
+  InitiateTransferAzureBlobForm
+} from "@/app/(authenticated)/contracts/[contractId]/transfer/components/initiate-transfer-azure-blob-form";
 
 export const InitiateTransferForm = ({
   contractAgreement,
@@ -69,6 +72,10 @@ export const InitiateTransferForm = ({
                 id: 'HTTP' satisfies InitiateTransferType,
                 label: t('Pages.DataOfferCreate.dataSourceTypeHttp'),
               },
+              {
+                id: 'AZURE_BLOB' satisfies InitiateTransferType,
+                label: t('Pages.DataOfferCreate.dataSourceTypeAzureBlob'),
+              },
             ]}
             placeholder={''}
           />
@@ -76,6 +83,8 @@ export const InitiateTransferForm = ({
           <InitiateTransferCustomForm form={form} />
 
           <InitiateTransferHttpForm form={form} />
+
+          <InitiateTransferAzureBlobForm form={form} />
         </FormGroup>
 
         <div className="flex justify-between gap-2">

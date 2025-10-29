@@ -6,8 +6,24 @@
  * SPDX-License-Identifier: Elastic-2.0
  */
 import React, {useEffect, useState} from 'react';
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
 import AzureBlobStorageService from "./azure-blob-storage-service";
-import {Card, CardContent} from "@/components/ui/card";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {Textarea} from "@/components/ui/textarea";
@@ -19,203 +35,242 @@ interface SelectorProps {
   setIsOpen: (isOpen: boolean) => void
 }
 
-const AzureBlobSelector = ({
-  setSelectionAllowed,
-  setAzureDataAddress,
-  selectionAllowed,
-  setIsOpen
-}: SelectorProps) => {
+const azureBlobSchema = z.object({
+  storageSasToken: z.string().min(1, "Storage SAS Token is required"),
+  storageAccountName: z.string().min(1, "Storage Account Name is required"),
+  sasToken: z.string().min(1, "SAS Token is required"),
+  containerName: z.string().min(1, "Container Name is required"),
+  blobName: z.string().min(1, "Blob Name is required"),
+});
 
-  const [sasToken, setSasToken] = useState("");
-  const [storageSasToken, setStorageSasToken] = useState("");
-  const [storageAccountName, setStorageAccountName] = useState("");
-  const [containerName, setContainerName] = useState("");
-  const [blobName, setBlobName] = useState("");
+type AzureBlobFormData = z.infer<typeof azureBlobSchema>;
+
+interface SelectorProps {
+  setSelectionAllowed: (selectionAllowed: boolean) => void;
+  setAzureDataAddress: (json: string) => void;
+  selectionAllowed: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+}
+
+export const AzureBlobSelector = ({
+                                    setSelectionAllowed,
+                                    setAzureDataAddress,
+                                    selectionAllowed,
+                                    setIsOpen,
+                                  }: SelectorProps) => {
   const [containers, setContainers] = useState<string[]>([]);
   const [blobs, setBlobs] = useState<string[]>([]);
 
-  const handleChangeSasToken = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSasToken(event.target.value);
-  };
+  const form = useForm<AzureBlobFormData>({
+    resolver: zodResolver(azureBlobSchema),
+    defaultValues: {
+      storageSasToken: "",
+      storageAccountName: "",
+      sasToken: "",
+      containerName: "",
+      blobName: "",
+    },
+  });
 
-  const handleStorageSasToken = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setStorageSasToken(event.target.value);
-  };
+  const { watch } = form;
+  const storageSasToken = watch("storageSasToken");
+  const storageAccountName = watch("storageAccountName");
+  const sasToken = watch("sasToken");
+  const containerName = watch("containerName");
+  const blobName = watch("blobName");
 
-  const handleChangeStorageAccountName = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setStorageAccountName(event.target.value);
-  };
-
-  const handleChangeContainerName = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setContainerName(event.target.value);
-  };
-
-  const handleChangeBlobName = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setBlobName(event.target.value);
-  };
-
+  // --- Backend calls ---
   const receiveContainers = async () => {
-    await AzureBlobStorageService.getContainers(storageSasToken, storageAccountName).then((containerNames) => {
-      setContainers(containerNames);
-    })
-  }
+    const containerNames = await AzureBlobStorageService.getContainers(
+      storageSasToken,
+      storageAccountName
+    );
+    setContainers(containerNames);
+  };
 
   const receiveBlobs = async () => {
-    await AzureBlobStorageService.getBlobs(sasToken, containerName, storageAccountName).then((blobNames) => {
-      setBlobs(blobNames);
-    })
-  }
+    const blobNames = await AzureBlobStorageService.getBlobs(
+      sasToken,
+      containerName,
+      storageAccountName
+    );
+    setBlobs(blobNames);
+  };
 
-  const clickSubmit = () => {
-    createAzureDataAddress();
-    setIsOpen(false);
-  }
-
-  const createAzureDataAddress = () => {
+  // --- Submit handler ---
+  const onSubmit = (values: AzureBlobFormData) => {
     const obj = {
       type: "AzureStorage",
-      account: storageAccountName,
-      container: containerName,
-      blobName: blobName,
+      account: values.storageAccountName,
+      container: values.containerName,
+      blobName: values.blobName,
       keyName: "key1",
     };
+    setAzureDataAddress(JSON.stringify(obj));
+    setIsOpen(false);
+  };
 
-    const res = JSON.stringify(obj);
-    setAzureDataAddress(res);
-  }
-
+  // --- Determine if selection is allowed ---
   useEffect(() => {
-    if (sasToken && storageSasToken && storageAccountName && containerName && blobName) {
-      setSelectionAllowed(true);
-    } else {
-      setSelectionAllowed(false);
-    }
-  }, [sasToken, storageSasToken, storageAccountName, containerName, blobName, setSelectionAllowed]);
+    const allFilled =
+      storageSasToken &&
+      storageAccountName &&
+      sasToken &&
+      containerName &&
+      blobName;
+    setSelectionAllowed(!!allFilled);
+  }, [
+    storageSasToken,
+    storageAccountName,
+    sasToken,
+    containerName,
+    blobName,
+    setSelectionAllowed,
+  ]);
 
   return (
-    <div className="p-6 max-w-6xl mx-auto grid gap-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Card>
-          <CardContent className="p-4 space-y-2">
-            <Input
-              placeholder="Storage Account SAS Token"
-              value={storageSasToken}
-              onChange={handleStorageSasToken}
-            />
-          </CardContent>
-        </Card>
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-4"
+      >
+        <DialogHeader>
+          <DialogTitle>Select Azure Blob</DialogTitle>
+        </DialogHeader>
 
-        <Card>
-          <CardContent className="p-4 space-y-2">
-            <Input
-              placeholder="Storage Account Name"
-              value={storageAccountName}
-              onChange={handleChangeStorageAccountName}
-            />
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card>
-        <CardContent className="p-4 space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Button
-              dataTestId={'btn-receive-containers'}
-              disabled={storageSasToken.length === 0 || storageAccountName.length === 0}
-              onClick={receiveContainers}
-            >
-              List Containers
-            </Button>
-
-            <Textarea
-              placeholder="Available Azure Blob Containers"
-              className="col-span-2"
-              disabled
-              value={containers}
-            />
-          </div>
-        </CardContent>
-      </Card>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Card>
-          <CardContent className="p-4 space-y-2">
-            <Input
-              placeholder="SAS Token"
-              value={sasToken}
-              onChange={handleChangeSasToken}
-            />
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4 space-y-2">
-            <Input
-              placeholder="Container Name"
-              value={containerName}
-              onChange={handleChangeContainerName}
-            />
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card>
-        <CardContent className="p-4 space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Button
-              dataTestId={'btn-receive-blobs'}
-              disabled={
-                sasToken.length === 0 ||
-                containerName.length === 0 ||
-                storageAccountName.length === 0
-              }
-              onClick={receiveBlobs}
-            >
-              List Blobs
-            </Button>
-
-            <Textarea
-              placeholder="Blobs"
-              className="col-span-2"
-              disabled
-              value={blobs}
-            />
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardContent className="p-4 space-y-2">
-          <Input
-            placeholder="Blob Name"
-            value={blobName}
-            onChange={handleChangeBlobName}
+        {/* Storage SAS Token + Account Name */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="storageSasToken"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Storage Account SAS Token</FormLabel>
+                <FormControl>
+                  <Input placeholder="Storage SAS Token" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </CardContent>
-      </Card>
+          <FormField
+            control={form.control}
+            name="storageAccountName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Storage Account Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Storage Account Name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
-      <Card>
-        <CardContent className="p-4 space-y-2">
+        {/* List Containers */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Button
+            type="button"
+            dataTestId="btn-receive-containers"
+            disabled={!storageSasToken.length || !storageAccountName.length}
+            onClick={receiveContainers}
+          >
+            List Containers
+          </Button>
+          <Textarea
+            placeholder="Available Containers"
+            className="col-span-2"
+            disabled
+            value={containers.join("\n")}
+          />
+        </div>
+
+        {/* SAS Token + Container Name */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="sasToken"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>SAS Token</FormLabel>
+                <FormControl>
+                  <Input placeholder="SAS Token" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="containerName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Container Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Container Name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        {/* List Blobs */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Button
+            type="button"
+            dataTestId="btn-receive-blobs"
+            disabled={
+              !sasToken.length || !containerName.length || !storageAccountName.length
+            }
+            onClick={receiveBlobs}
+          >
+            List Blobs
+          </Button>
+          <Textarea
+            placeholder="Blobs"
+            className="col-span-2"
+            disabled
+            value={blobs.join("\n")}
+          />
+        </div>
+
+        {/* Blob Name */}
+        <FormField
+          control={form.control}
+          name="blobName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Blob Name</FormLabel>
+              <FormControl>
+                <Input placeholder="Blob Name" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <DialogFooter>
           <Button
             type="button"
             variant="outline"
-            dataTestId={'cancel-blob-select'}
+            dataTestId="cancel-blob-select"
             onClick={() => setIsOpen(false)}
           >
             Cancel
           </Button>
           <Button
-            type="button"
-            dataTestId={'submit-blob-select'}
+            type="submit"
+            dataTestId="submit-blob-select"
             disabled={!selectionAllowed}
-            onClick={() => clickSubmit()}
           >
             Select Blob
           </Button>
-        </CardContent>
-      </Card>
-    </div>
+        </DialogFooter>
+      </form>
+    </Form>
   );
-}
+};
 
 export default AzureBlobSelector;

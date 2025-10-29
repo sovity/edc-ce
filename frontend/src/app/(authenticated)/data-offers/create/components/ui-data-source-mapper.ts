@@ -21,6 +21,9 @@ import {
   UiHttpAuthType,
   UiHttpOauth2AuthType,
 } from '@sovity.de/edc-client';
+import {
+  DataOfferLiveAzureBlobFormValue
+} from "@/app/(authenticated)/data-offers/create/components/data-offer-live-azure-blob-form";
 
 export const buildUiDataSource = (
   formValue: DataOfferTypeFormValue,
@@ -60,6 +63,20 @@ export const buildUiDataSourceLive = (
 
 const buildCustomDataSource = (
   formValue: DataOfferLiveCustomFormValue,
+): UiDataSource => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const json = JSON.parse(formValue.dataAddressJson.trim()) as Record<
+    string,
+    string
+  >;
+  return {
+    type: 'CUSTOM',
+    customProperties: json,
+  };
+};
+
+const buildAzureBlobDataSource = (
+  formValue: DataOfferLiveAzureBlobFormValue,
 ): UiDataSource => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const json = JSON.parse(formValue.dataAddressJson.trim()) as Record<

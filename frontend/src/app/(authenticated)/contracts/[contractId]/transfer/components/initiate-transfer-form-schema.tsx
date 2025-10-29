@@ -9,13 +9,15 @@
 
 import {initiateTransferCustomSchema} from '@/app/(authenticated)/contracts/[contractId]/transfer/components/initiate-transfer-custom-form';
 import {initiateTransferHttpSchema} from '@/app/(authenticated)/contracts/[contractId]/transfer/components/initiate-transfer-http-form';
+import {initiateTransferAzureBlobSchema} from '@/app/(authenticated)/contracts/[contractId]/transfer/components/initiate-transfer-azure-blob-form';
 import {z} from 'zod';
 
-export type InitiateTransferType = 'HTTP' | 'CUSTOM_JSON';
+export type InitiateTransferType = 'HTTP' | 'CUSTOM_JSON' | 'AZURE_BLOB';
 
 export const initiateTransferFormSchema = z.discriminatedUnion('transferType', [
   initiateTransferCustomSchema,
   initiateTransferHttpSchema,
+  initiateTransferAzureBlobSchema
 ]);
 
 export type InitiateTransferFormValue = z.infer<
