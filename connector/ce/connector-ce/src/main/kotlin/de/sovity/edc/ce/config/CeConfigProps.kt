@@ -588,7 +588,6 @@ object CeConfigProps {
         defaultDocumentation = "The URL path of the vault's /health endpoint",
     )
 
-
     @JvmStatic
     val EDC_VAULT_HASHICORP_HEALTH_CHECK_STANDBY_OK = ConfigPropRef(
         property = "edc.vault.hashicorp.health.check.standby.ok",

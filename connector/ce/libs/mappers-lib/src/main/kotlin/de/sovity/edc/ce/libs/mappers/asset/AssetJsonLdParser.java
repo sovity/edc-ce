@@ -37,6 +37,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -161,7 +162,19 @@ public class AssetJsonLdParser {
             Prop.SovityDcatExt.CONTACT_PREFERRED_EMAIL_SUBJECT,
             Prop.SovityDcatExt.DISTRIBUTION,
 
-            Prop.Sphinx.DATA_MODEL_NAME
+            Prop.Sphinx.PATIENT_COUNT,
+            Prop.Sphinx.BIRTH_YEAR_MIN,
+            Prop.Sphinx.BIRTH_YEAR_MAX,
+            Prop.Sphinx.ADMINISTRATIVE_GENDER,
+            Prop.Sphinx.BODY_HEIGHT_MIN,
+            Prop.Sphinx.BODY_HEIGHT_MAX,
+            Prop.Sphinx.DIAGNOSIS_PRIMARY,
+            Prop.Sphinx.DIAGNOSIS_SECONDARY,
+            Prop.Sphinx.ENCOUNTER_START,
+            Prop.Sphinx.ENCOUNTER_END,
+            Prop.Sphinx.MEDICATION_COUNT,
+            Prop.Sphinx.DOSAGE_COUNT,
+            Prop.Sphinx.CLINICAL_SPECIALTY
         ));
 
         // custom properties
@@ -214,14 +227,37 @@ public class AssetJsonLdParser {
     }
 
     private UiAssetExtForSphinx getSphinxFields(JsonObject properties) {
-        var dataModelName = JsonLdUtils.string(properties, Prop.Sphinx.DATA_MODEL_NAME);
-        if (dataModelName == null) {
-            return null;
-        }
+        val builder = UiAssetExtForSphinx.builder();
+        var hasFields = false;
 
-        return UiAssetExtForSphinx.builder()
-            .dataModelName(dataModelName)
-            .build();
+        val patientCount = JsonLdUtils.string(properties, Prop.Sphinx.PATIENT_COUNT);
+        val birthYearMin = JsonLdUtils.string(properties, Prop.Sphinx.BIRTH_YEAR_MIN);
+        val birthYearMax = JsonLdUtils.string(properties, Prop.Sphinx.BIRTH_YEAR_MAX
+        );
+        val administrativeGender = JsonLdUtils.string(properties, Prop.Sphinx.ADMINISTRATIVE_GENDER);
+        val bodyHeightMin = JsonLdUtils.string(properties, Prop.Sphinx.BODY_HEIGHT_MIN);
+        val bodyHeightMax = JsonLdUtils.string(properties, Prop.Sphinx.BODY_HEIGHT_MAX);
+        val diagnosisPrimary = JsonLdUtils.string(properties, Prop.Sphinx.DIAGNOSIS_PRIMARY);
+        val diagnosisSecondary = JsonLdUtils.string(properties, Prop.Sphinx.DIAGNOSIS_SECONDARY);
+        val encounterStart = JsonLdUtils.string(properties, Prop.Sphinx.ENCOUNTER_START);
+        val encounterEnd = JsonLdUtils.string(properties, Prop.Sphinx.ENCOUNTER_END);
+        val medicationCount = JsonLdUtils.string(properties, Prop.Sphinx.MEDICATION_COUNT);
+        val dosageCount = JsonLdUtils.string(properties, Prop.Sphinx.DOSAGE_COUNT);
+        val clinicalSpecialty = JsonLdUtils.string(properties, Prop.Sphinx.CLINICAL_SPECIALTY);
+
+        if (Stream.of(patientCount, birthYearMin, birthYearMax, administrativeGender,
+                bodyHeightMin, bodyHeightMax, diagnosisPrimary, diagnosisSecondary,
+                encounterStart, encounterEnd, medicationCount, dosageCount, clinicalSpecialty)
+            .anyMatch(field -> !isBlank(field))) {
+            hasFields = true;
+            builder.patientCount(patientCount).birthYearMin(birthYearMin).birthYearMax(birthYearMax)
+                .administrativeGender(administrativeGender).bodyHeightMin(bodyHeightMin).bodyHeightMax(bodyHeightMax)
+                .diagnosisPrimary(diagnosisPrimary).diagnosisSecondary(diagnosisSecondary)
+                .encounterStart(encounterStart).encounterEnd(encounterEnd)
+                .medicationCount(medicationCount).dosageCount(dosageCount)
+                .clinicalSpecialty(clinicalSpecialty);
+        }
+        return hasFields ? builder.build() : null;
     }
 
     private String ifBlank(String value, String defaultValue) {

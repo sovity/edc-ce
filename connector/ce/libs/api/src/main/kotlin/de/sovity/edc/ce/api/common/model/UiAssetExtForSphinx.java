@@ -36,6 +36,44 @@ import lombok.RequiredArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "Type-safe extra fields for the sphin-x dataspace.")
 public class UiAssetExtForSphinx {
-    @Schema(description = "Sphin-X Data Model Name", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String dataModelName;
+
+    @Schema(description = "Patient Count", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private String patientCount;
+
+    @Schema(description = "Birth Year Min", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private String birthYearMin;
+
+    @Schema(description = "Birth Year Max", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private String birthYearMax;
+
+    @Schema(description = "Administrative Gender", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private String administrativeGender;
+
+    @Schema(description = "Body Height Min", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private String bodyHeightMin;
+
+    @Schema(description = "Body Height Max", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private String bodyHeightMax;
+
+    @Schema(description = "Primary Diagnosis", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private String diagnosisPrimary;
+
+    @Schema(description = "Secondary Diagnosis", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private String diagnosisSecondary;
+
+    @Schema(description = "Encounter Start Year", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private String encounterStart;
+
+    @Schema(description = "Encounter End Year", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private String encounterEnd;
+
+    @Schema(description = "Medication Count", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private String medicationCount;
+
+    @Schema(description = "Dosage Count", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private String dosageCount;
+
+    @Schema(description = "Clinical Specialty", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private String clinicalSpecialty;
+
 }

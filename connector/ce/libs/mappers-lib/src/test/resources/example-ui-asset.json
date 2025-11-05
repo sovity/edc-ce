@@ -33,7 +33,19 @@
   "temporalCoverageFrom": "2007-12-03",
   "temporalCoverageToInclusive": "2024-01-22",
   "sphinxFields": {
-    "dataModelName": "some-data-model"
+    "patientCount": "3000",
+    "birthYearMin": "1990",
+    "birthYearMax": "2000",
+    "administrativeGender": "Male",
+    "bodyHeightMin": "150",
+    "bodyHeightMax": "210",
+    "diagnosisPrimary": "G30 - Alzheimer disease",
+    "diagnosisSecondary": "I11 - Hypertensive heart disease",
+    "encounterStart": "2020",
+    "encounterEnd": "2025",
+    "medicationCount": "950",
+    "dosageCount": "930",
+    "clinicalSpecialty": "Neurology"
   },
   "customJsonAsString": "{\"array\":[3,1,4,1,5],\"boolean\":false,\"null\":null,\"number\":116,\"object\":{\"key\":\"value\"},\"string\":\"value\"}",
   "customJsonLdAsString": "{\"http://unknown/some-custom-string\":\"some-string-value\",\"http://unknown/some-custom-obj\":{\"http://unknown/a\":\"b\"}}",

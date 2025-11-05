@@ -134,18 +134,42 @@ class AssetJsonLdBuilderTest {
     }
 
     @Test
-    void test_sphinx_fields_data_model_name() {
+    void test_sphinx_fields() {
         // arrange
         var uiAssetCreateRequest = UiAssetCreateRequest.builder()
             .dataSource(dummyDataSource())
             .id(ASSET_ID)
             .sphinxFields(UiAssetExtForSphinx.builder()
-                .dataModelName("a")
+                .patientCount("3000")
+                .birthYearMin("1990")
+                .birthYearMax("2000")
+                .administrativeGender("Male")
+                .bodyHeightMin("150")
+                .bodyHeightMax("210")
+                .diagnosisPrimary("G30 - Alzheimer disease")
+                .diagnosisSecondary("I11 - Hypertensive heart disease")
+                .encounterStart("2020")
+                .encounterEnd("2025")
+                .medicationCount("950")
+                .dosageCount("930")
+                .clinicalSpecialty("Neurology")
                 .build())
             .build();
 
         var expectedProperties = Json.createObjectBuilder()
-            .add(Prop.Sphinx.DATA_MODEL_NAME, "a");
+            .add(Prop.Sphinx.PATIENT_COUNT, "3000")
+            .add(Prop.Sphinx.BIRTH_YEAR_MIN, "1990")
+            .add(Prop.Sphinx.BIRTH_YEAR_MAX, "2000")
+            .add(Prop.Sphinx.ADMINISTRATIVE_GENDER, "Male")
+            .add(Prop.Sphinx.BODY_HEIGHT_MIN, "150")
+            .add(Prop.Sphinx.BODY_HEIGHT_MAX, "210")
+            .add(Prop.Sphinx.DIAGNOSIS_PRIMARY, "G30 - Alzheimer disease")
+            .add(Prop.Sphinx.DIAGNOSIS_SECONDARY, "I11 - Hypertensive heart disease")
+            .add(Prop.Sphinx.ENCOUNTER_START, "2020")
+            .add(Prop.Sphinx.ENCOUNTER_END, "2025")
+            .add(Prop.Sphinx.MEDICATION_COUNT, "950")
+            .add(Prop.Sphinx.DOSAGE_COUNT, "930")
+            .add(Prop.Sphinx.CLINICAL_SPECIALTY, "Neurology");
 
         // act
         var actual = assetJsonLdBuilder.buildCreateAssetJsonLds(uiAssetCreateRequest, ORG_NAME);

@@ -29,8 +29,6 @@ export const dataOfferFormValueForEdit = (
       title: asset.title,
       description: asset.description,
       keywords: asset.keywords,
-
-      sphinxDataModelName: asset.sphinxFields?.dataModelName,
     },
     advanced: {
       ...empty.advanced,
@@ -60,6 +58,22 @@ export const dataOfferFormValueForEdit = (
           : undefined,
       },
     },
+    sphinxFields: {
+      ...empty.sphinxFields,
+      patientCount: asset.sphinxFields?.patientCount,
+      birthYearMin: asset.sphinxFields?.birthYearMin,
+      birthYearMax: asset.sphinxFields?.birthYearMax,
+      administrativeGender: asset.sphinxFields?.administrativeGender,
+      bodyHeightMin: asset.sphinxFields?.bodyHeightMin,
+      bodyHeightMax: asset.sphinxFields?.bodyHeightMax,
+      diagnosisPrimary: asset.sphinxFields?.diagnosisPrimary,
+      diagnosisSecondary: asset.sphinxFields?.diagnosisSecondary,
+      encounterStart: asset.sphinxFields?.encounterStart,
+      encounterEnd: asset.sphinxFields?.encounterEnd,
+      medicationCount: asset.sphinxFields?.medicationCount,
+      dosageCount: asset.sphinxFields?.dosageCount,
+      clinicalSpecialty: asset.sphinxFields?.clinicalSpecialty,
+    }
   };
 };
 
@@ -100,6 +114,7 @@ export const dataOfferFormValueForCreate = (): DataOfferCreateFormModel => {
     advanced: {
       showAdvancedFields: false,
     },
+    sphinxFields: {},
     publishing: {
       mode: 'PUBLISH_UNRESTRICTED',
       policy: {},

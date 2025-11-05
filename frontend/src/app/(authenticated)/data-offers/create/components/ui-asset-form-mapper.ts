@@ -98,11 +98,26 @@ export const buildUiAssetCommonMetadata = (
         ? toGmtZeroHourDate(formValue.advanced.temporalCoverage.endDate)
         : undefined,
 
-    sphinxFields: formValue.general.sphinxDataModelName
-      ? {
-          dataModelName: formValue.general.sphinxDataModelName,
-        }
-      : undefined,
+    sphinxFields: {
+          patientCount: formValue.sphinxFields?.patientCount || undefined,
+          birthYearMin: formValue.sphinxFields?.birthYearMin || undefined,
+          birthYearMax: formValue.sphinxFields?.birthYearMax || undefined,
+          administrativeGender:
+            formValue.sphinxFields?.administrativeGender || undefined,
+          bodyHeightMin: formValue.sphinxFields?.bodyHeightMin || undefined,
+          bodyHeightMax: formValue.sphinxFields?.bodyHeightMax || undefined,
+          diagnosisPrimary:
+            formValue.sphinxFields?.diagnosisPrimary || undefined,
+          diagnosisSecondary:
+            formValue.sphinxFields?.diagnosisSecondary || undefined,
+          encounterStart: formValue.sphinxFields?.encounterStart || undefined,
+          encounterEnd: formValue.sphinxFields?.encounterEnd || undefined,
+          medicationCount:
+            formValue.sphinxFields?.medicationCount || undefined,
+          dosageCount: formValue.sphinxFields?.dosageCount || undefined,
+          clinicalSpecialty:
+            formValue.sphinxFields?.clinicalSpecialty || undefined,
+        },
   };
 };
 

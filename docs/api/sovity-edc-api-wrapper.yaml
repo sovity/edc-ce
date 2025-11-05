@@ -1178,11 +1178,45 @@ components:
       type: object
       description: Type-safe extra fields for the sphin-x dataspace.
       properties:
-        dataModelName:
+        patientCount:
           type: string
-          description: Sphin-X Data Model Name
-      required:
-      - dataModelName
+          description: Patient Count
+        birthYearMin:
+          type: string
+          description: Birth Year Min
+        birthYearMax:
+          type: string
+          description: Birth Year Max
+        administrativeGender:
+          type: string
+          description: Administrative Gender
+        bodyHeightMin:
+          type: string
+          description: Body Height Min
+        bodyHeightMax:
+          type: string
+          description: Body Height Max
+        diagnosisPrimary:
+          type: string
+          description: Primary Diagnosis
+        diagnosisSecondary:
+          type: string
+          description: Secondary Diagnosis
+        encounterStart:
+          type: string
+          description: Encounter Start Year
+        encounterEnd:
+          type: string
+          description: Encounter End Year
+        medicationCount:
+          type: string
+          description: Medication Count
+        dosageCount:
+          type: string
+          description: Dosage Count
+        clinicalSpecialty:
+          type: string
+          description: Clinical Specialty
     UiDataSource:
       type: object
       description: Type-safe data source as supported by the sovity product landscape.

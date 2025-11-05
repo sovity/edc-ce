@@ -2,6 +2,28 @@
 
 The versions of the sovity EDC CE are aligned with the sovity EDC EE.
 
+## [v16.2.0] - 2025-11-05
+
+### Overview
+
+General Metadata fields for the sphin-X variant.
+
+#### Minor Changes
+
+- sphin-X variant: Added general sphin-X metadata fields in API Wrapper and UI.
+
+### Deployment Migration Notes
+
+_No special deployment migration steps required_
+
+#### Compatible Versions
+
+- EDC CE Backend: `ghcr.io/sovity/edc-ce:16.2.0`
+- EDC CE Frontend: `ghcr.io/sovity/edc-ce-ui:16.2.0`
+- PostgreSQL: `17`
+- Eclipse EDC Fork: [v0.11.1.3](https://github.com/sovity/core-edc/releases/tag/v0.11.1.3)
+- Tractus-X: `0.9.0`
+
 ## [v16.1.0] - 2025-10-21
 
 ### Overview
