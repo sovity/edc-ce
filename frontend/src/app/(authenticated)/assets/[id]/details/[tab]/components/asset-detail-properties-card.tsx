@@ -37,6 +37,14 @@ import {
   SectionIcon,
   TextIcon,
   VariableIcon,
+  UsersIcon,
+  CakeIcon,
+  RulerIcon,
+  StethoscopeIcon,
+  ActivityIcon,
+  PillIcon,
+  FlaskConicalIcon,
+  HeartHandshakeIcon,
 } from 'lucide-react';
 import {useTranslations} from 'next-intl';
 import {type UiAssetProps} from './asset-detail-overview-card';
@@ -203,15 +211,77 @@ export const AssetDetailPropertiesCard = ({data}: UiAssetProps) => {
           label={t('General.contentType')}
           value={data.mediaType}
         />
-
-        {data.sphinxFields?.dataModelName && (
-          <AssetProperty
-            Icon={EclipseIcon}
-            label={t('General.sphinxDataModelNameTooltip')}
-            value={data.sphinxFields?.dataModelName}
-          />
-        )}
       </AssetPropertyCard>
+
+      {data.sphinxFields && (
+        <AssetPropertyCard title="Sphinx Properties">
+          <AssetProperty
+            Icon={UsersIcon}
+            label="Patient Count"
+            value={data.sphinxFields?.patientCount}
+          />
+          <AssetProperty
+            Icon={CakeIcon}
+            label="Birth Year Min"
+            value={data.sphinxFields?.birthYearMin}
+          />
+          <AssetProperty
+            Icon={CakeIcon}
+            label="Birth Year Max"
+            value={data.sphinxFields?.birthYearMax}
+          />
+          <AssetProperty
+            Icon={IdCardIcon}
+            label="Administrative Gender"
+            value={data.sphinxFields?.administrativeGender}
+          />
+          <AssetProperty
+            Icon={RulerIcon}
+            label="Body Height Min"
+            value={data.sphinxFields?.bodyHeightMin}
+          />
+          <AssetProperty
+            Icon={RulerIcon}
+            label="Body Height Max"
+            value={data.sphinxFields?.bodyHeightMax}
+          />
+          <AssetProperty
+            Icon={StethoscopeIcon}
+            label="Primary Diagnosis"
+            value={data.sphinxFields?.diagnosisPrimary}
+          />
+          <AssetProperty
+            Icon={StethoscopeIcon}
+            label="Secondary Diagnosis"
+            value={data.sphinxFields?.diagnosisSecondary}
+          />
+          <AssetProperty
+            Icon={ActivityIcon}
+            label="Encounter Start"
+            value={data.sphinxFields?.encounterStart}
+          />
+          <AssetProperty
+            Icon={ActivityIcon}
+            label="Encounter End"
+            value={data.sphinxFields?.encounterEnd}
+          />
+          <AssetProperty
+            Icon={PillIcon}
+            label="Medication Count"
+            value={data.sphinxFields?.medicationCount}
+          />
+          <AssetProperty
+            Icon={FlaskConicalIcon}
+            label="Dosage Count"
+            value={data.sphinxFields?.dosageCount}
+          />
+          <AssetProperty
+            Icon={HeartHandshakeIcon}
+            label="Clinical Specialty"
+            value={data.sphinxFields?.clinicalSpecialty}
+          />
+        </AssetPropertyCard>
+      )}
 
       {showAdditionalProperties ? (
         <AssetPropertyCard title={t('General.additionalProperties')}>

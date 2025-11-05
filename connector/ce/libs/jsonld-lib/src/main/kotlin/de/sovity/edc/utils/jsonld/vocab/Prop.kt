@@ -236,6 +236,18 @@ object Prop {
     @UtilityClass
     object Sphinx {
         const val CTX: String = "https://semantic.sphin-x.de/dcat-ext/"
-        const val DATA_MODEL_NAME: String = CTX + "dataModelName"
+        const val PATIENT_COUNT: String = CTX + "patientCount"
+        const val BIRTH_YEAR_MIN: String = CTX + "birthYearMin"
+        const val BIRTH_YEAR_MAX: String = CTX + "birthYearMax"
+        const val ADMINISTRATIVE_GENDER: String = CTX + "administrativeGender"
+        const val BODY_HEIGHT_MIN: String = CTX + "bodyHeightMin"
+        const val BODY_HEIGHT_MAX: String = CTX + "bodyHeightMax"
+        const val DIAGNOSIS_PRIMARY: String = CTX + "diagnosisPrimary"
+        const val DIAGNOSIS_SECONDARY: String = CTX + "diagnosisSecondary"
+        const val ENCOUNTER_START: String = CTX + "encounterStart"
+        const val ENCOUNTER_END: String = CTX + "encounterEnd"
+        const val MEDICATION_COUNT: String = CTX + "medicationCount"
+        const val DOSAGE_COUNT: String = CTX + "dosageCount"
+        const val CLINICAL_SPECIALTY: String = CTX + "clinicalSpecialty"
     }
 }

@@ -5,6 +5,9 @@ services:
       dockerfile: src/main/docker/Dockerfile.jvm
     ports:
       - "18080:8080"
+    networks:
+      provider: {}
+      consumer: {}
     environment:
       "chat-app.backend-url-as-reachable-by-own-edc": "http://provider-chat-app-backend:8080"
       "chat-app.edc.connector-endpoint": "http://provider/api/v1/dsp"
@@ -17,6 +20,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - "13000:3000"
+    networks:
+      provider: {}
+      consumer: {}
     environment:
       NEXT_PUBLIC_USE_FAKE_BACKEND: "false"
       NEXT_PUBLIC_BACKEND_URL: "http://localhost:18080/api/ui"
@@ -27,6 +33,9 @@ services:
       dockerfile: src/main/docker/Dockerfile.jvm
     ports:
       - "28080:8080"
+    networks:
+      provider: {}
+      consumer: {}
     environment:
       "chat-app.backend-url-as-reachable-by-own-edc": "http://consumer-chat-app-backend:8080"
       "chat-app.edc.connector-endpoint": "http://consumer/api/v1/dsp"
@@ -39,6 +48,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - "23000:3000"
+    networks:
+      provider: {}
+      consumer: {}
     environment:
       NEXT_PUBLIC_USE_FAKE_BACKEND: "false"
       NEXT_PUBLIC_BACKEND_URL: "http://localhost:28080/api/ui"

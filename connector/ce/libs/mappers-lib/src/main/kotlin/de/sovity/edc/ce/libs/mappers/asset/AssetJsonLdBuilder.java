@@ -204,7 +204,19 @@ public class AssetJsonLdBuilder {
             return;
         }
 
-        addNonNull(properties, Prop.Sphinx.DATA_MODEL_NAME, sphinxFields.getDataModelName());
+        addNonNull(properties, Prop.Sphinx.PATIENT_COUNT, sphinxFields.getPatientCount());
+        addNonNull(properties, Prop.Sphinx.BIRTH_YEAR_MIN, sphinxFields.getBirthYearMin());
+        addNonNull(properties, Prop.Sphinx.BIRTH_YEAR_MAX, sphinxFields.getBirthYearMax());
+        addNonNull(properties, Prop.Sphinx.ADMINISTRATIVE_GENDER, sphinxFields.getAdministrativeGender());
+        addNonNull(properties, Prop.Sphinx.BODY_HEIGHT_MIN, sphinxFields.getBodyHeightMin());
+        addNonNull(properties, Prop.Sphinx.BODY_HEIGHT_MAX, sphinxFields.getBodyHeightMax());
+        addNonNull(properties, Prop.Sphinx.DIAGNOSIS_PRIMARY, sphinxFields.getDiagnosisPrimary());
+        addNonNull(properties, Prop.Sphinx.DIAGNOSIS_SECONDARY, sphinxFields.getDiagnosisSecondary());
+        addNonNull(properties, Prop.Sphinx.ENCOUNTER_START, sphinxFields.getEncounterStart());
+        addNonNull(properties, Prop.Sphinx.ENCOUNTER_END, sphinxFields.getEncounterEnd());
+        addNonNull(properties, Prop.Sphinx.MEDICATION_COUNT, sphinxFields.getMedicationCount());
+        addNonNull(properties, Prop.Sphinx.DOSAGE_COUNT, sphinxFields.getDosageCount());
+        addNonNull(properties, Prop.Sphinx.CLINICAL_SPECIALTY, sphinxFields.getClinicalSpecialty());
     }
 
     @Nullable

@@ -192,13 +192,96 @@ export const DataOfferForm = ({
           <FormGroup
             title={t('Pages.DataOfferCreate.sphinxFieldsTitle')}
             subTitle={t('Pages.DataOfferCreate.sphinxFieldsDescription')}>
-            {/* Sphin-X Data Model Name */}
             <InputField
               control={form.control}
-              name="general.sphinxDataModelName"
-              placeholder={'example-data-model-1'}
-              label={t('General.sphinxDataModelNameTitle')}
-              tooltip={t('General.sphinxDataModelNameTooltip')}
+              name="sphinxFields.patientCount"
+              label="Patient Count"
+              placeholder="1000"
+              tooltip="Defines the number of individuals included in the dataset"
+            />
+            <InputField
+              control={form.control}
+              name="sphinxFields.birthYearMin"
+              label="Birth Year Min"
+              placeholder="1950"
+              tooltip="Defines the lowest birth year"
+            />
+            <InputField
+              control={form.control}
+              name="sphinxFields.birthYearMax"
+              label="Birth Year Max"
+              placeholder="2000"
+              tooltip="Defines the highest birth year"
+            />
+            <InputField
+              control={form.control}
+              name="sphinxFields.administrativeGender"
+              label="Administrative Gender"
+              placeholder="Male"
+              tooltip="Defines the administrative gender of the individuals"
+            />
+            <InputField
+              control={form.control}
+              name="sphinxFields.bodyHeightMin"
+              label="Body Height Min"
+              placeholder="120"
+              tooltip="Defines the minimum body height in centimeters"
+            />
+            <InputField
+              control={form.control}
+              name="sphinxFields.bodyHeightMax"
+              label="Body Height Max"
+              placeholder="210"
+              tooltip="Defines the maximum body height in centimeters"
+            />
+            <InputField
+              control={form.control}
+              name="sphinxFields.diagnosisPrimary"
+              label="Diagnosis Primary"
+              placeholder="G30 - Alzheimer disease"
+              tooltip="Defines the primary diagnosis"
+            />
+            <InputField
+              control={form.control}
+              name="sphinxFields.diagnosisSecondary"
+              label="Diagnosis Secondary"
+              placeholder="I11 - Hypertensive heart disease"
+              tooltip="Defines the secondary diagnosis"
+            />
+            <InputField
+              control={form.control}
+              name="sphinxFields.encounterStart"
+              label="Encounter Start"
+              placeholder="2020"
+              tooltip="Defines the start of the treatment"
+            />
+            <InputField
+              control={form.control}
+              name="sphinxFields.encounterEnd"
+              label="Encounter End"
+              placeholder="2025"
+              tooltip="Defines the end of the treatment"
+            />
+            <InputField
+              control={form.control}
+              name="sphinxFields.medicationCount"
+              label="Medication Count"
+              placeholder="950"
+              tooltip="Defines the number of records in which the “Medication” field is filled"
+            />
+            <InputField
+              control={form.control}
+              name="sphinxFields.dosageCount"
+              label="Dosage Count"
+              placeholder="930"
+              tooltip="Defines the number of records in which the “MedicationStatement.dosage” field is filled"
+            />
+            <InputField
+              control={form.control}
+              name="sphinxFields.clinicalSpecialty"
+              label="Clinical Specialty"
+              placeholder="Neurology"
+              tooltip="Defines the clinical specialty of the physician or healthcare provider who interacted with, treated, or provided services for the patient"
             />
           </FormGroup>
         )}

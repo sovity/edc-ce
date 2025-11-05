@@ -39,18 +39,89 @@ import { mapValues } from '../runtime';
  */
 export interface UiAssetExtForSphinx {
     /**
-     * Sphin-X Data Model Name
+     * Patient Count
      * @type {string}
      * @memberof UiAssetExtForSphinx
      */
-    dataModelName: string;
+    patientCount?: string;
+    /**
+     * Birth Year Min
+     * @type {string}
+     * @memberof UiAssetExtForSphinx
+     */
+    birthYearMin?: string;
+    /**
+     * Birth Year Max
+     * @type {string}
+     * @memberof UiAssetExtForSphinx
+     */
+    birthYearMax?: string;
+    /**
+     * Administrative Gender
+     * @type {string}
+     * @memberof UiAssetExtForSphinx
+     */
+    administrativeGender?: string;
+    /**
+     * Body Height Min
+     * @type {string}
+     * @memberof UiAssetExtForSphinx
+     */
+    bodyHeightMin?: string;
+    /**
+     * Body Height Max
+     * @type {string}
+     * @memberof UiAssetExtForSphinx
+     */
+    bodyHeightMax?: string;
+    /**
+     * Primary Diagnosis
+     * @type {string}
+     * @memberof UiAssetExtForSphinx
+     */
+    diagnosisPrimary?: string;
+    /**
+     * Secondary Diagnosis
+     * @type {string}
+     * @memberof UiAssetExtForSphinx
+     */
+    diagnosisSecondary?: string;
+    /**
+     * Encounter Start Year
+     * @type {string}
+     * @memberof UiAssetExtForSphinx
+     */
+    encounterStart?: string;
+    /**
+     * Encounter End Year
+     * @type {string}
+     * @memberof UiAssetExtForSphinx
+     */
+    encounterEnd?: string;
+    /**
+     * Medication Count
+     * @type {string}
+     * @memberof UiAssetExtForSphinx
+     */
+    medicationCount?: string;
+    /**
+     * Dosage Count
+     * @type {string}
+     * @memberof UiAssetExtForSphinx
+     */
+    dosageCount?: string;
+    /**
+     * Clinical Specialty
+     * @type {string}
+     * @memberof UiAssetExtForSphinx
+     */
+    clinicalSpecialty?: string;
 }
 
 /**
  * Check if a given object implements the UiAssetExtForSphinx interface.
  */
 export function instanceOfUiAssetExtForSphinx(value: any): value is UiAssetExtForSphinx {
-    if (!('dataModelName' in value) || value['dataModelName'] === undefined) return false;
     return true;
 }
 
@@ -64,7 +135,19 @@ export function UiAssetExtForSphinxFromJSONTyped(json: any, ignoreDiscriminator:
     }
     return {
         
-        'dataModelName': json['dataModelName'],
+        'patientCount': json['patientCount'] == null ? undefined : json['patientCount'],
+        'birthYearMin': json['birthYearMin'] == null ? undefined : json['birthYearMin'],
+        'birthYearMax': json['birthYearMax'] == null ? undefined : json['birthYearMax'],
+        'administrativeGender': json['administrativeGender'] == null ? undefined : json['administrativeGender'],
+        'bodyHeightMin': json['bodyHeightMin'] == null ? undefined : json['bodyHeightMin'],
+        'bodyHeightMax': json['bodyHeightMax'] == null ? undefined : json['bodyHeightMax'],
+        'diagnosisPrimary': json['diagnosisPrimary'] == null ? undefined : json['diagnosisPrimary'],
+        'diagnosisSecondary': json['diagnosisSecondary'] == null ? undefined : json['diagnosisSecondary'],
+        'encounterStart': json['encounterStart'] == null ? undefined : json['encounterStart'],
+        'encounterEnd': json['encounterEnd'] == null ? undefined : json['encounterEnd'],
+        'medicationCount': json['medicationCount'] == null ? undefined : json['medicationCount'],
+        'dosageCount': json['dosageCount'] == null ? undefined : json['dosageCount'],
+        'clinicalSpecialty': json['clinicalSpecialty'] == null ? undefined : json['clinicalSpecialty'],
     };
 }
 
@@ -79,7 +162,19 @@ export function UiAssetExtForSphinxToJSONTyped(value?: UiAssetExtForSphinx | nul
 
     return {
         
-        'dataModelName': value['dataModelName'],
+        'patientCount': value['patientCount'],
+        'birthYearMin': value['birthYearMin'],
+        'birthYearMax': value['birthYearMax'],
+        'administrativeGender': value['administrativeGender'],
+        'bodyHeightMin': value['bodyHeightMin'],
+        'bodyHeightMax': value['bodyHeightMax'],
+        'diagnosisPrimary': value['diagnosisPrimary'],
+        'diagnosisSecondary': value['diagnosisSecondary'],
+        'encounterStart': value['encounterStart'],
+        'encounterEnd': value['encounterEnd'],
+        'medicationCount': value['medicationCount'],
+        'dosageCount': value['dosageCount'],
+        'clinicalSpecialty': value['clinicalSpecialty'],
     };
 }
 

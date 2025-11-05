@@ -25,9 +25,6 @@ const dataOfferBasicFieldsSchema = z.object({
   title: z.string().min(1).max(128),
   description: z.string().optional(),
   keywords: z.array(z.string()).optional(),
-
-  // Sphin-X Fields
-  sphinxDataModelName: z.string().optional(),
 });
 
 const dataOfferAdvancedFieldsSchema = z.discriminatedUnion(
@@ -74,6 +71,23 @@ const dataOfferAdvancedFieldsSchema = z.discriminatedUnion(
   ],
 );
 
+const dataOfferSphinxFieldsSchema = z.object({
+  patientCount: z.string().optional(),
+  birthYearMin: z.string().optional(),
+  birthYearMax: z.string().optional(),
+  administrativeGender: z.string().optional(),
+  bodyHeightMin: z.string().optional(),
+  bodyHeightMax: z.string().optional(),
+  diagnosisPrimary: z.string().optional(),
+  diagnosisSecondary: z.string().optional(),
+  encounterStart: z.string().optional(),
+  encounterEnd: z.string().optional(),
+  medicationCount: z.string().optional(),
+  dosageCount: z.string().optional(),
+  clinicalSpecialty: z.string().optional(),
+})
+
+
 export const dataOfferFormSchema = (
   formMode: DataOfferFormMode,
   t: ReturnType<typeof useTranslations>,
@@ -83,6 +97,7 @@ export const dataOfferFormSchema = (
       type: dataOfferTypeSchema,
       general: dataOfferBasicFieldsSchema,
       advanced: dataOfferAdvancedFieldsSchema,
+      sphinxFields: dataOfferSphinxFieldsSchema,
       publishing: z.discriminatedUnion('mode', [
         z.object({
           mode: z.literal(
