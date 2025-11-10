@@ -80,8 +80,7 @@ object CeRootModule {
             ConfigPropCategory.IMPORTANT,
             CeConfigProps.SOVITY_EDC_FQDN_INTERNAL
         ) {
-            requiredInProd()
-            defaultValueOutsideProd("localhost") // should not be applied if required()
+            defaultValue("localhost")
         }
         property(
             ConfigPropCategory.OPTIONAL,
