@@ -17,7 +17,7 @@ services:
         aliases:
           - 'consumer'
   consumer-ui:
-    image: 'ghcr.io/sovity/edc-ce-ui:16.2.1'
+    image: 'ghcr.io/sovity/edc-ce-ui:16.2.2'
     networks:
       - 'consumer'
     restart: 'unless-stopped'
@@ -25,7 +25,7 @@ services:
       NEXT_PUBLIC_MANAGEMENT_API_URL: '/api/management'
       NEXT_PUBLIC_MANAGEMENT_API_KEY: 'SomeOtherApiKey'
   consumer-connector:
-    image: 'ghcr.io/sovity/edc-ce:16.2.1'
+    image: 'ghcr.io/sovity/edc-ce:16.2.2'
     networks:
       consumer: {}
     ports:
@@ -92,7 +92,7 @@ services:
         aliases:
           - 'provider'
   provider-ui:
-    image: 'ghcr.io/sovity/edc-ce-ui:16.2.1'
+    image: 'ghcr.io/sovity/edc-ce-ui:16.2.2'
     networks:
       - 'provider'
     restart: 'unless-stopped'
@@ -100,7 +100,7 @@ services:
       NEXT_PUBLIC_MANAGEMENT_API_URL: '/api/management'
       NEXT_PUBLIC_MANAGEMENT_API_KEY: 'SomeOtherApiKey'
   provider-connector:
-    image: 'ghcr.io/sovity/edc-ce:16.2.1'
+    image: 'ghcr.io/sovity/edc-ce:16.2.2'
     networks:
       provider: {}
     ports:

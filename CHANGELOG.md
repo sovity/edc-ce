@@ -2,6 +2,24 @@
 
 The versions of the sovity EDC CE are aligned with the sovity EDC EE.
 
+## [v16.2.2] - 2025-11-11
+
+### Overview
+
+Sync version with EE
+
+### Deployment Migration Notes
+
+_No special deployment migration steps required_
+
+#### Compatible Versions
+
+- EDC CE Backend: `ghcr.io/sovity/edc-ce:16.2.2`
+- EDC CE Frontend: `ghcr.io/sovity/edc-ce-ui:16.2.2`
+- PostgreSQL: `17`
+- Eclipse EDC Fork: [v0.11.1.3](https://github.com/sovity/core-edc/releases/tag/v0.11.1.3)
+- Tractus-X: `0.9.0`
+
 ## [v16.2.1] - 2025-11-10
 
 ### Overview
