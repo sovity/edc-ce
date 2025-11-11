@@ -25,7 +25,6 @@ import {
 import AzureBlobStorageService from './azure-blob-storage-service';
 import {Input} from '@/components/ui/input';
 import {Button} from '@/components/ui/button';
-import {Textarea} from '@/components/ui/textarea';
 
 interface SelectorProps {
   setSelectionAllowed: (selectionAllowed: boolean) => void;
