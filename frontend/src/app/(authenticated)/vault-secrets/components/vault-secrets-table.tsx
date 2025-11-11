@@ -32,7 +32,7 @@ const VaultSecretsTable = ({data}: VaultSecretsTableProps) => {
       wordFilter={wordFilter}
       headerButtonLink={urls.vaultSecrets.createPage()}
       headerButtonText={t('Pages.VaultSecretsList.createSecret')}
-      rowLink={row => urls.vaultSecrets.editPage(row.original.key)}
+      rowLink={(row) => urls.vaultSecrets.editPage(row.original.key)}
     />
   );
 };

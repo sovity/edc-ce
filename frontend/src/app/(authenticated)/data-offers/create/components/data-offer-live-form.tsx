@@ -24,14 +24,16 @@ import {useTranslations} from 'next-intl';
 import {type UseFormReturn} from 'react-hook-form';
 import {z} from 'zod';
 import {
-  DataOfferLiveAzureBlobForm
-} from "@/app/(authenticated)/data-offers/create/components/data-offer-live-azure-blob-form";
+  DataOfferLiveAzureBlobForm,
+  dataOfferLiveAzureBlobSchema
+} from '@/app/(authenticated)/data-offers/create/components/data-offer-live-azure-blob-form';
 
 export const dataOfferLiveSchema = z.object({
   offerType: z.literal('LIVE' satisfies DataOfferType),
   live: z.discriminatedUnion('offerLiveType', [
     dataOfferLiveCustomSchema,
     dataOfferLiveHttpSchema,
+    dataOfferLiveAzureBlobSchema,
   ]),
 });
 

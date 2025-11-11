@@ -30,6 +30,13 @@ export const useInitiateTransferForm = () => {
     transferPropertiesJson: '{\n}',
   };
 
+  const defaultAzureBlob: InitiateTransferFormValue = {
+    transferType: 'AZURE_BLOB',
+    dataAddressJson: '{\n}',
+    customTransferType: '',
+    transferPropertiesJson: '{\n}',
+  };
+
   return {
     form: useForm<InitiateTransferFormValue>({
       mode: 'onTouched',
@@ -37,6 +44,7 @@ export const useInitiateTransferForm = () => {
       defaultValues: {
         ...defaultCustom,
         ...defaultHttp,
+        ...defaultAzureBlob,
       },
     }),
     schema: initiateTransferFormSchema,

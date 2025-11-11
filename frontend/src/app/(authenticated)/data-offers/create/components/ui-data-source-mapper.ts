@@ -21,9 +21,7 @@ import {
   UiHttpAuthType,
   UiHttpOauth2AuthType,
 } from '@sovity.de/edc-client';
-import {
-  DataOfferLiveAzureBlobFormValue
-} from "@/app/(authenticated)/data-offers/create/components/data-offer-live-azure-blob-form";
+import {DataOfferLiveAzureBlobFormValue} from '@/app/(authenticated)/data-offers/create/components/data-offer-live-azure-blob-form';
 
 export const buildUiDataSource = (
   formValue: DataOfferTypeFormValue,
@@ -56,6 +54,8 @@ export const buildUiDataSourceLive = (
     return buildCustomDataSource(formValue.live);
   } else if (formValue.live.offerLiveType === 'HTTP') {
     return buildHttpDataSource(formValue.live);
+  } else if (formValue.live.offerLiveType === 'AZURE_BLOB') {
+    return buildAzureBlobDataSource(formValue.live);
   } else {
     throw new Error('Unknown data source type');
   }

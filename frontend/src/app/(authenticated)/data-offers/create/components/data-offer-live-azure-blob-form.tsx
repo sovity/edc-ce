@@ -12,14 +12,11 @@ import {type DataOfferLiveType} from '@/app/(authenticated)/data-offers/create/c
 import {jsonString} from '@/lib/utils/zod/schema-utils';
 import {useTranslations} from 'next-intl';
 import {type UseFormReturn} from 'react-hook-form';
-import {Button} from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-} from "@/components/ui/dialog";
+import {Button} from '@/components/ui/button';
+import {Dialog, DialogContent} from '@/components/ui/dialog';
 import {z} from 'zod';
-import {useEffect, useState} from "react";
-import AzureBlobSelector from "@/components/azure-blob-selector/azure-blob-selector";
+import {useEffect, useState} from 'react';
+import AzureBlobSelector from '@/components/azure-blob-selector/azure-blob-selector';
 
 export const dataOfferLiveAzureBlobSchema = z.object({
   offerLiveType: z.literal('AZURE_BLOB' satisfies DataOfferLiveType),
@@ -31,9 +28,9 @@ export type DataOfferLiveAzureBlobFormValue = z.infer<
 >;
 
 export const DataOfferLiveAzureBlobForm = ({
-                                          form,
-                                          formKeyDataOfferTypeLive,
-                                        }: {
+  form,
+  formKeyDataOfferTypeLive,
+}: {
   form: UseFormReturn<any>;
   formKeyDataOfferTypeLive: string;
 }) => {
@@ -41,7 +38,7 @@ export const DataOfferLiveAzureBlobForm = ({
 
   const [isAzureOpen, setIsAzureOpen] = useState(false);
   const [selectionAllowed, setSelectionAllowed] = useState(false);
-  const [azureDataAddress, setAzureDataAddress] = useState("");
+  const [azureDataAddress, setAzureDataAddress] = useState('');
 
   const fieldKey = (key: string): string =>
     formKeyDataOfferTypeLive === ''
@@ -53,40 +50,38 @@ export const DataOfferLiveAzureBlobForm = ({
   ) as DataOfferLiveAzureBlobFormValue;
 
   useEffect(() => {
-    console.log(`azureDataAddress: ${azureDataAddress}`);
     if (azureDataAddress) {
       form.setValue(fieldKey('dataAddressAzure'), azureDataAddress);
     }
   }, [azureDataAddress]);
 
   return (
-      value.offerLiveType === 'AZURE_BLOB' && (
-        <>
-          <TextareaField
-            control={form.control}
-            name={fieldKey('dataAddressAzure')}
-            placeholder='"dataAddress": { "type": ... }'
-            label={t('Pages.DataOfferCreate.dataSourceTypeAzureBlob')}
-          />
-          <Button
-            dataTestId={'btn-open-azure-blob-select'}
-            type="button"
-            onClick={() => setIsAzureOpen(true)}
-          >
-            Select Blob
-          </Button>
+    value.offerLiveType === 'AZURE_BLOB' && (
+      <>
+        <TextareaField
+          control={form.control}
+          name={fieldKey('dataAddressAzure')}
+          placeholder='"dataAddress": { "type": ... }'
+          label={t('Pages.DataOfferCreate.dataSourceTypeAzureBlob')}
+        />
+        <Button
+          dataTestId={'btn-open-azure-blob-select'}
+          type="button"
+          onClick={() => setIsAzureOpen(true)}>
+          Select Blob
+        </Button>
 
-          <Dialog open={isAzureOpen} onOpenChange={setIsAzureOpen}>
-            <DialogContent className="w-auto">
-              <AzureBlobSelector
-                setSelectionAllowed={setSelectionAllowed}
-                setAzureDataAddress={setAzureDataAddress}
-                selectionAllowed={selectionAllowed}
-                setIsOpen={setIsAzureOpen}
-              />
-            </DialogContent>
-          </Dialog>
-        </>
-      )
+        <Dialog open={isAzureOpen} onOpenChange={setIsAzureOpen}>
+          <DialogContent className="w-auto">
+            <AzureBlobSelector
+              setSelectionAllowed={setSelectionAllowed}
+              setAzureDataAddress={setAzureDataAddress}
+              selectionAllowed={selectionAllowed}
+              setIsOpen={setIsAzureOpen}
+            />
+          </DialogContent>
+        </Dialog>
+      </>
+    )
   );
 };

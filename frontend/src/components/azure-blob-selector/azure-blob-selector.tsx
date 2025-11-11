@@ -6,15 +6,14 @@
  * SPDX-License-Identifier: Elastic-2.0
  */
 import React, {useEffect, useState} from 'react';
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import {useForm} from 'react-hook-form';
+import {z} from 'zod';
+import {zodResolver} from '@hookform/resolvers/zod';
 import {
   DialogHeader,
   DialogTitle,
-  DialogDescription,
   DialogFooter,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 import {
   Form,
   FormField,
@@ -22,25 +21,26 @@ import {
   FormLabel,
   FormControl,
   FormMessage,
-} from "@/components/ui/form";
-import AzureBlobStorageService from "./azure-blob-storage-service";
-import {Input} from "@/components/ui/input";
-import {Button} from "@/components/ui/button";
-import {Textarea} from "@/components/ui/textarea";
+} from '@/components/ui/form';
+import AzureBlobStorageService from './azure-blob-storage-service';
+import {Input} from '@/components/ui/input';
+import {Button} from '@/components/ui/button';
+import {Textarea} from '@/components/ui/textarea';
 
 interface SelectorProps {
-  setSelectionAllowed: (selectionAllowed: boolean) => void,
-  setAzureDataAddress: (json: string) => void,
-  selectionAllowed: boolean,
-  setIsOpen: (isOpen: boolean) => void
+  setSelectionAllowed: (selectionAllowed: boolean) => void;
+  setAzureDataAddress: (json: string) => void;
+  selectionAllowed: boolean;
+  setIsOpen: (isOpen: boolean) => void;
 }
 
 const azureBlobSchema = z.object({
-  storageSasToken: z.string().min(1, "Storage SAS Token is required"),
-  storageAccountName: z.string().min(1, "Storage Account Name is required"),
-  sasToken: z.string().min(1, "SAS Token is required"),
-  containerName: z.string().min(1, "Container Name is required"),
-  blobName: z.string().min(1, "Blob Name is required"),
+  storageSasToken: z.string().min(1, 'Storage SAS Token is required'),
+  storageAccountName: z.string().min(1, 'Storage Account Name is required'),
+  containerSasToken: z.string().min(1, 'Container SAS Token is required'),
+  containerName: z.string().min(1, 'Container Name is required'),
+  blobName: z.string().min(1, 'Blob Name is required'),
+  azureStorageKeyName: z.string().min(1, 'Azure Storage Key Name is required'),
 });
 
 type AzureBlobFormData = z.infer<typeof azureBlobSchema>;
@@ -53,46 +53,48 @@ interface SelectorProps {
 }
 
 export const AzureBlobSelector = ({
-                                    setSelectionAllowed,
-                                    setAzureDataAddress,
-                                    selectionAllowed,
-                                    setIsOpen,
-                                  }: SelectorProps) => {
+  setSelectionAllowed,
+  setAzureDataAddress,
+  selectionAllowed,
+  setIsOpen,
+}: SelectorProps) => {
   const [containers, setContainers] = useState<string[]>([]);
   const [blobs, setBlobs] = useState<string[]>([]);
 
   const form = useForm<AzureBlobFormData>({
     resolver: zodResolver(azureBlobSchema),
     defaultValues: {
-      storageSasToken: "",
-      storageAccountName: "",
-      sasToken: "",
-      containerName: "",
-      blobName: "",
+      storageSasToken: '',
+      storageAccountName: '',
+      containerSasToken: '',
+      containerName: '',
+      blobName: '',
+      azureStorageKeyName: '',
     },
   });
 
-  const { watch } = form;
-  const storageSasToken = watch("storageSasToken");
-  const storageAccountName = watch("storageAccountName");
-  const sasToken = watch("sasToken");
-  const containerName = watch("containerName");
-  const blobName = watch("blobName");
+  const {watch} = form;
+  const storageSasToken = watch('storageSasToken');
+  const storageAccountName = watch('storageAccountName');
+  const containerSasToken = watch('containerSasToken');
+  const containerName = watch('containerName');
+  const blobName = watch('blobName');
+  const azureStorageKeyName = watch('azureStorageKeyName');
 
   // --- Backend calls ---
   const receiveContainers = async () => {
     const containerNames = await AzureBlobStorageService.getContainers(
       storageSasToken,
-      storageAccountName
+      storageAccountName,
     );
     setContainers(containerNames);
   };
 
   const receiveBlobs = async () => {
     const blobNames = await AzureBlobStorageService.getBlobs(
-      sasToken,
+      containerSasToken,
       containerName,
-      storageAccountName
+      storageAccountName,
     );
     setBlobs(blobNames);
   };
@@ -100,11 +102,11 @@ export const AzureBlobSelector = ({
   // --- Submit handler ---
   const onSubmit = (values: AzureBlobFormData) => {
     const obj = {
-      type: "AzureStorage",
+      type: 'AzureStorage',
       account: values.storageAccountName,
       container: values.containerName,
       blobName: values.blobName,
-      keyName: "key1",
+      keyName: values.azureStorageKeyName,
     };
     setAzureDataAddress(JSON.stringify(obj));
     setIsOpen(false);
@@ -115,31 +117,48 @@ export const AzureBlobSelector = ({
     const allFilled =
       storageSasToken &&
       storageAccountName &&
-      sasToken &&
+      containerSasToken &&
       containerName &&
-      blobName;
+      blobName &&
+      azureStorageKeyName;
     setSelectionAllowed(!!allFilled);
   }, [
     storageSasToken,
     storageAccountName,
-    sasToken,
+    containerSasToken,
     containerName,
     blobName,
     setSelectionAllowed,
+    azureStorageKeyName,
   ]);
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-4"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <DialogHeader>
           <DialogTitle>Select Azure Blob</DialogTitle>
         </DialogHeader>
 
+        {/* Azure Storage Key Name */}
+        <FormField
+          control={form.control}
+          name="azureStorageKeyName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Azure Storage Key Name</FormLabel>
+              <FormControl>
+                <Input placeholder="Azure Storage Key Name" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* Divider */}
+        <hr className="border-t border-muted my-4" />
+
         {/* Storage SAS Token + Account Name */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <FormField
             control={form.control}
             name="storageSasToken"
@@ -169,7 +188,7 @@ export const AzureBlobSelector = ({
         </div>
 
         {/* List Containers */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="space-y-2">
           <Button
             type="button"
             dataTestId="btn-receive-containers"
@@ -178,24 +197,36 @@ export const AzureBlobSelector = ({
           >
             List Containers
           </Button>
-          <Textarea
-            placeholder="Available Containers"
-            className="col-span-2"
-            disabled
-            value={containers.join("\n")}
-          />
+          {containers.length > 0 && (
+            <ul className="border rounded-md divide-y max-h-40 overflow-auto">
+              {containers.map((name) => (
+                <li
+                  key={name}
+                  className={`p-2 cursor-pointer hover:bg-muted ${
+                    containerName === name ? 'bg-muted font-semibold' : ''
+                  }`}
+                  onClick={() => form.setValue('containerName', name)}
+                >
+                  {name}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
+        {/* Divider */}
+        <hr className="border-t border-muted my-4" />
+
         {/* SAS Token + Container Name */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <FormField
             control={form.control}
-            name="sasToken"
+            name="containerSasToken"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>SAS Token</FormLabel>
+                <FormLabel>Container SAS Token</FormLabel>
                 <FormControl>
-                  <Input placeholder="SAS Token" {...field} />
+                  <Input placeholder="Container SAS Token" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -208,7 +239,12 @@ export const AzureBlobSelector = ({
               <FormItem>
                 <FormLabel>Container Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Container Name" {...field} />
+                  <Input
+                    placeholder="Container Name"
+                    {...field}
+                    value={field.value}
+                    readOnly
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -217,24 +253,36 @@ export const AzureBlobSelector = ({
         </div>
 
         {/* List Blobs */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="space-y-2">
           <Button
             type="button"
             dataTestId="btn-receive-blobs"
             disabled={
-              !sasToken.length || !containerName.length || !storageAccountName.length
+              !containerSasToken.length || !containerName.length || !storageAccountName.length
             }
             onClick={receiveBlobs}
           >
             List Blobs
           </Button>
-          <Textarea
-            placeholder="Blobs"
-            className="col-span-2"
-            disabled
-            value={blobs.join("\n")}
-          />
+          {blobs.length > 0 && (
+            <ul className="border rounded-md divide-y max-h-40 overflow-auto">
+              {blobs.map((name) => (
+                <li
+                  key={name}
+                  className={`p-2 cursor-pointer hover:bg-muted ${
+                    blobName === name ? 'bg-muted font-semibold' : ''
+                  }`}
+                  onClick={() => form.setValue('blobName', name)}
+                >
+                  {name}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
+
+        {/* Divider */}
+        <hr className="border-t border-muted my-4" />
 
         {/* Blob Name */}
         <FormField
@@ -244,7 +292,7 @@ export const AzureBlobSelector = ({
             <FormItem>
               <FormLabel>Blob Name</FormLabel>
               <FormControl>
-                <Input placeholder="Blob Name" {...field} />
+                <Input placeholder="Blob Name" {...field} readOnly />
               </FormControl>
               <FormMessage />
             </FormItem>

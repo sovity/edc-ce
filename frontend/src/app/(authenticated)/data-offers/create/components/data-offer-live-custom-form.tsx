@@ -24,9 +24,9 @@ export type DataOfferLiveCustomFormValue = z.infer<
 >;
 
 export const DataOfferLiveCustomForm = ({
-                                          form,
-                                          formKeyDataOfferTypeLive,
-                                        }: {
+  form,
+  formKeyDataOfferTypeLive,
+}: {
   form: UseFormReturn<any>;
   formKeyDataOfferTypeLive: string;
 }) => {
@@ -42,16 +42,16 @@ export const DataOfferLiveCustomForm = ({
   ) as DataOfferLiveCustomFormValue;
 
   return (
-      value.offerLiveType === 'CUSTOM_JSON' && (
-        <>
-          {/* Custom Data Address JSON */}
-          <TextareaField
-            control={form.control}
-            name={fieldKey('dataAddressJson')}
-            placeholder='{"https://w3id.org/edc/v0.0.1/ns/type": "HttpData", ...}'
-            label={t('Pages.DataOfferCreate.dataSourceTypeCustom')}
-          />
-        </>
-      )
+    value.offerLiveType === 'CUSTOM_JSON' && (
+      <>
+        {/* Custom Data Address JSON */}
+        <TextareaField
+          control={form.control}
+          name={fieldKey('dataAddressJson')}
+          placeholder='{"https://w3id.org/edc/v0.0.1/ns/type": "HttpData", ...}'
+          label={t('Pages.DataOfferCreate.dataSourceTypeCustom')}
+        />
+      </>
+    )
   );
 };

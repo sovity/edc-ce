@@ -37,7 +37,7 @@ export const InitiateTransferAzureBlobForm = ({
   const value = form.watch();
 
   return (
-    value.transferType === 'CUSTOM_JSON' && (
+    value.transferType === 'AZURE_BLOB' && (
       <>
         {/* Custom Transfer Type */}
         <InputField

@@ -17,7 +17,7 @@ export type InitiateTransferType = 'HTTP' | 'CUSTOM_JSON' | 'AZURE_BLOB';
 export const initiateTransferFormSchema = z.discriminatedUnion('transferType', [
   initiateTransferCustomSchema,
   initiateTransferHttpSchema,
-  initiateTransferAzureBlobSchema
+  initiateTransferAzureBlobSchema,
 ]);
 
 export type InitiateTransferFormValue = z.infer<

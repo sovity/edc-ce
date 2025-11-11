@@ -5,33 +5,46 @@
  *
  * SPDX-License-Identifier: Elastic-2.0
  */
-import {BlobServiceClient} from "@azure/storage-blob";
+import {BlobServiceClient} from '@azure/storage-blob';
 
 class AzureBlobStorageService {
+  public static async getContainers(
+    sasToken: string,
+    storageAccountName: string,
+  ): Promise<string[]> {
+    const sasUrl =
+      'https://' + storageAccountName + '.blob.core.windows.net?' + sasToken;
+    const blobServiceClient = new BlobServiceClient(sasUrl);
 
-    public static async getContainers(sasToken: string, storageAccountName: string): Promise<string[]> {
-        const sasUrl = 'https://' + storageAccountName + '.blob.core.windows.net?' + sasToken;
-        const blobServiceClient = new BlobServiceClient(sasUrl);
+    const containerNames: string[] = [];
+    for await (const containerItem of blobServiceClient.listContainers()) {
+      containerNames.push(containerItem.name);
+    }
+    return containerNames;
+  }
 
-        const containerNames: string[] = [];
-        for await (const containerItem of blobServiceClient.listContainers()) {
-            containerNames.push(containerItem.name);
-        }
-        return containerNames;
+  public static async getBlobs(
+    sasToken: string,
+    containerName: string,
+    storageAccountName: string,
+  ): Promise<string[]> {
+    const containerUrl =
+      'https://' +
+      storageAccountName +
+      '.blob.core.windows.net/' +
+      containerName +
+      '?' +
+      sasToken;
+    const blobServiceClient = new BlobServiceClient(containerUrl);
+    const containerClient = blobServiceClient.getContainerClient('');
+
+    const blobList = [];
+    for await (const blob of containerClient.listBlobsFlat()) {
+      blobList.push(blob.name);
     }
 
-    public static async getBlobs(sasToken: string, containerName: string, storageAccountName: string): Promise<string[]> {
-        const containerUrl = 'https://' + storageAccountName + '.blob.core.windows.net/' + containerName + '?' + sasToken;
-        const blobServiceClient = new BlobServiceClient(containerUrl);
-        const containerClient = blobServiceClient.getContainerClient('');
-
-        const blobList = [];
-        for await (const blob of containerClient.listBlobsFlat()) {
-            blobList.push(blob.name);
-        }
-
-        return blobList;
-    }
+    return blobList;
+  }
 }
 
 export default AzureBlobStorageService;
