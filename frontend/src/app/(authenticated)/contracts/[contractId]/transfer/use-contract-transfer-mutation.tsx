@@ -85,6 +85,20 @@ const buildTransferRequest = ({
       >,
     };
   }
+  if (transferType === 'AZURE_BLOB') {
+    return {
+      type: 'CUSTOM',
+      contractAgreementId,
+      customTransferType: formValue.customTransferType,
+      customTransferPrivateProperties: JSON.parse(
+        formValue.transferPropertiesJson,
+      ) as Record<string, string>,
+      customDataSinkProperties: JSON.parse(formValue.dataAddressJson) as Record<
+        string,
+        string
+      >,
+    };
+  }
   if (transferType === 'HTTP') {
     // HTTP PUSH
     return {
