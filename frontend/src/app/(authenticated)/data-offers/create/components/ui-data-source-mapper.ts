@@ -21,6 +21,7 @@ import {
   UiHttpAuthType,
   UiHttpOauth2AuthType,
 } from '@sovity.de/edc-client';
+import {type DataOfferLiveAzureStorageFormValue} from './data-offer-live-azure-storage-form';
 
 export const buildUiDataSource = (
   formValue: DataOfferTypeFormValue,
@@ -53,6 +54,8 @@ export const buildUiDataSourceLive = (
     return buildCustomDataSource(formValue.live);
   } else if (formValue.live.offerLiveType === 'HTTP') {
     return buildHttpDataSource(formValue.live);
+  } else if (formValue.live.offerLiveType === 'AZURE_STORAGE') {
+    return buildAzureStorageDataSource(formValue.live);
   } else {
     throw new Error('Unknown data source type');
   }
@@ -95,6 +98,20 @@ const buildHttpDataSource = (
       enablePathParameterization: formValue.httpPathParameterization,
       enableQueryParameterization: formValue.httpQueryParamsParameterization,
       enableBodyParameterization: formValue.httpRequestBodyParameterization,
+    },
+  };
+};
+
+const buildAzureStorageDataSource = (
+  formValue: DataOfferLiveAzureStorageFormValue,
+): UiDataSource => {
+  return {
+    type: 'AZURE_STORAGE',
+    azureStorage: {
+      blobName: formValue.blobName,
+      containerName: formValue.containerName,
+      storageAccountName: formValue.storageAccountName,
+      accountKey: formValue.accountKey,
     },
   };
 };

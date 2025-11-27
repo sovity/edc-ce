@@ -14,23 +14,23 @@ import type {PolicyDefinitionDto} from '@sovity.de/edc-client';
 export interface PolicyDefinitionMapped {
   policyDefinitionId: string;
   errors: string[];
-  expression: PolicyExpressionMapped;
-  jsonLd: string;
+  policyExpression: PolicyExpressionMapped;
+  policyJsonLd: string;
 }
 
 export const buildPolicyDefinitionMapped = (
   policyDefinition: PolicyDefinitionDto,
   policyContext: PolicyContext,
 ): PolicyDefinitionMapped => {
-  const expression =
+  const policyExpression =
     policyContext.policyExpressionMapper.buildPolicyExpressionMapped(
       policyDefinition.policy.expression!,
     );
 
   return {
     policyDefinitionId: policyDefinition.policyDefinitionId,
+    policyExpression,
+    policyJsonLd: policyDefinition.policy.policyJsonLd,
     errors: policyDefinition.policy.errors,
-    expression,
-    jsonLd: policyDefinition.policy.policyJsonLd,
   };
 };

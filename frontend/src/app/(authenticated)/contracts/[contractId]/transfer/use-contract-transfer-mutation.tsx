@@ -84,8 +84,7 @@ const buildTransferRequest = ({
         string
       >,
     };
-  }
-  if (transferType === 'HTTP') {
+  } else if (transferType === 'HTTP') {
     // HTTP PUSH
     return {
       type: 'HTTP_DATA_PUSH',

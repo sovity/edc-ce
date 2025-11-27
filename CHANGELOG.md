@@ -2,6 +2,29 @@
 
 The versions of the sovity EDC CE are aligned with the sovity EDC EE.
 
+## [v16.3.0] - 2025-11-27
+
+### Overview
+
+Azure Blob Storage Support for transfers and enable JSON-LD input policy creation
+
+#### Minor Changes
+
+- Allow Azure Blob Storage to be selected as Data Source in transfers
+- Allow JSON-LD input for policy creation
+
+### Deployment Migration Notes
+
+_No special deployment migration steps required_
+
+#### Compatible Versions
+
+- EDC CE Backend: `ghcr.io/sovity/edc-ce:16.3.0`
+- EDC CE Frontend: `ghcr.io/sovity/edc-ce-ui:16.3.0`
+- PostgreSQL: `17`
+- Eclipse EDC Fork: [v0.11.1.3](https://github.com/sovity/core-edc/releases/tag/v0.11.1.3)
+- Tractus-X: `0.9.0`
+
 ## [v16.2.2] - 2025-11-11
 
 ### Overview

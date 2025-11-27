@@ -245,13 +245,9 @@ export const contractsPage = (
           const aValue = extractor(a) ?? '';
           const bValue = extractor(b) ?? '';
           if (aValue < bValue) {
-            return direction === SortByDirection.Descending
-              ? 1
-              : -1;
+            return direction === SortByDirection.Descending ? 1 : -1;
           } else if (aValue > bValue) {
-            return direction === SortByDirection.Descending
-              ? -1
-              : 1;
+            return direction === SortByDirection.Descending ? -1 : 1;
           } else {
             return 0;
           }

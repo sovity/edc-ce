@@ -28,6 +28,7 @@ import {
   type PolicyDefinitionDto,
   type PolicyDefinitionPage,
   type UiPolicyExpression,
+  type PolicyDefinitionCreateFromJsonLdDto,
 } from '@sovity.de/edc-client';
 import {TestPolicies} from './data/test-policies';
 
@@ -66,13 +67,13 @@ export const policyDefinitionIdAvailable = (
   };
 };
 
-export const getPolicyDefinitionByJsonLd = (jsonLd: string) =>
+export const getPolicyDefinitionFromJsonLd = (jsonLd: string) =>
   policyDefinitions.find((it) => it.policy.policyJsonLd === jsonLd)?.policy;
 
 export const createPolicyDefinition = (
   request: PolicyDefinitionCreateRequest,
 ): IdResponseDto => {
-  const expression: UiPolicyExpression = {
+  const policyExpression: UiPolicyExpression = {
     type: 'AND',
     expressions: (request.policy.constraints ?? []).map((it) => ({
       type: 'CONSTRAINT',
@@ -82,7 +83,7 @@ export const createPolicyDefinition = (
 
   return createPolicyDefinitionV2({
     policyDefinitionId: request.policyDefinitionId,
-    expression,
+    policyExpression,
   });
 };
 
@@ -92,9 +93,30 @@ export const createPolicyDefinitionV2 = (
   const newPolicyDefinition: PolicyDefinitionDto = {
     policyDefinitionId: request.policyDefinitionId,
     policy: {
-      expression: request.expression,
+      expression: request.policyExpression,
       errors: [],
       policyJsonLd: '{"example-policy-jsonld": true}',
+    },
+  };
+  policyDefinitions = [newPolicyDefinition, ...policyDefinitions];
+
+  return {
+    id: request.policyDefinitionId,
+    lastUpdatedDate: new Date(),
+  };
+};
+
+export const createPolicyDefinitionFromJsonLd = (
+  request: PolicyDefinitionCreateFromJsonLdDto,
+): IdResponseDto => {
+  const newPolicyDefinition: PolicyDefinitionDto = {
+    policyDefinitionId: request.policyDefinitionId,
+    policy: {
+      expression: {
+        type: 'EMPTY',
+      },
+      errors: [],
+      policyJsonLd: request.policyJsonLd,
     },
   };
   policyDefinitions = [newPolicyDefinition, ...policyDefinitions];

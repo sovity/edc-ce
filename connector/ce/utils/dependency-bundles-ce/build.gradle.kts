@@ -57,7 +57,6 @@ dependencyBundles.bundle(
     api(libs.edc.contractDefinitionApi)
     api(libs.edc.controlApiConfiguration)
     api(libs.edc.controlPlaneApi)
-    api(libs.edc.controlPlaneApiClient)
     api(libs.edc.controlPlaneContract)
     api(libs.edc.controlPlaneCore)
     api(libs.edc.dataPlaneSelectorCore)
@@ -91,15 +90,14 @@ dependencyBundles.bundle(
 
     // data-plane-selector
     api(libs.edc.dataPlaneSelectorCore)
-    api(libs.edc.dataPlaneSelectorApi)
 
     // Data Transfer
-    api(libs.edc.accesstokendataStoreSql)
     api(libs.edc.transferPullHttpDynamicReceiver)
     api(libs.edc.edrStoreCore)
     api(libs.edc.edrStoreReceiver)
     api(libs.edc.transferDataPlaneSignaling)
     api(libs.edc.azure.provisionBlob)
+    api(libs.edc.aws.validatorDataAddressS3)
 
     // Adds headers Edc-Bpn and Edc-Contract-Agreement-Id to proxied calls via EDRs
     // A Tractus-X dependency, yet compatible with vanilla EDCs for now
@@ -133,6 +131,7 @@ dependencyBundles.bundle(
     api(libs.edc.http)
     api(libs.edc.jsonLd)
     api(libs.edc.tokenCore)
+    api(libs.edc.aws.validatorDataAddressS3)
 }
 
 dependencyBundles.bundle(
@@ -269,6 +268,7 @@ dependencyBundles.bundle(
     api(libs.edc.transferDataPlaneSignaling)
     api(libs.edc.azure.provisionBlob)
     api(libs.tractus.jsonLdCore)
+    api(libs.tractus.emptyAssetSelector)
 
     // iatp
     api(libs.edc.identityDidCore)
@@ -315,7 +315,6 @@ dependencyBundles.bundle(
     api(libs.edc.identityDidWeb)
     api(libs.tractus.edcDataplaneProxyConsumerApi)
     api(libs.tractus.edrCore)
-    api(libs.tractus.jsonLdCore)
     api(libs.tractus.tokenRefreshApi)
     api(libs.tractus.tokenRefreshCore)
     api(libs.tractus.tokenrefreshHandler)
@@ -323,6 +322,7 @@ dependencyBundles.bundle(
 
     // sql
     api(libs.edc.edrIndexSql)
+    api(libs.edc.assetIndexSql)
 }
 
 dependencyBundles.bundle(

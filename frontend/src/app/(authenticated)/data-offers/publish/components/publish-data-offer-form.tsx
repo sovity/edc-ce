@@ -95,7 +95,7 @@ const PublishDataOfferForm = ({policies}: PublishDataOfferFormProps) => {
             selectPlaceholder={t('General.selectItems')}
             buildQueryKey={(searchText) =>
               queryKeys.assets.assetsPage({
-                searchText
+                searchText,
               })
             }
             loadItems={(searchText) =>

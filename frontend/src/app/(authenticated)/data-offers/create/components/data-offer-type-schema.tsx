@@ -12,7 +12,7 @@ import {dataOfferOnRequestSchema} from '@/app/(authenticated)/data-offers/create
 import {z} from 'zod';
 
 export type DataOfferType = 'LIVE' | 'ON_REQUEST' | 'UNCHANGED';
-export type DataOfferLiveType = 'HTTP' | 'CUSTOM_JSON';
+export type DataOfferLiveType = 'HTTP' | 'CUSTOM_JSON' | 'AZURE_STORAGE';
 
 export const dataOfferTypeSchema = z.discriminatedUnion('offerType', [
   z.object({

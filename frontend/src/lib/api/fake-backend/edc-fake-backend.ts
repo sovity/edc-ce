@@ -23,6 +23,7 @@ import {
   IdResponseDtoToJSON,
   InitiateTransferRequestFromJSON,
   PolicyDefinitionCreateDtoFromJSON,
+  PolicyDefinitionCreateFromJsonLdDtoFromJSON,
   PolicyDefinitionCreateRequestFromJSON,
   PolicyDefinitionPageToJSON,
   TransferHistoryPageToJSON,
@@ -39,6 +40,8 @@ import {
   ContractsPageResultToJSON,
   AssetsPageRequestFromJSON,
   AssetsPageResultToJSON,
+  AzureStorageListContainersRequestFromJSON,
+  AzureStorageListBlobsRequestFromJSON,
 } from '@sovity.de/edc-client';
 import {
   assetIdAvailable,
@@ -75,6 +78,7 @@ import {createDataOffer} from './connector-fake-impl/data-offer-fake-service';
 import {
   createPolicyDefinition,
   createPolicyDefinitionV2,
+  createPolicyDefinitionFromJsonLd,
   deletePolicyDefinition,
   policyDefinitionIdAvailable,
   policyDefinitionPage,
@@ -132,7 +136,7 @@ export const EDC_FAKE_BACKEND: FetchAPI = async (
       return ok(DashboardPageToJSON(page));
     })
 
-        .url('ui/pages/asset-detail-page/*')
+    .url('ui/pages/asset-detail-page/*')
     .on('GET', (assetId) => {
       const page = getAssetById(assetId);
       return ok(UiAssetToJSON(page));
@@ -191,6 +195,13 @@ export const EDC_FAKE_BACKEND: FetchAPI = async (
       return ok(IdResponseDtoToJSON(created));
     })
 
+    .url('ui/pages/policy-page/create-policy-definition-json-ld')
+    .on('POST', () => {
+      const createRequest = PolicyDefinitionCreateFromJsonLdDtoFromJSON(body);
+      const created = createPolicyDefinitionFromJsonLd(createRequest);
+      return ok(IdResponseDtoToJSON(created));
+    })
+
     .url('ui/pages/policy-page/policy-definitions/*')
     .on('DELETE', (policyDefinitionId) => {
       const deleted = deletePolicyDefinition(policyDefinitionId);
@@ -243,14 +254,14 @@ export const EDC_FAKE_BACKEND: FetchAPI = async (
       return ok(UiContractNegotiationToJSON(contractNegotiation));
     })
 
-    .url('ui/pages/contract-agreement-page')
+    .url('ui/pages/contracts-page')
     .on('POST', () => {
       const pageQuery = body ? ContractsPageRequestFromJSON(body) : null;
       const page = contractsPage(pageQuery);
       return ok(ContractsPageResultToJSON(page));
     })
 
-    .url('ui/pages/contract-agreement-page/*')
+    .url('ui/pages/contract-detail-page/*')
     .on('GET', (contractAgreementId: string) => {
       return ok(contractAgreementPage(contractAgreementId));
     })
@@ -383,6 +394,27 @@ export const EDC_FAKE_BACKEND: FetchAPI = async (
     .on('DELETE', (groupId) => {
       const response = deleteBusinessPartnerGroup(groupId);
       return ok(response);
+    })
+
+    .url('ui/forms/azure-storage-select/containers')
+    .on('POST', () => {
+      console.log('body', body);
+      const request = AzureStorageListContainersRequestFromJSON(body);
+      return ok(
+        ['container1', 'container2', 'container3'].map(
+          (name) => `${request.storageAccountName}-${name}`,
+        ),
+      );
+    })
+
+    .url('ui/forms/azure-storage-select/blobs')
+    .on('POST', () => {
+      const request = AzureStorageListBlobsRequestFromJSON(body);
+      return ok(
+        ['blob1', 'blob2', 'blob3'].map(
+          (name) => `${request.containerName}-${name}`,
+        ),
+      );
     })
 
     .url('ui/build-info')

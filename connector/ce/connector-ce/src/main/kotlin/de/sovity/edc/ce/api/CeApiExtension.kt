@@ -22,6 +22,7 @@ import de.sovity.edc.ce.modules.policy_utils.always_true.AlwaysTruePolicyDefinit
 import de.sovity.edc.runtime.config.ConfigUtils
 import de.sovity.edc.runtime.simple_di.SimpleDi
 import de.sovity.edc.runtime.simple_di.SimpleDiExt.onInstanceCreatedRegisterEdcService
+import org.eclipse.edc.azure.blob.api.BlobStoreApi
 import org.eclipse.edc.connector.controlplane.contract.spi.negotiation.store.ContractNegotiationStore
 import org.eclipse.edc.connector.controlplane.contract.spi.offer.store.ContractDefinitionStore
 import org.eclipse.edc.connector.controlplane.policy.spi.store.PolicyDefinitionStore
@@ -129,6 +130,9 @@ class CeApiExtension : ServiceExtension {
     @Inject
     private lateinit var vault: Vault
 
+    @Inject
+    private lateinit var blobStoreApi: BlobStoreApi
+
     override fun initialize(context: ServiceExtensionContext) {
         val objectMapper = typeManager.getMapper(CoreConstants.JSON_LD)
         fixObjectMapperDateSerialization(objectMapper)
@@ -138,7 +142,8 @@ class CeApiExtension : ServiceExtension {
                 CeApiExtension::class.java.packageName,
                 "de.sovity.edc.ce.libs.mappers",
             )
-            .addClassesToInstantiate( // the order is important here
+            .addClassesToInstantiate(
+                // the order is important here
                 ExpressionExtractor::class.java,
                 OwnConnectorEndpointServiceImpl::class.java,
                 UiResourceImpl::class.java,
@@ -169,7 +174,8 @@ class CeApiExtension : ServiceExtension {
                 transferProcessStore,
                 typeTransformerRegistry,
                 objectMapper,
-                vault
+                vault,
+                blobStoreApi
             )
             .addInstance(contractAgreementService)
             .onInstanceCreatedRegisterEdcService(context)

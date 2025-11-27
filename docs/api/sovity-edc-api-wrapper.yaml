@@ -327,6 +327,24 @@ paths:
               schema:
                 $ref: '#/components/schemas/IdResponseDto'
       deprecated: true
+  /wrapper/ui/pages/policy-page/create-policy-definition-json-ld:
+    post:
+      tags:
+      - UI
+      description: Create a new Policy Definition from Policy JSON-LD
+      operationId: createPolicyDefinitionFromJsonLd
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PolicyDefinitionCreateFromJsonLdDto'
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponseDto'
   /wrapper/ui/v2/pages/policy-page/policy-definitions:
     post:
       tags:
@@ -799,6 +817,48 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IdAvailabilityResponse'
+  /wrapper/ui/forms/azure-storage-select/blobs:
+    post:
+      tags:
+      - UI
+      description: Lists all available Azure Storage Blobs for the given Storage Account
+        Name and Container
+      operationId: listAzureStorageBlobs
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AzureStorageListBlobsRequest'
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  /wrapper/ui/forms/azure-storage-select/containers:
+    post:
+      tags:
+      - UI
+      description: Lists all available Azure Storage Containers for the given Storage
+        Account Name
+      operationId: listAzureStorageContainers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AzureStorageListContainersRequest'
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
   /wrapper/ui/pages/vault-secrets/list-page:
     post:
       tags:
@@ -1075,6 +1135,7 @@ components:
       enum:
       - HTTP_DATA
       - ON_REQUEST
+      - AZURE_STORAGE
       - CUSTOM
     UiAssetCreateRequest:
       type: object
@@ -1232,6 +1293,9 @@ components:
         onRequest:
           $ref: '#/components/schemas/UiDataSourceOnRequest'
           description: Only for type ON_REQUEST
+        azureStorage:
+          $ref: '#/components/schemas/UiDataSourceAzureStorage'
+          description: Only for type AZURE_STORAGE
         customProperties:
           type: object
           additionalProperties:
@@ -1239,6 +1303,31 @@ components:
           description: For all types. Custom Data Address Properties.
       required:
       - type
+    UiDataSourceAzureStorage:
+      type: object
+      description: AZURE_STORAGE type Data Source.
+      properties:
+        storageAccountName:
+          type: string
+          description: Storage Account Name
+          example: storage-account
+        accountKey:
+          type: string
+          description: Vault Key for the Storage Account Secret
+          example: key-1
+        containerName:
+          type: string
+          description: Container Name of the Blob Storage
+          example: container
+        blobName:
+          type: string
+          description: Blob Name
+          example: blob
+      required:
+      - accountKey
+      - blobName
+      - containerName
+      - storageAccountName
     UiDataSourceHttpData:
       type: object
       description: HTTP_DATA type Data Source.
@@ -2257,12 +2346,27 @@ components:
           description: The asset to create
         publishType:
           $ref: '#/components/schemas/DataOfferPublishType'
+          description: The data offer publishing type
+        policyCreateType:
+          $ref: '#/components/schemas/DataOfferPolicyCreateType'
+          description: The policy creation type. Only required if publishType is PUBLISH_RESTRICTED.
         policyExpression:
           $ref: '#/components/schemas/UiPolicyExpression'
-          description: Policy Expression. Only relevant if policyType is 'RESTRICTED'
+          description: Tree-structured policy expression. Only required if publishType
+            is PUBLISH_RESTRICTED and policyCreateType is POLICY_EXPRESSION.
+        policyJsonLd:
+          type: string
+          description: ODRL policy as JSON-LD. Only required if publishType is PUBLISH_RESTRICTED
+            and policyCreateType is POLICY_JSON_LD.
       required:
       - asset
       - publishType
+    DataOfferPolicyCreateType:
+      type: string
+      description: The policy creation type
+      enum:
+      - POLICY_EXPRESSION
+      - POLICY_JSON_LD
     DataOfferPublishType:
       type: string
       description: |
@@ -2300,6 +2404,19 @@ components:
           description: Conjunction of required constraints
           items:
             $ref: '#/components/schemas/UiPolicyConstraint'
+    PolicyDefinitionCreateFromJsonLdDto:
+      type: object
+      description: Create a Policy Definition
+      properties:
+        policyDefinitionId:
+          type: string
+          description: Policy Definition ID
+        policyJsonLd:
+          type: string
+          description: ODRL policy as JSON-LD
+      required:
+      - policyDefinitionId
+      - policyJsonLd
     PolicyDefinitionCreateDto:
       type: object
       description: Create a Policy Definition
@@ -2307,12 +2424,12 @@ components:
         policyDefinitionId:
           type: string
           description: Policy Definition ID
-        expression:
+        policyExpression:
           $ref: '#/components/schemas/UiPolicyExpression'
-          description: Policy Expression
+          description: Tree-structured policy expression
       required:
-      - expression
       - policyDefinitionId
+      - policyExpression
     VaultSecretCreateSubmit:
       type: object
       description: Submit Request for creating a new User Managed Vault Secret
@@ -3034,6 +3151,36 @@ components:
           type: boolean
       required:
       - id
+    AzureStorageListBlobsRequest:
+      type: object
+      description: Azure List Blobs Request
+      properties:
+        storageAccountName:
+          type: string
+          description: Storage Account Name
+        containerName:
+          type: string
+          description: Container Name
+        storageAccountVaultKey:
+          type: string
+          description: Location of the Storage Account Secret in the Vault
+      required:
+      - containerName
+      - storageAccountName
+      - storageAccountVaultKey
+    AzureStorageListContainersRequest:
+      type: object
+      description: Azure List Containers Request
+      properties:
+        storageAccountName:
+          type: string
+          description: Storage Account Name
+        storageAccountVaultKey:
+          type: string
+          description: Location of the Storage Account Secret in the Vault
+      required:
+      - storageAccountName
+      - storageAccountVaultKey
     VaultSecretListPageEntry:
       type: object
       description: List Page Entry for the List Page of User Managed Vault Secrets

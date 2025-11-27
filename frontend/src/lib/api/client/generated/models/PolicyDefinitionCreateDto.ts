@@ -53,11 +53,11 @@ export interface PolicyDefinitionCreateDto {
      */
     policyDefinitionId: string;
     /**
-     * Policy Expression
+     * Tree-structured policy expression
      * @type {UiPolicyExpression}
      * @memberof PolicyDefinitionCreateDto
      */
-    expression: UiPolicyExpression;
+    policyExpression: UiPolicyExpression;
 }
 
 /**
@@ -65,7 +65,7 @@ export interface PolicyDefinitionCreateDto {
  */
 export function instanceOfPolicyDefinitionCreateDto(value: any): value is PolicyDefinitionCreateDto {
     if (!('policyDefinitionId' in value) || value['policyDefinitionId'] === undefined) return false;
-    if (!('expression' in value) || value['expression'] === undefined) return false;
+    if (!('policyExpression' in value) || value['policyExpression'] === undefined) return false;
     return true;
 }
 
@@ -80,7 +80,7 @@ export function PolicyDefinitionCreateDtoFromJSONTyped(json: any, ignoreDiscrimi
     return {
         
         'policyDefinitionId': json['policyDefinitionId'],
-        'expression': UiPolicyExpressionFromJSON(json['expression']),
+        'policyExpression': UiPolicyExpressionFromJSON(json['policyExpression']),
     };
 }
 
@@ -96,7 +96,7 @@ export function PolicyDefinitionCreateDtoToJSONTyped(value?: PolicyDefinitionCre
     return {
         
         'policyDefinitionId': value['policyDefinitionId'],
-        'expression': UiPolicyExpressionToJSON(value['expression']),
+        'policyExpression': UiPolicyExpressionToJSON(value['policyExpression']),
     };
 }
 

@@ -39,6 +39,7 @@
 export const DataSourceType = {
     HttpData: 'HTTP_DATA',
     OnRequest: 'ON_REQUEST',
+    AzureStorage: 'AZURE_STORAGE',
     Custom: 'CUSTOM'
 } as const;
 export type DataSourceType = typeof DataSourceType[keyof typeof DataSourceType];

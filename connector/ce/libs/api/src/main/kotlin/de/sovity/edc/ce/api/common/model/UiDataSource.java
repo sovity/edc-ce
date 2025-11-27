@@ -56,6 +56,12 @@ public class UiDataSource {
     private UiDataSourceOnRequest onRequest;
 
     @Schema(
+        description = "Only for type AZURE_STORAGE",
+        requiredMode = Schema.RequiredMode.NOT_REQUIRED
+    )
+    private UiDataSourceAzureStorage azureStorage;
+
+    @Schema(
         description = "For all types. Custom Data Address Properties.",
         requiredMode = Schema.RequiredMode.NOT_REQUIRED
     )

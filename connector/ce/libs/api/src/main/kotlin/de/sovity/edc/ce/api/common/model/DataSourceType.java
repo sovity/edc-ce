@@ -26,6 +26,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public enum DataSourceType {
     HTTP_DATA,
     ON_REQUEST,
+    AZURE_STORAGE,
     CUSTOM
 }
 

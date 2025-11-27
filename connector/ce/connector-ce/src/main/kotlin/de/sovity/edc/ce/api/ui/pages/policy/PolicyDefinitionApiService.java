@@ -10,6 +10,7 @@ package de.sovity.edc.ce.api.ui.pages.policy;
 
 import de.sovity.edc.ce.api.common.model.UiPolicyExpression;
 import de.sovity.edc.ce.api.ui.model.IdResponseDto;
+import de.sovity.edc.ce.api.ui.model.PolicyDefinitionCreateFromJsonLdDto;
 import de.sovity.edc.ce.api.ui.model.PolicyDefinitionCreateDto;
 import de.sovity.edc.ce.api.ui.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.ce.api.ui.model.PolicyDefinitionDto;
@@ -54,7 +55,14 @@ public class PolicyDefinitionApiService {
 
     @NotNull
     public IdResponseDto createPolicyDefinitionV2(PolicyDefinitionCreateDto request) {
-        var policyDefinition = buildPolicyDefinition(request.getPolicyDefinitionId(), request.getExpression());
+        var policyDefinition = buildPolicyDefinition(request.getPolicyDefinitionId(), request.getPolicyExpression());
+        policyDefinition = policyDefinitionService.create(policyDefinition).orElseThrow(ServiceException::new);
+        return new IdResponseDto(policyDefinition.getId());
+    }
+
+    @NotNull
+    public IdResponseDto createPolicyDefinitionFromJsonLd(PolicyDefinitionCreateFromJsonLdDto request) {
+        var policyDefinition = buildPolicyDefinition(request.getPolicyDefinitionId(), request.getPolicyJsonLd());
         policyDefinition = policyDefinitionService.create(policyDefinition).orElseThrow(ServiceException::new);
         return new IdResponseDto(policyDefinition.getId());
     }
@@ -79,6 +87,14 @@ public class PolicyDefinitionApiService {
 
     public PolicyDefinition buildPolicyDefinition(String id, UiPolicyExpression uiPolicyExpression) {
         var policy = policyMapper.buildPolicy(uiPolicyExpression);
+        return PolicyDefinition.Builder.newInstance()
+            .id(id)
+            .policy(policy)
+            .build();
+    }
+
+    public PolicyDefinition buildPolicyDefinition(String id, String jsonLd) {
+        var policy = policyMapper.buildPolicy(jsonLd);
         return PolicyDefinition.Builder.newInstance()
             .id(id)
             .policy(policy)

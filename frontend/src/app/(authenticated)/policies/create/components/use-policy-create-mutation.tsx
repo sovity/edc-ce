@@ -13,7 +13,10 @@ import {api} from '@/lib/api/client';
 import {useInvalidateId} from '@/lib/hooks/use-invalidate-id';
 import {queryKeys} from '@/lib/queryKeys';
 import {urls} from '@/lib/urls';
-import {type PolicyDefinitionCreateDto} from '@sovity.de/edc-client';
+import {
+  type PolicyDefinitionCreateDto,
+  type PolicyDefinitionCreateFromJsonLdDto,
+} from '@sovity.de/edc-client';
 import {useMutation} from '@tanstack/react-query';
 import {useTranslations} from 'next-intl';
 
@@ -23,10 +26,21 @@ export const usePolicyCreateMutation = () => {
   const t = useTranslations();
   const {toast} = useToast();
 
+  const mutationFn = async (
+    dto: PolicyDefinitionCreateDto | PolicyDefinitionCreateFromJsonLdDto,
+  ) => {
+    return 'policyExpression' in dto
+      ? await api.uiApi.createPolicyDefinitionV2({
+          policyDefinitionCreateDto: dto,
+        })
+      : await api.uiApi.createPolicyDefinitionFromJsonLd({
+          policyDefinitionCreateFromJsonLdDto: dto,
+        });
+  };
+
   return useMutation({
     mutationKey: ['createPolicy'],
-    mutationFn: async (policyDefinitionCreateDto: PolicyDefinitionCreateDto) =>
-      await api.uiApi.createPolicyDefinitionV2({policyDefinitionCreateDto}),
+    mutationFn,
     onSuccess: async ({id}) => {
       toast({
         title: t('General.success'),

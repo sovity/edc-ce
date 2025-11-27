@@ -84,6 +84,10 @@ object Prop {
         const val ALLOWED_DEST_TYPES: String = CTX + "allowedDestTypes"
         const val ALLOWED_TRANSFER_TYPES: String = CTX + "allowedTransferTypes"
         const val PUBLIC_API_URL: String = CTX + "publicApiUrl"
+        const val AZURE_BLOB_STORE_TYPE: String = "AzureStorage"
+        const val AZURE_ACCOUNT_NAME: String = "account"
+        const val AZURE_CONTAINER_NAME: String = "container"
+        const val AZURE_BLOB_NAME: String = "blobName"
 
         object Version07 {
             /**

@@ -1,0 +1,13 @@
+/*
+ * Copyright sovity GmbH and/or licensed to sovity GmbH under one or
+ * more contributor license agreements. You may not use this file except
+ * in compliance with the "Elastic License 2.0".
+ *
+ * SPDX-License-Identifier: Elastic-2.0
+ */
+export const POLICY_JSON_LD_INPUT_DEFAULT_VALUE = `{
+  "@type": "http://www.w3.org/ns/odrl/2/Set",
+  "http://www.w3.org/ns/odrl/2/permission": [],
+  "http://www.w3.org/ns/odrl/2/prohibition": [],
+  "http://www.w3.org/ns/odrl/2/obligation": []
+}`;

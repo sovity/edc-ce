@@ -23,12 +23,17 @@ import {
 import {useTranslations} from 'next-intl';
 import {type UseFormReturn} from 'react-hook-form';
 import {z} from 'zod';
+import {
+  DataOfferLiveAzureStorageForm,
+  dataOfferLiveAzureStorageSchema,
+} from './data-offer-live-azure-storage-form';
 
 export const dataOfferLiveSchema = z.object({
   offerType: z.literal('LIVE' satisfies DataOfferType),
   live: z.discriminatedUnion('offerLiveType', [
     dataOfferLiveCustomSchema,
     dataOfferLiveHttpSchema,
+    dataOfferLiveAzureStorageSchema,
   ]),
 });
 
@@ -67,16 +72,22 @@ export const DataOfferLiveForm = ({
               id: 'HTTP' satisfies DataOfferLiveType,
               label: t('Pages.DataOfferCreate.dataSourceTypeHttp'),
             },
+            {
+              id: 'AZURE_STORAGE' satisfies DataOfferLiveType,
+              label: t('Pages.DataOfferCreate.dataSourceTypeAzureStorage'),
+            },
           ]}
           placeholder={''}
         />
-
         <DataOfferLiveCustomForm
           form={form}
           formKeyDataOfferTypeLive={fieldKey('live')}
         />
-
         <DataOfferLiveHttpForm
+          form={form}
+          formKeyDataOfferTypeLive={fieldKey('live')}
+        />
+        <DataOfferLiveAzureStorageForm
           form={form}
           formKeyDataOfferTypeLive={fieldKey('live')}
         />

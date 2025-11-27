@@ -11,6 +11,7 @@ import * as React from 'react';
 import {cn} from '@/lib/utils/css-utils';
 import * as SelectPrimitive from '@radix-ui/react-select';
 import {Check, ChevronDown, ChevronUp} from 'lucide-react';
+import {LoadingSpinner} from '../loading-spinner';
 
 const Select = SelectPrimitive.Root;
 
@@ -22,8 +23,9 @@ const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> & {
     useChevronUp?: boolean;
+    isLoading?: boolean;
   }
->(({className, children, useChevronUp, ...props}, ref) => (
+>(({className, children, useChevronUp, isLoading, ...props}, ref) => (
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
@@ -33,7 +35,9 @@ const SelectTrigger = React.forwardRef<
     {...props}>
     {children}
     <SelectPrimitive.Icon asChild>
-      {useChevronUp ? (
+      {isLoading ? (
+        <LoadingSpinner size="sm" />
+      ) : useChevronUp ? (
         <ChevronUp className="h-4 w-4 opacity-50" />
       ) : (
         <ChevronDown className="h-4 w-4 opacity-50" />

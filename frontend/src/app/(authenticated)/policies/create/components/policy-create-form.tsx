@@ -20,20 +20,26 @@ import {
   usePolicyCreateForm,
 } from './use-policy-create-form';
 import {useTranslations} from 'next-intl';
+import {PolicyInputTypeSelect} from '@/components/policy-input/policy-input-type-select';
+import {PolicyJsonLdInput} from '@/components/policy-input/policy-json-ld-input';
 
 export const PolicyCreateForm = () => {
-  const mutation = usePolicyCreateMutation();
-  const {form} = usePolicyCreateForm();
   const t = useTranslations();
+  const {form} = usePolicyCreateForm();
+  const formValue = form.watch();
 
   // Supported Policies
   const policyContext = usePolicyContext();
-  const policyEditor = usePolicyEditor(policyContext, form, 'policy');
+  const policyEditor = usePolicyEditor(policyContext, form, 'policyExpression');
+
+  const mutation = usePolicyCreateMutation();
 
   async function onSubmit(values: PolicyCreateFormValue) {
     await mutation.mutateAsync({
       policyDefinitionId: values.policyDefinitionId,
-      expression: policyEditor.getUiPolicyExpression(),
+      ...(values.inputType === 'POLICY_EXPRESSION'
+        ? {policyExpression: policyEditor.getUiPolicyExpression()}
+        : {policyJsonLd: values.policyJsonLd}),
     });
   }
 
@@ -51,10 +57,23 @@ export const PolicyCreateForm = () => {
             isRequired
           />
         </FormGroup>
+
         <FormGroup
           title={t('Pages.PolicyCreate.expressionTitle')}
           subTitle={t('Pages.PolicyCreate.expressionSubtitle')}>
-          <PolicyEditor policyEditor={policyEditor} />
+          <PolicyInputTypeSelect
+            name={'inputType'}
+            formControl={form.control}
+          />
+
+          {formValue.inputType === 'POLICY_JSON_LD' ? (
+            <PolicyJsonLdInput
+              name={'policyJsonLd'}
+              formControl={form.control}
+            />
+          ) : (
+            <PolicyEditor policyEditor={policyEditor} />
+          )}
         </FormGroup>
         <div className="flex justify-end">
           <Button

@@ -36,6 +36,8 @@ import * as runtime from '../runtime';
 import type {
   AssetsPageRequest,
   AssetsPageResult,
+  AzureStorageListBlobsRequest,
+  AzureStorageListContainersRequest,
   BuildInfo,
   BusinessPartnerGroupCreateSubmit,
   BusinessPartnerGroupEditPage,
@@ -56,6 +58,7 @@ import type {
   InitiateCustomTransferRequest,
   InitiateTransferRequest,
   PolicyDefinitionCreateDto,
+  PolicyDefinitionCreateFromJsonLdDto,
   PolicyDefinitionCreateRequest,
   PolicyDefinitionPage,
   TransferHistoryPage,
@@ -77,6 +80,10 @@ import {
     AssetsPageRequestToJSON,
     AssetsPageResultFromJSON,
     AssetsPageResultToJSON,
+    AzureStorageListBlobsRequestFromJSON,
+    AzureStorageListBlobsRequestToJSON,
+    AzureStorageListContainersRequestFromJSON,
+    AzureStorageListContainersRequestToJSON,
     BuildInfoFromJSON,
     BuildInfoToJSON,
     BusinessPartnerGroupCreateSubmitFromJSON,
@@ -117,6 +124,8 @@ import {
     InitiateTransferRequestToJSON,
     PolicyDefinitionCreateDtoFromJSON,
     PolicyDefinitionCreateDtoToJSON,
+    PolicyDefinitionCreateFromJsonLdDtoFromJSON,
+    PolicyDefinitionCreateFromJsonLdDtoToJSON,
     PolicyDefinitionCreateRequestFromJSON,
     PolicyDefinitionCreateRequestToJSON,
     PolicyDefinitionPageFromJSON,
@@ -196,6 +205,10 @@ export interface CreateDataOfferRequest {
 
 export interface CreatePolicyDefinitionRequest {
     policyDefinitionCreateRequest?: PolicyDefinitionCreateRequest;
+}
+
+export interface CreatePolicyDefinitionFromJsonLdRequest {
+    policyDefinitionCreateFromJsonLdDto?: PolicyDefinitionCreateFromJsonLdDto;
 }
 
 export interface CreatePolicyDefinitionV2Request {
@@ -285,6 +298,14 @@ export interface IsContractDefinitionIdAvailableRequest {
 
 export interface IsPolicyIdAvailableRequest {
     policyId: string;
+}
+
+export interface ListAzureStorageBlobsRequest {
+    azureStorageListBlobsRequest?: AzureStorageListBlobsRequest;
+}
+
+export interface ListAzureStorageContainersRequest {
+    azureStorageListContainersRequest?: AzureStorageListContainersRequest;
 }
 
 export interface ListVaultSecretsPageRequest {
@@ -695,6 +716,35 @@ export class UIApi extends runtime.BaseAPI {
      */
     async createPolicyDefinition(requestParameters: CreatePolicyDefinitionRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<IdResponseDto> {
         const response = await this.createPolicyDefinitionRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Create a new Policy Definition from Policy JSON-LD
+     */
+    async createPolicyDefinitionFromJsonLdRaw(requestParameters: CreatePolicyDefinitionFromJsonLdRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<IdResponseDto>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/wrapper/ui/pages/policy-page/create-policy-definition-json-ld`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PolicyDefinitionCreateFromJsonLdDtoToJSON(requestParameters['policyDefinitionCreateFromJsonLdDto']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => IdResponseDtoFromJSON(jsonValue));
+    }
+
+    /**
+     * Create a new Policy Definition from Policy JSON-LD
+     */
+    async createPolicyDefinitionFromJsonLd(requestParameters: CreatePolicyDefinitionFromJsonLdRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<IdResponseDto> {
+        const response = await this.createPolicyDefinitionFromJsonLdRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -1487,6 +1537,64 @@ export class UIApi extends runtime.BaseAPI {
      */
     async isPolicyIdAvailable(requestParameters: IsPolicyIdAvailableRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<IdAvailabilityResponse> {
         const response = await this.isPolicyIdAvailableRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Lists all available Azure Storage Blobs for the given Storage Account Name and Container
+     */
+    async listAzureStorageBlobsRaw(requestParameters: ListAzureStorageBlobsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<string>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/wrapper/ui/forms/azure-storage-select/blobs`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: AzureStorageListBlobsRequestToJSON(requestParameters['azureStorageListBlobsRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     * Lists all available Azure Storage Blobs for the given Storage Account Name and Container
+     */
+    async listAzureStorageBlobs(requestParameters: ListAzureStorageBlobsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<string>> {
+        const response = await this.listAzureStorageBlobsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Lists all available Azure Storage Containers for the given Storage Account Name
+     */
+    async listAzureStorageContainersRaw(requestParameters: ListAzureStorageContainersRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<string>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/wrapper/ui/forms/azure-storage-select/containers`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: AzureStorageListContainersRequestToJSON(requestParameters['azureStorageListContainersRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     * Lists all available Azure Storage Containers for the given Storage Account Name
+     */
+    async listAzureStorageContainers(requestParameters: ListAzureStorageContainersRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<string>> {
+        const response = await this.listAzureStorageContainersRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

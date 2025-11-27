@@ -7,6 +7,7 @@
  */
 import {
   type DataOfferCreateRequest,
+  DataOfferPolicyCreateType,
   DataOfferPublishType,
   type IdResponseDto,
   UiCriterionLiteralType,
@@ -18,6 +19,7 @@ import {
 } from './contract-definition-fake-service';
 import {
   ALWAYS_TRUE_POLICY_ID,
+  createPolicyDefinitionFromJsonLd,
   createPolicyDefinitionV2,
   policyDefinitionIdAvailable,
 } from './policy-definition-fake-service';
@@ -36,7 +38,7 @@ const checkIfNoAlwaysTruePolicyExists = (): void => {
   if (policyDefinitionIdAvailable(ALWAYS_TRUE_POLICY_ID).available) {
     createPolicyDefinitionV2({
       policyDefinitionId: ALWAYS_TRUE_POLICY_ID,
-      expression: {
+      policyExpression: {
         type: 'EMPTY',
       },
     });
@@ -58,10 +60,20 @@ export const createDataOffer = (
     case DataOfferPublishType.DontPublish:
       return {id: commonId, lastUpdatedDate: new Date()};
     case DataOfferPublishType.PublishRestricted:
-      createPolicyDefinitionV2({
-        policyDefinitionId: commonId,
-        expression: request.policyExpression!,
-      });
+      switch (request.policyCreateType) {
+        case DataOfferPolicyCreateType.Expression:
+          createPolicyDefinitionV2({
+            policyDefinitionId: commonId,
+            policyExpression: request.policyExpression!,
+          });
+          break;
+        case DataOfferPolicyCreateType.JsonLd:
+          createPolicyDefinitionFromJsonLd({
+            policyDefinitionId: commonId,
+            policyJsonLd: request.policyJsonLd!,
+          });
+          break;
+      }
       accessPolicyId = commonId;
       contractPolicyId = commonId;
       break;

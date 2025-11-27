@@ -32,6 +32,13 @@
  */
 
 import { mapValues } from '../runtime';
+import type { UiDataSourceAzureStorage } from './UiDataSourceAzureStorage';
+import {
+    UiDataSourceAzureStorageFromJSON,
+    UiDataSourceAzureStorageFromJSONTyped,
+    UiDataSourceAzureStorageToJSON,
+    UiDataSourceAzureStorageToJSONTyped,
+} from './UiDataSourceAzureStorage';
 import type { DataSourceType } from './DataSourceType';
 import {
     DataSourceTypeFromJSON,
@@ -79,6 +86,12 @@ export interface UiDataSource {
      */
     onRequest?: UiDataSourceOnRequest;
     /**
+     * Only for type AZURE_STORAGE
+     * @type {UiDataSourceAzureStorage}
+     * @memberof UiDataSource
+     */
+    azureStorage?: UiDataSourceAzureStorage;
+    /**
      * For all types. Custom Data Address Properties.
      * @type {{ [key: string]: string; }}
      * @memberof UiDataSource
@@ -109,6 +122,7 @@ export function UiDataSourceFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'type': DataSourceTypeFromJSON(json['type']),
         'httpData': json['httpData'] == null ? undefined : UiDataSourceHttpDataFromJSON(json['httpData']),
         'onRequest': json['onRequest'] == null ? undefined : UiDataSourceOnRequestFromJSON(json['onRequest']),
+        'azureStorage': json['azureStorage'] == null ? undefined : UiDataSourceAzureStorageFromJSON(json['azureStorage']),
         'customProperties': json['customProperties'] == null ? undefined : json['customProperties'],
     };
 }
@@ -127,6 +141,7 @@ export function UiDataSourceToJSONTyped(value?: UiDataSource | null, ignoreDiscr
         'type': DataSourceTypeToJSON(value['type']),
         'httpData': UiDataSourceHttpDataToJSON(value['httpData']),
         'onRequest': UiDataSourceOnRequestToJSON(value['onRequest']),
+        'azureStorage': UiDataSourceAzureStorageToJSON(value['azureStorage']),
         'customProperties': value['customProperties'],
     };
 }

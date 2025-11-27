@@ -11,6 +11,7 @@ import {type DataOfferLiveFormValue} from '@/app/(authenticated)/data-offers/cre
 import {type DataOfferOnRequestFormValue} from '@/app/(authenticated)/data-offers/create/components/data-offer-on-request-form';
 import {type DataOfferTypeFormValue} from '@/app/(authenticated)/data-offers/create/components/data-offer-type-schema';
 import {type DataOfferCreateFormModel} from '@/app/(authenticated)/data-offers/create/components/data-offer-form-schema';
+import {POLICY_JSON_LD_INPUT_DEFAULT_VALUE} from '@/lib/policy-constants';
 import {type UiAsset} from '@sovity.de/edc-client';
 
 export const dataOfferFormValueForEdit = (
@@ -73,7 +74,7 @@ export const dataOfferFormValueForEdit = (
       medicationCount: asset.sphinxFields?.medicationCount,
       dosageCount: asset.sphinxFields?.dosageCount,
       clinicalSpecialty: asset.sphinxFields?.clinicalSpecialty,
-    }
+    },
   };
 };
 
@@ -117,7 +118,11 @@ export const dataOfferFormValueForCreate = (): DataOfferCreateFormModel => {
     sphinxFields: {},
     publishing: {
       mode: 'PUBLISH_UNRESTRICTED',
-      policy: {},
+      restrictedPublishing: {
+        inputType: 'POLICY_EXPRESSION',
+        policyExpression: {},
+        policyJsonLd: POLICY_JSON_LD_INPUT_DEFAULT_VALUE,
+      },
     } as DataOfferCreateFormModel['publishing'],
   };
 };

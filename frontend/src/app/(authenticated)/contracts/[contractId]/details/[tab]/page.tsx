@@ -30,8 +30,7 @@ export default function ContractDetailsPage({
 
   const pageQuery = useQueryWrapper(
     queryKeys.contracts.detailPage(contractId),
-    () =>
-      api.uiApi.contractDetailPage({contractAgreementId: contractId}),
+    () => api.uiApi.contractDetailPage({contractAgreementId: contractId}),
     {refetchInterval: 5000},
   );
 

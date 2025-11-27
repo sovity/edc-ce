@@ -14,7 +14,7 @@ import {
 } from '@sovity.de/edc-client';
 import {getAssetById} from './asset-fake-service';
 import {addContractAgreement} from './contract-agreement-fake-service';
-import {getPolicyDefinitionByJsonLd} from './policy-definition-fake-service';
+import {getPolicyDefinitionFromJsonLd} from './policy-definition-fake-service';
 
 const initiated: ContractNegotiationState = {
   name: 'INITIATED',
@@ -73,7 +73,7 @@ export const initiateContractNegotiation = (
       counterPartyId: request.counterPartyId,
       asset: getAssetById(request.assetId)!,
       contractSigningDate: new Date(),
-      contractPolicy: getPolicyDefinitionByJsonLd(request.policyJsonLd)!,
+      contractPolicy: getPolicyDefinitionFromJsonLd(request.policyJsonLd)!,
       terminationInformation: undefined,
       terminationStatus: 'ONGOING',
     });

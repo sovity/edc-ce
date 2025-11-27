@@ -24,6 +24,7 @@ import de.sovity.edc.ce.api.common.model.DataSourceType;
 import de.sovity.edc.ce.api.common.model.UiAssetCreateRequest;
 import de.sovity.edc.ce.api.common.model.UiAssetExtForSphinx;
 import de.sovity.edc.ce.api.common.model.UiDataSource;
+import de.sovity.edc.ce.api.common.model.UiDataSourceAzureStorage;
 import de.sovity.edc.ce.api.common.model.UiDataSourceHttpData;
 import de.sovity.edc.ce.api.common.model.UiDataSourceHttpDataMethod;
 import de.sovity.edc.ce.api.common.model.UiDataSourceOnRequest;
@@ -40,6 +41,7 @@ import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.Json;
 import jakarta.json.JsonObjectBuilder;
 import org.eclipse.edc.iam.oauth2.spi.Oauth2DataAddressSchema;
+import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -721,6 +723,45 @@ class AssetJsonLdBuilderTest {
 
         // assert
         assertCreateAssetJsonLdsEquals(actual, dummyBuildCreateAssetJsonLds(dataAddress, expectedProperties));
+    }
+
+    @Test
+    void test_create_azureStorage() {
+        // arrange
+        var dataSource = UiDataSource.builder()
+            .type(DataSourceType.AZURE_STORAGE)
+            .azureStorage(
+                UiDataSourceAzureStorage.builder()
+                    .accountKey("key")
+                    .storageAccountName("account")
+                    .containerName("container")
+                    .blobName("blob")
+                    .build()
+            ).build();
+
+        var uiAssetCreateRequest = UiAssetCreateRequest.builder()
+            .dataSource(dataSource)
+            .id(ASSET_ID)
+            .build();
+
+        var expectedDataAddress = Json.createObjectBuilder()
+            .add(Prop.TYPE, Prop.Edc.TYPE_DATA_ADDRESS)
+            .add(Prop.Edc.TYPE, Prop.Edc.AZURE_BLOB_STORE_TYPE)
+            .add(Prop.Edc.AZURE_ACCOUNT_NAME, "account")
+            .add(Prop.Edc.AZURE_CONTAINER_NAME, "container")
+            .add(Prop.Edc.AZURE_BLOB_NAME, "blob")
+            .add(DataAddress.EDC_DATA_ADDRESS_KEY_NAME, "key");
+
+        var expectedProperties = Json.createObjectBuilder()
+            .add(Prop.Edc.ID, ASSET_ID)
+            .add(Prop.Dcterms.CREATOR, Json.createObjectBuilder()
+                .add(Prop.Foaf.NAME, ORG_NAME));
+
+        // act
+        var actual = assetJsonLdBuilder.buildCreateAssetJsonLds(uiAssetCreateRequest, ORG_NAME);
+
+        // assert
+        assertCreateAssetJsonLdsEquals(actual, dummyBuildCreateAssetJsonLds(expectedDataAddress, expectedProperties));
     }
 
     private AssetJsonLdBuilder.CreateAssetJsonLds dummyBuildCreateAssetJsonLds(

@@ -823,4 +823,13 @@ object CeConfigProps {
         property = "sovity.edc.dataplane.oauth2.cache.minimum.time.to.live",
         defaultDocumentation = "Format: ISO 8601 duration. The minimum duration between the token's age and the time at which it expires. If the token has a shorter remaining lifespan than this, it is renewed.",
     )
+
+    @JvmStatic
+    val EDC_BLOBSTORE_ENDPOINT_TEMPLATE = ConfigPropRef(
+        property = "edc.blobstore.endpoint.template",
+        defaultDocumentation = "The template for the blobstore." +
+            " The EDC Azure Blob Store extension is currently hard-coded against one Azure Blob Backend." +
+            " Should a non-Microsoft Azure Blob backend be used, e.g. a China region one, this template can be adjusted." +
+            " For example https://%s.blob.core.windows.net",
+    )
 }

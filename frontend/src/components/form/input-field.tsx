@@ -7,7 +7,6 @@
  */
 'use client';
 
-import {Button} from '@/components/ui/button';
 import {
   FormControl,
   FormField,
@@ -28,8 +27,6 @@ export interface TextFieldProps {
   placeholder?: string;
   type?: HTMLInputTypeAttribute;
   value?: string;
-  icon?: React.ReactNode;
-  onIconClick?: () => void;
   disableAutoComplete?: boolean;
   labelClassName?: string;
   isRequired?: boolean;
@@ -45,8 +42,6 @@ const InputField = ({
   tooltip,
   placeholder,
   type,
-  icon,
-  onIconClick,
   disableAutoComplete,
   isRequired,
   labelClassName,
@@ -81,18 +76,6 @@ const InputField = ({
                 autoComplete={disableAutoComplete ? 'off' : undefined}
                 disabled={disabled}
               />
-              {icon && (
-                <div className="absolute inset-y-0 right-0 flex items-center pr-2">
-                  <Button
-                    dataTestId={`form-input-${name}-icon-btn`}
-                    type="button"
-                    size="smallIcon"
-                    variant="ghost"
-                    onClick={onIconClick}>
-                    <div>{icon}</div>
-                  </Button>
-                </div>
-              )}
             </div>
           </FormControl>
           <FormMessage />

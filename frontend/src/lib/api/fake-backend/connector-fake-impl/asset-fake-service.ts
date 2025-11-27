@@ -55,13 +55,9 @@ export const assetsPage = (request: AssetsPageRequest): AssetsPageResult => {
           const aValue = a[propertyName] ?? '';
           const bValue = b[propertyName] ?? '';
           if (aValue < bValue) {
-            return direction === SortByDirection.Descending
-              ? 1
-              : -1;
+            return direction === SortByDirection.Descending ? 1 : -1;
           } else if (aValue > bValue) {
-            return direction === SortByDirection.Descending
-              ? -1
-              : 1;
+            return direction === SortByDirection.Descending ? -1 : 1;
           } else {
             return 0;
           }

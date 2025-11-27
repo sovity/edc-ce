@@ -46,9 +46,21 @@ export const useDataOfferCreateMutation = () => {
       return await api.uiApi.createDataOffer({
         dataOfferCreateRequest: {
           publishType: formValue.publishing.mode,
-          policyExpression:
+          policyCreateType:
             formValue.publishing.mode === 'PUBLISH_RESTRICTED'
+              ? formValue.publishing.restrictedPublishing.inputType
+              : undefined,
+          policyExpression:
+            formValue.publishing.mode === 'PUBLISH_RESTRICTED' &&
+            formValue.publishing.restrictedPublishing.inputType ===
+              'POLICY_EXPRESSION'
               ? expression
+              : undefined,
+          policyJsonLd:
+            formValue.publishing.mode === 'PUBLISH_RESTRICTED' &&
+            formValue.publishing.restrictedPublishing.inputType ===
+              'POLICY_JSON_LD'
+              ? formValue.publishing.restrictedPublishing.policyJsonLd
               : undefined,
           asset,
         },

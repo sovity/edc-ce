@@ -12,6 +12,7 @@ import de.sovity.edc.client.gen.model.ContractNegotiationRequest
 import de.sovity.edc.client.gen.model.ContractNegotiationSimplifiedState
 import de.sovity.edc.client.gen.model.ContractsPageRequest
 import de.sovity.edc.client.gen.model.DataOfferCreateRequest
+import de.sovity.edc.client.gen.model.DataOfferPolicyCreateType
 import de.sovity.edc.client.gen.model.DataOfferPublishType
 import de.sovity.edc.client.gen.model.DataSourceType
 import de.sovity.edc.client.gen.model.OperatorDto
@@ -123,6 +124,7 @@ class PolicyTestUtils(
         val request = DataOfferCreateRequest.builder()
             .asset(asset)
             .publishType(DataOfferPublishType.PUBLISH_RESTRICTED)
+            .policyCreateType(DataOfferPolicyCreateType.EXPRESSION)
             .policyExpression(expression)
             .build()
 
