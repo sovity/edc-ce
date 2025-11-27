@@ -12,6 +12,7 @@ import de.sovity.edc.ce.api.ui.model.DataOfferCreateRequest;
 import de.sovity.edc.ce.api.ui.model.IdAvailabilityResponse;
 import de.sovity.edc.ce.api.ui.model.IdResponseDto;
 import de.sovity.edc.ce.api.ui.model.PolicyDefinitionCreateDto;
+import de.sovity.edc.ce.api.ui.model.PolicyDefinitionCreateFromJsonLdDto;
 import de.sovity.edc.ce.api.ui.model.UiCriterion;
 import de.sovity.edc.ce.api.ui.model.UiCriterionLiteral;
 import de.sovity.edc.ce.api.ui.model.UiCriterionLiteralType;
@@ -124,9 +125,16 @@ public class DataOfferPageApiService {
 
         assetApiService.createAsset(dsl, dataOfferCreateRequest.getAsset());
 
-        val policyExpression = Optional.ofNullable(dataOfferCreateRequest.getPolicyExpression())
-            .orElseThrow(() -> new InvalidRequestException("Missing policy expression"));
-        policyDefinitionApiService.createPolicyDefinitionV2(new PolicyDefinitionCreateDto(policyId, policyExpression));
+        switch (dataOfferCreateRequest.getPolicyCreateType()) {
+            case POLICY_EXPRESSION -> {
+                val policyExpression = Optional.ofNullable(dataOfferCreateRequest.getPolicyExpression()).orElseThrow(() -> new InvalidRequestException("Missing policy expression"));
+                policyDefinitionApiService.createPolicyDefinitionV2(new PolicyDefinitionCreateDto(policyId, policyExpression));
+            }
+            case POLICY_JSON_LD -> {
+                val policyJsonLd = Optional.ofNullable(dataOfferCreateRequest.getPolicyJsonLd()).orElseThrow(() -> new InvalidRequestException("Missing policy JSON-LD"));
+                policyDefinitionApiService.createPolicyDefinitionFromJsonLd(new PolicyDefinitionCreateFromJsonLdDto(policyId, policyJsonLd));
+            }
+        }
 
         createContractDefinition(assetId, policyId, contractDefinitionId);
 

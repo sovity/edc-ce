@@ -18,6 +18,7 @@ import de.sovity.edc.client.gen.model.ContractNegotiationRequest;
 import de.sovity.edc.client.gen.model.ContractNegotiationSimplifiedState;
 import de.sovity.edc.client.gen.model.ContractTerminationRequest;
 import de.sovity.edc.client.gen.model.DataOfferCreateRequest;
+import de.sovity.edc.client.gen.model.DataOfferPolicyCreateType;
 import de.sovity.edc.client.gen.model.DataOfferPublishType;
 import de.sovity.edc.client.gen.model.DataSourceType;
 import de.sovity.edc.client.gen.model.IdResponseDto;
@@ -272,7 +273,7 @@ public class E2eTestScenario {
 
         var policyDefinition = PolicyDefinitionCreateDto.builder()
             .policyDefinitionId(id)
-            .expression(expression)
+            .policyExpression(expression)
             .build();
 
         providerClient.uiApi().createPolicyDefinitionV2(policyDefinition);
@@ -340,6 +341,7 @@ public class E2eTestScenario {
                         .build()
                 )
                 .publishType(DataOfferPublishType.PUBLISH_RESTRICTED)
+                .policyCreateType(DataOfferPolicyCreateType.EXPRESSION)
                 .policyExpression(
                     UiPolicyExpression.builder()
                         .type(UiPolicyExpressionType.CONSTRAINT)
@@ -356,7 +358,8 @@ public class E2eTestScenario {
                                 .build()
                         )
                         .build()
-                ).build()
+                )
+                .build()
         ).getId();
     }
 }

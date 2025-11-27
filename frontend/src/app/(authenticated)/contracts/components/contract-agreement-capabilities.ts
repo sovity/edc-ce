@@ -5,7 +5,10 @@
  *
  * SPDX-License-Identifier: Elastic-2.0
  */
-import {type ContractAgreementDirection, type ContractTerminationStatus} from '@sovity.de/edc-client';
+import {
+  type ContractAgreementDirection,
+  type ContractTerminationStatus,
+} from '@sovity.de/edc-client';
 
 export const canTransfer = (contract: {
   terminationStatus: ContractTerminationStatus;

@@ -117,6 +117,7 @@ export function AsyncComboboxField<
               field.onChange([...multiselectValue, newValue]);
             }
           } else {
+            setOpen(false);
             field.onChange(newValue);
           }
         }
@@ -198,7 +199,7 @@ export function AsyncComboboxField<
                         onSelect={() => onSelect(item.id)}>
                         <Check
                           className={cn(
-                            'ml-auto h-4 w-4',
+                            'ml-auto mr-2 h-4 w-4',
                             isSelected(item.id) ? 'opacity-100' : 'opacity-0',
                           )}
                         />

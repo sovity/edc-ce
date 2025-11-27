@@ -38,6 +38,7 @@ public class PolicyDefinitionCreateDto {
     @Schema(description = "Policy Definition ID", requiredMode = Schema.RequiredMode.REQUIRED)
     private String policyDefinitionId;
 
-    @Schema(description = "Policy Expression", requiredMode = Schema.RequiredMode.REQUIRED)
-    private UiPolicyExpression expression;
+    @Schema(description = "Tree-structured policy expression",
+        requiredMode = Schema.RequiredMode.REQUIRED)
+    private UiPolicyExpression policyExpression;
 }

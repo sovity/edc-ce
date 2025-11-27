@@ -23,6 +23,7 @@ package de.sovity.edc.ce.libs.mappers.dataaddress
 import de.sovity.edc.ce.api.common.model.DataSourceType
 import de.sovity.edc.ce.api.common.model.UiDataSource
 import de.sovity.edc.ce.libs.mappers.asset.utils.EdcPropertyUtils
+import de.sovity.edc.ce.libs.mappers.dataaddress.http.AzureStorageDataSourceMapper
 import de.sovity.edc.ce.libs.mappers.dataaddress.http.HttpDataSourceMapper
 import de.sovity.edc.ce.libs.mappers.dataaddress.http.OnRequestDataSourceMapper
 import de.sovity.edc.runtime.simple_di.Service
@@ -36,7 +37,8 @@ import jakarta.json.JsonValue
 class DataSourceMapper(
     private val edcPropertyUtils: EdcPropertyUtils,
     private val httpDataSourceMapper: HttpDataSourceMapper,
-    private val onRequestDataSourceMapper: OnRequestDataSourceMapper
+    private val onRequestDataSourceMapper: OnRequestDataSourceMapper,
+    private val azureStorageDataSourceMapper: AzureStorageDataSourceMapper
 ) {
 
     fun buildDataSourceJsonLd(dataSource: UiDataSource): JsonObject {
@@ -51,6 +53,13 @@ class DataSourceMapper(
 
             DataSourceType.ON_REQUEST ->
                 onRequestDataSourceMapper.buildOnRequestDataAddress(dataSource.onRequest!!)
+
+            DataSourceType.AZURE_STORAGE -> azureStorageDataSourceMapper.buildAzureStorageDataAddress(
+                storageAccountName = dataSource.azureStorage.storageAccountName,
+                containerName = dataSource.azureStorage.containerName,
+                blobName = dataSource.azureStorage.blobName,
+                accountKey = dataSource.azureStorage.accountKey
+            )
 
             DataSourceType.CUSTOM -> emptyMap()
         }

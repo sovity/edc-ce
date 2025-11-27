@@ -24,7 +24,6 @@ import {useTranslations} from 'next-intl';
 import {urls} from './urls';
 import {type SvgIcon} from './utils/svg-icon';
 import {useConfig} from './hooks/use-config';
-import {UiConfigFeature} from '@sovity.de/edc-client';
 import {takeIf} from './utils/array-utils';
 
 export interface NavItem {

@@ -33,7 +33,7 @@ export const usePolicyDefinitionTableColumns = (): ColumnType => {
       },
     },
     {
-      accessorKey: 'expression',
+      accessorKey: 'policyExpression',
       header: ({column}) => (
         <DataTableColumnHeader
           column={column}
@@ -44,7 +44,7 @@ export const usePolicyDefinitionTableColumns = (): ColumnType => {
         return (
           <PolicyRenderer
             errors={row.original.errors}
-            expression={row.original.expression}
+            expression={row.original.policyExpression}
           />
         );
       },
@@ -58,7 +58,7 @@ export const usePolicyDefinitionTableColumns = (): ColumnType => {
     // Invisible columns for filtering
     {
       id: 'jsonLd',
-      accessorFn: (row) => row.jsonLd,
+      accessorFn: (row) => row.policyJsonLd,
     },
   ];
 };

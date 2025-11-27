@@ -67,11 +67,14 @@ taskinfo = "2.2.0"
 testcontainers = "1.20.6"
 titaniumLd = "1.6.0"
 versions = "0.52.0"
+azure = "12.29.0"
+azureIdentity = "1.18.1"
 
 [libraries]
 edc-accesstokendataStoreSql = { module = "org.eclipse.edc:accesstokendata-store-sql", version.ref = "edc" }
 edc-apiCore = { module = "org.eclipse.edc:api-core", version.ref = "edc" }
 edc-apiObservability = { module = "org.eclipse.edc:api-observability", version.ref = "edc" }
+edc-assetIndexSql = { module = "org.eclipse.edc:asset-index-sql", version.ref = "edc" }
 edc-assetSpi = { module = "org.eclipse.edc:asset-spi", version.ref = "edc" }
 edc-authSpi = { module = "org.eclipse.edc:auth-spi", version.ref = "edc" }
 edc-authTokenbased = { module = "org.eclipse.edc:auth-tokenbased", version.ref = "edc" }
@@ -98,7 +101,6 @@ edc-dataPlaneHttpOauth2 = { module = "org.eclipse.edc:data-plane-http-oauth2", v
 edc-dataPlaneIam = { module = "org.eclipse.edc:data-plane-iam", version.ref = "edc" }
 edc-dataPlaneInstanceStoreSql = { module = "org.eclipse.edc:data-plane-instance-store-sql", version.ref = "edc" }
 edc-dataPlanePublicApiV2 = { module = "org.eclipse.edc:data-plane-public-api-v2", version.ref = "edc" }
-edc-dataPlaneSelectorApi = { module = "org.eclipse.edc:data-plane-selector-api", version.ref = "edc" }
 edc-dataPlaneSelectorCore = { module = "org.eclipse.edc:data-plane-selector-core", version.ref = "edc" }
 edc-dataPlaneSignalingApi = { module = "org.eclipse.edc:data-plane-signaling-api", version.ref = "edc" }
 edc-dataPlaneStoreSql = { module = "org.eclipse.edc:data-plane-store-sql", version.ref = "edc" }
@@ -160,6 +162,7 @@ edc-aws-dataPlaneAwsS3 = { module = "org.eclipse.edc.aws:data-plane-aws-s3", ver
 edc-azure-dataPlaneAzureStorage = { module = "org.eclipse.edc.azure:data-plane-azure-storage", version.ref = "edcUniverse" }
 edc-azure-provisionBlob = { module = "org.eclipse.edc.azure:provision-blob", version.ref = "edcUniverse" }
 edc-azure-vaultAzure = { module = "org.eclipse.edc.azure:vault-azure", version.ref = "edcUniverse" }
+edc-aws-validatorDataAddressS3 = { module = "org.eclipse.edc.aws:validator-data-address-s3", version.ref = "edcUniverse" }
 tractus-bdrsClient = { module = "org.eclipse.tractusx.edc:bdrs-client", version.ref = "tractus" }
 tractus-bpnValidation = { module = "org.eclipse.tractusx.edc:bpn-validation", version.ref = "tractus" }
 tractus-businessPartnerStoreSql = { module = "org.eclipse.tractusx.edc:business-partner-store-sql", version.ref = "tractus" }
@@ -171,6 +174,7 @@ tractus-edrCallback = { module = "org.eclipse.tractusx.edc:edr-callback", versio
 tractus-edrCore = { module = "org.eclipse.tractusx.edc:edr-core", version.ref = "tractus" }
 tractus-edrIndexLockSql = { module = "org.eclipse.tractusx.edc:edr-index-lock-sql", version.ref = "tractus" }
 tractus-edrSpi = { module = "org.eclipse.tractusx.edc:edr-spi", version.ref = "tractus" }
+tractus-emptyAssetSelector = { module = "org.eclipse.tractusx.edc:empty-asset-selector", version.ref = "tractus" }
 tractus-jsonLdCore = { module = "org.eclipse.tractusx.edc:json-ld-core", version.ref = "tractus" }
 tractus-provisionAdditionalHeaders = { module = "org.eclipse.tractusx.edc:provision-additional-headers", version.ref = "tractus" }
 tractus-retirementEvaluationApi = { module = "org.eclipse.tractusx.edc:retirement-evaluation-api", version.ref = "tractus" }
@@ -221,6 +225,8 @@ swagger-jaxrs2Jakarta = { module = "io.swagger.core.v3:swagger-jaxrs2-jakarta", 
 t9tJooq-jooqPostgresqlJson = { module = "com.github.t9t.jooq:jooq-postgresql-json", version.ref = "jooqPostgresqlJson" }
 testcontainers-postgresql = { module = "org.testcontainers:postgresql", version.ref = "testcontainers" }
 testcontainers-testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers" }
+azure-storageBlob = { module = "com.azure:azure-storage-blob", version.ref = "azure" }
+azure-identity = { module = "com.azure:azure-identity", version.ref = "azureIdentity" }
 assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 awaitility-java = { module = "org.awaitility:awaitility", version.ref = "awaitility" }
 junit-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }

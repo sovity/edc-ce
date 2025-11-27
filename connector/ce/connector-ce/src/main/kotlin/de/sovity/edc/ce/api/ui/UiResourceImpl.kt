@@ -14,6 +14,8 @@ import de.sovity.edc.ce.api.common.model.UiAssetEditRequest
 import de.sovity.edc.ce.api.common.model.UiInitiateTransferRequest
 import de.sovity.edc.ce.api.ui.model.AssetsPageRequest
 import de.sovity.edc.ce.api.ui.model.AssetsPageResult
+import de.sovity.edc.ce.api.ui.model.AzureStorageListBlobsRequest
+import de.sovity.edc.ce.api.ui.model.AzureStorageListContainersRequest
 import de.sovity.edc.ce.api.ui.model.BusinessPartnerGroupCreateSubmit
 import de.sovity.edc.ce.api.ui.model.BusinessPartnerGroupEditSubmit
 import de.sovity.edc.ce.api.ui.model.BusinessPartnerGroupQuery
@@ -30,6 +32,7 @@ import de.sovity.edc.ce.api.ui.model.IdAvailabilityResponse
 import de.sovity.edc.ce.api.ui.model.IdResponseDto
 import de.sovity.edc.ce.api.ui.model.InitiateCustomTransferRequest
 import de.sovity.edc.ce.api.ui.model.InitiateTransferRequest
+import de.sovity.edc.ce.api.ui.model.PolicyDefinitionCreateFromJsonLdDto
 import de.sovity.edc.ce.api.ui.model.PolicyDefinitionCreateDto
 import de.sovity.edc.ce.api.ui.model.PolicyDefinitionCreateRequest
 import de.sovity.edc.ce.api.ui.model.PolicyDefinitionPage
@@ -43,6 +46,7 @@ import de.sovity.edc.ce.api.ui.model.VaultSecretQuery
 import de.sovity.edc.ce.api.ui.pages.asset.AssetApiService
 import de.sovity.edc.ce.api.ui.pages.asset_detail_page.AssetDetailPageApiService
 import de.sovity.edc.ce.api.ui.pages.assets_page.AssetsPageApiService
+import de.sovity.edc.ce.api.ui.pages.blob_storage.AzureBlobStorageService
 import de.sovity.edc.ce.api.ui.pages.business_partner_group.BusinessPartnerGroupApiService
 import de.sovity.edc.ce.api.ui.pages.catalog.CatalogApiService
 import de.sovity.edc.ce.api.ui.pages.config.UiConfigApiService
@@ -87,6 +91,7 @@ class UiResourceImpl(
     private val versionsService: VersionsService,
     private val assetsPageApiService: AssetsPageApiService,
     private val assetDetailPageApiService: AssetDetailPageApiService,
+    private val azureBlobStorageService: AzureBlobStorageService
 ) : UiResource {
 
     override fun getDashboardPage(): DashboardPage =
@@ -205,6 +210,13 @@ class UiResourceImpl(
         dslContextFactory.transactionResult {
             policyDefinitionApiService.createPolicyDefinitionV2(
                 policyDefinitionCreateDto
+            )
+        }
+
+    override fun createPolicyDefinitionFromJsonLd(policyDefinitionCreateFromJsonLdDto: PolicyDefinitionCreateFromJsonLdDto): IdResponseDto =
+        dslContextFactory.transactionResult {
+            policyDefinitionApiService.createPolicyDefinitionFromJsonLd(
+                policyDefinitionCreateFromJsonLdDto
             )
         }
 
@@ -378,6 +390,12 @@ class UiResourceImpl(
             )
         }
     }
+
+    override fun listAzureStorageContainers(azureStorageListContainersRequest: AzureStorageListContainersRequest): List<String> =
+        azureBlobStorageService.listContainerNames(azureStorageListContainersRequest)
+
+    override fun listAzureStorageBlobs(azureStorageListBlobsRequest: AzureStorageListBlobsRequest): List<String> =
+        azureBlobStorageService.listBlobNames(azureStorageListBlobsRequest)
 
     override fun buildInfo(): BuildInfo =
         versionsService.versions

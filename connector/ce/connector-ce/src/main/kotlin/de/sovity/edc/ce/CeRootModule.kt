@@ -103,6 +103,10 @@ object CeRootModule {
         ) {
             defaultValue(SqlQueryExecutorConfiguration.DEFAULT_EDC_SQL_FETCH_SIZE)
         }
+        property(
+            ConfigPropCategory.OPTIONAL,
+            CeConfigProps.EDC_BLOBSTORE_ENDPOINT_TEMPLATE
+        )
         configureWebApi()
         configureControlApi()
         configureCommonOverrides()

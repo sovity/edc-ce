@@ -29,6 +29,8 @@ import de.sovity.edc.ce.api.common.model.UiAssetEditRequest;
 import de.sovity.edc.ce.api.common.model.UiInitiateTransferRequest;
 import de.sovity.edc.ce.api.ui.model.AssetsPageRequest;
 import de.sovity.edc.ce.api.ui.model.AssetsPageResult;
+import de.sovity.edc.ce.api.ui.model.AzureStorageListBlobsRequest;
+import de.sovity.edc.ce.api.ui.model.AzureStorageListContainersRequest;
 import de.sovity.edc.ce.api.ui.model.BusinessPartnerGroupCreateSubmit;
 import de.sovity.edc.ce.api.ui.model.BusinessPartnerGroupEditPage;
 import de.sovity.edc.ce.api.ui.model.BusinessPartnerGroupEditSubmit;
@@ -47,6 +49,7 @@ import de.sovity.edc.ce.api.ui.model.IdAvailabilityResponse;
 import de.sovity.edc.ce.api.ui.model.IdResponseDto;
 import de.sovity.edc.ce.api.ui.model.InitiateCustomTransferRequest;
 import de.sovity.edc.ce.api.ui.model.InitiateTransferRequest;
+import de.sovity.edc.ce.api.ui.model.PolicyDefinitionCreateFromJsonLdDto;
 import de.sovity.edc.ce.api.ui.model.PolicyDefinitionCreateDto;
 import de.sovity.edc.ce.api.ui.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.ce.api.ui.model.PolicyDefinitionPage;
@@ -210,6 +213,13 @@ interface UiResource {
     @Operation(description = "Create a new Policy Definition")
     IdResponseDto createPolicyDefinitionV2(PolicyDefinitionCreateDto policyDefinitionCreateDto);
 
+    @POST
+    @Path("pages/policy-page/create-policy-definition-json-ld")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Create a new Policy Definition from Policy JSON-LD")
+    IdResponseDto createPolicyDefinitionFromJsonLd(PolicyDefinitionCreateFromJsonLdDto policyDefinitionCreateFromJsonLdDto);
+
     @DELETE
     @Path("pages/policy-page/policy-definitions/{policyId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -357,6 +367,20 @@ interface UiResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Validates if the provided contractDefinitionId is already taken")
     IdAvailabilityResponse isContractDefinitionIdAvailable(@PathParam("contractDefinitionId") String contractDefinitionId);
+
+    @POST
+    @Path("forms/azure-storage-select/containers")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Lists all available Azure Storage Containers for the given Storage Account Name")
+    List<String> listAzureStorageContainers(AzureStorageListContainersRequest azureStorageListContainersRequest);
+
+    @POST
+    @Path("forms/azure-storage-select/blobs")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Lists all available Azure Storage Blobs for the given Storage Account Name and Container")
+    List<String> listAzureStorageBlobs(AzureStorageListBlobsRequest azureStorageListBlobsRequest);
 
     @GET
     @Path("/build-info")

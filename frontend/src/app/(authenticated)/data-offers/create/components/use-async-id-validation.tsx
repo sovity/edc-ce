@@ -24,6 +24,10 @@ const isAssetIdAvailable = async (
     return true;
   }
 
+  if (!assetId) {
+    return false;
+  }
+
   const assetIdAvailable =
     (await api.uiApi.isAssetIdAvailable({assetId})).available ?? false;
   if (formMode === 'CREATE_ASSET' || publishingMode === 'DONT_PUBLISH') {

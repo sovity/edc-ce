@@ -33,8 +33,8 @@ export interface SelectFieldProps {
   items: UiSelectItemOption[];
   placeholder: string;
   isRequired?: boolean;
-  onValueChange?: (event: string) => void;
   className?: string;
+  isLoading?: boolean;
 }
 
 const SelectField = ({
@@ -45,8 +45,8 @@ const SelectField = ({
   placeholder,
   items,
   isRequired,
-  onValueChange,
   className,
+  isLoading,
 }: SelectFieldProps) => {
   return (
     <FormField
@@ -63,10 +63,13 @@ const SelectField = ({
           </FormLabel>
           <Select
             data-testid={`form-field-${name}`}
-            onValueChange={onValueChange ?? field.onChange}
+            disabled={isLoading}
+            onValueChange={field.onChange}
             value={field.value as string}>
             <FormControl>
-              <SelectTrigger data-testid={`form-select-${name}-trigger`}>
+              <SelectTrigger
+                data-testid={`form-select-${name}-trigger`}
+                isLoading={isLoading}>
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
             </FormControl>

@@ -20,6 +20,7 @@
  */
 package de.sovity.edc.ce.api.ui.model;
 
+import de.sovity.edc.ce.api.common.model.DataOfferPolicyCreateType;
 import de.sovity.edc.ce.api.common.model.UiAssetCreateRequest;
 import de.sovity.edc.ce.api.common.model.UiPolicyExpression;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -28,9 +29,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.NOT_REQUIRED;
-import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
-
 @Data
 @AllArgsConstructor
 @RequiredArgsConstructor
@@ -38,12 +36,20 @@ import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 @Schema(description = "Request to create a data offer")
 public class DataOfferCreateRequest {
 
-    @Schema(description = "The asset to create", requiredMode = REQUIRED)
+    @Schema(description = "The asset to create", requiredMode = Schema.RequiredMode.REQUIRED)
     private UiAssetCreateRequest asset;
 
-    @Schema(requiredMode = REQUIRED)
+    @Schema(description = "The data offer publishing type", requiredMode = Schema.RequiredMode.REQUIRED)
     private DataOfferPublishType publishType;
 
-    @Schema(description = "Policy Expression. Only relevant if policyType is 'RESTRICTED'", requiredMode = NOT_REQUIRED)
+    @Schema(description = "The policy creation type. Only required if publishType is PUBLISH_RESTRICTED.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private DataOfferPolicyCreateType policyCreateType;
+
+    @Schema(description = "Tree-structured policy expression. Only required if publishType is PUBLISH_RESTRICTED and policyCreateType is POLICY_EXPRESSION.",
+        requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private UiPolicyExpression policyExpression;
+
+    @Schema(description = "ODRL policy as JSON-LD. Only required if publishType is PUBLISH_RESTRICTED and policyCreateType is POLICY_JSON_LD.",
+        requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private String policyJsonLd;
 }

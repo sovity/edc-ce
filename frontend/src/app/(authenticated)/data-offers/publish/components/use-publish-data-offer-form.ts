@@ -31,6 +31,9 @@ const publishDataOfferSchema = (
       })
       .refine(
         async (dataOfferId) => {
+          if (!dataOfferId) {
+            return false;
+          }
           const response = await withCancellation(
             Promise.all([
               api.uiApi.isContractDefinitionIdAvailable({

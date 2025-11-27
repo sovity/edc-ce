@@ -53,6 +53,13 @@ import {
     UiAssetCreateRequestToJSON,
     UiAssetCreateRequestToJSONTyped,
 } from './UiAssetCreateRequest';
+import type { DataOfferPolicyCreateType } from './DataOfferPolicyCreateType';
+import {
+    DataOfferPolicyCreateTypeFromJSON,
+    DataOfferPolicyCreateTypeFromJSONTyped,
+    DataOfferPolicyCreateTypeToJSON,
+    DataOfferPolicyCreateTypeToJSONTyped,
+} from './DataOfferPolicyCreateType';
 
 /**
  * Request to create a data offer
@@ -67,17 +74,29 @@ export interface DataOfferCreateRequest {
      */
     asset: UiAssetCreateRequest;
     /**
-     * 
+     * The data offer publishing type
      * @type {DataOfferPublishType}
      * @memberof DataOfferCreateRequest
      */
     publishType: DataOfferPublishType;
     /**
-     * Policy Expression. Only relevant if policyType is 'RESTRICTED'
+     * The policy creation type. Only required if publishType is PUBLISH_RESTRICTED.
+     * @type {DataOfferPolicyCreateType}
+     * @memberof DataOfferCreateRequest
+     */
+    policyCreateType?: DataOfferPolicyCreateType;
+    /**
+     * Tree-structured policy expression. Only required if publishType is PUBLISH_RESTRICTED and policyCreateType is POLICY_EXPRESSION.
      * @type {UiPolicyExpression}
      * @memberof DataOfferCreateRequest
      */
     policyExpression?: UiPolicyExpression;
+    /**
+     * ODRL policy as JSON-LD. Only required if publishType is PUBLISH_RESTRICTED and policyCreateType is POLICY_JSON_LD.
+     * @type {string}
+     * @memberof DataOfferCreateRequest
+     */
+    policyJsonLd?: string;
 }
 
 
@@ -103,7 +122,9 @@ export function DataOfferCreateRequestFromJSONTyped(json: any, ignoreDiscriminat
         
         'asset': UiAssetCreateRequestFromJSON(json['asset']),
         'publishType': DataOfferPublishTypeFromJSON(json['publishType']),
+        'policyCreateType': json['policyCreateType'] == null ? undefined : DataOfferPolicyCreateTypeFromJSON(json['policyCreateType']),
         'policyExpression': json['policyExpression'] == null ? undefined : UiPolicyExpressionFromJSON(json['policyExpression']),
+        'policyJsonLd': json['policyJsonLd'] == null ? undefined : json['policyJsonLd'],
     };
 }
 
@@ -120,7 +141,9 @@ export function DataOfferCreateRequestToJSONTyped(value?: DataOfferCreateRequest
         
         'asset': UiAssetCreateRequestToJSON(value['asset']),
         'publishType': DataOfferPublishTypeToJSON(value['publishType']),
+        'policyCreateType': DataOfferPolicyCreateTypeToJSON(value['policyCreateType']),
         'policyExpression': UiPolicyExpressionToJSON(value['policyExpression']),
+        'policyJsonLd': value['policyJsonLd'],
     };
 }
 

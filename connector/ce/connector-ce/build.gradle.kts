@@ -88,6 +88,8 @@ dependencies {
     api(libs.jakarta.rsApi)
     api(libs.jakarta.validationApi)
     api(libs.jooq.jooq)
+    api(libs.azure.storageBlob)
+    api(libs.azure.identity)
 
     testAnnotationProcessor(libs.lombok)
     testImplementation(libs.lombok)

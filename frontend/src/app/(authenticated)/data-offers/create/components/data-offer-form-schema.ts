@@ -15,6 +15,7 @@ import {allowedIdRegex, invalidIdError} from '@/lib/utils/id-utils';
 import {validateAssetId} from './use-async-id-validation';
 import {type DataOfferFormMode} from './data-offer-form-mode';
 import {type useTranslations} from 'next-intl';
+import {jsonString} from '@/lib/utils/zod/schema-utils';
 
 const debounceValidateAssetId = validateAssetId();
 
@@ -85,8 +86,31 @@ const dataOfferSphinxFieldsSchema = z.object({
   medicationCount: z.string().optional(),
   dosageCount: z.string().optional(),
   clinicalSpecialty: z.string().optional(),
-})
+});
 
+const restrictedPublishingFieldsSchema = z.discriminatedUnion('inputType', [
+  z.object({
+    inputType: z.literal('POLICY_JSON_LD'),
+    policyJsonLd: jsonString(),
+  }),
+  z.object({
+    inputType: z.literal('POLICY_EXPRESSION'),
+    policyExpression: policyEditorFormSchema,
+  }),
+]);
+
+const dataOfferPublishingFieldsSchema = z.discriminatedUnion('mode', [
+  z.object({
+    mode: z.literal('PUBLISH_UNRESTRICTED' satisfies DataOfferPublishType),
+  }),
+  z.object({
+    mode: z.literal('PUBLISH_RESTRICTED' satisfies DataOfferPublishType),
+    restrictedPublishing: restrictedPublishingFieldsSchema,
+  }),
+  z.object({
+    mode: z.literal('DONT_PUBLISH' satisfies DataOfferPublishType),
+  }),
+]);
 
 export const dataOfferFormSchema = (
   formMode: DataOfferFormMode,
@@ -98,20 +122,7 @@ export const dataOfferFormSchema = (
       general: dataOfferBasicFieldsSchema,
       advanced: dataOfferAdvancedFieldsSchema,
       sphinxFields: dataOfferSphinxFieldsSchema,
-      publishing: z.discriminatedUnion('mode', [
-        z.object({
-          mode: z.literal(
-            'PUBLISH_UNRESTRICTED' satisfies DataOfferPublishType,
-          ),
-        }),
-        z.object({
-          mode: z.literal('PUBLISH_RESTRICTED' satisfies DataOfferPublishType),
-          policy: policyEditorFormSchema,
-        }),
-        z.object({
-          mode: z.literal('DONT_PUBLISH' satisfies DataOfferPublishType),
-        }),
-      ]),
+      publishing: dataOfferPublishingFieldsSchema,
     })
     .refine(
       (formData) =>

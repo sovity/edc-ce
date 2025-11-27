@@ -59,7 +59,11 @@ const PolicyDefinitionActionMenu = ({
           subtitle={policyDefinition.policyDefinitionId}
           content={
             <pre className={'whitespace-pre-wrap'}>
-              {JSON.stringify(JSON.parse(policyDefinition.jsonLd), null, 2)}
+              {JSON.stringify(
+                JSON.parse(policyDefinition.policyJsonLd),
+                null,
+                2,
+              )}
             </pre>
           }></ScrollableDialog>
       ),

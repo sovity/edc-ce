@@ -13,17 +13,19 @@ import {
   type CancellablePromise,
   useCancellablePromise,
 } from '@/lib/hooks/use-cancellable-promise';
+import {POLICY_JSON_LD_INPUT_DEFAULT_VALUE} from '@/lib/policy-constants';
 import {allowedIdRegex, invalidIdError} from '@/lib/utils/id-utils';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {useTranslations} from 'next-intl';
 import {useForm} from 'react-hook-form';
 import {z} from 'zod';
+import {jsonString} from '@/lib/utils/zod/schema-utils';
 
-export const policyCreateForm = (
-  withCancellation: CancellablePromise,
+const policyDefinitionIdSchema = (
+  withCancellation: <T>(promise: Promise<T>) => Promise<T>,
   policyIdValidationMessage: string,
-) =>
-  z.object({
+) => {
+  return z.object({
     policyDefinitionId: z
       .string()
       .min(1)
@@ -32,6 +34,9 @@ export const policyCreateForm = (
       })
       .refine(
         async (policyId) => {
+          if (!policyId) {
+            return false;
+          }
           const {available} = await withCancellation(
             api.uiApi.isPolicyIdAvailable({policyId}),
           );
@@ -39,8 +44,26 @@ export const policyCreateForm = (
         },
         {message: policyIdValidationMessage},
       ),
-    policy: policyEditorFormSchema,
   });
+};
+
+export const policyCreateForm = (
+  withCancellation: CancellablePromise,
+  policyIdValidationMessage: string,
+) =>
+  z.intersection(
+    policyDefinitionIdSchema(withCancellation, policyIdValidationMessage),
+    z.discriminatedUnion('inputType', [
+      z.object({
+        inputType: z.literal('POLICY_JSON_LD'),
+        policyJsonLd: jsonString(),
+      }),
+      z.object({
+        inputType: z.literal('POLICY_EXPRESSION'),
+        policyExpression: policyEditorFormSchema,
+      }),
+    ]),
+  );
 
 export type PolicyCreateFormValue = z.infer<
   ReturnType<typeof policyCreateForm>
@@ -60,7 +83,14 @@ export const usePolicyCreateForm = () => {
       ),
       defaultValues: {
         policyDefinitionId: '',
-        policy: {},
+        ...{
+          inputType: 'JSON_LD',
+          policyJsonLd: POLICY_JSON_LD_INPUT_DEFAULT_VALUE,
+        },
+        ...{
+          inputType: 'POLICY_EXPRESSION',
+          policyExpression: {},
+        },
       },
     }),
     schema: policyCreateForm,

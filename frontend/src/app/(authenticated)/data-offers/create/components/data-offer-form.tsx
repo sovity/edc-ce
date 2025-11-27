@@ -33,6 +33,8 @@ import {
 import {useTranslations} from 'next-intl';
 import {type DataOfferFormMode} from './data-offer-form-mode';
 import {useConfig} from '@/lib/hooks/use-config';
+import {PolicyInputTypeSelect} from '@/components/policy-input/policy-input-type-select';
+import {PolicyJsonLdInput} from '@/components/policy-input/policy-json-ld-input';
 
 export const DataOfferForm = ({
   mode,
@@ -56,7 +58,7 @@ export const DataOfferForm = ({
   const policyEditor = usePolicyEditor(
     policyContext,
     form,
-    'publishing.policy',
+    'publishing.restrictedPublishing.policyExpression',
   );
 
   async function onSubmitFn(values: DataOfferCreateFormModel) {
@@ -431,21 +433,21 @@ export const DataOfferForm = ({
                   id: 'PUBLISH_UNRESTRICTED' satisfies DataOfferPublishType,
                   label: t('Pages.DataOfferCreate.publish_unrestricted'),
                   description: t(
-                    'Pages.DataOfferCreate.publish_unrestricted_tooltip',
+                    'Pages.DataOfferCreate.publish_unrestricted_description',
                   ),
                 },
                 {
                   id: 'PUBLISH_RESTRICTED' satisfies DataOfferPublishType,
                   label: t('Pages.DataOfferCreate.publish_restricted'),
                   description: t(
-                    'Pages.DataOfferCreate.publish_restricted_tooltip',
+                    'Pages.DataOfferCreate.publish_restricted_description',
                   ),
                 },
                 {
                   id: 'DONT_PUBLISH' satisfies DataOfferPublishType,
                   label: t('Pages.DataOfferCreate.publish_asset_only'),
                   description: t(
-                    'Pages.DataOfferCreate.publish_asset_only_tooltip',
+                    'Pages.DataOfferCreate.publish_asset_only_description',
                   ),
                 },
               ]}
@@ -453,7 +455,22 @@ export const DataOfferForm = ({
 
             {/* Policy Expression */}
             {formValue.publishing.mode === 'PUBLISH_RESTRICTED' && (
-              <PolicyEditor policyEditor={policyEditor} />
+              <>
+                <PolicyInputTypeSelect
+                  name={'publishing.restrictedPublishing.inputType'}
+                  formControl={form.control}
+                />
+
+                {formValue.publishing.restrictedPublishing.inputType ===
+                'POLICY_JSON_LD' ? (
+                  <PolicyJsonLdInput
+                    name={'publishing.restrictedPublishing.policyJsonLd'}
+                    formControl={form.control}
+                  />
+                ) : (
+                  <PolicyEditor policyEditor={policyEditor} />
+                )}
+              </>
             )}
           </FormGroup>
         )}

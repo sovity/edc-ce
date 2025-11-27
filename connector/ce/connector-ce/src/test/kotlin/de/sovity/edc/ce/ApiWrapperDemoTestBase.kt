@@ -159,7 +159,7 @@ abstract class ApiWrapperDemoTestBase {
 
         val policyDefinition = PolicyDefinitionCreateDto.builder()
             .policyDefinitionId(dataOfferId)
-            .expression(expression)
+            .policyExpression(expression)
             .build()
 
         providerClient.uiApi().createPolicyDefinitionV2(policyDefinition)
