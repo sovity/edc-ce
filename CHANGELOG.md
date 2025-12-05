@@ -33,7 +33,8 @@ Sync version with EE
 
 ### Deployment Migration Notes
 
-_No special deployment migration steps required_
+- Adds the environment variable `edc.blobstore.endpoint.template`
+  - Should a non-Microsoft Azure Blob backend be used, e.g. for a different region, this template can be adjusted.
 
 #### Compatible Versions
 
