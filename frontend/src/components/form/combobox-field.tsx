@@ -7,7 +7,7 @@
  */
 'use client';
 
-import {useRef, useState} from 'react';
+import {type ReactNode, useRef, useState} from 'react';
 import {Button} from '@/components/ui/button';
 import {
   Command,
@@ -28,8 +28,9 @@ import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover';
 import {useWidthObserver} from '@/lib/hooks/use-width-observer';
 import {cn} from '@/lib/utils/css-utils';
 import {type UiSelectItemGroup} from '@/model/ui-select-item-group';
-import {Check, ChevronsUpDown} from 'lucide-react';
-import {type Control} from 'react-hook-form';
+import {Check, ChevronsUpDown, PlusIcon} from 'lucide-react';
+import type {ControllerRenderProps, Control} from 'react-hook-form';
+import {useDialogsStore} from '@/lib/stores/dialog-store';
 
 export interface ComboboxFieldProps {
   control: Control<any, any>;
@@ -41,6 +42,11 @@ export interface ComboboxFieldProps {
   searchEmptyMessage: string;
   onChangeExec?: (value: string) => void;
   isRequired?: boolean;
+  createDescription?: string;
+  renderCreateDialog?: (
+    query: string,
+    onSubmit: (id: string) => unknown,
+  ) => ReactNode;
 }
 
 const ComboboxField = ({
@@ -53,13 +59,29 @@ const ComboboxField = ({
   itemGroups,
   onChangeExec,
   isRequired,
+  createDescription,
+  renderCreateDialog,
 }: ComboboxFieldProps) => {
   const selectButtonRef = useRef<HTMLButtonElement>(null);
   const fieldWidth = useWidthObserver(selectButtonRef, 300);
   const [isOpen, setIsOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const items = itemGroups.flatMap((group) => group.items);
   const getItem = (id: string) => items.find((item) => item.id === id);
+
+  const {showDialog, dismissDialog} = useDialogsStore();
+  const onCreateClick = (field: ControllerRenderProps<any, any>) => {
+    const dialogId = 'async-combobox-field-dialog';
+    showDialog({
+      id: dialogId,
+      dialogContent: () =>
+        renderCreateDialog!(searchQuery, (id) => {
+          dismissDialog(dialogId);
+          field.onChange(id);
+        }),
+    });
+  };
 
   return (
     <FormField
@@ -93,9 +115,24 @@ const ComboboxField = ({
               <Command>
                 <CommandInput
                   data-testid={`form-combobox-${name}-search`}
+                  value={searchQuery}
+                  onValueChange={setSearchQuery}
                   placeholder={searchPlaceholder}
                 />
                 <CommandList>
+                  {createDescription && renderCreateDialog && searchQuery && (
+                    <CommandItem onSelect={() => onCreateClick(field)}>
+                      <PlusIcon className="ml-auto" />
+                      <div className="flex min-w-0 flex-1 flex-col gap-1">
+                        <span className="text-sm font-medium">
+                          {searchQuery}
+                        </span>
+                        <span className="line-clamp-2 break-words text-xs leading-relaxed text-muted-foreground">
+                          {createDescription}
+                        </span>
+                      </div>
+                    </CommandItem>
+                  )}
                   {itemGroups.map((group, i) => (
                     <CommandGroup
                       key={`command-group-${group.heading}-${i}`}

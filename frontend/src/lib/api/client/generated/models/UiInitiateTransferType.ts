@@ -46,7 +46,8 @@
 export const UiInitiateTransferType = {
     HttpDataPush: 'HTTP_DATA_PUSH',
     HttpDataProxy: 'HTTP_DATA_PROXY',
-    Custom: 'CUSTOM'
+    Custom: 'CUSTOM',
+    AzureStorage: 'AZURE_STORAGE'
 } as const;
 export type UiInitiateTransferType = typeof UiInitiateTransferType[keyof typeof UiInitiateTransferType];
 

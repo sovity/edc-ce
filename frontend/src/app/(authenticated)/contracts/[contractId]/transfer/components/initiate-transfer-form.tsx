@@ -27,6 +27,7 @@ import {useTranslations} from 'next-intl';
 import ContractAgreementHeaderStack from '@/components/stacks/contract-agreement-header-stack';
 import InternalLink from '@/components/links/internal-link';
 import {urls} from '@/lib/urls';
+import { InitiateTransferAzureStorageForm } from './initiate-transfer-azure-storage-form';
 
 export const InitiateTransferForm = ({
   contractAgreement,
@@ -78,6 +79,10 @@ export const InitiateTransferForm = ({
                 id: 'HTTP' satisfies InitiateTransferType,
                 label: t('Pages.DataOfferCreate.dataSourceTypeHttp'),
               },
+              {
+                id: 'AZURE_STORAGE' satisfies InitiateTransferType,
+                label: t('Pages.DataOfferCreate.dataSourceTypeAzureStorage'),
+              },
             ]}
             placeholder={''}
           />
@@ -85,6 +90,8 @@ export const InitiateTransferForm = ({
           <InitiateTransferCustomForm form={form} />
 
           <InitiateTransferHttpForm form={form} />
+
+          <InitiateTransferAzureStorageForm form={form} />
         </FormGroup>
 
         <div className="flex justify-between gap-2">

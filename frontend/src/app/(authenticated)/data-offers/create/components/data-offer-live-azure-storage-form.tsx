@@ -11,11 +11,11 @@ import {type DataOfferLiveType} from '@/app/(authenticated)/data-offers/create/c
 import {type UseFormReturn} from 'react-hook-form';
 import {z} from 'zod';
 import {
-  AzureStorageForm,
-  azureStorageSchema,
-} from '@/app/(authenticated)/components/azure-storage-form';
+  AzureDataSourceForm,
+  azureDataSourceSchema,
+} from '@/app/(authenticated)/components/azure-data-source-form';
 
-export const dataOfferLiveAzureStorageSchema = azureStorageSchema.extend({
+export const dataOfferLiveAzureStorageSchema = azureDataSourceSchema.extend({
   offerLiveType: z.literal('AZURE_STORAGE' satisfies DataOfferLiveType),
 });
 
@@ -36,7 +36,7 @@ export const DataOfferLiveAzureStorageForm = ({
 
   return (
     value.offerLiveType === 'AZURE_STORAGE' && (
-      <AzureStorageForm form={form} formKey={formKeyDataOfferTypeLive} />
+      <AzureDataSourceForm form={form} formKey={formKeyDataOfferTypeLive} />
     )
   );
 };

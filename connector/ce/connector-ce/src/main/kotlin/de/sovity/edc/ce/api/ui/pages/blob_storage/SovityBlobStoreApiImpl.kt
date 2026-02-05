@@ -20,7 +20,7 @@ import org.eclipse.edc.spi.security.Vault
 @Service
 class SovityBlobStoreApiImpl(
     private val vault: Vault,
-    private val blobStoreApi: BlobStoreApi
+    private val blobStoreApi: BlobStoreApi,
 ) {
 
     private val accountCache: AccountCache by lazy {

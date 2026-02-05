@@ -16,6 +16,7 @@ import {queryKeys} from '@/lib/queryKeys';
 import {urls} from '@/lib/urls';
 import type {
   IdResponseDto,
+  UiDataSinkAzureStorage,
   UiDataSinkHttpDataPush,
   UiDataSinkHttpDataPushMethod,
   UiHttpPushAuth,
@@ -25,6 +26,7 @@ import {useMutation} from '@tanstack/react-query';
 import {useTranslations} from 'next-intl';
 import {type InitiateTransferHttpFormValue} from '@/app/(authenticated)/contracts/[contractId]/transfer/components/initiate-transfer-http-form';
 import {buildHttpHeaders} from '@/app/(authenticated)/data-offers/create/components/ui-data-source-mapper';
+import {type InitiateTransferAzureStorageFormValue} from './components/initiate-transfer-azure-storage-form';
 
 export interface InitiateTransferParams {
   contractAgreementId: string;
@@ -91,6 +93,13 @@ const buildTransferRequest = ({
       contractAgreementId,
       httpDataPush: buildHttpPushTransferRequest(formValue),
     };
+  } else if (transferType === 'AZURE_STORAGE') {
+    // AZURE STORAGE
+    return {
+      type: 'AZURE_STORAGE',
+      contractAgreementId,
+      azureStorage: buildAzureStorageTransferRequest(formValue),
+    };
   }
 
   throw new Error(`Unsupported transfer type: ${JSON.stringify(formValue)}`);
@@ -105,6 +114,17 @@ const buildHttpPushTransferRequest = (
     method: formValue.httpMethod as UiDataSinkHttpDataPushMethod,
     headers: buildHttpHeaders(formValue.httpAdditionalHeaders ?? []),
     auth: buildHttpPushAuth(formValue.auth) ?? undefined,
+  };
+};
+
+const buildAzureStorageTransferRequest = (
+  formValue: InitiateTransferAzureStorageFormValue,
+): UiDataSinkAzureStorage => {
+  return {
+    storageAccountName: formValue.storageAccountName,
+    containerName: formValue.containerName,
+    blobName: formValue.blobName,
+    folderName: formValue.useFolder ? formValue.folderName : undefined,
   };
 };
 

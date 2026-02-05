@@ -3028,6 +3028,30 @@ components:
       - dataSinkProperties
       - transferProcessProperties
       - transferType
+    UiDataSinkAzureStorage:
+      type: object
+      description: AZURE_STORAGE type Data Sink.
+      properties:
+        storageAccountName:
+          type: string
+          description: "Storage Account Name. Note, that the corresponding secret\
+            \ must be stored in the vault under storageAccountName + '-key1'"
+          example: storage-account
+        containerName:
+          type: string
+          description: Container Name of the Blob Storage
+          example: container
+        folderName:
+          type: string
+          description: Folder Name of the Blob Storage
+          example: folder
+        blobName:
+          type: string
+          description: Blob Name of the Blob Storage
+          example: folder
+      required:
+      - containerName
+      - storageAccountName
     UiDataSinkHttpDataPush:
       type: object
       description: HTTP_DATA type Data Source. This is an HttpData-PUSH data sink.
@@ -3104,6 +3128,9 @@ components:
         httpDataPush:
           $ref: '#/components/schemas/UiDataSinkHttpDataPush'
           description: Only for type HTTP_DATA_PUSH
+        azureStorage:
+          $ref: '#/components/schemas/UiDataSinkAzureStorage'
+          description: Only for type AZURE_STORAGE
         callbackAddresses:
           type: array
           description: List of endpoints to call upon given transfer events
@@ -3139,6 +3166,7 @@ components:
       - HTTP_DATA_PUSH
       - HTTP_DATA_PROXY
       - CUSTOM
+      - AZURE_STORAGE
     IdAvailabilityResponse:
       type: object
       description: Object indicates whether an ID for the given object type is already

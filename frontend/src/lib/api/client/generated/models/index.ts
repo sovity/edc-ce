@@ -110,6 +110,7 @@ export * from './UiCriterionLiteral';
 export * from './UiCriterionLiteralType';
 export * from './UiCriterionOperator';
 export * from './UiDataOffer';
+export * from './UiDataSinkAzureStorage';
 export * from './UiDataSinkHttpDataPush';
 export * from './UiDataSinkHttpDataPushMethod';
 export * from './UiDataSource';

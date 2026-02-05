@@ -88,6 +88,7 @@ object Prop {
         const val AZURE_ACCOUNT_NAME: String = "account"
         const val AZURE_CONTAINER_NAME: String = "container"
         const val AZURE_BLOB_NAME: String = "blobName"
+        const val AZURE_FOLDER_NAME: String = "folderName"
 
         object Version07 {
             /**

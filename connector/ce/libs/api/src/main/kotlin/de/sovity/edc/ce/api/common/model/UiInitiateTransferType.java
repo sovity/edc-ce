@@ -34,6 +34,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public enum UiInitiateTransferType {
     HTTP_DATA_PUSH,
     HTTP_DATA_PROXY,
-    CUSTOM
+    CUSTOM,
+    AZURE_STORAGE,
 }
 
