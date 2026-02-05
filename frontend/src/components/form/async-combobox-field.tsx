@@ -89,7 +89,7 @@ export function AsyncComboboxField<
 
   const {showDialog, dismissDialog} = useDialogsStore();
 
-  const onCreateVaultSecretClick = (field: ControllerRenderProps<any, any>) => {
+  const onCreateClick = (field: ControllerRenderProps<any, any>) => {
     const dialogId = 'async-combobox-field-dialog';
     showDialog({
       id: dialogId,
@@ -166,7 +166,7 @@ export function AsyncComboboxField<
                       !isLoading &&
                       !isError && (
                         <CommandItem
-                          onSelect={() => onCreateVaultSecretClick(field)}>
+                          onSelect={() => onCreateClick(field)}>
                           <PlusIcon className="ml-auto" />
                           <div className="flex min-w-0 flex-1 flex-col gap-1">
                             <span className="text-sm font-medium">

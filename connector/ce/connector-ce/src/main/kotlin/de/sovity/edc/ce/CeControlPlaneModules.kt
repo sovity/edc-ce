@@ -15,6 +15,7 @@ import de.sovity.edc.ce.config.moduleIfCeDataspace
 import de.sovity.edc.ce.config.withCeDataspaceChoice
 import de.sovity.edc.ce.dependency_bundles.CeDependencyBundles
 import de.sovity.edc.ce.modules.auth.ApiKeyAuthModule
+import de.sovity.edc.ce.modules.azure_provision.AzureProvisionOverrideModule
 import de.sovity.edc.ce.modules.config_utils.ConfigUtilsImpl
 import de.sovity.edc.ce.modules.config_utils.ConfigUtilsModule
 import de.sovity.edc.ce.modules.dataspaces.catena.CatenaDataspaceFeatures
@@ -126,6 +127,7 @@ object CeControlPlaneModules {
             EdrTokenSecretModule.instance(),
             SimplePolicyCreatorModule.instance(),
             SovityMessengerModule.instance(),
+            AzureProvisionOverrideModule.instance()
         )
 
         property(

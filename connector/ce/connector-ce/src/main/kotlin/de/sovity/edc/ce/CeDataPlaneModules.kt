@@ -96,6 +96,13 @@ object CeDataPlaneModules {
         ) {
             defaultValue("PT5s")
         }
+
+        property(
+            ConfigPropCategory.OVERRIDES,
+            CeConfigProps.EDC_DATAPLANE_AWS_SINK_CHUNK_SIZE_MB
+        ) {
+            defaultValue("50")
+        }
     }
 
     fun baseStandalone() = EdcModule(
@@ -185,7 +192,7 @@ object CeDataPlaneModules {
             ConfigPropCategory.OVERRIDES,
             CeConfigProps.EDC_DATAPLANE_TRANSFERTYPES
         ) {
-            defaultValue("HttpData-PUSH,HttpData-PULL,AmazonS3-PUSH")
+            defaultValue("HttpData-PUSH,HttpData-PULL,AmazonS3-PUSH,AzureStorage-PUSH")
             warnIfOverridden = true
         }
         property(

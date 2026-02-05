@@ -13,6 +13,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from '@/components/ui/form';
 import {Input} from '@/components/ui/input';
 import {type Control} from 'react-hook-form';
@@ -33,6 +34,8 @@ export interface TextFieldProps {
   children?: React.ReactNode;
   disabled?: boolean;
   className?: string;
+  description?: string;
+  onChangeExec?: (value: string) => void;
 }
 
 const InputField = ({
@@ -49,6 +52,8 @@ const InputField = ({
   disabled,
   className,
   value,
+  description,
+  onChangeExec,
 }: TextFieldProps) => {
   return (
     <FormField
@@ -75,7 +80,12 @@ const InputField = ({
                 type={type ?? 'text'}
                 autoComplete={disableAutoComplete ? 'off' : undefined}
                 disabled={disabled}
+                onChange={(e) => {
+                  field.onChange(e);
+                  onChangeExec?.(e.target.value);
+                }}
               />
+              {description && <FormDescription>{description}</FormDescription>}
             </div>
           </FormControl>
           <FormMessage />

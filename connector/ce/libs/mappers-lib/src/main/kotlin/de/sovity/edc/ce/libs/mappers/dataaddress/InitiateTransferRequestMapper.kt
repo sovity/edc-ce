@@ -22,6 +22,7 @@ package de.sovity.edc.ce.libs.mappers.dataaddress
 
 import de.sovity.edc.ce.api.common.model.UiInitiateTransferRequest
 import de.sovity.edc.ce.api.common.model.UiInitiateTransferType
+import de.sovity.edc.ce.libs.mappers.dataaddress.http.AzureStorageDataSinkMapper
 import de.sovity.edc.ce.libs.mappers.dataaddress.http.HttpDataProxyTransferMapper
 import de.sovity.edc.ce.libs.mappers.dataaddress.http.HttpDataPushTransferMapper
 import de.sovity.edc.ce.libs.mappers.dataaddress.model.InitiateTransferParams
@@ -30,7 +31,8 @@ import de.sovity.edc.runtime.simple_di.Service
 @Service
 class InitiateTransferRequestMapper(
     private val httpDataPushTransferMapper: HttpDataPushTransferMapper,
-    private val httpDataProxyTransferMapper: HttpDataProxyTransferMapper
+    private val httpDataProxyTransferMapper: HttpDataProxyTransferMapper,
+    private val azureStorageDataSinkMapper: AzureStorageDataSinkMapper
 ) {
 
     /**
@@ -43,6 +45,9 @@ class InitiateTransferRequestMapper(
 
             UiInitiateTransferType.HTTP_DATA_PROXY ->
                 httpDataProxyTransferMapper.buildTransferParams()
+
+            UiInitiateTransferType.AZURE_STORAGE ->
+                azureStorageDataSinkMapper.buildAzureStorageTransferData(request.azureStorage)
 
             UiInitiateTransferType.CUSTOM ->
                 InitiateTransferParams()

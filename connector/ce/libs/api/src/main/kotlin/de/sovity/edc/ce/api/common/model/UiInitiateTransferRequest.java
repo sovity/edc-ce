@@ -54,6 +54,12 @@ public class UiInitiateTransferRequest {
     private UiDataSinkHttpDataPush httpDataPush;
 
     @Schema(
+        description = "Only for type AZURE_STORAGE",
+        requiredMode = Schema.RequiredMode.NOT_REQUIRED
+    )
+    private UiDataSinkAzureStorage azureStorage;
+
+    @Schema(
         description = "List of endpoints to call upon given transfer events",
         requiredMode = Schema.RequiredMode.NOT_REQUIRED
     )

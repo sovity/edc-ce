@@ -18,16 +18,16 @@ import {useQuery} from '@tanstack/react-query';
 import VaultSecretField from '@/components/vault-secret-field';
 import {Button} from '@/components/ui/button';
 
-export const azureStorageSchema = z.object({
+export const azureDataSourceSchema = z.object({
   accountKey: z.string().min(1, 'Account Key is required'),
   storageAccountName: z.string().min(1, 'Shared Access Secret is required'),
   containerName: z.string().min(1, 'Container is required'),
   blobName: z.string().min(1, 'Blob is required'),
 });
 
-export type AzureStorageFormValue = z.infer<typeof azureStorageSchema>;
+export type AzureDataSourceFormValue = z.infer<typeof azureDataSourceSchema>;
 
-export const AzureStorageForm = ({
+export const AzureDataSourceForm = ({
   form,
   formKey,
 }: {
@@ -38,7 +38,7 @@ export const AzureStorageForm = ({
 
   const value = (
     formKey ? form.watch(formKey) : form.watch()
-  ) as AzureStorageFormValue;
+  ) as AzureDataSourceFormValue;
 
   const fieldKey = useCallback(
     (key: string): string => (formKey ? `${formKey}.${key}` : key),

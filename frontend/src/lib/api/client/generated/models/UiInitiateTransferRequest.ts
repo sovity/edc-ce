@@ -53,6 +53,13 @@ import {
     UiInitiateTransferTypeToJSON,
     UiInitiateTransferTypeToJSONTyped,
 } from './UiInitiateTransferType';
+import type { UiDataSinkAzureStorage } from './UiDataSinkAzureStorage';
+import {
+    UiDataSinkAzureStorageFromJSON,
+    UiDataSinkAzureStorageFromJSONTyped,
+    UiDataSinkAzureStorageToJSON,
+    UiDataSinkAzureStorageToJSONTyped,
+} from './UiDataSinkAzureStorage';
 
 /**
  * Type-safe data sink as supported by the sovity product landscape. Contains extension points for using custom data address properties.
@@ -78,6 +85,12 @@ export interface UiInitiateTransferRequest {
      * @memberof UiInitiateTransferRequest
      */
     httpDataPush?: UiDataSinkHttpDataPush;
+    /**
+     * Only for type AZURE_STORAGE
+     * @type {UiDataSinkAzureStorage}
+     * @memberof UiInitiateTransferRequest
+     */
+    azureStorage?: UiDataSinkAzureStorage;
     /**
      * List of endpoints to call upon given transfer events
      * @type {Array<CallbackAddressDto>}
@@ -128,6 +141,7 @@ export function UiInitiateTransferRequestFromJSONTyped(json: any, ignoreDiscrimi
         'contractAgreementId': json['contractAgreementId'],
         'type': UiInitiateTransferTypeFromJSON(json['type']),
         'httpDataPush': json['httpDataPush'] == null ? undefined : UiDataSinkHttpDataPushFromJSON(json['httpDataPush']),
+        'azureStorage': json['azureStorage'] == null ? undefined : UiDataSinkAzureStorageFromJSON(json['azureStorage']),
         'callbackAddresses': json['callbackAddresses'] == null ? undefined : ((json['callbackAddresses'] as Array<any>).map(CallbackAddressDtoFromJSON)),
         'customDataSinkProperties': json['customDataSinkProperties'] == null ? undefined : json['customDataSinkProperties'],
         'customTransferPrivateProperties': json['customTransferPrivateProperties'] == null ? undefined : json['customTransferPrivateProperties'],
@@ -149,6 +163,7 @@ export function UiInitiateTransferRequestToJSONTyped(value?: UiInitiateTransferR
         'contractAgreementId': value['contractAgreementId'],
         'type': UiInitiateTransferTypeToJSON(value['type']),
         'httpDataPush': UiDataSinkHttpDataPushToJSON(value['httpDataPush']),
+        'azureStorage': UiDataSinkAzureStorageToJSON(value['azureStorage']),
         'callbackAddresses': value['callbackAddresses'] == null ? undefined : ((value['callbackAddresses'] as Array<any>).map(CallbackAddressDtoToJSON)),
         'customDataSinkProperties': value['customDataSinkProperties'],
         'customTransferPrivateProperties': value['customTransferPrivateProperties'],

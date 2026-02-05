@@ -23,6 +23,12 @@ export const useInitiateTransferForm = () => {
     auth: {type: 'NONE'},
   };
 
+  const defaultAzure: InitiateTransferFormValue = {
+    transferType: 'AZURE_STORAGE',
+    storageAccountName: '',
+    containerName: '',
+  };
+
   const defaultCustom: InitiateTransferFormValue = {
     transferType: 'CUSTOM_JSON',
     dataAddressJson: '{\n}',
@@ -36,6 +42,7 @@ export const useInitiateTransferForm = () => {
       resolver: zodResolver(initiateTransferFormSchema),
       defaultValues: {
         ...defaultCustom,
+        ...defaultAzure,
         ...defaultHttp,
       },
     }),

@@ -832,4 +832,10 @@ object CeConfigProps {
             " Should a non-Microsoft Azure Blob backend be used, e.g. a China region one, this template can be adjusted." +
             " For example https://%s.blob.core.windows.net",
     )
+
+    @JvmStatic
+    val EDC_DATAPLANE_AWS_SINK_CHUNK_SIZE_MB = ConfigPropRef(
+        property = "edc.dataplane.aws.sink.chunk.size.mb",
+        defaultDocumentation = "Sets the chunk size in megabytes for the AWS S3 transfers.",
+    )
 }

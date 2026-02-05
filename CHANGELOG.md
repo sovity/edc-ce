@@ -2,6 +2,34 @@
 
 The versions of the sovity EDC CE are aligned with the sovity EDC EE.
 
+
+## [v16.4.0] - 2026-02-05
+
+### Overview
+
+Add Azure Blob Storage as a data sink.
+
+#### Minor Changes
+
+- Add Azure Blob Storage selection for data sinks
+
+#### Patch Changes
+
+- Add default value for property that defines AWS data sink chunk size
+
+### Deployment Migration Notes
+
+Adds the string `AzureStorage-PUSH` to the environment variable `edc.dataplane.transfertypes` by default. This is needed for the Azure Blob Storage to work as a data sink.
+
+#### Compatible Versions
+
+- EDC CE Backend: `ghcr.io/sovity/edc-ce:16.4.0`
+- EDC CE Frontend: `ghcr.io/sovity/edc-ce-ui:16.4.0`
+- PostgreSQL: `17`
+- Eclipse EDC Fork: [v0.11.1.3](https://github.com/sovity/core-edc/releases/tag/v0.11.1.3)
+- Tractus-X: `0.9.0`
+
+
 ## [v16.3.0] - 2025-11-27
 
 ### Overview
@@ -15,7 +43,8 @@ Azure Blob Storage Support for transfers and enable JSON-LD input policy creatio
 
 ### Deployment Migration Notes
 
-_No special deployment migration steps required_
+- Adds the environment variable `edc.blobstore.endpoint.template`
+  - Should a non-Microsoft Azure Blob backend be used, e.g. for a different region, this template can be adjusted.
 
 #### Compatible Versions
 
@@ -33,8 +62,7 @@ Sync version with EE
 
 ### Deployment Migration Notes
 
-- Adds the environment variable `edc.blobstore.endpoint.template`
-  - Should a non-Microsoft Azure Blob backend be used, e.g. for a different region, this template can be adjusted.
+_No special deployment migration steps required_
 
 #### Compatible Versions
 

@@ -25,10 +25,11 @@ interface ActionConfirmDialogProps<T, S> {
   buttonType: 'WARNING' | 'DEFAULT';
   buttonLabel: string;
   confirmCheckboxLabel?: string;
-  useActionMutation: (dismiss: () => void) => UseMutationResult<S, Error, T>;
-  mutationArgs: T;
+  useActionMutation?: (dismiss: () => void) => UseMutationResult<S, Error, T>;
+  mutationArgs?: T;
   children?: React.ReactNode;
   dismiss: () => void;
+  onConfirm?: () => void;
 }
 
 const ActionConfirmDialog = <T, S>({
@@ -37,10 +38,13 @@ const ActionConfirmDialog = <T, S>({
   ...props
 }: ActionConfirmDialogProps<T, S>) => {
   const [isChecked, setIsChecked] = useState(false);
-  const mutation = useActionMutation(props.dismiss);
+  const mutation = useActionMutation?.(props.dismiss);
 
   const onConfirm = () => {
-    mutation.mutate(props.mutationArgs);
+    if (props.mutationArgs) {
+      mutation?.mutate(props.mutationArgs);
+    }
+    props.onConfirm?.();
   };
 
   const hasConfirmCheckbox = props.confirmCheckboxLabel !== undefined;
@@ -69,8 +73,8 @@ const ActionConfirmDialog = <T, S>({
           type="submit"
           dataTestId={`btn-confirm`}
           onClick={onConfirm}
-          disabled={mutation.isLoading || (hasConfirmCheckbox && !isChecked)}
-          isLoading={mutation.isLoading}
+          disabled={mutation?.isLoading || (hasConfirmCheckbox && !isChecked)}
+          isLoading={mutation?.isLoading}
           variant={props.buttonType === 'WARNING' ? 'destructive' : 'default'}>
           {props.buttonLabel}
         </Button>
