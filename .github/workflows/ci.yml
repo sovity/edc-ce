@@ -9,6 +9,10 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  id-token: write
+  contents: read
+
 env:
   REGISTRY_URL: ghcr.io
   REGISTRY_USER: ${{ github.actor }}
@@ -59,11 +63,11 @@ jobs:
       contents: read
       packages: write
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: "Set up Node 24"
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: "24.x"
           cache: "yarn"
@@ -186,8 +190,6 @@ jobs:
         if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v') }}
         working-directory: connector/ce/libs/api-clients/typescript-client
         run: |
-          npm set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN
-          npm set //registry.npmjs.org/:username $NODE_USER
           npm publish --access public --tag "${{ env.DIST_TAG }}"
         env:
           NODE_USER: richardtreier-sovity
