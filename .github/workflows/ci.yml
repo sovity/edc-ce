@@ -9,10 +9,6 @@ on:
   pull_request:
     branches: [main]
 
-permissions:
-  id-token: write
-  contents: read
-
 env:
   REGISTRY_URL: ghcr.io
   REGISTRY_USER: ${{ github.actor }}
@@ -63,11 +59,11 @@ jobs:
       contents: read
       packages: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: "Set up Node 24"
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
           node-version: "24.x"
           cache: "yarn"
@@ -146,6 +142,9 @@ jobs:
     name: TS API Client Library
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: FranzDiebold/github-env-vars-action@v2
       - uses: actions/checkout@v3
@@ -158,6 +157,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "24"
+          registry-url: "https://registry.npmjs.org"
           cache: "npm"
           cache-dependency-path: connector/ce/libs/api-clients/typescript-client/package.json
       - name: "Gradle: Validate Gradle Wrapper"
@@ -189,11 +189,7 @@ jobs:
       - name: "NPM: Publish (Main & Releases Only)"
         if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v') }}
         working-directory: connector/ce/libs/api-clients/typescript-client
-        run: |
-          npm publish --access public --tag "${{ env.DIST_TAG }}"
-        env:
-          NODE_USER: richardtreier-sovity
-          NODE_AUTH_TOKEN: ${{ secrets.SOVITY_EDC_CLIENT_NPM_AUTH }}
+        run: npm publish --access public --tag "${{ env.DIST_TAG }}"
   check-migration-script-names:
     name: "Check Migration Script Names"
     env:
