@@ -43,7 +43,7 @@ These libraries are essential to interact smoothly with the sovity EDC services.
 // backend/build.gradle.kts
 
 // sovity EDC Dependencies
-implementation("de.sovity.edc:client:16.4.0")
-implementation("de.sovity.edc:jsonld-lib:16.4.0")
+implementation("de.sovity.edc:client:16.4.1")
+implementation("de.sovity.edc:jsonld-lib:16.4.1")
 ```
 ```

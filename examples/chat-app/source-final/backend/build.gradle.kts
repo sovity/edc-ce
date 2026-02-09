@@ -51,8 +51,8 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("io.quarkus:quarkus-arc")
     // sovity EDC Dependencies
-    implementation("de.sovity.edc:client:16.4.0")
-    implementation("de.sovity.edc:jsonld-lib:16.4.0")
+    implementation("de.sovity.edc:client:16.4.1")
+    implementation("de.sovity.edc:jsonld-lib:16.4.1")
 
     // Tests
     testImplementation("org.assertj:assertj-core:3.27.3")
