@@ -11,7 +11,7 @@ import de.sovity.edc.ce.config.CeConfigProps
 import de.sovity.edc.ce.config.CeEnvironment
 import de.sovity.edc.ce.config.getCeEnvironment
 import de.sovity.edc.ce.dependency_bundles.CeDependencyBundles
-import de.sovity.edc.ce.modules.control_api.ControlApiUrlOverrideModule
+import de.sovity.edc.ce.modules.fixes.control_api.ControlApiUrlOverrideModule
 import de.sovity.edc.ce.modules.test_utils.TestBackendModule
 import de.sovity.edc.ce.modules.vault.hashicorp.HashicorpVaultModule
 import de.sovity.edc.ce.modules.vault.inmemory.InMemoryVaultModule

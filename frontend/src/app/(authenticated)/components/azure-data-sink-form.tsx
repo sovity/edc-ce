@@ -10,7 +10,7 @@
 import {useTranslations} from 'next-intl';
 import {type UseFormReturn} from 'react-hook-form';
 import {z} from 'zod';
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import InputField from '@/components/form/input-field';
 import {api} from '@/lib/api/client';
 import {useQuery} from '@tanstack/react-query';

@@ -132,6 +132,9 @@ dependencyBundles.bundle(
     api(libs.edc.jsonLd)
     api(libs.edc.tokenCore)
     api(libs.edc.aws.validatorDataAddressS3)
+
+    // Can be removed as of EDC 0.13.x
+    api(libs.edc.statemachineLib)
 }
 
 dependencyBundles.bundle(

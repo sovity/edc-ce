@@ -3,6 +3,29 @@
 The versions of the sovity EDC CE are aligned with the sovity EDC EE.
 
 
+## [v16.4.2] - 2026-02-19
+
+### Overview
+
+Bugfix for stuck PULL transfer processes.
+
+#### Patch Changes
+
+- Fix PULL transfer processes being stuck in RECEIVED state
+
+### Deployment Migration Notes
+
+_No special deployment migration steps required_
+
+#### Compatible Versions
+
+- EDC CE Backend: `ghcr.io/sovity/edc-ce:16.4.2`
+- EDC CE Frontend: `ghcr.io/sovity/edc-ce-ui:16.4.2`
+- PostgreSQL: `17`
+- Eclipse EDC Fork: [v0.11.1.3](https://github.com/sovity/core-edc/releases/tag/v0.11.1.3)
+- Tractus-X: `0.9.0`
+
+
 ## [v16.4.1] - 2026-02-09
 
 ### Overview
