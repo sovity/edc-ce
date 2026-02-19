@@ -5,7 +5,7 @@
  *
  * SPDX-License-Identifier: Elastic-2.0
  */
-package de.sovity.edc.ce.modules.azure_provision
+package de.sovity.edc.ce.modules.fixes.azure_provision
 
 import de.sovity.edc.runtime.modules.model.EdcModule
 import org.eclipse.edc.connector.provision.azure.AzureProvisionExtension

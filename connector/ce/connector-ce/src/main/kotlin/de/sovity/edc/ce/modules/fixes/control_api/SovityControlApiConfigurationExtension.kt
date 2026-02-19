@@ -5,7 +5,7 @@
  *
  * SPDX-License-Identifier: Elastic-2.0
  */
-package de.sovity.edc.ce.modules.control_api
+package de.sovity.edc.ce.modules.fixes.control_api
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import de.sovity.edc.ce.config.CeConfigProps

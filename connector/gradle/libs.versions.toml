@@ -158,6 +158,9 @@ edc-transformLib = { module = "org.eclipse.edc:transform-lib", version.ref = "ed
 edc-transformSpi = { module = "org.eclipse.edc:transform-spi", version.ref = "edc" }
 edc-validatorDataAddressHttpData = { module = "org.eclipse.edc:validator-data-address-http-data", version.ref = "edc" }
 edc-vaultHashicorp = { module = "org.eclipse.edc:vault-hashicorp", version.ref = "edc" }
+
+# Can be removed as of EDC 0.13.x
+edc-statemachineLib = { module = "org.eclipse.edc:state-machine-lib", version.ref = "edc" }
 edc-aws-dataPlaneAwsS3 = { module = "org.eclipse.edc.aws:data-plane-aws-s3", version.ref = "edcUniverse" }
 edc-azure-dataPlaneAzureStorage = { module = "org.eclipse.edc.azure:data-plane-azure-storage", version.ref = "edcUniverse" }
 edc-azure-provisionBlob = { module = "org.eclipse.edc.azure:provision-blob", version.ref = "edcUniverse" }
