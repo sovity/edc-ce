@@ -2,10 +2,21 @@ name: "Idea / Gap Box"
 description: Quickly capture an idea or a gap in sovity products, who it impacts, and why it matters. No need to propose a solution.
 type: Idea / Gap
 body:
+  - type: dropdown
+    id: sanity_check
+    attributes:
+      label: 1. I confirm that my idea is not already a feature / planned on the product roadmap.
+      description: I have thoroughly checked sovity products on staging environments / reviewed the knowledge base to ensure my idea is unique / searched the product backlog for this component.
+      options:
+        - Not selected
+        - "Yes"
+        - "No"
+    validations:
+      required: true
   - type: textarea
     id: problem_statement
     attributes:
-      label: 1. I have this Idea / I identified this Gap:*
+      label: 2. I have this Idea / I identified this Gap:*
       description: Focus on the user's needs / pains / goals. Avoid jumping to solutions. Give as much context as possible.
       placeholder: As a user of sovity CaaS, I want [INSERT WISH / NEED], so that I can [INSERT GOAL].
     validations:
@@ -13,7 +24,7 @@ body:
   - type: dropdown
     id: stakeholder_group
     attributes:
-      label: 2. A solution to the idea / gap will make happy:* 
+      label: 3. A solution to the idea / gap will make happy:* 
       description: Multiple selections possible, click on the dropdown again. Of course everything we do benefits end users. However, sometimes some stakeholders require particular attention.
       multiple: true
       options:
@@ -33,7 +44,7 @@ body:
   - type: dropdown
     id: importance
     attributes:
-      label: 3. What’s the impact if this isn’t addressed?*
+      label: 4. What’s the impact if this isn’t addressed?*
       description: Choose from dropdown.
       options:
         - Not selected
@@ -45,7 +56,7 @@ body:
   - type: checkboxes
     id: problem_frequency
     attributes:
-      label: 4. How many times per month does the problem occur?
+      label: 5. How many times per month does the problem occur?
       description: Providing an average number is good enough.
       options:
         - label: 1 time
@@ -59,12 +70,12 @@ body:
   - type: input
     id: problem_duration
     attributes:
-      label: 5. In minutes, how long does one instance of the  problem last? 
+      label: 6. In minutes, how long does one instance of the  problem last? 
       description: Providing an average number is good enough.    
   - type: checkboxes
     id: problem_mention
     attributes:
-      label: 6. In your role, how many different sources mentioned the problem?
+      label: 7. In your role, how many different sources mentioned the problem?
       description: Providing an average number is good enough.
       options:
         - label: 1 source
@@ -73,29 +84,29 @@ body:
   - type: textarea
     id: acceptance_criteria
     attributes:
-      label: 7. What does success look like?
+      label: 8. What does success look like?
       description: Optional but encouraged. Define clear outcomes or acceptance criteria.
       placeholder: User can click ‘Export’ on UI and download a CSV with all visible data columns.
   - type: textarea
     id: constraint
     attributes:
-      label: 8. Any constraints or requirements?
+      label: 9. Any constraints or requirements?
       description: Optional. Security, performance, compliance, etc.
       placeholder: Must be compatible with CX Industry Core KIT.
   - type: textarea
     id: internal_stakeholder
     attributes:
-      label: 9. Internal stakeholders for whom this idea might be valuable. 
+      label: 10. Internal stakeholders for whom this idea might be valuable. 
       description: Tag them with @ !
   - type: textarea
     id: solution
     attributes:
-      label: 10. Potential Directions or Solutions (if any)
+      label: 11. Potential Directions or Solutions (if any)
       description: Optional. If you already have thoughts on how to approach this, list them here. Product and Engineering teams will consider them.
       placeholder: Add a button next to the report filters on the page X of apps YYY.
   - type: textarea
     id: attachments
     attributes:
-      label: 11. Attachments or references
+      label: 12. Attachments or references
       description: Optional. Screenshots, links to customer feedback, MS Teams threads, etc.
       

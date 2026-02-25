@@ -1,6 +1,6 @@
 name: Bug Report Template
 description: Report a bug to help us improve
-type: Bug Report
+type: Bug
 body:
   - type: textarea
     id: description
@@ -46,7 +46,7 @@ body:
     attributes:
       label: Relevant log output
       description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
-      render: shell
+      render: bash
     validations:
       required: false
   - type: textarea
