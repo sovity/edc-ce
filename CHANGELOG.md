@@ -3,6 +3,30 @@
 The versions of the sovity EDC CE are aligned with the sovity EDC EE.
 
 
+## [v16.4.3] - 2026-03-06
+
+### Overview
+
+Database load reduction and Trivy GitHub action update.
+
+#### Patch Changes
+
+- Reduce database load by creating indices on foreign keys and clean up orphaned leases
+- Update Trivy GitHub action to version 0.34.2
+
+### Deployment Migration Notes
+
+_No special deployment migration steps required_
+
+#### Compatible Versions
+
+- EDC CE Backend: `ghcr.io/sovity/edc-ce:16.4.3`
+- EDC CE Frontend: `ghcr.io/sovity/edc-ce-ui:16.4.3`
+- PostgreSQL: `17`
+- Eclipse EDC Fork: [v0.11.1.3](https://github.com/sovity/core-edc/releases/tag/v0.11.1.3)
+- Tractus-X: `0.9.0`
+
+
 ## [v16.4.2] - 2026-02-19
 
 ### Overview

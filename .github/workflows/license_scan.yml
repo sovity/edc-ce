@@ -13,7 +13,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run license scanner
-        uses: aquasecurity/trivy-action@0.24.0
+        uses: aquasecurity/trivy-action@0.34.2
         env:
           TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
         with:
@@ -33,7 +33,7 @@ jobs:
       - name: npm install (typescript-client)
         run: cd connector/ce/libs/api-clients/typescript-client && npm clean-install
       - name: Run license scanner
-        uses: aquasecurity/trivy-action@0.24.0
+        uses: aquasecurity/trivy-action@0.34.2
         env:
           TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
         with:
