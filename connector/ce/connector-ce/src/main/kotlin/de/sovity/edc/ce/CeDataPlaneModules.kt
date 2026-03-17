@@ -107,6 +107,25 @@ object CeDataPlaneModules {
         ) {
             defaultValue("50")
         }
+
+        property(
+            ConfigPropCategory.OVERRIDES,
+            CeConfigProps.EDC_DATAPLANE_STATE_MACHINE_FLOW_LEASE_TIME
+        ) {
+            defaultValue("3600000")
+        }
+        property(
+            ConfigPropCategory.OVERRIDES,
+            CeConfigProps.EDC_DATAPLANE_STATE_MACHINE_FLOW_LEASE_FACTOR
+        ) {
+            defaultValue("0")
+        }
+        property(
+            ConfigPropCategory.OVERRIDES,
+            CeConfigProps.EDC_DATAPLANE_STATE_MACHINE_BATCH_SIZE
+        ) {
+            defaultValue("5")
+        }
     }
 
     fun baseStandalone() = EdcModule(

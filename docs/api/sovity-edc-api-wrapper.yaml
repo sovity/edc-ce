@@ -3065,10 +3065,6 @@ components:
           type: string
           description: HTTP Request URL.
           example: https://my-app.my-org.com/api/edc-data-offer/v1
-        queryString:
-          type: string
-          description: HTTP Request Query Params / Query String.
-          example: search=example&limit=10
         auth:
           $ref: '#/components/schemas/UiHttpPushAuth'
           description: The authentication method.

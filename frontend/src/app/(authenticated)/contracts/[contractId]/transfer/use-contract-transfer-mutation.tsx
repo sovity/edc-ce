@@ -110,7 +110,6 @@ const buildHttpPushTransferRequest = (
 ): UiDataSinkHttpDataPush => {
   return {
     baseUrl: formValue.httpUrl,
-    queryString: '',
     method: formValue.httpMethod as UiDataSinkHttpDataPushMethod,
     headers: buildHttpHeaders(formValue.httpAdditionalHeaders ?? []),
     auth: buildHttpPushAuth(formValue.auth) ?? undefined,

@@ -43,7 +43,7 @@ class HttpDataPushTransferMapper(
         val dataAddress = httpDataAddressMapper.buildDataAddress(
             baseUrl = httpData.baseUrl,
             method = httpData.method?.name,
-            queryString = httpData.queryString,
+            queryString = null,
             auth = mapAuth(httpData.auth),
             headers = httpData.headers
         )

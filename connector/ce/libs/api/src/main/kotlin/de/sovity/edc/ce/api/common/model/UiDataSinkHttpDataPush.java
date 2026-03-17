@@ -51,14 +51,6 @@ public class UiDataSinkHttpDataPush {
     private String baseUrl;
 
     @Schema(
-        description = "HTTP Request Query Params / Query String.",
-        example = "search=example&limit=10",
-        requiredMode = Schema.RequiredMode.NOT_REQUIRED
-    )
-    private String queryString;
-
-
-    @Schema(
         description = "The authentication method.",
         requiredMode = Schema.RequiredMode.NOT_REQUIRED
     )
