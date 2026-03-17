@@ -440,6 +440,12 @@ object CeConfigProps {
         defaultDocumentation = "Full URL for the DSP callback address",
     )
 
+    @JvmStatic
+    val EDC_CONTROL_ENDPOINT = ConfigPropRef(
+        property = "edc.control.endpoint",
+        defaultDocumentation = "Configures endpoint for reaching the Control API."
+    )
+
     @JvmField
     val SOVITY_CONTRACT_TERMINATION_THREAD_POOL_SIZE = ConfigPropRef(
         property = "sovity.contract.termination.thread.pool_size",
@@ -837,5 +843,25 @@ object CeConfigProps {
     val EDC_DATAPLANE_AWS_SINK_CHUNK_SIZE_MB = ConfigPropRef(
         property = "edc.dataplane.aws.sink.chunk.size.mb",
         defaultDocumentation = "Sets the chunk size in megabytes for the AWS S3 transfers.",
+    )
+
+    @JvmStatic
+    val EDC_DATAPLANE_STATE_MACHINE_FLOW_LEASE_TIME = ConfigPropRef(
+        property = "edc.dataplane.state-machine.flow.lease.time",
+        defaultDocumentation = "The time in milliseconds after which a runtime renews its" +
+            " ownership on a started data flow.",
+    )
+
+    @JvmStatic
+    val EDC_DATAPLANE_STATE_MACHINE_FLOW_LEASE_FACTOR = ConfigPropRef(
+        property = "edc.dataplane.state-machine.flow.lease.factor",
+        defaultDocumentation = "After flow lease time * factor a started data flow will be considered abandoned by" +
+            " the owner and so another runtime can caught it up and start it again.",
+    )
+
+    @JvmStatic
+    val EDC_DATAPLANE_STATE_MACHINE_BATCH_SIZE = ConfigPropRef(
+        property = "edc.dataplane.state-machine.batch-size",
+        defaultDocumentation = "The number of entities to be processed on every iteration.",
     )
 }

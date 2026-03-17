@@ -69,7 +69,7 @@ export const InitiateTransferHttpForm = ({
   return (
     value.transferType === 'HTTP' && (
       <>
-        {/* HTTP Data Source: Method */}
+        {/* HTTP Data Sink: Method */}
         <SelectField
           control={form.control}
           name={'httpMethod'}
@@ -83,25 +83,16 @@ export const InitiateTransferHttpForm = ({
             }))}
         />
 
-        {/* HTTP Data Source: URL */}
+        {/* HTTP Data Sink: URL */}
         <InputField
           control={form.control}
           name={'httpUrl'}
-          placeholder={'https://my-data-source.com/api'}
+          placeholder={'https://my-data-sink.com/api'}
           label={t('General.httpUrlLabel')}
           isRequired
         />
 
-        {/* HTTP Data Source: Query Params */}
-        <KeyValuePairsField
-          control={form.control}
-          name={'httpQueryParams'}
-          label={t('General.httpQueryParamsLabel')}
-          keyPlaceholder={t('General.httpQueryParamsKeyPlaceholder')}
-          valuePlaceholder={t('General.httpQueryParamsValuePlaceholder')}
-        />
-
-        {/* HTTP Data Source: Authentication */}
+        {/* HTTP Data Sink: Authentication */}
         <SelectField
           control={form.control}
           name={'auth.type'}
@@ -123,7 +114,7 @@ export const InitiateTransferHttpForm = ({
           placeholder={''}
         />
 
-        {/* HTTP Data Source: Auth Header via Secret */}
+        {/* HTTP Data Sink: Auth Header via Secret */}
         {value.auth.type === 'VAULT_SECRET' && (
           <div className={'flex gap-4'}>
             <InputField
@@ -144,7 +135,7 @@ export const InitiateTransferHttpForm = ({
           </div>
         )}
 
-        {/* HTTP Data Source: Auth Basic */}
+        {/* HTTP Data Sink: Auth Basic */}
         {value.auth.type === 'BASIC' && (
           <>
             <InputField
@@ -167,7 +158,7 @@ export const InitiateTransferHttpForm = ({
           </>
         )}
 
-        {/* HTTP Data Source: Additional Headers */}
+        {/* HTTP Data Sink: Additional Headers */}
         <KeyValuePairsField
           control={form.control}
           name={'httpAdditionalHeaders'}

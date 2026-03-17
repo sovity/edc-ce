@@ -66,12 +66,6 @@ export interface UiDataSinkHttpDataPush {
      */
     baseUrl: string;
     /**
-     * HTTP Request Query Params / Query String.
-     * @type {string}
-     * @memberof UiDataSinkHttpDataPush
-     */
-    queryString?: string;
-    /**
      * The authentication method.
      * @type {UiHttpPushAuth}
      * @memberof UiDataSinkHttpDataPush
@@ -107,7 +101,6 @@ export function UiDataSinkHttpDataPushFromJSONTyped(json: any, ignoreDiscriminat
         
         'method': json['method'] == null ? undefined : UiDataSinkHttpDataPushMethodFromJSON(json['method']),
         'baseUrl': json['baseUrl'],
-        'queryString': json['queryString'] == null ? undefined : json['queryString'],
         'auth': json['auth'] == null ? undefined : UiHttpPushAuthFromJSON(json['auth']),
         'headers': json['headers'] == null ? undefined : json['headers'],
     };
@@ -126,7 +119,6 @@ export function UiDataSinkHttpDataPushToJSONTyped(value?: UiDataSinkHttpDataPush
         
         'method': UiDataSinkHttpDataPushMethodToJSON(value['method']),
         'baseUrl': value['baseUrl'],
-        'queryString': value['queryString'],
         'auth': UiHttpPushAuthToJSON(value['auth']),
         'headers': value['headers'],
     };

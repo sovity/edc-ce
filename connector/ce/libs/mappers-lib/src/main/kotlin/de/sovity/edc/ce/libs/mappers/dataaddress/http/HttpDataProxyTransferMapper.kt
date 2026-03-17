@@ -20,7 +20,6 @@
  */
 package de.sovity.edc.ce.libs.mappers.dataaddress.http
 
-import de.sovity.edc.ce.api.common.model.UiDataSinkHttpDataPush
 import de.sovity.edc.ce.libs.mappers.dataaddress.model.InitiateTransferParams
 import de.sovity.edc.runtime.simple_di.Service
 import de.sovity.edc.utils.jsonld.vocab.Prop
@@ -33,7 +32,6 @@ class HttpDataProxyTransferMapper(
     /**
      * Transfer Params for type HttpData-PROXY
      *
-     * @param httpData [UiDataSinkHttpDataPush]
      * @return properties for [org.eclipse.edc.spi.types.domain.DataAddress]
      */
     fun buildTransferParams(): InitiateTransferParams {

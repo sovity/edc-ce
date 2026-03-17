@@ -11,7 +11,7 @@ import de.sovity.edc.ce.config.CeConfigProps
 import de.sovity.edc.ce.config.CeEnvironment
 import de.sovity.edc.ce.config.getCeEnvironment
 import de.sovity.edc.ce.dependency_bundles.CeDependencyBundles
-import de.sovity.edc.ce.modules.fixes.control_api.ControlApiUrlOverrideModule
+import de.sovity.edc.ce.modules.config_utils.ConfigUtilsImpl
 import de.sovity.edc.ce.modules.test_utils.TestBackendModule
 import de.sovity.edc.ce.modules.vault.hashicorp.HashicorpVaultModule
 import de.sovity.edc.ce.modules.vault.inmemory.InMemoryVaultModule
@@ -159,7 +159,15 @@ object CeRootModule {
             defaultFromPropPlus(RuntimeConfigProps.SOVITY_FIRST_PORT, 4)
             warnIfOverridden = true
         }
-        module(ControlApiUrlOverrideModule.instance())
+        property(
+            ConfigPropCategory.OVERRIDES,
+            CeConfigProps.EDC_CONTROL_ENDPOINT
+        ) {
+            defaultValueFn = DocumentedFn("Defaults to Control API URL") {
+                ConfigUtilsImpl.getControlApiUrl(it)
+            }
+            warnIfOverridden = true
+        }
     }
 
     private fun EdcModule.configureCommonOverrides() {

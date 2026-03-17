@@ -3,6 +3,33 @@
 The versions of the sovity EDC CE are aligned with the sovity EDC EE.
 
 
+## [v16.5.0] - 2026-03-17
+
+### Overview
+
+Remove parametrization of query params for data sink and fix high DB CPU load after fixing stuck pull transfers.
+
+#### Minor Changes
+
+- Remove parametrization of query params for data sink in UI and UI API Wrapper
+
+#### Patch Changes
+
+- Set default values for data plane state machine to mitigate high DB CPU load after fixing stuck pull transfers with v16.4.2 migration
+
+### Deployment Migration Notes
+
+_No special deployment migration steps required_
+
+#### Compatible Versions
+
+- EDC CE Backend: `ghcr.io/sovity/edc-ce:16.5.0`
+- EDC CE Frontend: `ghcr.io/sovity/edc-ce-ui:16.5.0`
+- PostgreSQL: `17`
+- Eclipse EDC Fork: [v0.11.1.3](https://github.com/sovity/core-edc/releases/tag/v0.11.1.3)
+- Tractus-X: `0.9.0`
+
+
 ## [v16.4.3] - 2026-03-06
 
 ### Overview
