@@ -13,7 +13,6 @@ jobs:
     name: Markdown Link Checks
     runs-on: ubuntu-latest
     steps:
-      - uses: FranzDiebold/github-env-vars-action@v2
       - uses: actions/checkout@master
       - name: "Markdown Link Checker: Generate Config"
         run: .github/markdown-link-checker-config.jq > .github/markdown-link-checker-config.json
