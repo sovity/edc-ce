@@ -21,19 +21,19 @@
   "replacementPatterns": [
     {
       "pattern": "^https://github.com/sovity/edc-ce/blob/main/",
-      "replacement": "https://github.com/sovity/edc-ce/blob/\(env | .CI_SHA // ("CI_SHA was null" | halt_error))/"
+      "replacement": "https://github.com/sovity/edc-ce/blob/\(env | .GITHUB_SHA // ("GITHUB_SHA was null" | halt_error))/"
     },
     {
       "pattern": "^https://github.com/sovity/edc-ce/tree/main/",
-      "replacement": "https://github.com/sovity/edc-ce/tree/\(env | .CI_SHA // ("CI_SHA was null" | halt_error))/"
+      "replacement": "https://github.com/sovity/edc-ce/tree/\(env | .GITHUB_SHA // ("GITHUB_SHA was null" | halt_error))/"
     },
     {
       "pattern": "^https://github.com/sovity/edc-ce/blob/main/",
-      "replacement": "https://github.com/sovity/edc-ce/blob/\(env | .CI_SHA // ("CI_SHA was null" | halt_error))/"
+      "replacement": "https://github.com/sovity/edc-ce/blob/\(env | .GITHUB_SHA // ("GITHUB_SHA was null" | halt_error))/"
     },
     {
       "pattern": "^https://github.com/sovity/edc-ce/tree/main/",
-      "replacement": "https://github.com/sovity/edc-ce/tree/\(env | .CI_SHA // ("CI_SHA was null" | halt_error))/"
+      "replacement": "https://github.com/sovity/edc-ce/tree/\(env | .GITHUB_SHA // ("GITHUB_SHA was null" | halt_error))/"
     }
   ]
 }
