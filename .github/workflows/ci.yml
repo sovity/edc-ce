@@ -32,15 +32,15 @@ jobs:
           java-version: "21"
           distribution: "temurin"
       - name: "Gradle: Validate Gradle Wrapper"
-        uses: gradle/wrapper-validation-action@f9c9c575b8b21b6485636a91ffecd10e558c62f6 # v3.5.0
-      - name: "Gradle: Build"
+        uses: gradle/actions/wrapper-validation@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
+      - name: "Gradle: Set up Gradle"
         uses: gradle/actions/setup-gradle@d9c87d481d55275bb5441eef3fe0e46805f9ef70 # v3.5.0
-        with:
-          build-root-directory: connector
-          arguments: build -x test ${{ env.GRADLE_ARGS }}
+      - name: "Gradle: Build"
+        working-directory: connector
         env:
           USERNAME: ${{ env.REGISTRY_USER }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew build -x test ${{ env.GRADLE_ARGS }}
       - name: "Docker Image: edc-ce"
         uses: ./.github/actions/build-connector-image
         with:
@@ -95,15 +95,15 @@ jobs:
           java-version: "21"
           distribution: "temurin"
       - name: "Gradle: Validate Gradle Wrapper"
-        uses: gradle/wrapper-validation-action@f9c9c575b8b21b6485636a91ffecd10e558c62f6 # v3.5.0
-      - name: "Gradle: Test"
+        uses: gradle/actions/wrapper-validation@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
+      - name: "Gradle: Set up Gradle"
         uses: gradle/actions/setup-gradle@d9c87d481d55275bb5441eef3fe0e46805f9ef70 # v3.5.0
-        with:
-          build-root-directory: connector
-          arguments: test -x :ce:docker-image-ce:assemble
+      - name: "Gradle: Test"
+        working-directory: connector
         env:
           USERNAME: ${{ env.REGISTRY_USER }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew test -x :ce:docker-image-ce:assemble
   publish-jars-ce:
     name: Publish CE Jars
     runs-on: ubuntu-latest
@@ -119,7 +119,7 @@ jobs:
           java-version: "21"
           distribution: "temurin"
       - name: "Gradle: Validate Gradle Wrapper"
-        uses: gradle/wrapper-validation-action@f9c9c575b8b21b6485636a91ffecd10e558c62f6 # v3.5.0
+        uses: gradle/actions/wrapper-validation@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
         env:
           USERNAME: ${{ env.REGISTRY_USER }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -128,15 +128,15 @@ jobs:
         run: |
           GRADLE_ARGS="-Pversion=${GITHUB_REF#refs/tags/v}"
           echo "GRADLE_ARGS=$GRADLE_ARGS" >> $GITHUB_ENV
-      - name: "Gradle: Publish (Release Only)"
+      - name: "Gradle: Set up Gradle"
         uses: gradle/actions/setup-gradle@d9c87d481d55275bb5441eef3fe0e46805f9ef70 # v3.5.0
+      - name: "Gradle: Publish (Release Only)"
         if: ${{ startsWith(github.ref, 'refs/tags/v') }}
-        with:
-          build-root-directory: connector
-          arguments: publish -x test -x :ce:docker-image-ce:assemble ${{ env.GRADLE_ARGS }}
+        working-directory: connector
         env:
           USERNAME: ${{ github.actor }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew publish -x test -x :ce:docker-image-ce:assemble ${{ env.GRADLE_ARGS }}
   build-client-library-typescript:
     name: TS API Client Library
     runs-on: ubuntu-latest
@@ -159,15 +159,15 @@ jobs:
           cache: "npm"
           cache-dependency-path: connector/ce/libs/api-clients/typescript-client/package.json
       - name: "Gradle: Validate Gradle Wrapper"
-        uses: gradle/wrapper-validation-action@f9c9c575b8b21b6485636a91ffecd10e558c62f6 # v3.5.0
-      - name: "Gradle: Generate TS Code"
+        uses: gradle/actions/wrapper-validation@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
+      - name: "Gradle: Set up Gradle"
         uses: gradle/actions/setup-gradle@d9c87d481d55275bb5441eef3fe0e46805f9ef70 # v3.5.0
-        with:
-          build-root-directory: connector
-          arguments: :ce:libs:api-clients:typescript-client:openApiGenerate -x test
+      - name: "Gradle: Generate TS Code"
+        working-directory: connector
         env:
           USERNAME: ${{ github.actor }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew :ce:libs:api-clients:typescript-client:openApiGenerate -x test
       - name: "NPM: Dist Tag & Version"
         working-directory: ./connector/ce/libs/api-clients/typescript-client
         run: |
@@ -176,7 +176,7 @@ jobs:
             VERSION="${GITHUB_REF#refs/tags/v}"
             DIST_TAG=latest
           else
-            VERSION="0.$(date '+%Y%m%d.%H%M%S')-main-${GITHUB_SHA:0:7}"
+            VERSION="0.$(date '+%Y%m%d.%H%M%S')-main-${GITHUB_SHA::8}"
             DIST_TAG=main
           fi
           npm version $VERSION
