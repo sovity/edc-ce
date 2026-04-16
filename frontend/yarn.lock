@@ -3748,15 +3748,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dompurify@npm:^3.2.5":
-  version: 3.2.5
-  resolution: "dompurify@npm:3.2.5"
+"dompurify@npm:^3.4.0":
+  version: 3.4.0
+  resolution: "dompurify@npm:3.4.0"
   dependencies:
     "@types/trusted-types": "npm:^2.0.7"
   dependenciesMeta:
     "@types/trusted-types":
       optional: true
-  checksum: 10c0/b564167cc588933ad2d25c185296716bdd7124e9d2a75dac76efea831bb22d1230ce5205a1ab6ce4c1010bb32ac35f7a5cb2dd16c78cbf382111f1228362aa59
+  checksum: 10c0/5593ac44ee20b9aa521c2120884effc98927fb9128c548183c75e79e0a04357c62ee913a049a267c8f396cb8c9d520ecf72562826c5524c46d4fe03c12063638
   languageName: node
   linkType: hard
 
@@ -3836,7 +3836,7 @@ __metadata:
     cross-spawn: "npm:^7.0.6"
     date-fns: "npm:^3.6.0"
     date-fns-tz: "npm:^3.2.0"
-    dompurify: "npm:^3.2.5"
+    dompurify: "npm:^3.4.0"
     dotenv: "npm:^16.4.7"
     eslint: "npm:^8.57.1"
     eslint-config-next: "npm:^14.2.27"
