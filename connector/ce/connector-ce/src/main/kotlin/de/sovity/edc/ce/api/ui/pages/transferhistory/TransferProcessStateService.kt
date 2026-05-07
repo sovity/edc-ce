@@ -25,7 +25,6 @@ package de.sovity.edc.ce.api.ui.pages.transferhistory
 import de.sovity.edc.ce.api.ui.model.TransferProcessSimplifiedState
 import de.sovity.edc.ce.api.ui.model.TransferProcessState
 import de.sovity.edc.runtime.simple_di.Service
-import org.eclipse.edc.connector.controlplane.transfer.spi.types.TransferProcess
 import org.eclipse.edc.connector.controlplane.transfer.spi.types.TransferProcessStates
 
 @Service

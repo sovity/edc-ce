@@ -32,6 +32,7 @@ import org.eclipse.edc.spi.query.QuerySpec;
 
 import java.nio.charset.StandardCharsets;
 
+
 @RequiredArgsConstructor
 @Service
 public class DspCatalogService {
@@ -39,7 +40,8 @@ public class DspCatalogService {
     private final DspDataOfferParser dspDataOfferParser;
 
     public DspCatalog fetchDataOffers(String participantId, String endpoint) throws DspCatalogServiceException {
-        var catalogJson = fetchDcatResponse(participantId, endpoint, QuerySpec.max());
+        var maxQuerySpec = QuerySpec.Builder.newInstance().limit(Integer.MAX_VALUE - 1).build();
+        var catalogJson = fetchDcatResponse(participantId, endpoint, maxQuerySpec);
         return dspDataOfferParser.parseDataOffers(endpoint, catalogJson);
     }
 

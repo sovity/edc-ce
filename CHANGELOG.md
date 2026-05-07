@@ -3,6 +3,40 @@
 The versions of the sovity EDC CE are aligned with the sovity EDC EE.
 
 
+## [v16.6.0] - 2026-05-07
+
+### Overview
+
+Adds a new EDC variant for Railway-X, bugfixes and performance improvements.
+
+#### Minor Changes
+
+- New Railway-X EDC variant based on our Catena-X EDC
+  - The `DataExchangeGovernanceCredential` is not set for this variant
+  - Set `sovity.dataspace.kind` to `railway-x` to use this variant
+
+#### Patch Changes
+
+- Fix catalog requests to BMW EDCs via API wrapper by decreasing query spec max limit
+- Remove state machine transition to reduce lease queries
+- Remove duplicate database indices
+- Replace `SovityObjectStorageResourceDefinition` by `ObjectStorageResourceDefinition` in `edc_transfer_process` DB table
+- Extend AWS S3 documentation
+- Fix typo in debug environment variables documentation
+
+### Deployment Migration Notes
+
+_No special deployment migration steps required_
+
+#### Compatible Versions
+
+- EDC CE Backend: `ghcr.io/sovity/edc-ce:16.6.0`
+- EDC CE Frontend: `ghcr.io/sovity/edc-ce-ui:16.6.0`
+- PostgreSQL: `17`
+- Eclipse EDC Fork: [v0.11.1.3](https://github.com/sovity/core-edc/releases/tag/v0.11.1.3)
+- Tractus-X: `0.9.0`
+
+
 ## [v16.5.0] - 2026-03-17
 
 ### Overview

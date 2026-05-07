@@ -37,7 +37,7 @@ public class UseCaseCatalogV1ApiService {
 
     private QuerySpec buildQuerySpec(CatalogQuery params) {
         var builder = QuerySpec.Builder.newInstance()
-            .limit(withDefault(params.getLimit(), Integer.MAX_VALUE))
+            .limit(withDefault(params.getLimit(), Integer.MAX_VALUE - 1))
             .offset(withDefault(params.getOffset(), 0));
 
         var filterExpressions = params.getFilterExpressions();

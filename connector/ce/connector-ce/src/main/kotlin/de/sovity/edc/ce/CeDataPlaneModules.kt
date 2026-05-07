@@ -15,6 +15,7 @@ import de.sovity.edc.ce.dependency_bundles.CeDependencyBundles
 import de.sovity.edc.ce.modules.config_utils.ConfigUtilsImpl
 import de.sovity.edc.ce.modules.config_utils.ConfigUtilsModule
 import de.sovity.edc.ce.modules.dataspaces.catena.CatenaDataspaceFeatures
+import de.sovity.edc.ce.modules.dataspaces.railway.RailwayDataspaceFeatures
 import de.sovity.edc.ce.modules.dataspaces.sovity.edrs.EdrTokenSecretModule
 import de.sovity.edc.ce.modules.db.DbModule
 import de.sovity.edc.ce.modules.fixes.data_plane_framework.DataPlaneFrameworkOverrideModule
@@ -59,7 +60,11 @@ object CeDataPlaneModules {
 
         moduleIfCeDataspace(
             CeDataspace.CATENA_X,
-            CatenaDataspaceFeatures.tractusDataPlane()
+            CatenaDataspaceFeatures.catenaDataPlane()
+        )
+        moduleIfCeDataspace(
+            CeDataspace.RAILWAY_X,
+            RailwayDataspaceFeatures.railwayDataPlane()
         )
     }
 
@@ -110,19 +115,7 @@ object CeDataPlaneModules {
 
         property(
             ConfigPropCategory.OVERRIDES,
-            CeConfigProps.EDC_DATAPLANE_STATE_MACHINE_FLOW_LEASE_TIME
-        ) {
-            defaultValue("3600000")
-        }
-        property(
-            ConfigPropCategory.OVERRIDES,
-            CeConfigProps.EDC_DATAPLANE_STATE_MACHINE_FLOW_LEASE_FACTOR
-        ) {
-            defaultValue("0")
-        }
-        property(
-            ConfigPropCategory.OVERRIDES,
-            CeConfigProps.EDC_DATAPLANE_STATE_MACHINE_BATCH_SIZE
+            CeConfigProps.EDC_POLICY_MONITOR_STATE_MACHINE_BATCH_SIZE
         ) {
             defaultValue("5")
         }

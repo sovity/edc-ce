@@ -51,7 +51,7 @@ object RuntimeModule {
         )
 
         documentDockerImageEnvVar(
-            envVarName = "REMOTE_DEBUG_SUSPEND",
+            envVarName = "REMOTE_DEBUG_BIND",
             requiredOrDefault = """
                 Default value `127.0.0.1:5005`
                 Default set in `docker-entrypoint.sh`
