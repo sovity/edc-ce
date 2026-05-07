@@ -50,7 +50,7 @@ runs:
       shell: bash
       id: build_info
       run: |
-        echo "NEXT_PUBLIC_BUILD_VERSION_ARG=$(git describe --tags ${CI_PR_SHA})" >> "$GITHUB_OUTPUT"
+        echo "NEXT_PUBLIC_BUILD_VERSION_ARG=$(git describe --tags ${{ github.event.pull_request.base.sha }})" >> "$GITHUB_OUTPUT"
         echo "NEXT_PUBLIC_BUILD_DATE_ARG=$(date --utc +%FT%TZ)" >> "$GITHUB_OUTPUT"
     - name: "Docker: Extract metadata (tags, labels)"
       id: meta

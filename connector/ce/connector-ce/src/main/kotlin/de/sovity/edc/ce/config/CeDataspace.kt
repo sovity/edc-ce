@@ -18,7 +18,8 @@ enum class CeDataspace(override val documentation: String) : DocumentedEnum {
     SOVITY_DAPS("Configures the connector for use in sovity dataspaces that use the sovity DAPS"),
     SOVITY_DAPS_OMEJDN("Configures the connector for use in legacy self-hosted sovity dataspaces that use the now deprecated Omejdn DAPS"),
     SPHIN_X("Configures the connector for use in Sphin-X."),
-    CATENA_X("Configures the connector Catena-X compliant and Tractus-X compatible while further enhancing it with sovity features")
+    CATENA_X("Configures the connector Catena-X compliant and Tractus-X compatible while further enhancing it with sovity features"),
+    RAILWAY_X("Configures the connector Catena-X compliant and Tractus-X compatible while disabling the data exchange governance credential and further enhancing it with sovity features")
 }
 
 fun EdcModule.withCeDataspaceChoice() = apply {

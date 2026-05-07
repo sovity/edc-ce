@@ -22,12 +22,23 @@ import org.eclipse.edc.connector.controlplane.api.management.edr.EdrCacheApiExte
 
 object CatenaDataspaceFeatures {
 
-    fun tractusControlPlane() = EdcModule(
-        name = "tractus-control-plane",
+    fun catenaControlPlane() = EdcModule(
+        name = "catena-control-plane",
         documentation = "Enable Tractus-X Extensions and Catena-X C2C IAM"
     ).apply {
+        tractusControlPlane()
+    }
+
+    fun catenaDataPlane() = EdcModule(
+        name = "catena-data-plane",
+        documentation = "Enable Tractus-X Extensions and Catena-X C2C IAM"
+    ).apply {
+        tractusDataPlane()
+    }
+
+    fun EdcModule.tractusControlPlane(disableGovernanceCredential: Boolean = false) {
         dependencyBundles(CeDependencyBundles.tractusControlPlane)
-        configureIatp()
+        configureIatp(disableGovernanceCredential)
         serviceExtensions(EdrApiServiceV2CatenaExtension::class.java)
         excludeServiceExtensions(EdrCacheApiExtension::class.java)
 
@@ -47,18 +58,15 @@ object CatenaDataspaceFeatures {
         }
     }
 
-    fun tractusDataPlane() = EdcModule(
-        name = "tractus-data-plane",
-        documentation = "Enable Tractus-X Extensions and Catena-X C2C IAM"
-    ).apply {
+    fun EdcModule.tractusDataPlane(disableGovernanceCredential: Boolean = false) {
         dependencyBundles(CeDependencyBundles.tractusDataPlane)
         excludeServiceExtensions(EdrCacheApiExtension::class.java)
-        configureIatp()
+        configureIatp(disableGovernanceCredential)
         configureProxyApiAndEdrs()
     }
 
     @Suppress("LongMethod")
-    private fun EdcModule.configureIatp() {
+    private fun EdcModule.configureIatp(disableGovernanceCredential: Boolean) {
         vaultEntry(CeVaultEntries.STS_CLIENT_SECRET)
 
         property(
@@ -112,7 +120,9 @@ object CatenaDataspaceFeatures {
             defaultValue(CeVaultEntries.STS_CLIENT_SECRET.key)
         }
         configureTxMembershipCredential()
-        configureTxGovernanceCredential()
+        if (!disableGovernanceCredential) {
+            configureTxGovernanceCredential()
+        }
     }
 
     private fun EdcModule.configureTxGovernanceCredential() {

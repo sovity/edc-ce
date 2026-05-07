@@ -15,15 +15,16 @@ import de.sovity.edc.ce.config.moduleIfCeDataspace
 import de.sovity.edc.ce.config.withCeDataspaceChoice
 import de.sovity.edc.ce.dependency_bundles.CeDependencyBundles
 import de.sovity.edc.ce.modules.auth.ApiKeyAuthModule
-import de.sovity.edc.ce.modules.fixes.azure_provision.AzureProvisionOverrideModule
 import de.sovity.edc.ce.modules.config_utils.ConfigUtilsImpl
 import de.sovity.edc.ce.modules.config_utils.ConfigUtilsModule
 import de.sovity.edc.ce.modules.dataspaces.catena.CatenaDataspaceFeatures
+import de.sovity.edc.ce.modules.dataspaces.railway.RailwayDataspaceFeatures
 import de.sovity.edc.ce.modules.dataspaces.sovity.SovityDataspaceFeatures
 import de.sovity.edc.ce.modules.dataspaces.sovity.edrs.EdrTokenSecretAutogenerationExtension
 import de.sovity.edc.ce.modules.dataspaces.sovity.edrs.EdrTokenSecretModule
 import de.sovity.edc.ce.modules.dataspaces.sphinx.SphinxDataspaceFeatures
 import de.sovity.edc.ce.modules.db.DbModule
+import de.sovity.edc.ce.modules.fixes.azure_provision.AzureProvisionOverrideModule
 import de.sovity.edc.ce.modules.messaging.contract_termination.ContractTerminationModule
 import de.sovity.edc.ce.modules.messaging.messenger.SovityMessengerModule
 import de.sovity.edc.ce.modules.policy_utils.always_true.AlwaysTruePolicyDefinitionModule
@@ -103,7 +104,11 @@ object CeControlPlaneModules {
         )
         moduleIfCeDataspace(
             CeDataspace.CATENA_X,
-            CatenaDataspaceFeatures.tractusControlPlane()
+            CatenaDataspaceFeatures.catenaControlPlane()
+        )
+        moduleIfCeDataspace(
+            CeDataspace.RAILWAY_X,
+            RailwayDataspaceFeatures.railwayControlPlane()
         )
 
         property(

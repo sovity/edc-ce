@@ -26,7 +26,6 @@ import de.sovity.edc.ce.libs.mappers.asset.utils.FailedMappingException;
 import de.sovity.edc.ce.libs.mappers.policy.ExpressionExtractor;
 import de.sovity.edc.ce.libs.mappers.policy.ExpressionMapper;
 import de.sovity.edc.ce.libs.mappers.policy.MappingErrors;
-import de.sovity.edc.ce.libs.mappers.policy.PolicyValidator;
 import de.sovity.edc.runtime.config.ConfigUtils;
 import de.sovity.edc.runtime.simple_di.Service;
 import de.sovity.edc.utils.JsonUtils;

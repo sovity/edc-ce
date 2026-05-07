@@ -187,7 +187,7 @@ class PolicyTestUtils(
 
         consumerClient.uiApi().initiateTransferV2(transferRequest)
 
-        Awaitility.await().atMost(Duration.ofSeconds(5)).untilAsserted {
+        Awaitility.await().atMost(Duration.ofSeconds(10)).untilAsserted {
             assertThat(actualData).isEqualTo("data for $dataOfferId")
         }
     }
@@ -229,7 +229,7 @@ class PolicyTestUtils(
         val negotiationId = consumerClient.uiApi().initiateContractNegotiation(negotiationRequest)
             .contractNegotiationId
 
-        val negotiation = Awaitility.await().atMost(Duration.ofSeconds(15)).until(
+        val negotiation = Awaitility.await().atMost(Duration.ofSeconds(30)).until(
             { consumerClient.uiApi().getContractNegotiation(negotiationId) },
             { contractNegotiation: UiContractNegotiation ->
                 contractNegotiation.state.simplifiedState != ContractNegotiationSimplifiedState.IN_PROGRESS

@@ -9,6 +9,7 @@
 package de.sovity.edc.ce.modules.fixes.azure_provision;
 
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import de.sovity.edc.runtime.simple_di.MigrationSensitive;
@@ -17,6 +18,7 @@ import org.eclipse.edc.connector.provision.azure.blob.ObjectStorageResourceDefin
 
 import java.util.Objects;
 
+@JsonTypeName("ObjectStorageResourceDefinition")
 @JsonDeserialize(builder = SovityObjectStorageResourceDefinition.Builder.class)
 @MigrationSensitive(changes = "Fixes serialization issue as in https://github.com/eclipse-edc/Technology-Azure/pull/339/files." +
     " Will be fixed as of v0.8.1-72-g250dd26",

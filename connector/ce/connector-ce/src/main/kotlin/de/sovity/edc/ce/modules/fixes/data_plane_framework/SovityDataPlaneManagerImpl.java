@@ -50,7 +50,11 @@ import static org.eclipse.edc.spi.types.domain.transfer.FlowType.PUSH;
  * Default data manager implementation.
  */
 @MigrationSensitive(
-        changes = "Fix bug by setting runtimeId when transitioning to RECEIVED state",
+        changes = """
+            Fix bug by setting runtimeId when transitioning to RECEIVED state.
+            Additionally removes the 'updateFlowLease' function and state machine transition.
+            The transition is not necessary since we only have a single data plane.
+        """,
         dependsOn = DataPlaneManagerImpl.class
 )
 public class SovityDataPlaneManagerImpl extends AbstractStateEntityManager<DataFlow, DataPlaneStore> implements DataPlaneManager {
@@ -156,24 +160,14 @@ public class SovityDataPlaneManagerImpl extends AbstractStateEntityManager<DataF
 
     @Override
     protected StateMachineManager.Builder configureStateMachineManager(StateMachineManager.Builder builder) {
-        Supplier<Criterion> ownedByThisRuntime = () -> new Criterion("runtimeId", "=", runtimeId);
         Supplier<Criterion> ownedByAnotherRuntime = () -> new Criterion("runtimeId", "!=", runtimeId);
-        Supplier<Criterion> flowLeaseNeedsToBeUpdated = () -> new Criterion("updatedAt", "<", clock.millis() - flowLeaseConfiguration.time());
         Supplier<Criterion> danglingTransfer = () -> new Criterion("updatedAt", "<", clock.millis() - flowLeaseConfiguration.abandonTime());
 
         return builder
-                .processor(processDataFlowInState(STARTED, this::updateFlowLease, ownedByThisRuntime, flowLeaseNeedsToBeUpdated))
                 .processor(processDataFlowInState(STARTED, this::restartFlow, ownedByAnotherRuntime, danglingTransfer))
                 .processor(processDataFlowInState(RECEIVED, this::processReceived))
                 .processor(processDataFlowInState(COMPLETED, this::processCompleted))
                 .processor(processDataFlowInState(FAILED, this::processFailed));
-    }
-
-    private boolean updateFlowLease(DataFlow dataFlow) {
-        transitionDataFlowToReceived(dataFlow, runtimeId);
-        dataFlow.transitionToStarted(runtimeId);
-        store.save(dataFlow);
-        return true;
     }
 
     private boolean restartFlow(DataFlow dataFlow) {

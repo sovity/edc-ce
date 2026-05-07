@@ -30,7 +30,8 @@ class CatalogApiService(
         participantId: String,
         connectorEndpoint: String,
     ): UiDataOffer {
-        val querySpec = QuerySpec.max().toBuilder()
+        val querySpec = QuerySpec.Builder.newInstance()
+            .limit(Int.MAX_VALUE - 1)
             .filter(
                 Criterion.criterion(
                     "'" + Prop.Edc.ID + "'",
