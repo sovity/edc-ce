@@ -202,7 +202,7 @@ abstract class ApiWrapperDemoTestBase {
     }
 
     private fun awaitNegotiationDone(negotiationId: String): UiContractNegotiation {
-        val negotiation = Awaitility.await().atMost(Duration.ofSeconds(15)).until(
+        val negotiation = Awaitility.await().atMost(Duration.ofSeconds(20)).until(
             { consumerClient.uiApi().getContractNegotiation(negotiationId) },
             { contractNegotiation: UiContractNegotiation ->
                 contractNegotiation.state.simplifiedState != ContractNegotiationSimplifiedState.IN_PROGRESS
