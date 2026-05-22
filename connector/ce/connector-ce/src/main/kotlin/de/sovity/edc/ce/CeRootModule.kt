@@ -81,6 +81,7 @@ object CeRootModule {
             CeConfigProps.SOVITY_EDC_FQDN_INTERNAL
         ) {
             defaultValue("localhost")
+            warnIfOverridden = true
         }
         property(
             ConfigPropCategory.OPTIONAL,
@@ -163,8 +164,8 @@ object CeRootModule {
             ConfigPropCategory.OVERRIDES,
             CeConfigProps.EDC_CONTROL_ENDPOINT
         ) {
-            defaultValueFn = DocumentedFn("Defaults to Control API URL") {
-                ConfigUtilsImpl.getControlApiUrl(it)
+            defaultValueFn = DocumentedFn("Defaults to the Control API URL for the callback address. This always needs to be `http` and not `https`.") {
+                ConfigUtilsImpl.getControlApiUrlForCallbackAddress(it)
             }
             warnIfOverridden = true
         }
