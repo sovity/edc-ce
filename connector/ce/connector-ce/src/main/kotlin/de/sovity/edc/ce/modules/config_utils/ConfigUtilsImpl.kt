@@ -83,6 +83,19 @@ class ConfigUtilsImpl(config: Config) : ConfigUtils {
             )
         }
 
+        /**
+         * Control API URL for the data plane callback address. Always needs to be http.
+         */
+        @JvmStatic
+        fun getControlApiUrlForCallbackAddress(config: Config): String {
+            return UrlPathUtils.urlPathJoin(
+                "http://",
+                CeConfigProps.SOVITY_EDC_FQDN_INTERNAL.getStringOrEmpty(config) +
+                    ":" + CeConfigProps.WEB_HTTP_CONTROL_PORT.getStringOrEmpty(config),
+                CeConfigProps.WEB_HTTP_CONTROL_PATH.getStringOrEmpty(config)
+            )
+        }
+
         @JvmStatic
         fun getProxyApiUrl(config: Config): String {
             return UrlPathUtils.urlPathJoin(
