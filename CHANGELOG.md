@@ -2,8 +2,29 @@
 
 The versions of the sovity EDC CE are aligned with the sovity EDC EE.
 
+## [v16.6.1] - 2026-05-22
+
+Port changes from v16.5.1
+
+#### Patch Changes
+
+- Backport fix for callback addresses containing https instead of http
+
+### Deployment Migration Notes
+
+- All versions must be migrated to v16.5.1 before being upgraded to this version, OR disable rolling updates.
+
+#### Compatible Versions
+
+- EDC CE Backend: `ghcr.io/sovity/edc-ce:16.6.1`
+- EDC CE Frontend: `ghcr.io/sovity/edc-ce-ui:16.6.1`
+- PostgreSQL: `17`
+- Eclipse EDC Fork: [v0.11.1.3](https://github.com/sovity/core-edc/releases/tag/v0.11.1.3)
+- Tractus-X: `0.9.0`
 
 ## [v16.6.0] - 2026-05-07
+
+DO NOT DEPLOY THIS VERSION. Instead, directly upgrade to v16.6.1 or above
 
 ### Overview
 
@@ -26,7 +47,7 @@ Adds a new EDC variant for Railway-X, bugfixes and performance improvements.
 
 ### Deployment Migration Notes
 
-_No special deployment migration steps required_
+- This version must not be deployed. Instead, immediately upgrade to v16.6.1 or above.
 
 #### Compatible Versions
 
@@ -37,7 +58,32 @@ _No special deployment migration steps required_
 - Tractus-X: `0.9.0`
 
 
+## [v16.5.1] - 2026-05-22
+
+### Overview
+
+Hotfix for the Control API URL being wrongly set in callback addresses.
+
+#### Patch Changes
+
+- Fix callback addresses containing https instead of http
+
+### Deployment Migration Notes
+
+- All versions must be migrated to this version before being upgraded further. If v16.5.0 was already deployed, the EDC needs to be shut down before upgrading.
+
+#### Compatible Versions
+
+- EDC CE Backend: `ghcr.io/sovity/edc-ce:16.5.1`
+- EDC CE Frontend: `ghcr.io/sovity/edc-ce-ui:16.5.1`
+- PostgreSQL: `17`
+- Eclipse EDC Fork: [v0.11.1.3](https://github.com/sovity/core-edc/releases/tag/v0.11.1.3)
+- Tractus-X: `0.9.0`
+
+
 ## [v16.5.0] - 2026-03-17
+
+DO NOT DEPLOY THIS VERSION. Instead, directly upgrade to v16.5.1
 
 ### Overview
 
@@ -53,7 +99,7 @@ Remove parametrization of query params for data sink and fix high DB CPU load af
 
 ### Deployment Migration Notes
 
-_No special deployment migration steps required_
+- This version must not be deployed. Instead, immediately upgrade to v16.5.1
 
 #### Compatible Versions
 
