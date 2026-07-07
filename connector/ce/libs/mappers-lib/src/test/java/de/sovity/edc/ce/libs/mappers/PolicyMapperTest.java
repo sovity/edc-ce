@@ -101,7 +101,7 @@ class PolicyMapperTest {
         // assert
         assertThat(actual.getType()).isEqualTo(PolicyType.SET);
         assertThat(actual.getPermissions()).hasSize(1);
-        assertThat(actual.getPermissions().get(0).getAction().getType()).isEqualTo("USE");
+        assertThat(actual.getPermissions().get(0).getAction().getType()).isEqualTo("http://www.w3.org/ns/odrl/2/use");
         assertThat(actual.getPermissions().get(0).getConstraints()).hasSize(1);
         assertThat(actual.getPermissions().get(0).getConstraints()).containsExactly(constraint);
     }
@@ -120,6 +120,6 @@ class PolicyMapperTest {
         assertThat(actual.getType()).isEqualTo(PolicyType.SET);
         assertThat(actual.getPermissions()).hasSize(1);
         assertThat(actual.getPermissions().get(0).getConstraints()).isEmpty();
-        assertThat(actual.getPermissions().get(0).getAction().getType()).isEqualTo("USE");
+        assertThat(actual.getPermissions().get(0).getAction().getType()).isEqualTo("http://www.w3.org/ns/odrl/2/use");
     }
 }

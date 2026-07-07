@@ -145,7 +145,7 @@ class PolicyValidatorTest {
         var errors = MappingErrors.root();
         var permission = Permission.Builder.newInstance()
             .constraint(mock(Constraint.class))
-            .action(Action.Builder.newInstance().type("USE").build())
+            .action(Action.Builder.newInstance().type("http://www.w3.org/ns/odrl/2/use").build())
             .build();
 
         // act
@@ -175,7 +175,7 @@ class PolicyValidatorTest {
         // assert
         assertThat(errors.getErrors()).containsExactlyInAnyOrder(
             "$: Permission has duties, which is currently unsupported.",
-            "$.action: Action has a type that is not '[http://www.w3.org/ns/odrl/2/use, USE, use]', but 'idk'.",
+            "$.action: Action has a type that is not '[http://www.w3.org/ns/odrl/2/use]', but 'idk'.",
             "$.action: Action has a value for includedIn, which is currently unsupported.",
             "$.action: Action has a constraint, which is currently unsupported."
         );

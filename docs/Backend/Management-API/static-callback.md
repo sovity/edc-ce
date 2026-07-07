@@ -54,6 +54,7 @@ This allows to specify where and how to send notifications for that particular t
 
 When starting a transfer process via the Management API, include the callback URL in the request body under the `callbackAddress` field:
 
+{% code title="JSON" overflow="wrap" lineNumbers="true" %}
 ```json
 {
   "callbackAddress": "{{CALLBACK_URL}}",
@@ -63,6 +64,7 @@ When starting a transfer process via the Management API, include the callback UR
   "managedResources": true
 }
 ```
+{% endcode %}
 
 The EDC will send event notifications as HTTP POST requests to this URL, enabling real-time integration with external monitoring systems.
 

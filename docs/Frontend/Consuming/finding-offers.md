@@ -2,7 +2,9 @@
 
 To find and consume data from another Connector, you first need to get the Connector Endpoint of the Connector you would like to explore for its offerings. Ensure that both Connectors are registered at the same Data Space identity provider (DAPS/MIW/...). Note that the EDC does not support consuming its own Data Offers!
 
-{% hint style="info" %} The Connector Endpoint is provided on the Dashboard on the bottom as information and additionally in the top right corner. Please be aware that the Connector Endpoint in the top right is extended by the Participant ID. In some Data Spaces, you can additionally find the Connector Endpoint via the Dataspace Portal or other Discovery Service. {% endhint %}
+{% hint style="info" %}
+The Connector Endpoint is provided on the Dashboard on the bottom as information and additionally in the top right corner. Please be aware that the Connector Endpoint in the top right is extended by the Participant ID. In some Data Spaces, you can additionally find the Connector Endpoint via the Dataspace Portal or other Discovery Service.
+{% endhint %}
 
 ![EDC UI Dashboard](/docs/images/provider-dashboard-1.png)
 
@@ -12,7 +14,9 @@ The information symbol in the `Connector Endpoint` search bar provides basic inf
 
 The `Search...` bar lets you search for a specific offering within the Catalog Browser.
 
-{% hint style="info" %} The search bar filters by asset name, keywords, and version number. {% endhint %}
+{% hint style="info" %}
+The search bar filters by asset name, keywords, and version number.
+{% endhint %}
 
 ![EDC UI Catalog Browser](/docs/images/consumer-catalog-browser-1.png)
 
@@ -35,6 +39,8 @@ When clicking `Negotiate` you will see a prompt asking you to accept the standar
 - After you’ve checked the box, click on the `Confirm` button.
 Congratulations! You’ve now started the contract negotiation process. Keep an eye out for a notification at the top middle of your screen. This will let you know when your contract negotiation has ended and its result.
 
-{% hint style="warning" %} Contract Negotiations can also end unsuccessfully under certain conditions, for example when contract-policies are not met. {% endhint %}
+{% hint style="warning" %}
+Contract Negotiations can also end unsuccessfully under certain conditions, for example when contract-policies are not met.
+{% endhint %}
 
 After a successful negotiation, the data transfer can be started.

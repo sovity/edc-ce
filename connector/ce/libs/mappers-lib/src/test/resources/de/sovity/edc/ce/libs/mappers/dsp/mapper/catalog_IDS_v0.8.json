@@ -9,7 +9,7 @@
       "@type": "odrl:Offer",
       "odrl:permission": {
         "odrl:action": {
-          "@id": "USE"
+          "@id": "http://www.w3.org/ns/odrl/2/use"
         },
         "odrl:constraint": {
           "odrl:and": [

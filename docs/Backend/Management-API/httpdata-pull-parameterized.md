@@ -2,7 +2,9 @@
 
 **Parameterization**: In certain scenarios, it is beneficial to expose multiple datasets via a single asset, reducing contract negotiations and catalog size, thus improving Connector scalability.
 
-{% hint style="info" %} Parameterization is optional and does not have to be activated by the Provider if the datasource API does not require or enable it. In this case, the corresponding parameters do not have to be enabled when creating an asset and the Consumer does not have to add any additional parameters to the endpoint from the EDR. {% endhint %}
+{% hint style="info" %}
+Parameterization is optional and does not have to be activated by the Provider if the datasource API does not require or enable it. In this case, the corresponding parameters do not have to be enabled when creating an asset and the Consumer does not have to add any additional parameters to the endpoint from the EDR.
+{% endhint %}
 
 ## Practical Example: Chat-App Use Case
 
@@ -62,7 +64,9 @@ Ensure that `proxyPath` and `proxyQueryParams` are correctly set and enabled `tr
 - `"proxyPath": "true"`: enables path-based dataset retrieval for the Consumer (Parameterization)
 - `"proxyQueryParams": "true"`: allows dynamic query parameter inclusion for the Consumer (Parameterization)
 
-{% hint style="info" %} As parameterization is optional, these settings do not need to be set to "true" if the datasource API doesn't support it, then either don't add them at all or set them to "false". {% endhint %}
+{% hint style="info" %}
+As parameterization is optional, these settings do not need to be set to `true` if the datasource API doesn't support it, then either don't add them at all or set them to `false`.
+{% endhint %}
 
 After adding the asset, the asset only needs to be linked in a Contract Definition/Data Offer along with Policies in order to make it available for potential Consumers to consume.
 
@@ -162,7 +166,9 @@ The EDC uses the token to map the request to the appropriate data source.
 The request will be forwarded to the Provider’s `baseUrl` configured in the asset.
 Any additional path parameters appended to `{{endpoint}}` will be included in the request to the data source.
 
-{% hint style="info" %} As parameterization is optional for the Provider, the additional parameters like {{dataset-id}} in this example do not need to be set by the Consumer if the Provider doesn't support it. {% endhint %}
+{% hint style="info" %}
+As parameterization is optional for the Provider, the additional parameters like `{{dataset-id}}` in this example do not need to be set by the Consumer if the Provider doesn't support it.
+{% endhint %}
 
 #### Parameterized Example
 

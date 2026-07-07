@@ -7,6 +7,7 @@
  */
 package de.sovity.edc.ce.modules.policy_utils.creator
 
+import de.sovity.edc.utils.jsonld.vocab.Prop
 import org.eclipse.edc.policy.engine.spi.PolicyEngine
 import org.eclipse.edc.policy.engine.spi.RuleBindingRegistry
 import org.eclipse.edc.runtime.metamodel.annotation.Inject
@@ -28,7 +29,7 @@ class SimplePolicyCreatorExtension : ServiceExtension {
     private lateinit var typeManager: TypeManager
 
     override fun initialize(context: ServiceExtensionContext) {
-        ruleBindingRegistry.bind("USE", PolicyEngine.ALL_SCOPES)
+        ruleBindingRegistry.bind(Prop.Odrl.USE, PolicyEngine.ALL_SCOPES)
 
         val monitor = context.monitor
         val objectMapper = typeManager.getMapper(CoreConstants.JSON_LD)

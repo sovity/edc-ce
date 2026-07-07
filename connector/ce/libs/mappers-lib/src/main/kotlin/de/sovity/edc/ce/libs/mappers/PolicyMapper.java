@@ -29,6 +29,7 @@ import de.sovity.edc.ce.libs.mappers.policy.MappingErrors;
 import de.sovity.edc.runtime.config.ConfigUtils;
 import de.sovity.edc.runtime.simple_di.Service;
 import de.sovity.edc.utils.JsonUtils;
+import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.jsonld.spi.JsonLd;
@@ -81,7 +82,7 @@ public class PolicyMapper {
     public Policy buildPolicy(UiPolicyExpression expression) {
         var constraints = expressionMapper.buildConstraint(expression);
 
-        var actionType = "USE"; // For some reason this needs to be that, expecting it to become irrelevant in Saturn
+        var actionType = Prop.Odrl.USE;
         var action = Action.Builder.newInstance().type(actionType).build();
 
         var permission = Permission.Builder.newInstance()

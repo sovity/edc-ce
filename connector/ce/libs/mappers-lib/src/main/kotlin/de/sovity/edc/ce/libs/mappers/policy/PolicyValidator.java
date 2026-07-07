@@ -21,6 +21,7 @@
 package de.sovity.edc.ce.libs.mappers.policy;
 
 import de.sovity.edc.runtime.simple_di.Service;
+import de.sovity.edc.utils.jsonld.vocab.Prop;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -38,9 +39,7 @@ import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 public class PolicyValidator {
 
     public static final List<String> ALLOWED_ACTION_VALUES = List.of(
-        "http://www.w3.org/ns/odrl/2/use",
-        "USE",
-        "use"
+        Prop.Odrl.USE
     );
 
     public void validateOtherPolicyFieldsUnset(Policy policy, MappingErrors errors) {

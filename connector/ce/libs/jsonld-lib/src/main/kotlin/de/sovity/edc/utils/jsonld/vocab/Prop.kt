@@ -137,7 +137,7 @@ object Prop {
         const val TYPE: String = CTX + "type"
         const val CONSTRAINT: String = CTX + "constraint"
         const val AND: String = CTX + "and"
-        const val USE: String = "USE"
+        const val USE: String = CTX + "use"
     }
 
     /**
