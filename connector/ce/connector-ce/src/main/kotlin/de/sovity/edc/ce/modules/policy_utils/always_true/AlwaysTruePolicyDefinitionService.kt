@@ -7,6 +7,7 @@
  */
 package de.sovity.edc.ce.modules.policy_utils.always_true
 
+import de.sovity.edc.utils.jsonld.vocab.Prop
 import org.eclipse.edc.connector.controlplane.policy.spi.PolicyDefinition
 import org.eclipse.edc.connector.controlplane.services.spi.policydefinition.PolicyDefinitionService
 import org.eclipse.edc.policy.model.Action
@@ -30,7 +31,7 @@ class AlwaysTruePolicyDefinitionService(private val policyDefinitionService: Pol
      */
     fun create() {
         val alwaysTruePermission = Permission.Builder.newInstance()
-            .action(Action.Builder.newInstance().type("USE").build())
+            .action(Action.Builder.newInstance().type(Prop.Odrl.USE).build())
             .build()
         val policy = Policy.Builder.newInstance()
             .permission(alwaysTruePermission)

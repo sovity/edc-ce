@@ -17,7 +17,7 @@
         "odrl:permission": [
             {
                 "odrl:action": {
-                    "odrl:type": "USE"
+                    "odrl:type": "http://www.w3.org/ns/odrl/2/use"
                 }
             }
         ]

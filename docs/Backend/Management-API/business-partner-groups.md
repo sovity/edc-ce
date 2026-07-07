@@ -69,7 +69,7 @@
          "@type": "http://www.w3.org/ns/odrl/2/Set",
          "permission": [
              {
-                 "action": "USE",
+                 "action": "http://www.w3.org/ns/odrl/2/use",
                  "http://www.w3.org/ns/odrl/2/constraint": [
                      {
                          "leftOperand": "https://w3id.org/tractusx/v0.0.1/ns/BusinessPartnerGroup",

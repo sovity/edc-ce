@@ -1,6 +1,8 @@
 # Data Transfer Process
 
-{% hint style="warning" %} When using the Connector UI, only a HttpData-Push can be triggered, not an HttpData-Pull. {% endhint %}
+{% hint style="warning" %}
+When using the Connector UI, only a HttpData-Push can be triggered, not an HttpData-Pull.
+{% endhint %}
 
 To transfer the data to your desired data sink, navigate to the `Contracts` page. This page displays all your contract agreements, including both consuming and providing contract agreements. You can easily distinguish between them by the arrow on the left side on each row next to the `Contract` column (Up = providing, Down = consuming). You can inspect details of your contract agreements, such as the counterpart Connector.
 
@@ -51,5 +53,7 @@ Here, `"type": "HttpData"` indicates that the EDC will interpret the destination
 
 Click on `Initiate Transfer` to send the asset to the desired data sink.
 
-{% hint style="warning" %} It is important to know that a data transfer can fail for a variety of reasons. This may be due to a misconfiguration of the data-source as well as the data-sink or unfulfilled contract policies set by the Provider, as contract policies are also evaluated at the time a transfer is initiated. {% endhint %}
+{% hint style="warning" %}
+It is important to know that a data transfer can fail for a variety of reasons. This may be due to a misconfiguration of the data-source as well as the data-sink or unfulfilled contract policies set by the Provider, as contract policies are also evaluated at the time a transfer is initiated.
+{% endhint %}
  

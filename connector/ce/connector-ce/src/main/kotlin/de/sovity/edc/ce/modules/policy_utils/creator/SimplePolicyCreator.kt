@@ -9,6 +9,7 @@ package de.sovity.edc.ce.modules.policy_utils.creator
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import de.sovity.edc.utils.JsonUtils
+import de.sovity.edc.utils.jsonld.vocab.Prop
 import jakarta.json.JsonValue
 import lombok.SneakyThrows
 import org.eclipse.edc.connector.controlplane.catalog.spi.policy.CatalogPolicyContext
@@ -33,12 +34,6 @@ class SimplePolicyCreator(
         CatalogPolicyContext.CATALOG_SCOPE,
         ContractNegotiationPolicyContext.NEGOTIATION_SCOPE,
         TransferProcessPolicyContext.TRANSFER_SCOPE,
-    )
-
-    private val actionTypes = listOf(
-        "use",
-        "USE",
-        "http://www.w3.org/ns/odrl/2/use"
     )
 
     /**
@@ -68,9 +63,7 @@ class SimplePolicyCreator(
         comparator: (left: List<T>, operator: Operator, right: List<T>) -> Boolean = policyComparator::compare
     ) {
         scopes.forEach { scope ->
-            actionTypes.forEach { actionType ->
-                ruleBindingRegistry.bind(actionType, scope)
-            }
+            ruleBindingRegistry.bind(Prop.Odrl.USE, scope)
             ruleBindingRegistry.bind(leftExpressionName, scope)
         }
 

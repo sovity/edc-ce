@@ -8,7 +8,9 @@ The following properties can be used within the `dataAddress` array or respectiv
 
 ### OAuth 2.0
 
-{% hint style="info" %} In the newest Connector versions, you are able to manage the secrets yourself via the Management-API. If you are not yet on the newest version and want to use OAuth 2.0, please create a Ticket in the Service Desk. We need to add your secret combined with a secret-alias to our vault; the secret-alias can then be used as the value of `clientSecretKey`. {% endhint %}
+{% hint style="info" %}
+In the newest Connector versions, you are able to manage the secrets yourself via the Management-API. If you are not yet on the newest version and want to use OAuth 2.0, please create a Ticket in the Service Desk. We need to add your secret combined with a secret-alias to our vault; the secret-alias can then be used as the value of `clientSecretKey`.
+{% endhint %}
 
 - `oauth2:tokenUrl` -> token URL where the access-token can be fetched from
 - `oauth2:clientId` -> the client ID
@@ -161,5 +163,5 @@ Example for a header `hello` with value `world` within the dataDestination towar
 Currently, with the HttpData-Pull EDR-flow and the use of API-keys, these API-keys cannot be added dynamically when initiating the transfer. For this, our infrastructure team must store the desired combination of target URL and API-key (auth-key and auth-code) for your Connector in our infrastructure. Please contact our service desk team to do this in advance.
 
 {% hint style="info" %} 
-Link: <a href="https://sovity.zammad.com/#ticket/view/my_tickets">Service Desk</a>
+Link: <a href="https://servicedesk.sovity.de/tickets-view">Service Desk</a>
 {% endhint %}

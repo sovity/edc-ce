@@ -17,7 +17,7 @@ services:
         aliases:
           - 'consumer'
   consumer-ui:
-    image: 'ghcr.io/sovity/edc-ce-ui:16.6.1'
+    image: 'ghcr.io/sovity/edc-ce-ui:16.6.2'
     networks:
       - 'consumer'
     restart: 'unless-stopped'
@@ -25,7 +25,7 @@ services:
       NEXT_PUBLIC_MANAGEMENT_API_URL: '/api/management'
       NEXT_PUBLIC_MANAGEMENT_API_KEY: 'SomeOtherApiKey'
   consumer-connector:
-    image: 'ghcr.io/sovity/edc-ce:16.6.1'
+    image: 'ghcr.io/sovity/edc-ce:16.6.2'
     networks:
       consumer: {}
     ports:
@@ -49,6 +49,7 @@ services:
       sovity.edc.maintainer.url: 'https://consumer/maintainer'
       sovity.edc.curator.name: 'consumer Curator'
       sovity.edc.curator.url: 'https://consumer/curator'
+      REMOTE_DEBUG: 'true'
       REMOTE_DEBUG_BIND: '0.0.0.0:5006'
       sovity.edc.ui.preconfigured.counterparties: 'http://provider/api/v1/dsp?participantId=provider'
       sovity.dataspace.kind: 'sovity-mock-iam'
@@ -60,6 +61,8 @@ services:
     image: 'docker.io/postgres:17-alpine'
     networks:
       consumer: {}
+    ports:
+      - '54322:5432'
     restart: 'unless-stopped'
     environment:
       POSTGRES_USER: 'db-user'
@@ -92,7 +95,7 @@ services:
         aliases:
           - 'provider'
   provider-ui:
-    image: 'ghcr.io/sovity/edc-ce-ui:16.6.1'
+    image: 'ghcr.io/sovity/edc-ce-ui:16.6.2'
     networks:
       - 'provider'
     restart: 'unless-stopped'
@@ -100,7 +103,7 @@ services:
       NEXT_PUBLIC_MANAGEMENT_API_URL: '/api/management'
       NEXT_PUBLIC_MANAGEMENT_API_KEY: 'SomeOtherApiKey'
   provider-connector:
-    image: 'ghcr.io/sovity/edc-ce:16.6.1'
+    image: 'ghcr.io/sovity/edc-ce:16.6.2'
     networks:
       provider: {}
     ports:
@@ -124,6 +127,7 @@ services:
       sovity.edc.maintainer.url: 'https://provider/maintainer'
       sovity.edc.curator.name: 'provider Curator'
       sovity.edc.curator.url: 'https://provider/curator'
+      REMOTE_DEBUG: 'true'
       REMOTE_DEBUG_BIND: '0.0.0.0:5005'
       sovity.edc.ui.preconfigured.counterparties: 'http://consumer/api/v1/dsp?participantId=consumer'
       sovity.dataspace.kind: 'sovity-mock-iam'
@@ -135,6 +139,8 @@ services:
     image: 'docker.io/postgres:17-alpine'
     networks:
       provider: {}
+    ports:
+      - '54321:5432'
     restart: 'unless-stopped'
     environment:
       POSTGRES_USER: 'db-user'

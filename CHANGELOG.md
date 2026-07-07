@@ -2,6 +2,30 @@
 
 The versions of the sovity EDC CE are aligned with the sovity EDC EE.
 
+## [v16.6.2] - 2026-07-07
+
+### Overview
+
+Policy action type fix and Azure Blob transfer documentation update.
+
+#### Patch Changes
+
+- Fix `use` action type in UI API Wrapper
+- Add Azure Blob transfer documentation
+
+### Deployment Migration Notes
+
+_No special deployment migration steps required_
+
+#### Compatible Versions
+
+- EDC CE Backend: `ghcr.io/sovity/edc-ce:16.6.2`
+- EDC CE Frontend: `ghcr.io/sovity/edc-ce-ui:16.6.2`
+- PostgreSQL: `17`
+- Eclipse EDC Fork: [v0.11.1.3](https://github.com/sovity/core-edc/releases/tag/v0.11.1.3)
+- Tractus-X: `0.9.0`
+
+
 ## [v16.6.1] - 2026-05-22
 
 Port changes from v16.5.1
@@ -21,6 +45,7 @@ Port changes from v16.5.1
 - PostgreSQL: `17`
 - Eclipse EDC Fork: [v0.11.1.3](https://github.com/sovity/core-edc/releases/tag/v0.11.1.3)
 - Tractus-X: `0.9.0`
+
 
 ## [v16.6.0] - 2026-05-07
 

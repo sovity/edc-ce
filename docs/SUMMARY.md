@@ -36,7 +36,7 @@
   * [Policy: Unrestricted](Backend/Management-API/unrestricted-policy.md)
 * [Data Transfer](Backend/data-transfer-types.md)
   * [HttpData-Pull (Parameterized)](Backend/Management-API/httpdata-pull-parameterized.md)
-  * [AWS S3 Transfer](Backend/Management-API/aws-s3-transfer.md)
+  * [AWS S3 / Azure Blob Transfer](Backend/Management-API/aws-s3-azure-blob-transfer.md)
   * [Source: Audit Headers](Backend/data-source-audit-headers.md)
   * [Source/Sink: OAuth2/API-Key](Backend/Management-API/oauth2-or-api-keys.md)
 * [Static Callback](Backend/Management-API/static-callback.md)
@@ -50,4 +50,4 @@
 ## Customer Links
 * [Glossary](https://docs.sovity.de/glossary/glossary)
 * [sovity Hub](https://portal-main.prod-sovity.azure.sovity.io/)
-* [Service Desk](https://support.sovity.de/)
+* [Service Desk](https://servicedesk.sovity.de/)
