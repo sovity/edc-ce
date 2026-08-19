@@ -121,6 +121,7 @@ const buildAzureStorageTransferRequest = (
 ): UiDataSinkAzureStorage => {
   return {
     storageAccountName: formValue.storageAccountName,
+    accountKey: formValue.accountKey,
     containerName: formValue.containerName,
     blobName: formValue.blobName,
     folderName: formValue.useFolder ? formValue.folderName : undefined,

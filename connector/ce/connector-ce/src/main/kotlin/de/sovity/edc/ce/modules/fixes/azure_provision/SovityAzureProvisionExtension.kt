@@ -19,6 +19,7 @@ import org.eclipse.edc.connector.provision.azure.AzureProvisionExtension
 import org.eclipse.edc.runtime.metamodel.annotation.Configuration
 import org.eclipse.edc.runtime.metamodel.annotation.Extension
 import org.eclipse.edc.runtime.metamodel.annotation.Inject
+import org.eclipse.edc.spi.security.Vault
 import org.eclipse.edc.spi.system.ServiceExtension
 import org.eclipse.edc.spi.system.ServiceExtensionContext
 import org.eclipse.edc.spi.types.TypeManager
@@ -55,6 +56,9 @@ class SovityAzureProvisionExtension : ServiceExtension {
     @Inject
     private lateinit var provisionManager: ProvisionManager
 
+    @Inject
+    private lateinit var vault: Vault
+
     override fun initialize(context: ServiceExtensionContext) {
         provisionManager.register(
             // Use Sovity Variant of ObjectStorageProvisioner
@@ -62,7 +66,8 @@ class SovityAzureProvisionExtension : ServiceExtension {
                 retryPolicy,
                 context.monitor,
                 blobStoreApi,
-                azureProvisionConfiguration
+                azureProvisionConfiguration,
+                vault
             )
         )
         // Use Sovity Variant of ObjectStorageConsumerResourceDefinitionGenerator

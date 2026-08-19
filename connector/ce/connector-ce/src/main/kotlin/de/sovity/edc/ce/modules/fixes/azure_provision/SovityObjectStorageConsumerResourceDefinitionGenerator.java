@@ -1,9 +1,24 @@
 /*
- * Copyright sovity GmbH and/or licensed to sovity GmbH under one or
- * more contributor license agreements. You may not use this file except
- * in compliance with the "Elastic License 2.0".
+ * Copyright 2022 Microsoft Corporation
+ * Copyright 2025 sovity GmbH
  *
- * SPDX-License-Identifier: Elastic-2.0
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Contributors:
+ *     Microsoft Corporation - initial API and implementation
+ *     sovity GmbH - modifications
  */
 
 package de.sovity.edc.ce.modules.fixes.azure_provision;
@@ -45,7 +60,10 @@ public class SovityObjectStorageConsumerResourceDefinitionGenerator implements C
                 .accountName(destination.getStringProperty(AzureBlobStoreSchema.ACCOUNT_NAME))
                 .containerName(destination.getStringProperty(AzureBlobStoreSchema.CONTAINER_NAME, randomUUID().toString()))
                 .folderName(destination.getStringProperty(AzureBlobStoreSchema.FOLDER_NAME))
-                .blobName(destination.getStringProperty(AzureBlobStoreSchema.BLOB_NAME));
+                .blobName(destination.getStringProperty(AzureBlobStoreSchema.BLOB_NAME))
+                // Vault alias for the storage account key, carried from the sink DataAddress' keyName.
+                // Required when the transfer is initiated via the UI API Wrapper (UiDataSinkAzureStorage#accountKey).
+                .keyName(destination.getKeyName());
         }
 
         return definitionBuilder.build();

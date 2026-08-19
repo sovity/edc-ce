@@ -42,8 +42,8 @@ public class UiDataSourceAzureStorage {
     private String storageAccountName;
 
     @Schema(
-        description = "Vault Key for the Storage Account Secret",
-        example = "key-1",
+        description = "Vault key under which the storage account secret is stored.",
+        example = "azure-account-key",
         requiredMode = Schema.RequiredMode.REQUIRED
     )
     private String accountKey;

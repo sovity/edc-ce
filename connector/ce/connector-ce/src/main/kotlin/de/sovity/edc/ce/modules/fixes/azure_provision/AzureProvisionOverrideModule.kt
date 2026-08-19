@@ -16,6 +16,9 @@ object AzureProvisionOverrideModule {
         "This override fixes two bugs in the EDC 0.11.0, that are fixed in later versions:"
             + "1) Fix serialization of ObjectStorageResourceDefinition"
             + "2) Use blobName in SovityObjectContainerProvisionedResource"
+            + "It additionally makes the Azure storage account key configurable via the "
+            + "DataAddress keyName instead of the hardcoded accountName + '-key1' convention."
+            + "(https://github.com/sovity/edc-ee/issues/1622)."
     ).apply {
         excludeServiceExtensions(AzureProvisionExtension::class.java)
         serviceExtensions(SovityAzureProvisionExtension::class.java)
