@@ -34,7 +34,9 @@ jobs:
       - name: "Gradle: Validate Gradle Wrapper"
         uses: gradle/actions/wrapper-validation@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
       - name: "Gradle: Set up Gradle"
-        uses: gradle/actions/setup-gradle@d9c87d481d55275bb5441eef3fe0e46805f9ef70 # v3.5.0
+        uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
+        with:
+          cache-read-only: true
       - name: "Gradle: Build"
         working-directory: connector
         env:
@@ -97,7 +99,7 @@ jobs:
       - name: "Gradle: Validate Gradle Wrapper"
         uses: gradle/actions/wrapper-validation@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
       - name: "Gradle: Set up Gradle"
-        uses: gradle/actions/setup-gradle@d9c87d481d55275bb5441eef3fe0e46805f9ef70 # v3.5.0
+        uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
       - name: "Gradle: Test"
         working-directory: connector
         env:
@@ -129,7 +131,9 @@ jobs:
           GRADLE_ARGS="-Pversion=${GITHUB_REF#refs/tags/v}"
           echo "GRADLE_ARGS=$GRADLE_ARGS" >> $GITHUB_ENV
       - name: "Gradle: Set up Gradle"
-        uses: gradle/actions/setup-gradle@d9c87d481d55275bb5441eef3fe0e46805f9ef70 # v3.5.0
+        uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
+        with:
+          cache-read-only: true
       - name: "Gradle: Publish (Release Only)"
         if: ${{ startsWith(github.ref, 'refs/tags/v') }}
         working-directory: connector
@@ -161,7 +165,7 @@ jobs:
       - name: "Gradle: Validate Gradle Wrapper"
         uses: gradle/actions/wrapper-validation@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
       - name: "Gradle: Set up Gradle"
-        uses: gradle/actions/setup-gradle@d9c87d481d55275bb5441eef3fe0e46805f9ef70 # v3.5.0
+        uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
       - name: "Gradle: Generate TS Code"
         working-directory: connector
         env:
@@ -211,7 +215,7 @@ jobs:
             echo "Checking $MIGRATIONS_DIR"
 
             for filename in $FILES ; do
-              if [[ ! "$filename" =~ $PATTERN ]]; then
+              if [[ ! "$filename" =~ $PATTERN ]] || [[ "${BASH_REMATCH[1]}" != "${BASH_REMATCH[2]}" ]]; then
                 echo "Error: Invalid migration script name: ${filename##*/}"
                 echo "Expected format: $PATTERN"
                 exit 1
@@ -224,9 +228,9 @@ jobs:
 
           MIGRATION_DIR_CE='connector/ce/utils/db-schema-ce/src/main/resources/db/migration-ce'
 
-          PATTERN_CE='^V([0-9]+\.[0-9]+\.[0-9]+)__Release_\1_CE\.sql$'
+          PATTERN_CE='^V([0-9]+\.[0-9]+\.[0-9]+)__Release_([0-9]+\.[0-9]+\.[0-9]+)_CE\.sql$'
 
-          if [[ ! "${{ github.ref }}" =~ '^refs/tags/v' ]] && [[ ! "${{ github.event.pull_request.head.ref }}" == "next" ]]; then
+          if [[ ! "${{ github.ref }}" =~ ^refs/tags/v ]] && [[ ! "${{ github.event.pull_request.head.ref }}" == "next" ]]; then
             PATTERN_CE+='|^V99__Unreleased_CE.sql$'
           fi
 

@@ -1,9 +1,24 @@
 /*
- * Copyright sovity GmbH and/or licensed to sovity GmbH under one or
- * more contributor license agreements. You may not use this file except
- * in compliance with the "Elastic License 2.0".
+ * Copyright 2022 Microsoft Corporation
+ * Copyright 2025 sovity GmbH
  *
- * SPDX-License-Identifier: Elastic-2.0
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Contributors:
+ *     Microsoft Corporation - initial API and implementation
+ *     sovity GmbH - modifications
  */
 
 package de.sovity.edc.ce.modules.fixes.azure_provision;
@@ -30,6 +45,10 @@ import static org.eclipse.edc.spi.constants.CoreConstants.EDC_NAMESPACE;
 @JsonTypeName("dataspaceconnector:ObjectContainerProvisionedResource")
 public class SovityObjectContainerProvisionedResource extends ProvisionedDataDestinationResource {
 
+    // Stored as a distinct property because the DataAddress' native keyName is already used for the
+    // provisioned SAS-token secret name (see Builder#resourceName).
+    private static final String ACCOUNT_KEY_NAME = "accountKeyName";
+
     private SovityObjectContainerProvisionedResource() {
     }
 
@@ -39,6 +58,14 @@ public class SovityObjectContainerProvisionedResource extends ProvisionedDataDes
 
     public String getContainerName() {
         return getDataAddress().getStringProperty(CONTAINER_NAME);
+    }
+
+    /**
+     * Vault alias for the storage account key, needed to authenticate against the account on deprovision.
+     * Carried over from the provisioned resource definition's keyName.
+     */
+    public String getAccountKeyName() {
+        return getDataAddress().getStringProperty(EDC_NAMESPACE + ACCOUNT_KEY_NAME);
     }
 
     @JsonPOJOBuilder(withPrefix = "")
@@ -82,6 +109,14 @@ public class SovityObjectContainerProvisionedResource extends ProvisionedDataDes
         public Builder blobName(String blobName) {
             if (blobName != null) {
                 dataAddressBuilder.property(EDC_NAMESPACE + BLOB_NAME, blobName);
+            }
+            return this;
+        }
+
+        // Vault alias for the storage account key, carried through so deprovision can authenticate
+        public Builder accountKeyName(String keyName) {
+            if (keyName != null) {
+                dataAddressBuilder.property(EDC_NAMESPACE + ACCOUNT_KEY_NAME, keyName);
             }
             return this;
         }

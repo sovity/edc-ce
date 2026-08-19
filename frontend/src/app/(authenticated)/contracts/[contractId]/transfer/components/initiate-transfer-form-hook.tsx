@@ -26,6 +26,7 @@ export const useInitiateTransferForm = () => {
   const defaultAzure: InitiateTransferFormValue = {
     transferType: 'AZURE_STORAGE',
     storageAccountName: '',
+    accountKey: '',
     containerName: '',
   };
 

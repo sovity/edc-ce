@@ -1313,8 +1313,8 @@ components:
           example: storage-account
         accountKey:
           type: string
-          description: Vault Key for the Storage Account Secret
-          example: key-1
+          description: Vault key under which the storage account secret is stored.
+          example: azure-account-key
         containerName:
           type: string
           description: Container Name of the Blob Storage
@@ -3034,9 +3034,12 @@ components:
       properties:
         storageAccountName:
           type: string
-          description: "Storage Account Name. Note, that the corresponding secret\
-            \ must be stored in the vault under storageAccountName + '-key1'"
+          description: Storage Account Name.
           example: storage-account
+        accountKey:
+          type: string
+          description: Vault key under which the storage account secret is stored.
+          example: azure-account-key
         containerName:
           type: string
           description: Container Name of the Blob Storage
@@ -3050,6 +3053,7 @@ components:
           description: Blob Name of the Blob Storage
           example: folder
       required:
+      - accountKey
       - containerName
       - storageAccountName
     UiDataSinkHttpDataPush:

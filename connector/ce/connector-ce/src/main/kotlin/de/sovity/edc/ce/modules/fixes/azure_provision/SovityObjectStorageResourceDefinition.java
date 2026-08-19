@@ -1,9 +1,24 @@
 /*
- * Copyright sovity GmbH and/or licensed to sovity GmbH under one or
- * more contributor license agreements. You may not use this file except
- * in compliance with the "Elastic License 2.0".
+ * Copyright 2022 Microsoft Corporation
+ * Copyright 2025 sovity GmbH
  *
- * SPDX-License-Identifier: Elastic-2.0
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Contributors:
+ *     Microsoft Corporation - initial API and implementation
+ *     sovity GmbH - modifications
  */
 
 package de.sovity.edc.ce.modules.fixes.azure_provision;
@@ -29,6 +44,7 @@ public class SovityObjectStorageResourceDefinition extends ResourceDefinition {
     private String accountName;
     private String folderName;
     private String blobName;
+    private String keyName;
 
     public String getContainerName() {
         return containerName;
@@ -44,6 +60,7 @@ public class SovityObjectStorageResourceDefinition extends ResourceDefinition {
             .containerName(containerName)
             .folderName(folderName)
             .blobName(blobName)
+            .keyName(keyName)
             .accountName(accountName);
     }
 
@@ -53,6 +70,14 @@ public class SovityObjectStorageResourceDefinition extends ResourceDefinition {
 
     public String getBlobName() {
         return blobName;
+    }
+
+    /**
+     * Vault alias under which the storage account key is stored, carried from the sink DataAddress' keyName.
+     * Required when the transfer is initiated via the UI API Wrapper (see {@code UiDataSinkAzureStorage#accountKey}).
+     */
+    public String getKeyName() {
+        return keyName;
     }
 
     // Added this as in https://github.com/eclipse-edc/Technology-Azure/pull/339/files
@@ -87,6 +112,11 @@ public class SovityObjectStorageResourceDefinition extends ResourceDefinition {
 
         public Builder blobName(String blobName) {
             resourceDefinition.blobName = blobName;
+            return this;
+        }
+
+        public Builder keyName(String keyName) {
+            resourceDefinition.keyName = keyName;
             return this;
         }
 

@@ -12,6 +12,7 @@ import {type UseFormReturn} from 'react-hook-form';
 import {z} from 'zod';
 import {useState} from 'react';
 import InputField from '@/components/form/input-field';
+import VaultSecretField from '@/components/vault-secret-field';
 import {api} from '@/lib/api/client';
 import {useQuery} from '@tanstack/react-query';
 import {Button} from '@/components/ui/button';
@@ -21,6 +22,7 @@ import ActionConfirmDialog from '@/components/action-confirm-dialog';
 
 export const azureDataSinkSchema = z.object({
   storageAccountName: z.string().min(1, 'Storage Account Name is required'),
+  accountKey: z.string().min(1, 'Account Key is required'),
   containerName: z.string().min(1, 'Container Name is required'),
   useFolder: z.boolean().optional(),
   folderName: z.string().optional(),
@@ -44,13 +46,13 @@ export const AzureDataSinkForm = ({form}: {form: UseFormReturn<any>}) => {
   };
 
   const {data: containers} = useQuery(
-    ['azure-containers', storageAccountName],
+    ['azure-containers', storageAccountName, value.accountKey],
     async () =>
-      storageAccountName
+      storageAccountName && value.accountKey?.trim()
         ? api.uiApi.listAzureStorageContainers({
             azureStorageListContainersRequest: {
               storageAccountName: storageAccountName,
-              storageAccountVaultKey: storageAccountName + '-key1',
+              storageAccountVaultKey: value.accountKey,
             },
           })
         : null,
@@ -58,7 +60,7 @@ export const AzureDataSinkForm = ({form}: {form: UseFormReturn<any>}) => {
 
   return (
     <>
-      <div className="flex flex-wrap items-center gap-4">
+      <div className="flex flex-wrap items-end gap-4">
         <InputField
           className="flex-1"
           isRequired
@@ -73,16 +75,20 @@ export const AzureDataSinkForm = ({form}: {form: UseFormReturn<any>}) => {
             form.setValue('useFolder', false);
             form.setValue('blobName', '');
           }}
-          description={
-            value.storageAccountName &&
-            t('Pages.InitiateTransfer.vaultSecretDescription', {
-              vaultKey: `${value.storageAccountName}-key1`,
-            } as unknown as undefined)
-          }
+        />
+        <VaultSecretField
+          isRequired
+          className="flex-1"
+          name="accountKey"
+          label={t('Pages.DataOfferCreate.sharedAccessSecret')}
+          control={form.control}
         />
         <Button
-          className="justify-center"
-          disabled={!value.storageAccountName?.trim()?.length}
+          className="justify-center align-bottom"
+          disabled={
+            !value.storageAccountName?.trim()?.length ||
+            !value.accountKey?.trim()?.length
+          }
           dataTestId="search-containers"
           onClick={(e) => {
             e.preventDefault();

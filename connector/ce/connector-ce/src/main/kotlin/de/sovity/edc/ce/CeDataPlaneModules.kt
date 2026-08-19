@@ -18,6 +18,7 @@ import de.sovity.edc.ce.modules.dataspaces.catena.CatenaDataspaceFeatures
 import de.sovity.edc.ce.modules.dataspaces.railway.RailwayDataspaceFeatures
 import de.sovity.edc.ce.modules.dataspaces.sovity.edrs.EdrTokenSecretModule
 import de.sovity.edc.ce.modules.db.DbModule
+import de.sovity.edc.ce.modules.fixes.azure_storage.AzureStorageOverrideModule
 import de.sovity.edc.ce.modules.fixes.data_plane_framework.DataPlaneFrameworkOverrideModule
 import de.sovity.edc.ce.modules.messaging.dp_registration.DataPlaneRegistrationModule
 import de.sovity.edc.runtime.config.UrlPathUtils
@@ -79,7 +80,8 @@ object CeDataPlaneModules {
 
         modules(
             EdrTokenSecretModule.instance(),
-            DataPlaneFrameworkOverrideModule.instance()
+            DataPlaneFrameworkOverrideModule.instance(),
+            AzureStorageOverrideModule.instance()
         )
 
         configurePublicApi()

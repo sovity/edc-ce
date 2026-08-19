@@ -39,11 +39,17 @@ import { mapValues } from '../runtime';
  */
 export interface UiDataSinkAzureStorage {
     /**
-     * Storage Account Name. Note, that the corresponding secret must be stored in the vault under storageAccountName + '-key1'
+     * Storage Account Name.
      * @type {string}
      * @memberof UiDataSinkAzureStorage
      */
     storageAccountName: string;
+    /**
+     * Vault key under which the storage account secret is stored.
+     * @type {string}
+     * @memberof UiDataSinkAzureStorage
+     */
+    accountKey: string;
     /**
      * Container Name of the Blob Storage
      * @type {string}
@@ -69,6 +75,7 @@ export interface UiDataSinkAzureStorage {
  */
 export function instanceOfUiDataSinkAzureStorage(value: any): value is UiDataSinkAzureStorage {
     if (!('storageAccountName' in value) || value['storageAccountName'] === undefined) return false;
+    if (!('accountKey' in value) || value['accountKey'] === undefined) return false;
     if (!('containerName' in value) || value['containerName'] === undefined) return false;
     return true;
 }
@@ -84,6 +91,7 @@ export function UiDataSinkAzureStorageFromJSONTyped(json: any, ignoreDiscriminat
     return {
         
         'storageAccountName': json['storageAccountName'],
+        'accountKey': json['accountKey'],
         'containerName': json['containerName'],
         'folderName': json['folderName'] == null ? undefined : json['folderName'],
         'blobName': json['blobName'] == null ? undefined : json['blobName'],
@@ -102,6 +110,7 @@ export function UiDataSinkAzureStorageToJSONTyped(value?: UiDataSinkAzureStorage
     return {
         
         'storageAccountName': value['storageAccountName'],
+        'accountKey': value['accountKey'],
         'containerName': value['containerName'],
         'folderName': value['folderName'],
         'blobName': value['blobName'],

@@ -446,7 +446,6 @@
   "Pages.InitiateTransfer.title": "Initiate Transfer",
   "Pages.InitiateTransfer.useFolder": "Use Folder",
   "Pages.InitiateTransfer.useFolderDescription": "Select whether to use a folder for the blob or put it in the root of the container.",
-  "Pages.InitiateTransfer.vaultSecretDescription": "The secret for the storage account must be stored in the vault under the key {vaultKey}.",
   "Pages.PolicyCreate.expressionSubtitle": "Restricts Negotiations or Transfers",
   "Pages.PolicyCreate.expressionTitle": "Policy Expression",
   "Pages.PolicyCreate.generalSubtitle": "General Information",

@@ -25,6 +25,7 @@ import de.sovity.edc.ce.libs.mappers.dataaddress.model.InitiateTransferParams
 import de.sovity.edc.runtime.simple_di.Service
 import de.sovity.edc.utils.jsonld.vocab.Prop
 import org.eclipse.edc.spi.security.Vault
+import org.eclipse.edc.spi.types.domain.DataAddress
 
 @Service
 class AzureStorageDataSinkMapper(
@@ -33,8 +34,13 @@ class AzureStorageDataSinkMapper(
     fun buildAzureStorageTransferData(
         azureStorage: UiDataSinkAzureStorage
     ): InitiateTransferParams {
-        if (vault.resolveSecret(azureStorage.storageAccountName + "-key1") == null) {
-            error("The secret for the storage account must be stored in '${azureStorage.storageAccountName}-key1'.")
+        val keyName = azureStorage.accountKey
+        if (keyName.isNullOrBlank()) {
+            error("An accountKey (the vault alias of the storage account key) must be provided.")
+        }
+        if (vault.resolveSecret(keyName) == null) {
+            error("The storage account secret could not be found in the vault " +
+                "under the given vault key alias '$keyName'.")
         }
         val dataAddress = mutableMapOf(
             Prop.Edc.TYPE to Prop.Edc.AZURE_BLOB_STORE_TYPE,
@@ -42,6 +48,7 @@ class AzureStorageDataSinkMapper(
             Prop.Edc.AZURE_CONTAINER_NAME to azureStorage.containerName,
             Prop.Edc.AZURE_FOLDER_NAME to azureStorage.folderName,
             Prop.Edc.AZURE_BLOB_NAME to azureStorage.blobName,
+            DataAddress.EDC_DATA_ADDRESS_KEY_NAME to keyName,
         )
         return InitiateTransferParams().also {
             it.dataSinkProperties += dataAddress

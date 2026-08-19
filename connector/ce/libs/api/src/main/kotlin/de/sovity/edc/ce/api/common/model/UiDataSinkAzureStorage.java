@@ -36,11 +36,18 @@ import org.jetbrains.annotations.Nullable;
 @Schema(description = "AZURE_STORAGE type Data Sink.")
 public class UiDataSinkAzureStorage {
     @Schema(
-        description = "Storage Account Name. Note, that the corresponding secret must be stored in the vault under storageAccountName + '-key1'",
+        description = "Storage Account Name.",
         example = "storage-account",
         requiredMode = Schema.RequiredMode.REQUIRED
     )
     private String storageAccountName;
+
+    @Schema(
+        description = "Vault key under which the storage account secret is stored.",
+        example = "azure-account-key",
+        requiredMode = Schema.RequiredMode.REQUIRED
+    )
+    private String accountKey;
 
     @Schema(
         description = "Container Name of the Blob Storage",

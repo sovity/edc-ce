@@ -45,7 +45,7 @@ export interface UiDataSourceAzureStorage {
      */
     storageAccountName: string;
     /**
-     * Vault Key for the Storage Account Secret
+     * Vault key under which the storage account secret is stored.
      * @type {string}
      * @memberof UiDataSourceAzureStorage
      */
