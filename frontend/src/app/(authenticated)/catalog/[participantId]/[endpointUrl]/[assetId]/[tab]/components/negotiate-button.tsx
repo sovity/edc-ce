@@ -19,6 +19,7 @@ import {
 import {useToast} from '@/components/ui/use-toast';
 import {
   type ContractNegotiationRequest,
+  ContractNegotiationSimplifiedState,
   type UiContractNegotiation,
 } from '@/lib/api/client/generated';
 import {useDialogsStore} from '@/lib/stores/dialog-store';
@@ -54,6 +55,10 @@ export const NegotiateButton = (props: NegotiateButtonProps) => {
 
   const statusQuery = useContractNegotiationStatus(negotiationId);
   const isNegotiationSuccess = statusQuery.data?.contractAgreementId != null;
+  const isNegotiationTerminated =
+    !isNegotiationSuccess &&
+    statusQuery.data?.state.simplifiedState ===
+      ContractNegotiationSimplifiedState.Terminated;
 
   const onNegotiateClick = () => {
     const dialogId = `data-offer-negotiate`;
@@ -100,6 +105,18 @@ export const NegotiateButton = (props: NegotiateButtonProps) => {
       });
     }
   }, [statusQuery.isSuccess, isNegotiationSuccess, toast, t]);
+
+  useEffect(() => {
+    if (isNegotiationTerminated) {
+      setNegotiationId(null);
+      toast({
+        title: t('Pages.CatalogDataOfferDetails.negotiationFailed'),
+        description: t(
+          'Pages.CatalogDataOfferDetails.negotiationFailedDescription',
+        ),
+      });
+    }
+  }, [isNegotiationTerminated, toast, t]);
 
   return (
     <>

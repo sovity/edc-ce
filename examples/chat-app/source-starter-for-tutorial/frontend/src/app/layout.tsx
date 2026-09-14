@@ -21,7 +21,7 @@
 import type {Metadata} from 'next';
 import {Geist, Geist_Mono} from 'next/font/google';
 import './globals.css';
-import {PublicEnvScript} from 'next-runtime-env';
+import {PublicEnvScript} from '@/components/public-env-script';
 import {QueryClientProvider} from '@/components/query-client-provider';
 
 const geistSans = Geist({

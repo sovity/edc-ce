@@ -39,7 +39,7 @@ class ReferringConnectorPolicyExtension : ServiceExtension {
         simplePolicyCreator.registerPolicyFunction(
             leftExpressionName = "REFERRING_CONNECTOR",
             leftExpressionValueFn = { policyContext ->
-                requirePristinePolicyContext(policyContext, context.monitor)
+                requirePolicyContextToHaveNoProblems(policyContext, context.monitor)
 
                 val claim = policyContextUtils.getStringClaim(policyContext, claimName)
 
@@ -51,7 +51,7 @@ class ReferringConnectorPolicyExtension : ServiceExtension {
         )
     }
 
-    private fun requirePristinePolicyContext(policyContext: PolicyContext, monitor: Monitor) {
+    private fun requirePolicyContextToHaveNoProblems(policyContext: PolicyContext, monitor: Monitor) {
         // TODO: This is old code. Does the current version of the EDC still need sanity checks like that?
         require(!policyContext.hasProblems()) {
             val problems = java.lang.String.join(", ", policyContext.problems)

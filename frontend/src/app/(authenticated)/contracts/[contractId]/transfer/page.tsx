@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: Elastic-2.0
  */
 'use client';
+import {use} from 'react';
 
 import {CenteredLoadingSpinner} from '@/components/loading-spinner';
 import {InitiateTransferForm} from '@/app/(authenticated)/contracts/[contractId]/transfer/components/initiate-transfer-form';
@@ -20,11 +21,10 @@ import {decodeParams} from '@/lib/utils/http-utils';
 import {useTranslations} from 'next-intl';
 import PageContainer from '@/components/page-container';
 
-export default function ContractTransferPage({
-  params,
-}: {
-  params: {contractId: string};
+export default function ContractTransferPage(props: {
+  params: Promise<{contractId: string}>;
 }) {
+  const params = use(props.params);
   const breadcrumbItems = useBreadcrumbItems();
   const t = useTranslations();
   const {contractId} = decodeParams(params);

@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: Elastic-2.0
  */
 'use client';
+import {use} from 'react';
 
 import {CenteredLoadingSpinner} from '@/components/loading-spinner';
 import {api} from '@/lib/api/client';
@@ -18,11 +19,10 @@ import {queryKeys} from '@/lib/queryKeys';
 import AssetDetailPageContent from './components/asset-detail-page-content';
 import PageContainer from '@/components/page-container';
 
-export default function AssetDetailPage({
-  params,
-}: {
-  params: {id: string; tab: string};
+export default function AssetDetailPage(props: {
+  params: Promise<{id: string; tab: string}>;
 }) {
+  const params = use(props.params);
   const {id, tab} = params;
 
   const pageQuery = useQueryWrapper(queryKeys.assets.detailPage(id), () =>

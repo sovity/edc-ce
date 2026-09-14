@@ -17,6 +17,10 @@ export interface PolicyExpressionMapped {
   expressions?: PolicyExpressionMapped[];
 
   verb?: PolicyVerbConfig;
+  /**
+   * Raw left operand, e.g. "POLICY_CLAIM_COUNTRY". Required to render verbs with a dynamic left operand.
+   */
+  left?: string;
   operator?: PolicyOperatorConfig;
   valueRaw?: UiPolicyLiteral;
   valueJson?: string;

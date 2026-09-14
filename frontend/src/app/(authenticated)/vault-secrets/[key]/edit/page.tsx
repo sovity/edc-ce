@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: Elastic-2.0
  */
 'use client';
+import {use} from 'react';
 
 import {CenteredLoadingSpinner} from '@/components/loading-spinner';
 import {useBreadcrumbItems} from '@/lib/breadcrumb-items';
@@ -20,7 +21,10 @@ import {EditVaultSecretForm} from './components/edit-vault-secret-form';
 import {api} from '@/lib/api/client';
 import {decodeParams} from '@/lib/utils/http-utils';
 
-export default function EditVaultSecretPage({params}: {params: {key: string}}) {
+export default function EditVaultSecretPage(props: {
+  params: Promise<{key: string}>;
+}) {
+  const params = use(props.params);
   const {key} = decodeParams(params);
   const pageQuery = useQueryWrapper(queryKeys.vaultSecrets.id(key), () =>
     api.uiApi.editVaultSecretPage({key}),

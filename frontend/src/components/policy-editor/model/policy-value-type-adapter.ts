@@ -20,16 +20,26 @@ export interface PolicyValueTypeAdapter {
 
   /**
    * API Model -> Form Value
+   *
+   * The left operand is only relevant for verbs with a dynamic left operand (see PolicyVerbConfig.operandLeftPrefix)
    */
   buildFormValueFn: (
     literal: UiPolicyLiteral,
     operator: OperatorDto,
+    left: string,
   ) => PolicyEditorConstraintFormValue;
 
   /**
    * Form Value -> API Model
    */
   buildValueFn: (formValue: PolicyEditorConstraintFormValue) => UiPolicyLiteral;
+
+  /**
+   * Form Value -> Left Operand
+   *
+   * Only required for verbs with a dynamic left operand. Defaults to the verb's first operand left ID.
+   */
+  buildLeftFn?: (formValue: PolicyEditorConstraintFormValue) => string;
 
   /**
    * Empty API Model (can be made to Form Value)

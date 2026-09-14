@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: Elastic-2.0
  */
 'use client';
+import {use} from 'react';
 
 import {CenteredLoadingSpinner} from '@/components/loading-spinner';
 import CatalogDataOfferTable from '@/app/(authenticated)/catalog/[participantId]/[endpointUrl]/components/catalog-data-offer-table';
@@ -20,11 +21,10 @@ import {decodeParams} from '@/lib/utils/http-utils';
 import {useTranslations} from 'next-intl';
 import PageContainer from '@/components/page-container';
 
-const CatalogResultPage = ({
-  params,
-}: {
-  params: {participantId: string; endpointUrl: string};
+const CatalogResultPage = (props: {
+  params: Promise<{participantId: string; endpointUrl: string}>;
 }) => {
+  const params = use(props.params);
   const {participantId, endpointUrl} = decodeParams(params);
 
   const pageQuery = useQueryWrapper(

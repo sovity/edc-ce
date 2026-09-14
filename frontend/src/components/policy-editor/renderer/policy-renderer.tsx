@@ -69,7 +69,10 @@ const PolicyRendererExpressionConstraint = ({
 }) => {
   return (
     <div className="flex items-center gap-1">
-      <PolicyConstraintVerbLabel verb={expression.verb!} />
+      <PolicyConstraintVerbLabel
+        verb={expression.verb!}
+        left={expression.left}
+      />
       <PolicyConstraintOperatorLabel operator={expression.operator!} />
       <PolicyConstraintValueText expression={expression} />
     </div>

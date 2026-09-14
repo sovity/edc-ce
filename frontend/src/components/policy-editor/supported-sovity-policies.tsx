@@ -8,6 +8,7 @@
 'use client';
 
 import type {PolicyVerbConfig} from '@/components/policy-editor/model/policy-verb-config';
+import {GENERIC_CLAIM_POLICY_PREFIX} from '@/components/policy-editor/value-types/claim-string-list-adapter';
 import {byTranslation} from '@/lib/utils/translation-utils';
 
 export function getSovityPolicyVerbs(): PolicyVerbConfig[] {
@@ -49,6 +50,27 @@ export function getSovityPolicyVerbs(): PolicyVerbConfig[] {
 
       supportedOperators: ['GEQ', 'LEQ', 'GT', 'LT'],
       valueType: 'DATETIME_TRUNCATE_TO_DATE',
+    },
+    {
+      // Dynamic left operand: "POLICY_CLAIM_" + claim name entered by the user
+      operandLeftIds: [GENERIC_CLAIM_POLICY_PREFIX],
+      operandLeftPrefix: GENERIC_CLAIM_POLICY_PREFIX,
+      operandLeftTitle: byTranslation(
+        'General.Policies.Verbs.genericClaimOperandLeftTitle',
+      ),
+      operandLeftDescription: byTranslation(
+        'General.Policies.Verbs.genericClaimOperandLeftDescription',
+      ),
+
+      operandRightTitle: byTranslation(
+        'General.Policies.Verbs.genericClaimOperandRightTitle',
+      ),
+      operandRightPlaceholder: byTranslation(
+        'General.Policies.Verbs.genericClaimOperandRightPlaceholder',
+      ),
+
+      supportedOperators: ['EQ', 'IN'],
+      valueType: 'CLAIM_STRING_LIST',
     },
   ];
 }

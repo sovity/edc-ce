@@ -11,6 +11,7 @@ package de.sovity.edc.ce.modules.dataspaces.sphinx
 import de.sovity.edc.client.EdcClient
 import de.sovity.edc.client.gen.model.OperatorDto
 import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.PolicyTestUtils
+import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.PolicyTestUtils.PolicyDto
 import de.sovity.edc.extension.e2e.junit.utils.Consumer
 import de.sovity.edc.extension.e2e.junit.utils.ControlPlane
 import de.sovity.edc.extension.e2e.junit.utils.Provider
@@ -57,9 +58,7 @@ abstract class SphinxPoliciesTestBase {
         val assetId = "time-restricted-gt-yesterday-$testId"
         policyTestUtils.createDataOffer(
             assetId,
-            "POLICY_EVALUATION_TIME",
-            OperatorDto.GT,
-            yesterday
+            PolicyDto.string("POLICY_EVALUATION_TIME", OperatorDto.GT, yesterday)
         )
 
         // act
@@ -73,9 +72,7 @@ abstract class SphinxPoliciesTestBase {
         val assetId = "time-restricted-geq-yesterday-$testId"
         policyTestUtils.createDataOffer(
             assetId,
-            "POLICY_EVALUATION_TIME",
-            OperatorDto.GEQ,
-            yesterday
+            PolicyDto.string("POLICY_EVALUATION_TIME", OperatorDto.GEQ, yesterday)
         )
 
         // act
@@ -90,9 +87,7 @@ abstract class SphinxPoliciesTestBase {
         val assetId = "time-restricted-lt-yesterday-$testId"
         policyTestUtils.createDataOffer(
             assetId,
-            "POLICY_EVALUATION_TIME",
-            OperatorDto.LT,
-            yesterday
+            PolicyDto.string("POLICY_EVALUATION_TIME", OperatorDto.LT, yesterday)
         )
 
         // act
@@ -105,9 +100,7 @@ abstract class SphinxPoliciesTestBase {
         val assetId = "time-restricted-leq-yesterday-$testId"
         policyTestUtils.createDataOffer(
             assetId,
-            "POLICY_EVALUATION_TIME",
-            OperatorDto.LEQ,
-            yesterday
+            PolicyDto.string("POLICY_EVALUATION_TIME", OperatorDto.LEQ, yesterday)
         )
 
         // act
@@ -120,9 +113,7 @@ abstract class SphinxPoliciesTestBase {
         val assetId = "time-restricted-lt-tomorrow-$testId"
         policyTestUtils.createDataOffer(
             assetId,
-            "POLICY_EVALUATION_TIME",
-            OperatorDto.LT,
-            tomorrow
+            PolicyDto.string("POLICY_EVALUATION_TIME", OperatorDto.LT, tomorrow)
         )
 
         // act
@@ -136,9 +127,7 @@ abstract class SphinxPoliciesTestBase {
         val assetId = "time-restricted-leq-tomorrow-$testId"
         policyTestUtils.createDataOffer(
             assetId,
-            "POLICY_EVALUATION_TIME",
-            OperatorDto.LEQ,
-            tomorrow
+            PolicyDto.string("POLICY_EVALUATION_TIME", OperatorDto.LEQ, tomorrow)
         )
 
         // act
@@ -152,9 +141,7 @@ abstract class SphinxPoliciesTestBase {
         val assetId = "time-restricted-gt-tomorrow-$testId"
         policyTestUtils.createDataOffer(
             assetId,
-            "POLICY_EVALUATION_TIME",
-            OperatorDto.GT,
-            tomorrow
+            PolicyDto.string("POLICY_EVALUATION_TIME", OperatorDto.GT, tomorrow)
         )
 
         // act
@@ -167,9 +154,7 @@ abstract class SphinxPoliciesTestBase {
         val assetId = "time-restricted-geq-tomorrow-$testId"
         policyTestUtils.createDataOffer(
             assetId,
-            "POLICY_EVALUATION_TIME",
-            OperatorDto.GEQ,
-            tomorrow
+            PolicyDto.string("POLICY_EVALUATION_TIME", OperatorDto.GEQ, tomorrow)
         )
 
         // act
@@ -183,9 +168,7 @@ abstract class SphinxPoliciesTestBase {
         val assetId = "referring-connector-eq-self-$testId"
         policyTestUtils.createDataOffer(
             assetId,
-            "sphinxDid",
-            OperatorDto.EQ,
-            providerConfig.participantId
+            PolicyDto.string("sphinxDid", OperatorDto.EQ, providerConfig.participantId)
         )
 
         // act & assert
@@ -198,9 +181,7 @@ abstract class SphinxPoliciesTestBase {
         val assetId = "referring-connector-eq-counterparty-$testId"
         policyTestUtils.createDataOffer(
             assetId,
-            "sphinxDid",
-            OperatorDto.EQ,
-            consumerConfig.participantId
+            PolicyDto.string("sphinxDid", OperatorDto.EQ, consumerConfig.participantId)
         )
 
         // act & assert
@@ -215,9 +196,7 @@ abstract class SphinxPoliciesTestBase {
         val assetId = "referring-connector-eq-doesnotexist-$testId"
         policyTestUtils.createDataOffer(
             assetId,
-            "sphinxDid",
-            OperatorDto.EQ,
-            "doesnotexist"
+            PolicyDto.string("sphinxDid", OperatorDto.EQ, "doesnotexist")
         )
 
         // act & assert
@@ -231,9 +210,7 @@ abstract class SphinxPoliciesTestBase {
         val assetId = "referring-connector-eq-empty-$testId"
         policyTestUtils.createDataOffer(
             assetId,
-            "sphinxDid",
-            OperatorDto.EQ,
-            ""
+            PolicyDto.string("sphinxDid", OperatorDto.EQ, "")
         )
 
         // act & assert
@@ -247,9 +224,7 @@ abstract class SphinxPoliciesTestBase {
         val assetId = "referring-connector-eq-doesnotexist-comma-counterparty-$testId"
         policyTestUtils.createDataOffer(
             assetId,
-            "sphinxDid",
-            OperatorDto.EQ,
-            "doesnotexist, ${consumerConfig.participantId}"
+            PolicyDto.string("sphinxDid", OperatorDto.EQ, "doesnotexist, ${consumerConfig.participantId}")
         )
 
         // act & assert
@@ -264,9 +239,7 @@ abstract class SphinxPoliciesTestBase {
         val assetId = "referring-connector-in-doesnotexist-comma-counterparty-$testId"
         policyTestUtils.createDataOffer(
             assetId,
-            "sphinxDid",
-            OperatorDto.IN,
-            "doesnotexist, ${consumerConfig.participantId}"
+            PolicyDto.string("sphinxDid", OperatorDto.IN, "doesnotexist, ${consumerConfig.participantId}")
         )
 
         // act & assert
@@ -280,9 +253,7 @@ abstract class SphinxPoliciesTestBase {
         val assetId = "referring-connector-in-empty-$testId"
         policyTestUtils.createDataOffer(
             assetId,
-            "sphinxDid",
-            OperatorDto.IN,
-            ""
+            PolicyDto.string("sphinxDid", OperatorDto.IN, "")
         )
 
         // act & assert
@@ -293,11 +264,9 @@ abstract class SphinxPoliciesTestBase {
     fun `given sphinxDid, when in-list-doesnotexist-and-counterparty, expect allowed`() {
         // arrange
         val assetId = "referring-connector-in-list-doesnotexist-and-counterparty-$testId"
-        policyTestUtils.createDataOfferList(
+        policyTestUtils.createDataOffer(
             assetId,
-            "sphinxDid",
-            OperatorDto.IN,
-            listOf("doesnotexist", consumerConfig.participantId)
+            PolicyDto.stringList("sphinxDid", OperatorDto.IN, listOf("doesnotexist", consumerConfig.participantId))
         )
 
         // act & assert
@@ -309,11 +278,9 @@ abstract class SphinxPoliciesTestBase {
     fun `given sphinxDid, when in-list-doesnotexist, expect disallowed`() {
         // arrange
         val assetId = "referring-connector-in-list-doesnotexist-$testId"
-        policyTestUtils.createDataOfferList(
+        policyTestUtils.createDataOffer(
             assetId,
-            "sphinxDid",
-            OperatorDto.IN,
-            listOf("doesnotexist")
+            PolicyDto.stringList("sphinxDid", OperatorDto.IN, listOf("doesnotexist"))
         )
 
         // act & assert

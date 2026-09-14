@@ -21,7 +21,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import {createEnv} from '@t3-oss/env-nextjs';
-import {env as runtimeEnv} from 'next-runtime-env';
+import {env as runtimeEnv} from './lib/runtime-env.js';
 import {z} from 'zod';
 
 export const env = createEnv({

@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: Elastic-2.0
  */
 'use client';
+import {use} from 'react';
 
 import {CenteredLoadingSpinner} from '@/components/loading-spinner';
 import {api} from '@/lib/api/client';
@@ -20,11 +21,10 @@ import {useTranslations} from 'next-intl';
 import ContractDetailPage from './contract-detail-page';
 import PageContainer from '@/components/page-container';
 
-export default function ContractDetailsPage({
-  params,
-}: {
-  params: {contractId: string; tab: string};
+export default function ContractDetailsPage(props: {
+  params: Promise<{contractId: string; tab: string}>;
 }) {
+  const params = use(props.params);
   const {contractId, tab} = decodeParams(params);
   const t = useTranslations();
 

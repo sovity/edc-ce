@@ -99,6 +99,7 @@ jobs:
       - name: "Gradle: Validate Gradle Wrapper"
         uses: gradle/actions/wrapper-validation@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
       - name: "Gradle: Set up Gradle"
+        # Gradle Caching: setup-gradle's default writes only on merges to the default branch, never on PRs.
         uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
       - name: "Gradle: Test"
         working-directory: connector
@@ -165,6 +166,7 @@ jobs:
       - name: "Gradle: Validate Gradle Wrapper"
         uses: gradle/actions/wrapper-validation@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
       - name: "Gradle: Set up Gradle"
+        # Gradle Caching: setup-gradle's default writes only on merges to the default branch, never on PRs.
         uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
       - name: "Gradle: Generate TS Code"
         working-directory: connector

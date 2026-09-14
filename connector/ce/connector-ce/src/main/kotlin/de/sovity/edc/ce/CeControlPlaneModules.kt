@@ -82,7 +82,7 @@ object CeControlPlaneModules {
         moduleOneOf(
             ConfigPropCategory.IMPORTANT,
             CeConfigProps.SOVITY_MANAGEMENT_API_IAM_KIND,
-            { warnIfUnset = true },
+            { required() },
             ApiKeyAuthModule.instance()
         )
 

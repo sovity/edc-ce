@@ -14,7 +14,7 @@ import {TITLE_TEMPLATE} from '@/lib/title-template';
 import {cn} from '@/lib/utils/css-utils';
 import '@/styles/globals.css';
 import {NextIntlClientProvider} from 'next-intl';
-import {PublicEnvScript} from 'next-runtime-env';
+import {PublicEnvScript} from '@/components/public-env-script';
 import React from 'react';
 
 export const metadata = {
