@@ -11,6 +11,13 @@ import {type OperatorDto} from '@sovity.de/edc-client';
 
 export interface PolicyVerbConfig {
   operandLeftIds: [string, ...string[]];
+
+  /**
+   * Set for verbs whose left operand is dynamic, e.g. "POLICY_CLAIM_" + user-provided claim name.
+   * Constraints with a left operand starting with this prefix are mapped to this verb.
+   */
+  operandLeftPrefix?: string;
+
   operandLeftTitle: TranslatedString;
   operandLeftDescription: TranslatedString;
   operandRightTitle?: TranslatedString;

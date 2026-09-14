@@ -33,5 +33,5 @@ export default defineConfig({
         },
         sourcemap: true,
     },
-    plugins: [dts({rollupTypes: true})],
+    plugins: [dts({bundleTypes: true})],
 });

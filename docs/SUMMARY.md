@@ -34,6 +34,7 @@
   * [Health Check APIs](Backend/health-check-api.md)
   * [Policy: Business Partner Groups](Backend/Management-API/business-partner-groups.md)
   * [Policy: Unrestricted](Backend/Management-API/unrestricted-policy.md)
+  * [Policy: Generic Claims (DAPS)](Backend/Management-API/generic-claims-policy.md)
 * [Data Transfer](Backend/data-transfer-types.md)
   * [HttpData-Pull (Parameterized)](Backend/Management-API/httpdata-pull-parameterized.md)
   * [AWS S3 / Azure Blob Transfer](Backend/Management-API/aws-s3-azure-blob-transfer.md)

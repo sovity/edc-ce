@@ -20,7 +20,18 @@ export class PolicyVerbList {
   }
 
   getVerbConfig(verb: string): PolicyVerbConfig {
-    return this.byId.get(verb) ?? this.getFallbackVerbConfig(verb);
+    return (
+      this.byId.get(verb) ??
+      this.getPrefixedVerbConfig(verb) ??
+      this.getFallbackVerbConfig(verb)
+    );
+  }
+
+  private getPrefixedVerbConfig(verb: string): PolicyVerbConfig | undefined {
+    return this.verbs.find(
+      (it) =>
+        it.operandLeftPrefix != null && verb.startsWith(it.operandLeftPrefix),
+    );
   }
 
   private getFallbackVerbConfig(verb: string): PolicyVerbConfig {

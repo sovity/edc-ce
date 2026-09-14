@@ -2,6 +2,36 @@
 
 The versions of the sovity EDC CE are aligned with the sovity EDC EE.
 
+## [v16.8.0] - 2026-09-14
+
+### Overview
+
+Require Management API Authentication. Add support for Generic Claims Policies for sovity Dataspaces.
+
+#### Major Changes
+
+#### Minor Changes
+
+- Upgrade the frontend from Next.js 14 to 15, staying on React 18
+- Add the generic claims policy `POLICY_CLAIM_<NAME>` for sovity dataspaces
+
+#### Patch Changes
+
+- Require Management API Authentication Kind to be set
+- Resolve open Dependabot alerts
+
+### Deployment Migration Notes
+
+`sovity.management.api.iam.kind` is now required to be set to `management-iam-api-key`.
+
+#### Compatible Versions
+
+- EDC CE Backend: `ghcr.io/sovity/edc-ce:16.8.0`
+- EDC CE Frontend: `ghcr.io/sovity/edc-ce-ui:16.8.0`
+- PostgreSQL: `17`
+- Eclipse EDC Fork: [v0.11.1.3](https://github.com/sovity/core-edc/releases/tag/v0.11.1.3)
+- Tractus-X: `0.9.0`
+
 ## [v16.7.0] - 2026-08-19
 
 ### Overview

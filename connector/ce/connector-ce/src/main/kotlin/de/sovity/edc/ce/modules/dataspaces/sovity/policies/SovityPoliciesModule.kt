@@ -8,6 +8,7 @@
 package de.sovity.edc.ce.modules.dataspaces.sovity.policies
 
 import de.sovity.edc.ce.modules.dataspaces.sovity.policies.evaluation_time.EvaluationTimePolicyExtension
+import de.sovity.edc.ce.modules.dataspaces.sovity.policies.generic_claims.GenericClaimsPolicyExtension
 import de.sovity.edc.ce.modules.dataspaces.sovity.policies.referring_connector.ReferringConnectorPolicyExtension
 import de.sovity.edc.runtime.modules.model.EdcModule
 
@@ -20,6 +21,7 @@ object SovityPoliciesModule {
             // Policies
             EvaluationTimePolicyExtension::class.java,
             ReferringConnectorPolicyExtension::class.java,
+            GenericClaimsPolicyExtension::class.java,
         )
     }
 }

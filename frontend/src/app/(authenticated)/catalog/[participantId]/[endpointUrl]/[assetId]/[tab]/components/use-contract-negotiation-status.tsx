@@ -9,6 +9,7 @@
 
 import {useRouter} from 'next/navigation';
 import {api} from '@/lib/api/client';
+import {ContractNegotiationSimplifiedState} from '@/lib/api/client/generated';
 import {queryKeys} from '@/lib/queryKeys';
 import {urls} from '@/lib/urls';
 import {useQuery} from '@tanstack/react-query';
@@ -35,6 +36,12 @@ export const useContractNegotiationStatus = (
             'contract-agreement',
           ),
         );
+        return false;
+      }
+      if (
+        data?.state.simplifiedState ===
+        ContractNegotiationSimplifiedState.Terminated
+      ) {
         return false;
       }
       return 500;

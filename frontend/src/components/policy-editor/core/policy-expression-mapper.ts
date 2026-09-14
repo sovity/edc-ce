@@ -41,9 +41,8 @@ export class PolicyExpressionMapper {
   private mapConstraint(
     expression: UiPolicyExpression,
   ): PolicyExpressionMapped {
-    const verb = this.policyVerbList.getVerbConfig(
-      expression.constraint?.left ?? 'Broken Expression',
-    );
+    const left = expression.constraint?.left ?? 'Broken Expression';
+    const verb = this.policyVerbList.getVerbConfig(left);
     const operator = this.policyOperatorList.getOperatorConfig(
       expression.constraint?.operator ?? 'EQ',
     );
@@ -52,6 +51,7 @@ export class PolicyExpressionMapper {
     return {
       type: 'CONSTRAINT',
       verb,
+      left,
       operator,
       valueRaw: value,
       valueJson: this.formatJson(value!),

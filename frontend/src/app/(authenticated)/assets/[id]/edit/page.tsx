@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: Elastic-2.0
  */
 'use client';
+import {use} from 'react';
 
 import {CenteredLoadingSpinner} from '@/components/loading-spinner';
 import {type IdResponseDto} from '@sovity.de/edc-client';
@@ -24,7 +25,8 @@ import {matchQueryState} from '@/lib/utils/match-query-state';
 import {api} from '@/lib/api/client';
 import {decodeParams} from '@/lib/utils/http-utils';
 
-export default function AssetEditPage({params}: {params: {id: string}}) {
+export default function AssetEditPage(props: {params: Promise<{id: string}>}) {
+  const params = use(props.params);
   const {id} = decodeParams(params);
   const breadcrumbItems = useBreadcrumbItems();
 

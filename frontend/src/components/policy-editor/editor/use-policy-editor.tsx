@@ -183,7 +183,11 @@ export const usePolicyEditor = (
         // Register Form Controls
         const constraintFormValue = policyContext
           .getAdapter(verb)
-          .buildFormValueFn(constraint.right, constraint.operator);
+          .buildFormValueFn(
+            constraint.right,
+            constraint.operator,
+            constraint.left,
+          );
         registerConstraintFormControls(nodeId, constraintFormValue);
         break;
       default:
@@ -231,7 +235,9 @@ export const usePolicyEditor = (
         return {
           type: 'CONSTRAINT',
           constraint: {
-            left: value.verb!.operandLeftIds[0],
+            left:
+              adapter.buildLeftFn?.(formValueNode) ??
+              value.verb!.operandLeftIds[0],
             operator: formValueNode.operator,
             right: adapter.buildValueFn(formValueNode),
           },

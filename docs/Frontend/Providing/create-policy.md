@@ -9,9 +9,10 @@ To create a new policy click on `New policy` button.
 
 A new policy can now be defined in the window, which can later be used for data offerings.
 
-Two different types of policies are available:
+Three different types of policies are available:
 - **Consumer's Participant ID**: With this policy, the data offering can be offered only for specific connectors based on their Participant ID. This Participant ID must be known at this time.
 - **Time Restriction**: This policy can be used to specify a time period during which the data offering can be accessed or negotiated for.
+- **Consumer's Token Claim** (DAPS only): With this policy, the data offering can be offered only to connectors whose DAPS identity token contains a given claim with one of the allowed values, for example `COUNTRY` in `DE,CH`. The claim is configured by the dataspace operator in the DAPS. See [Policy: Generic Claims (DAPS)](../../Backend/Management-API/generic-claims-policy.md) for details.
 
 Policies can also be linked. In other words, several policies can have to be fulfilled at the same time, as well as different parallels, independently of each other, depending on the selection.
 

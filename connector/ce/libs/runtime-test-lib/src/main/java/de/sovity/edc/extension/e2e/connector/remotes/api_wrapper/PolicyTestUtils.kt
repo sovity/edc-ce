@@ -8,17 +8,22 @@
 package de.sovity.edc.extension.e2e.connector.remotes.api_wrapper
 
 import de.sovity.edc.client.EdcClient
+import de.sovity.edc.client.gen.model.ContractDefinitionRequest
 import de.sovity.edc.client.gen.model.ContractNegotiationRequest
 import de.sovity.edc.client.gen.model.ContractNegotiationSimplifiedState
 import de.sovity.edc.client.gen.model.ContractsPageRequest
 import de.sovity.edc.client.gen.model.DataOfferCreateRequest
-import de.sovity.edc.client.gen.model.DataOfferPolicyCreateType
 import de.sovity.edc.client.gen.model.DataOfferPublishType
 import de.sovity.edc.client.gen.model.DataSourceType
 import de.sovity.edc.client.gen.model.OperatorDto
+import de.sovity.edc.client.gen.model.PolicyDefinitionCreateDto
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest
 import de.sovity.edc.client.gen.model.UiContractNegotiation
 import de.sovity.edc.client.gen.model.UiContractOffer
+import de.sovity.edc.client.gen.model.UiCriterion
+import de.sovity.edc.client.gen.model.UiCriterionLiteral
+import de.sovity.edc.client.gen.model.UiCriterionLiteralType
+import de.sovity.edc.client.gen.model.UiCriterionOperator
 import de.sovity.edc.client.gen.model.UiDataOffer
 import de.sovity.edc.client.gen.model.UiDataSinkHttpDataPush
 import de.sovity.edc.client.gen.model.UiDataSource
@@ -32,6 +37,7 @@ import de.sovity.edc.client.gen.model.UiPolicyLiteral
 import de.sovity.edc.client.gen.model.UiPolicyLiteralType
 import de.sovity.edc.extension.e2e.utils.getUrl
 import de.sovity.edc.runtime.config.ConfigUtils
+import de.sovity.edc.utils.jsonld.vocab.Prop
 import org.assertj.core.api.Assertions.assertThat
 import org.awaitility.Awaitility
 import org.mockserver.integration.ClientAndServer
@@ -47,45 +53,55 @@ class PolicyTestUtils(
     val clientAndServer: ClientAndServer
 ) {
 
+    data class PolicyDto(
+        val leftExpression: String,
+        val operator: OperatorDto,
+        val rightExpression: UiPolicyLiteral
+    ) {
+        companion object {
+            fun string(
+                leftExpression: String,
+                operator: OperatorDto,
+                rightExpression: String
+            ) = PolicyDto(
+                leftExpression,
+                operator,
+                UiPolicyLiteral.builder()
+                    .type(UiPolicyLiteralType.STRING)
+                    .value(rightExpression)
+                    .build()
+            )
+
+            fun stringList(
+                leftExpression: String,
+                operator: OperatorDto,
+                rightExpression: List<String?>?
+            ) = PolicyDto(
+                leftExpression,
+                operator,
+                UiPolicyLiteral.builder()
+                    .type(UiPolicyLiteralType.STRING_LIST)
+                    .valueList(rightExpression)
+                    .build()
+            )
+        }
+    }
+
+    private fun constraint(policy: PolicyDto): UiPolicyExpression = UiPolicyExpression.builder()
+        .type(UiPolicyExpressionType.CONSTRAINT)
+        .constraint(
+            UiPolicyConstraint.builder()
+                .left(policy.leftExpression)
+                .operator(policy.operator)
+                .right(policy.rightExpression)
+                .build()
+        )
+        .build()
+
     fun createDataOffer(
         dataOfferId: String,
-        leftExpression: String,
-        operator: OperatorDto,
-        rightExpression: String
-    ) {
-        createDataOfferInternal(
-            dataOfferId,
-            leftExpression,
-            operator,
-            UiPolicyLiteral.builder()
-                .type(UiPolicyLiteralType.STRING)
-                .value(rightExpression)
-                .build()
-        )
-    }
-
-    fun createDataOfferList(
-        dataOfferId: String,
-        leftExpression: String,
-        operator: OperatorDto,
-        rightExpression: List<String?>?
-    ) {
-        createDataOfferInternal(
-            dataOfferId,
-            leftExpression,
-            operator,
-            UiPolicyLiteral.builder()
-                .type(UiPolicyLiteralType.STRING_LIST)
-                .valueList(rightExpression)
-                .build()
-        )
-    }
-
-    private fun createDataOfferInternal(
-        dataOfferId: String,
-        leftExpression: String,
-        operator: OperatorDto,
-        rightExpression: UiPolicyLiteral
+        accessPolicy: PolicyDto,
+        usagePolicy: PolicyDto = accessPolicy
     ) {
         val relativeUrl = "/data-source/$dataOfferId"
         val url = clientAndServer.getUrl(relativeUrl)
@@ -110,25 +126,53 @@ class PolicyTestUtils(
             .dataSource(dataSource)
             .build()
 
-        val expression: UiPolicyExpression = UiPolicyExpression.builder()
-            .type(UiPolicyExpressionType.CONSTRAINT)
-            .constraint(
-                UiPolicyConstraint.builder()
-                    .left(leftExpression)
-                    .operator(operator)
-                    .right(rightExpression)
-                    .build()
-            )
-            .build()
+        val expression = constraint(accessPolicy)
 
         val request = DataOfferCreateRequest.builder()
             .asset(asset)
-            .publishType(DataOfferPublishType.PUBLISH_RESTRICTED)
-            .policyCreateType(DataOfferPolicyCreateType.EXPRESSION)
-            .policyExpression(expression)
+            .publishType(DataOfferPublishType.DONT_PUBLISH)
             .build()
 
         providerClient.uiApi().createDataOffer(request)
+
+        val accessPolicyId = "$dataOfferId-access"
+        val contractPolicyId = "$dataOfferId-contract"
+
+        providerClient.uiApi().createPolicyDefinitionV2(
+            PolicyDefinitionCreateDto.builder()
+                .policyDefinitionId(accessPolicyId)
+                .policyExpression(expression)
+                .build()
+        )
+
+        providerClient.uiApi().createPolicyDefinitionV2(
+            PolicyDefinitionCreateDto.builder()
+                .policyDefinitionId(contractPolicyId)
+                .policyExpression(constraint(usagePolicy))
+                .build()
+        )
+
+        providerClient.uiApi().createContractDefinition(
+            ContractDefinitionRequest.builder()
+                .contractDefinitionId(dataOfferId)
+                .accessPolicyId(accessPolicyId)
+                .contractPolicyId(contractPolicyId)
+                .assetSelector(
+                    listOf(
+                        UiCriterion.builder()
+                            .operandLeft(Prop.Edc.ID)
+                            .operator(UiCriterionOperator.EQ)
+                            .operandRight(
+                                UiCriterionLiteral.builder()
+                                    .type(UiCriterionLiteralType.VALUE)
+                                    .value(dataOfferId)
+                                    .build()
+                            )
+                            .build()
+                    )
+                )
+                .build()
+        )
     }
 
     fun checkUnavailable(assetId: String) {
@@ -192,6 +236,12 @@ class PolicyTestUtils(
         }
     }
 
+    fun checkNegotiationFails(dataOffer: UiDataOffer) {
+        val contractOffer = dataOffer.contractOffers.single()
+        val negotiation = awaitNegotiation(dataOffer, contractOffer)
+        assertThat(negotiation.state.simplifiedState).isEqualTo(ContractNegotiationSimplifiedState.TERMINATED)
+    }
+
     private fun checkPoliciesErrorFree(
         dataOffer: UiDataOffer,
         contractOffer: UiContractOffer,
@@ -218,6 +268,15 @@ class PolicyTestUtils(
         dataOffer: UiDataOffer,
         contractOffer: UiContractOffer
     ): String {
+        val negotiation = awaitNegotiation(dataOffer, contractOffer)
+        assertThat(negotiation.state.simplifiedState).isEqualTo(ContractNegotiationSimplifiedState.AGREED)
+        return negotiation.contractAgreementId!!
+    }
+
+    private fun awaitNegotiation(
+        dataOffer: UiDataOffer,
+        contractOffer: UiContractOffer
+    ): UiContractNegotiation {
         val negotiationRequest = ContractNegotiationRequest.builder()
             .counterPartyId(dataOffer.participantId)
             .counterPartyAddress(dataOffer.endpoint)
@@ -229,16 +288,11 @@ class PolicyTestUtils(
         val negotiationId = consumerClient.uiApi().initiateContractNegotiation(negotiationRequest)
             .contractNegotiationId
 
-        val negotiation = Awaitility.await().atMost(Duration.ofSeconds(30)).until(
+        return Awaitility.await().atMost(Duration.ofSeconds(30)).until(
             { consumerClient.uiApi().getContractNegotiation(negotiationId) },
             { contractNegotiation: UiContractNegotiation ->
                 contractNegotiation.state.simplifiedState != ContractNegotiationSimplifiedState.IN_PROGRESS
             }
         )
-        assertThat(negotiation.state.simplifiedState).isEqualTo(ContractNegotiationSimplifiedState.AGREED)
-        val contractAgreementId = negotiation.contractAgreementId!!
-        return contractAgreementId
     }
 }
-
-

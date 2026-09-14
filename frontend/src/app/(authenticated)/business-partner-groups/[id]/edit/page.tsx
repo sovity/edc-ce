@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: Elastic-2.0
  */
 'use client';
+import {use} from 'react';
 
 import {CenteredLoadingSpinner} from '@/components/loading-spinner';
 import PageContainer from '@/components/page-container';
@@ -19,11 +20,13 @@ import {matchQueryState} from '@/lib/utils/match-query-state';
 import {EditBusinessPartnerGroupForm} from './components/edit-business-partner-group-form';
 import {useTranslations} from 'next-intl';
 
-const BusinessPartnerGroupEditPage = ({
-  params: {id},
-}: {
-  params: {id: string};
+const BusinessPartnerGroupEditPage = (props: {
+  params: Promise<{id: string}>;
 }) => {
+  const params = use(props.params);
+
+  const {id} = params;
+
   const t = useTranslations();
   const pageQuery = useQueryWrapper(
     queryKeys.businessPartnerGroups.editPage(id),

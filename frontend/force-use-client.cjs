@@ -12,6 +12,10 @@ const excludes = [
 
   // Ensure access to env.js
   'src/components/dev-utilities/tailwind-indicator.tsx',
+
+  // Reads process.env on the server to serialise the runtime environment into
+  // the page; as a client component it would see build-time values instead
+  'src/components/public-env-script.tsx',
 ];
 
 const fs = require('fs').promises;
