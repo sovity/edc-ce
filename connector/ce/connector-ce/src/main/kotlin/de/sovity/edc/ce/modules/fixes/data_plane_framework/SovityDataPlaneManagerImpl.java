@@ -34,13 +34,16 @@ import org.eclipse.edc.statemachine.StateMachineManager;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static java.lang.String.format;
 import static org.eclipse.edc.connector.dataplane.spi.DataFlowStates.*;
 import static org.eclipse.edc.spi.persistence.StateEntityStore.hasState;
+import static org.eclipse.edc.spi.response.ResponseStatus.ERROR_RETRY;
 import static org.eclipse.edc.spi.response.ResponseStatus.FATAL_ERROR;
 import static org.eclipse.edc.spi.result.Result.success;
 import static org.eclipse.edc.spi.types.domain.transfer.FlowType.PULL;
@@ -54,6 +57,8 @@ import static org.eclipse.edc.spi.types.domain.transfer.FlowType.PUSH;
             Fix bug by setting runtimeId when transitioning to RECEIVED state.
             Additionally removes the 'updateFlowLease' function and state machine transition.
             The transition is not necessary since we only have a single data plane.
+            The completion and failure callbacks to the control plane use the retry limit and backoff,
+            a 4xx answer terminates the flow. Upstream retried a rejected callback forever.
         """,
         dependsOn = DataPlaneManagerImpl.class
 )
@@ -64,6 +69,9 @@ public class SovityDataPlaneManagerImpl extends AbstractStateEntityManager<DataF
     private TransferProcessApiClient transferProcessClient;
     private String runtimeId;
     private FlowLeaseConfiguration flowLeaseConfiguration = new FlowLeaseConfiguration();
+
+    // Message format of ControlApiHttpClientImpl for 400, 404 and 409
+    private static final Pattern REJECTED_BY_CONTROL_PLANE = Pattern.compile("Remote API returned HTTP 4[0-9][0-9]");
 
     private SovityDataPlaneManagerImpl() {
 
@@ -276,27 +284,50 @@ public class SovityDataPlaneManagerImpl extends AbstractStateEntityManager<DataF
     }
 
     private boolean processCompleted(DataFlow dataFlow) {
-        var response = transferProcessClient.completed(dataFlow.toRequest());
-        if (response.succeeded()) {
-            dataFlow.transitToNotified();
-            update(dataFlow);
-        } else {
-            dataFlow.transitToCompleted();
-            update(dataFlow);
-        }
-        return true;
+        return notifyControlPlane(dataFlow, "complete",
+                () -> transferProcessClient.completed(dataFlow.toRequest()),
+                DataFlow::transitToCompleted);
     }
 
     private boolean processFailed(DataFlow dataFlow) {
-        var response = transferProcessClient.failed(dataFlow.toRequest(), dataFlow.getErrorDetail());
-        if (response.succeeded()) {
-            dataFlow.transitToNotified();
-            update(dataFlow);
-        } else {
-            dataFlow.transitToFailed(dataFlow.getErrorDetail());
-            update(dataFlow);
+        return notifyControlPlane(dataFlow, "fail",
+                () -> transferProcessClient.failed(dataFlow.toRequest(), dataFlow.getErrorDetail()),
+                flow -> flow.transitToFailed(flow.getErrorDetail()));
+    }
+
+    /**
+     * The callback is retried with the configured backoff and limit. A 4xx answer means the control plane will never
+     * accept it, e.g. 409 once the transfer was terminated, so the flow ends right away instead of blocking the state
+     * machine on every iteration.
+     */
+    private boolean notifyControlPlane(DataFlow dataFlow, String action, Supplier<Result<Void>> callback, Consumer<DataFlow> keepForRetry) {
+        return entityRetryProcessFactory.doSyncProcess(dataFlow, () -> toStatusResult(callback.get()))
+                .onSuccess((flow, v) -> {
+                    flow.transitToNotified();
+                    update(flow);
+                })
+                .onFailure((flow, failure) -> {
+                    keepForRetry.accept(flow);
+                    update(flow);
+                })
+                .onFatalError((flow, failure) -> {
+                    flow.transitToTerminated(failure.getFailureDetail());
+                    update(flow);
+                })
+                .onRetryExhausted((flow, failure) -> {
+                    flow.transitToTerminated(failure.getFailureDetail());
+                    update(flow);
+                })
+                .execute("notify the control plane to " + action + " the transfer");
+    }
+
+    private static StatusResult<Void> toStatusResult(Result<Void> result) {
+        if (result.succeeded()) {
+            return StatusResult.success();
         }
-        return true;
+        var detail = result.getFailureDetail();
+        var status = REJECTED_BY_CONTROL_PLANE.matcher(detail).find() ? FATAL_ERROR : ERROR_RETRY;
+        return StatusResult.failure(status, detail);
     }
 
     @SafeVarargs

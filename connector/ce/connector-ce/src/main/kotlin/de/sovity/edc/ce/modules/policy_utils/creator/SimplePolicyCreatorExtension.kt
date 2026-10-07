@@ -8,6 +8,9 @@
 package de.sovity.edc.ce.modules.policy_utils.creator
 
 import de.sovity.edc.utils.jsonld.vocab.Prop
+import org.eclipse.edc.connector.controlplane.catalog.spi.policy.CatalogPolicyContext
+import org.eclipse.edc.connector.controlplane.contract.spi.policy.ContractNegotiationPolicyContext
+import org.eclipse.edc.connector.controlplane.contract.spi.policy.TransferProcessPolicyContext
 import org.eclipse.edc.policy.engine.spi.PolicyEngine
 import org.eclipse.edc.policy.engine.spi.RuleBindingRegistry
 import org.eclipse.edc.runtime.metamodel.annotation.Inject
@@ -29,7 +32,14 @@ class SimplePolicyCreatorExtension : ServiceExtension {
     private lateinit var typeManager: TypeManager
 
     override fun initialize(context: ServiceExtensionContext) {
-        ruleBindingRegistry.bind(Prop.Odrl.USE, PolicyEngine.ALL_SCOPES)
+        // Same scopes as Tractus-X: https://github.com/eclipse-tractusx/tractusx-edc/blob/0.9.0/edc-extensions/cx-policy/src/main/java/org/eclipse/tractusx/edc/policy/cx/CxPolicyExtension.java#L102-L104
+        // No request.* scopes: they drop the MembershipCredential from the DCP token, the provider then fails with
+        // "Required credential type 'MembershipCredential' not present in ClaimToken".
+        setOf(
+            CatalogPolicyContext.CATALOG_SCOPE,
+            ContractNegotiationPolicyContext.NEGOTIATION_SCOPE,
+            TransferProcessPolicyContext.TRANSFER_SCOPE
+        ).forEach { ruleBindingRegistry.bind(Prop.Odrl.USE, it) }
 
         val monitor = context.monitor
         val objectMapper = typeManager.getMapper(CoreConstants.JSON_LD)
